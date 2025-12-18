@@ -1,85 +1,94 @@
 ==============================================================================
-GUIA COMPLETO DE PUBLICAÇÃO (DEPLOY) - DEVPRO ACADEMY
+GUIA COMPLETO DE PUBLICAÇÃO (DEPLOY) - DEVPRO ACADEMY (DO ZERO)
 ==============================================================================
 
-Olá! Vamos colocar seu projeto no ar da maneira correta.
-Este projeto é dividido em duas partes que precisam ser hospedadas separadamente:
+Olá! Vamos colocar seu projeto no ar, começando do absoluto zero (criando o repositório).
 
-1. FRONTEND: A parte visual (React) -> Hospedaremos no Netlify ou Vercel.
-2. BACKEND: O servidor (Node.js/API) -> Hospedaremos no Render.com.
-
-==============================================================================
-PASSO 1: PREPARAR O GITHUB
-==============================================================================
-Antes de tudo, seu código precisa estar atualizado no GitHub.
-
-1. Abra o terminal na pasta do projeto.
-2. Execute os seguintes comandos um por um:
-   git add .
-   git commit -m "Preparando para deploy final"
-   git push origin main
-
-(Se der erro pedindo para configurar email/nome, siga as instruções que aparecerem na tela).
+O projeto é dividido em duas partes:
+1. FRONTEND: A parte visual (React).
+2. BACKEND: O servidor (Node.js/API).
 
 ==============================================================================
-PASSO 2: HOSPEDAR O BACKEND (SERVIDOR)
+PASSO 0: CRIAR O REPOSITÓRIO (GITHUB)
 ==============================================================================
-O Backend é quem processa o Login e Cadastro. Sem ele, o site dá erro "Failed to fetch".
+Primeiro, precisamos salvar seu código na nuvem (GitHub).
+
+1. Acesse: https://github.com (Faça login ou crie conta).
+2. Clique no botão "+" (canto superior direito) -> "New repository".
+3. Nome do repositório: `academia-devpro` (ou o que preferir).
+4. Deixe como "Public".
+5. Clique em "Create repository".
+6. NÃO feche a página que abrir, vamos usar os comandos dela agora.
+
+7. Volte para o VS Code (ou seu terminal na pasta do projeto).
+8. Se você NUNCA usou git nessa pasta, inicie agora:
+   
+   git init
+
+9. Agora vamos conectar com o GitHub (Copie o comando da página do GitHub que começa com 'git remote add origin...', ou digite substituindo SEU_USUARIO):
+   
+   git remote add origin https://github.com/SEU_USUARIO/academia-devpro.git
+
+10. Agora vamos salvar e enviar tudo:
+
+    git add .
+    git commit -m "Meu primeiro deploy"
+    git branch -M main
+    git push -u origin main
+
+(Se pedir login/senha, siga as instruções da janelinha que abrir).
+
+==============================================================================
+PASSO 1: HOSPEDAR O BACKEND (SERVIDOR) - RENDER.COM
+==============================================================================
+O Backend é o "cérebro" que processa Login/Cadastro.
 
 1. Acesse: https://render.com
-2. Crie uma conta (pode usar o GitHub).
-3. Clique no botão "New +" e escolha "Web Service".
+2. Crie conta (pode usar o botão "GitHub" para facilitar).
+3. Clique em "New +" -> "Web Service".
 4. Selecione "Build and deploy from a Git repository".
-5. Conecte sua conta do GitHub e selecione o repositório "AcademiaDevPro" (ou o nome que você deu).
-6. Configurações do Render:
-   - Name: devpro-backend (ou o que preferir)
-   - Region: Escolha a mais próxima (ex: Ohio ou Frankfurt)
+5. Escolha o repositório `academia-devpro` que você acabou de criar.
+6. Na tela de configurações, preencha:
+   - Name: devpro-backend
+   - Region: Escolha a mais próxima (East US ou Frankfurt)
    - Branch: main
-   - Root Directory: deixe em branco (ou ./ se der erro)
+   - Root Directory: (Deixe em branco)
    - Runtime: Node
    - Build Command: npm install
    - Start Command: npm start
    - Plan: Free (Grátis)
-7. Clique em "Create Web Service".
-8. AGUARDE o deploy terminar (leva uns minutos).
-9. Quando ficar verde ("Live"), copie a URL lá em cima (algo como `https://devpro-backend.onrender.com`).
-   -> GUARDE ESSA URL, ELA É IMPORTANTE!
+7. Clique "Create Web Service".
+8. Espere terminar o deploy (pode levar 5 min).
+9. Quando ficar verde ("Live"), COPIE A URL lá em cima (algo como `https://devpro-backend.onrender.com`).
 
 ==============================================================================
-PASSO 3: HOSPEDAR O FRONTEND (SITE)
+PASSO 2: HOSPEDAR O FRONTEND (SITE) - NETLIFY
 ==============================================================================
-Agora vamos colocar o site visual no ar e conectar com o backend.
+Agora a parte visual.
 
 1. Acesse: https://netlify.com
-2. Faça login (GitHub).
-3. Clique em "Add new site" -> "Import from existing project".
+2. Login com GitHub.
+3. "Add new site" -> "Import from existing project".
 4. Escolha "GitHub".
-5. Selecione o repositório "AcademiaDevPro".
-6. Configurações de Build:
-   - Base directory: (deixe vazio)
+5. Selecione `academia-devpro`.
+6. Configurações de Build (Geralmente já vem certo):
    - Build command: npm run build
    - Publish directory: dist
-7. IMPORTANTE: Clique em "Show advanced" ou vá em "Environment variables" depois de criar.
-   Você precisa adicionar a variável que conecta no backend:
+7. CLIQUE EM "Show advanced" (ou Environment Variables).
+   Adicione a conexão com o backend:
    
    Key:   VITE_API_URL
-   Value: (Cole a URL do Render que você copiou no Passo 2)
-   Exemplo: https://devpro-backend.onrender.com
-
-   *NÃO coloque a barra / no final do link.
+   Value: (Cole a URL do Render aqui)
+          Exemplo: https://devpro-backend.onrender.com
 
 8. Clique em "Deploy Site".
 
 ==============================================================================
-RESUMO FINAL E TESTE
+RESUMO FINAL
 ==============================================================================
-1. Aguarde o Netlify terminar o deploy.
-2. Abra o link do seu site no Netlify (ex: https://devproacademy.netlify.app).
-3. Tente fazer um Cadastro.
-   - Se funcionar, Parabéns! Tudo está conectado.
-   - Se der erro, verifique se a URL do backend está correta nas variáveis do Netlify.
+1. Espere o Netlify terminar.
+2. Abra o link que o Netlify gerou.
+3. O site deve estar funcionando!
 
-Obs: O plano grátis do Render "dorme" após 15 minutos sem uso. O primeiro acesso pode demorar 50 segundos para "acordar" o servidor. Isso é normal no plano grátis.
-
-Boa sorte!
+Dica: O servidor grátis do Render "dorme" se ninguém usar. O primeiro login do dia pode demorar 1 minuto. Depois fica rápido.
 ==============================================================================
