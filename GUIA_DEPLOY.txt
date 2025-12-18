@@ -1,0 +1,85 @@
+==============================================================================
+GUIA COMPLETO DE PUBLICAÇÃO (DEPLOY) - DEVPRO ACADEMY
+==============================================================================
+
+Olá! Vamos colocar seu projeto no ar da maneira correta.
+Este projeto é dividido em duas partes que precisam ser hospedadas separadamente:
+
+1. FRONTEND: A parte visual (React) -> Hospedaremos no Netlify ou Vercel.
+2. BACKEND: O servidor (Node.js/API) -> Hospedaremos no Render.com.
+
+==============================================================================
+PASSO 1: PREPARAR O GITHUB
+==============================================================================
+Antes de tudo, seu código precisa estar atualizado no GitHub.
+
+1. Abra o terminal na pasta do projeto.
+2. Execute os seguintes comandos um por um:
+   git add .
+   git commit -m "Preparando para deploy final"
+   git push origin main
+
+(Se der erro pedindo para configurar email/nome, siga as instruções que aparecerem na tela).
+
+==============================================================================
+PASSO 2: HOSPEDAR O BACKEND (SERVIDOR)
+==============================================================================
+O Backend é quem processa o Login e Cadastro. Sem ele, o site dá erro "Failed to fetch".
+
+1. Acesse: https://render.com
+2. Crie uma conta (pode usar o GitHub).
+3. Clique no botão "New +" e escolha "Web Service".
+4. Selecione "Build and deploy from a Git repository".
+5. Conecte sua conta do GitHub e selecione o repositório "AcademiaDevPro" (ou o nome que você deu).
+6. Configurações do Render:
+   - Name: devpro-backend (ou o que preferir)
+   - Region: Escolha a mais próxima (ex: Ohio ou Frankfurt)
+   - Branch: main
+   - Root Directory: deixe em branco (ou ./ se der erro)
+   - Runtime: Node
+   - Build Command: npm install
+   - Start Command: npm start
+   - Plan: Free (Grátis)
+7. Clique em "Create Web Service".
+8. AGUARDE o deploy terminar (leva uns minutos).
+9. Quando ficar verde ("Live"), copie a URL lá em cima (algo como `https://devpro-backend.onrender.com`).
+   -> GUARDE ESSA URL, ELA É IMPORTANTE!
+
+==============================================================================
+PASSO 3: HOSPEDAR O FRONTEND (SITE)
+==============================================================================
+Agora vamos colocar o site visual no ar e conectar com o backend.
+
+1. Acesse: https://netlify.com
+2. Faça login (GitHub).
+3. Clique em "Add new site" -> "Import from existing project".
+4. Escolha "GitHub".
+5. Selecione o repositório "AcademiaDevPro".
+6. Configurações de Build:
+   - Base directory: (deixe vazio)
+   - Build command: npm run build
+   - Publish directory: dist
+7. IMPORTANTE: Clique em "Show advanced" ou vá em "Environment variables" depois de criar.
+   Você precisa adicionar a variável que conecta no backend:
+   
+   Key:   VITE_API_URL
+   Value: (Cole a URL do Render que você copiou no Passo 2)
+   Exemplo: https://devpro-backend.onrender.com
+
+   *NÃO coloque a barra / no final do link.
+
+8. Clique em "Deploy Site".
+
+==============================================================================
+RESUMO FINAL E TESTE
+==============================================================================
+1. Aguarde o Netlify terminar o deploy.
+2. Abra o link do seu site no Netlify (ex: https://devproacademy.netlify.app).
+3. Tente fazer um Cadastro.
+   - Se funcionar, Parabéns! Tudo está conectado.
+   - Se der erro, verifique se a URL do backend está correta nas variáveis do Netlify.
+
+Obs: O plano grátis do Render "dorme" após 15 minutos sem uso. O primeiro acesso pode demorar 50 segundos para "acordar" o servidor. Isso é normal no plano grátis.
+
+Boa sorte!
+==============================================================================
