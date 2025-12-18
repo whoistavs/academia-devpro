@@ -1,0 +1,121 @@
+{
+    "hero.title": "Meistere den Code: Frontend, Backend und Data Science",
+    "hero.description": "Die komplette Programmierschule, um deine Karriere zu verändern. Echte Projekte, Mentoring und die beste Community.",
+    "hero.cta": "Kurse ansehen",
+    "hero.learnMore": "Mehr erfahren",
+    "nav.home": "Startseite",
+    "nav.courses": "Kurse",
+    "nav.contact": "Kontakt",
+    "nav.start": "Jetzt starten",
+    "nav.logout": "Ausloggen",
+    "footer.rights": "Alle Rechte vorbehalten.",
+    "footer.about": "Die beste Plattform, um Programmieren von Null auf Profi zu lernen.",
+    "footer.quickLinks": "Schnelllinks",
+    "footer.contact": "Kontakt",
+    "home.features.title": "Warum AcademiaDevPro wählen?",
+    "home.features.mentor.title": "Spezialisiertes Mentoring",
+    "home.features.mentor.desc": "Lerne von Experten, die bereits im Markt sind und die Technologien beherrschen.",
+    "home.features.project.title": "Echte Projekte",
+    "home.features.project.desc": "Baue ein Portfolio auf, während du lernst, mit praktischen Herausforderungen.",
+    "home.features.community.title": "Aktive Community",
+    "home.features.community.desc": "Tausche Erfahrungen aus und wachse zusammen mit anderen Entwicklern.",
+    "home.categories.title": "Unsere Kategorien",
+    "courses.searchPlaceholder": "Kurse suchen...",
+    "courses.filters.all": "Alle",
+    "courses.filters.frontend": "Frontend",
+    "courses.filters.backend": "Backend",
+    "courses.filters.datascience": "Data Science",
+    "courses.noCourses": "Keine Kurse gefunden.",
+    "courseCard.details": "Details",
+    "courseCard.level": "Level",
+    "courseCard.duration": "Dauer",
+    "courseDetails.back": "Zurück zu den Kursen",
+    "courseDetails.about": "Über den Kurs",
+    "courseDetails.learn": "Was du lernen wirst",
+    "courseDetails.content": "Kursinhalt",
+    "courseDetails.start": "Kurs jetzt starten",
+    "courseDetails.access": "Sofortiger Zugriff nach Anmeldung.",
+    "courseDetails.duration": "Dauer",
+    "courseDetails.level": "Level",
+    "courseDetails.category": "Kategorie",
+    "courseDetails.certificate": "Zertifikat inbegriffen",
+    "courseDetails.contentCount": "Inhalte",
+    "contact": {
+        "title": "Kontaktiere uns",
+        "description": "Hast du Fragen zu unseren Kursen oder benötigst Support? Sende uns eine Nachricht und wir antworten so schnell wie möglich.",
+        "info": {
+            "title": "Kontaktinformationen",
+            "phone": "Telefon",
+            "email": "E-Mail",
+            "address": "Adresse"
+        },
+        "form": {
+            "name": "Vollständiger Name",
+            "email": "E-Mail",
+            "subject": "Betreff",
+            "message": "Nachricht",
+            "send": "Nachricht senden"
+        },
+        "placeholder": {
+            "name": "Dein Name",
+            "email": "deine@email.com",
+            "subject": "Nachrichtenbetreff",
+            "message": "Schreibe deine Nachricht hier..."
+        },
+        "success": {
+            "title": "Nachricht gesendet!",
+            "message": "Danke für deine Kontaktaufnahme. Wir antworten bald.",
+            "new": "Neue Nachricht senden"
+        }
+    },
+    "auth": {
+        "login": {
+            "title": "Melde dich an",
+            "newAccount": "oder erstelle ein neues Konto",
+            "submit": "Anmelden",
+            "email": "E-Mail-Adresse",
+            "password": "Passwort",
+            "error": "Anmeldung fehlgeschlagen"
+        },
+        "signup": {
+            "title": "Erstelle dein Konto",
+            "hasAccount": "Hast du schon ein Konto?",
+            "loginLink": "Anmelden",
+            "name": "Vollständiger Name",
+            "submit": "Registrieren",
+            "error": "Registrierung fehlgeschlagen"
+        }
+    },
+    "dashboard": {
+        "welcome": "Hallo, {{name}}!",
+        "myCourses": "Meine Kurse",
+        "progress": "Fortschritt",
+        "continue": "Kurs fortsetzen",
+        "deleteAccount": "Konto löschen",
+        "deleteConfirm": "Bist du sicher, dass du dein Konto löschen möchtest? Diese Aktion ist unwiderruflich."
+    },
+    "lgpd": {
+        "cookieBanner": {
+            "text": "Wir verwenden Cookies, um deine Erfahrung zu verbessern. Durch die Nutzung stimmst du unserer",
+            "link": "Datenschutzrichtlinie",
+            "accept": "Akzeptieren"
+        },
+        "privacy": {
+            "title": "Datenschutzrichtlinie",
+            "intro": "Diese Datenschutzrichtlinie beschreibt, wie wir deine Informationen sammeln, verwenden und schützen."
+        },
+        "terms": {
+            "title": "Nutzungsbedingungen",
+            "intro": "Durch den Zugriff auf unsere Website stimmst du diesen Nutzungsbedingungen zu."
+        },
+        "disclaimer": "Dies ist ein Demo-Projekt. Verwende keine echten sensiblen Daten."
+    },
+    "footer": {
+        "about": "Karrieren transformieren durch hochwertige Technologiebildung.",
+        "quickLinks": "Schnelllinks",
+        "legal": "Rechtliches",
+        "privacy": "Datenschutz",
+        "terms": "Bedingungen",
+        "rights": "Alle Rechte vorbehalten."
+    }
+}

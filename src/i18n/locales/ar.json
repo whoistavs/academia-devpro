@@ -1,0 +1,121 @@
+{
+    "hero.title": "أتقن البرمجة: الواجهة الأمامية والخلفية وعلم البيانات",
+    "hero.description": "المدرسة البرمجية الكاملة لتحويل مسارك المهني. مشاريع حقيقية، إرشاد وأفضل مجتمع.",
+    "hero.cta": "عرض الدورات",
+    "hero.learnMore": "اعرف المزيد",
+    "nav.home": "الرئيسية",
+    "nav.courses": "الدورات",
+    "nav.contact": "اتصل بنا",
+    "nav.start": "ابدأ الآن",
+    "nav.logout": "تسجيل الخروج",
+    "footer.rights": "جميع الحقوق محفوظة.",
+    "footer.about": "أفضل منصة لتعلم البرمجة من الصفر إلى الاحتراف.",
+    "footer.quickLinks": "روابط سريعة",
+    "footer.contact": "اتصل بنا",
+    "home.features.title": "لماذا تختار AcademiaDevPro؟",
+    "home.features.mentor.title": "إرشاد متخصص",
+    "home.features.mentor.desc": "تعلم من الخبراء في السوق والذين يتقنون التقنيات.",
+    "home.features.project.title": "مشاريع حقيقية",
+    "home.features.project.desc": "ابنِ معرض أعمالك أثناء التعلم، مع تحديات عملية.",
+    "home.features.community.title": "مجتمع نشط",
+    "home.features.community.desc": "تبادل الخبرات وتطور مع مطورين آخرين.",
+    "home.categories.title": "فئاتنا",
+    "courses.searchPlaceholder": "بحث عن دورات...",
+    "courses.filters.all": "الكل",
+    "courses.filters.frontend": "الواجهة الأمامية",
+    "courses.filters.backend": "الواجهة الخلفية",
+    "courses.filters.datascience": "علم البيانات",
+    "courses.noCourses": "لم يتم العثور على دورات.",
+    "courseCard.details": "التفاصيل",
+    "courseCard.level": "المستوى",
+    "courseCard.duration": "المدة",
+    "courseDetails.back": "العودة للدورات",
+    "courseDetails.about": "عن الدورة",
+    "courseDetails.learn": "ماذا ستتعلم",
+    "courseDetails.content": "محتوى الدورة",
+    "courseDetails.start": "ابدأ الدورة الآن",
+    "courseDetails.access": "وصول فوري بعد التسجيل.",
+    "courseDetails.duration": "المدة",
+    "courseDetails.level": "المستوى",
+    "courseDetails.category": "الفئة",
+    "courseDetails.certificate": "شهادة متضمنة",
+    "courseDetails.contentCount": "من المحتوى",
+    "contact": {
+        "title": "تواصل معنا",
+        "description": "هل لديك أي أسئلة حول دوراتنا أو تحتاج إلى دعم؟ أرسل لنا رسالة وسنرد عليك في أقرب وقت ممكن.",
+        "info": {
+            "title": "معلومات الاتصال",
+            "phone": "الهاتف",
+            "email": "البريد الإلكتروني",
+            "address": "العنوان"
+        },
+        "form": {
+            "name": "الاسم الكامل",
+            "email": "البريد الإلكتروني",
+            "subject": "الموضوع",
+            "message": "الرسالة",
+            "send": "إرسال الرسالة"
+        },
+        "placeholder": {
+            "name": "اسمك",
+            "email": "your@email.com",
+            "subject": "موضوع الرسالة",
+            "message": "اكتب رسالتك هنا..."
+        },
+        "success": {
+            "title": "تم إرسال الرسالة!",
+            "message": "شكراً لتواصلك معنا. سنرد عليك قريباً.",
+            "new": "إرسال رسالة جديدة"
+        }
+    },
+    "auth": {
+        "login": {
+            "title": "سجل الدخول إلى حسابك",
+            "newAccount": "أو أنشئ حساباً جديداً",
+            "submit": "دخول",
+            "email": "عنوان البريد الإلكتروني",
+            "password": "كلمة المرور",
+            "error": "فشل تسجيل الدخول"
+        },
+        "signup": {
+            "title": "أنشئ حسابك",
+            "hasAccount": "لديك حساب بالفعل؟",
+            "loginLink": "سجل الدخول",
+            "name": "الاسم الكامل",
+            "submit": "تسجيل",
+            "error": "فشل التسجيل"
+        }
+    },
+    "dashboard": {
+        "welcome": "مرحباً، {{name}}!",
+        "myCourses": "دوراتي",
+        "progress": "التقدم",
+        "continue": "متابعة الدورة",
+        "deleteAccount": "حذف الحساب",
+        "deleteConfirm": "هل أنت متأكد أنك تريد حذف حسابك؟ هذا الإجراء لا يمكن التراجع عنه."
+    },
+    "lgpd": {
+        "cookieBanner": {
+            "text": "نحن نستخدم ملفات تعريف الارتباط لتحسين تجربتك. بالمتابعة، أنت توافق على",
+            "link": "سياسة الخصوصية",
+            "accept": "قبول"
+        },
+        "privacy": {
+            "title": "سياسة الخصوصية",
+            "intro": "تصف سياسة الخصوصية هذه كيفية جمع واستخدام وحماية معلوماتك."
+        },
+        "terms": {
+            "title": "شروط الخدمة",
+            "intro": "بالوصول إلى موقعنا، أنت توافق على الالتزام بشروط الخدمة هذه."
+        },
+        "disclaimer": "هذا مشروع تجريبي. لا تستخدم بيانات حساسة حقيقية."
+    },
+    "footer": {
+        "about": "تحويل المسارات المهنية من خلال تعليم تقني عالي الجودة.",
+        "quickLinks": "روابط سريعة",
+        "legal": "قانوني",
+        "privacy": "الخصوصية",
+        "terms": "الشروط",
+        "rights": "جميع الحقوق محفوظة."
+    }
+}

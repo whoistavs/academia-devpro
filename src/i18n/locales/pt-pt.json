@@ -1,0 +1,121 @@
+{
+    "hero.title": "Domine o Código: Front-end, Back-end e Data Science",
+    "hero.description": "A Escola de Programação Completa para transformar a sua carreira. Projetos reais, mentoria e a melhor comunidade.",
+    "hero.cta": "Ver Cursos",
+    "hero.learnMore": "Saiba Mais",
+    "nav.home": "Início",
+    "nav.courses": "Cursos",
+    "nav.contact": "Contacto",
+    "nav.start": "Começar Agora",
+    "nav.logout": "Sair",
+    "footer.rights": "Todos os direitos reservados.",
+    "footer.about": "A melhor plataforma para aprender programação do zero ao profissional.",
+    "footer.quickLinks": "Links Rápidos",
+    "footer.contact": "Contacto",
+    "home.features.title": "Porquê escolher a AcademiaDevPro?",
+    "home.features.mentor.title": "Mentoria Especializada",
+    "home.features.mentor.desc": "Aprenda com quem já está no mercado e domina as tecnologias.",
+    "home.features.project.title": "Projetos Reais",
+    "home.features.project.desc": "Construa portefólio enquanto aprende, com desafios práticos.",
+    "home.features.community.title": "Comunidade Ativa",
+    "home.features.community.desc": "Troque experiências e cresça junto com outros programadores.",
+    "home.categories.title": "As Nossas Categorias",
+    "courses.searchPlaceholder": "Pesquisar cursos...",
+    "courses.filters.all": "Todos",
+    "courses.filters.frontend": "Front-end",
+    "courses.filters.backend": "Back-end",
+    "courses.filters.datascience": "Data Science",
+    "courses.noCourses": "Nenhum curso encontrado.",
+    "courseCard.details": "Detalhes",
+    "courseCard.level": "Nível",
+    "courseCard.duration": "Duração",
+    "courseDetails.back": "Voltar para Cursos",
+    "courseDetails.about": "Sobre o Curso",
+    "courseDetails.learn": "O que vai aprender",
+    "courseDetails.content": "Conteúdo do Curso",
+    "courseDetails.start": "Começar Curso Agora",
+    "courseDetails.access": "Acesso imediato após inscrição.",
+    "courseDetails.duration": "Duração",
+    "courseDetails.level": "Nível",
+    "courseDetails.category": "Categoria",
+    "courseDetails.certificate": "Certificado Incluído",
+    "courseDetails.contentCount": "de conteúdo",
+    "contact": {
+        "title": "Entre em Contacto",
+        "description": "Tem alguma dúvida sobre os nossos cursos ou precisa de suporte? Envie uma mensagem e responderemos o mais breve possível.",
+        "info": {
+            "title": "Informações de Contacto",
+            "phone": "Telefone",
+            "email": "E-mail",
+            "address": "Morada"
+        },
+        "form": {
+            "name": "Nome Completo",
+            "email": "E-mail",
+            "subject": "Assunto",
+            "message": "Mensagem",
+            "send": "Enviar Mensagem"
+        },
+        "placeholder": {
+            "name": "O seu nome",
+            "email": "seu@email.com",
+            "subject": "Assunto da mensagem",
+            "message": "Escreva a sua mensagem aqui..."
+        },
+        "success": {
+            "title": "Mensagem Enviada!",
+            "message": "Obrigado pelo seu contacto. Responderemos em breve.",
+            "new": "Enviar nova mensagem"
+        }
+    },
+    "auth": {
+        "login": {
+            "title": "Entre na sua conta",
+            "newAccount": "ou crie uma nova conta",
+            "submit": "Entrar",
+            "email": "Endereço de e-mail",
+            "password": "Palavra-passe",
+            "error": "Falha no login"
+        },
+        "signup": {
+            "title": "Crie a sua conta",
+            "hasAccount": "Já tem uma conta?",
+            "loginLink": "Faça login",
+            "name": "Nome Completo",
+            "submit": "Registar",
+            "error": "Falha no registo"
+        }
+    },
+    "dashboard": {
+        "welcome": "Olá, {{name}}!",
+        "myCourses": "Os Meus Cursos",
+        "progress": "Progresso",
+        "continue": "Continuar Curso",
+        "deleteAccount": "Apagar Conta",
+        "deleteConfirm": "Tem a certeza que deseja apagar a sua conta? Esta ação é irreversível."
+    },
+    "lgpd": {
+        "cookieBanner": {
+            "text": "Nós utilizamos cookies para melhorar a sua experiência. Ao continuar, concorda com a nossa",
+            "link": "Política de Privacidade",
+            "accept": "Aceitar"
+        },
+        "privacy": {
+            "title": "Política de Privacidade",
+            "intro": "Esta Política de Privacidade descreve como recolhemos, usamos e protegemos as suas informações."
+        },
+        "terms": {
+            "title": "Termos de Uso",
+            "intro": "Ao aceder ao nosso site, concorda em cumprir estes termos de serviço."
+        },
+        "disclaimer": "Este é um projeto de demonstração. Não utilize dados reais sensíveis."
+    },
+    "footer": {
+        "about": "A transformar carreiras através da educação em tecnologia de alta qualidade.",
+        "quickLinks": "Links Rápidos",
+        "legal": "Legal",
+        "privacy": "Privacidade",
+        "terms": "Termos de Uso",
+        "rights": "Todos os direitos reservados."
+    }
+}

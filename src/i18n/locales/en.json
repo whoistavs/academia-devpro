@@ -1,0 +1,141 @@
+{
+    "hero.title": "Master the Code: Front-end, Back-end and Data Science",
+    "hero.description": "The Complete Coding School to transform your career. Real projects, mentorship and the best community.",
+    "hero.cta": "View Courses",
+    "hero.learnMore": "Learn More",
+    "nav.home": "Home",
+    "nav.courses": "Courses",
+    "nav.contact": "Contact",
+    "nav.start": "Start Now",
+    "nav.logout": "Logout",
+    "footer.rights": "All rights reserved.",
+    "footer.about": "The best platform to learn programming from zero to professional.",
+    "footer.quickLinks": "Quick Links",
+    "footer.contact": "Contact",
+    "home.features.title": "Why choose DevPro Academy?",
+    "home.features.mentor.title": "Specialized Mentorship",
+    "home.features.mentor.desc": "Learn from those who are already in the market and master the technologies.",
+    "home.features.project.title": "Real Projects",
+    "home.features.project.desc": "Build a portfolio while you learn, with practical challenges.",
+    "home.features.community.title": "Active Community",
+    "home.features.community.desc": "Exchange experiences and grow together with other developers.",
+    "home.categories.title": "Our Categories",
+    "courses.searchPlaceholder": "Search courses...",
+    "courses.filters.all": "All",
+    "courses.filters.frontend": "Front-end",
+    "courses.filters.backend": "Back-end",
+    "courses.filters.datascience": "Data Science",
+    "courses.noCourses": "No courses found.",
+    "courseCard.details": "Details",
+    "courseCard.level": "Level",
+    "courseCard.duration": "Duration",
+    "courseDetails.back": "Back to Courses",
+    "courseDetails.about": "About the Course",
+    "courseDetails.learn": "What you will learn",
+    "courseDetails.content": "Course Content",
+    "courseDetails.start": "Start Course Now",
+    "courseDetails.access": "Immediate access after enrollment.",
+    "courseDetails.duration": "Duration",
+    "courseDetails.level": "Level",
+    "courseDetails.category": "Category",
+    "courseDetails.certificate": "Certificate Included",
+    "courseDetails.contentCount": "of content",
+    "contact": {
+        "title": "Get in Touch",
+        "description": "Have any questions about our courses or need support? Send us a message and we'll get back to you as soon as possible.",
+        "info": {
+            "title": "Contact Information",
+            "phone": "Phone",
+            "email": "E-mail",
+            "address": "Address"
+        },
+        "form": {
+            "name": "Full Name",
+            "email": "E-mail",
+            "subject": "Subject",
+            "message": "Message",
+            "send": "Send Message"
+        },
+        "placeholder": {
+            "name": "Your name",
+            "email": "your@email.com",
+            "subject": "Message subject",
+            "message": "Write your message here..."
+        },
+        "success": {
+            "title": "Message Sent!",
+            "message": "Thank you for contacting us. We will respond shortly.",
+            "new": "Send new message"
+        }
+    },
+    "auth": {
+        "login": {
+            "title": "Sign in to your account",
+            "newAccount": "or create a new account",
+            "submit": "Sign in",
+            "email": "Email address",
+            "password": "Password",
+            "error": "Login failed"
+        },
+        "signup": {
+            "title": "Create your account",
+            "hasAccount": "Already have an account?",
+            "loginLink": "Sign in",
+            "name": "Full Name",
+            "submit": "Sign up",
+            "error": "Signup failed"
+        }
+    },
+    "dashboard": {
+        "welcome": "Hello, {{name}}!",
+        "myCourses": "My Courses",
+        "progress": "Progress",
+        "continue": "Continue Course",
+        "deleteAccount": "Delete Account",
+        "deleteConfirm": "Are you sure you want to delete your account? This action cannot be undone."
+    },
+    "lgpd": {
+        "cookieBanner": {
+            "text": "We use cookies to improve your experience. By continuing, you agree to our",
+            "link": "Privacy Policy",
+            "accept": "Accept"
+        },
+        "privacy": {
+            "title": "Privacy Policy",
+            "intro": "This Privacy Policy describes how we collect, use, and protect your information.",
+            "collection": {
+                "title": "Data Collection",
+                "text": "We collect information you provide directly to us, such as name and email when you register."
+            },
+            "usage": {
+                "title": "Data Usage",
+                "text": "We use your data to provide and improve our services, and to personalize your experience."
+            },
+            "rights": {
+                "title": "Your Rights",
+                "text": "You have the right to access, correct, or delete your personal data at any time."
+            }
+        },
+        "terms": {
+            "title": "Terms of Service",
+            "intro": "By accessing our website, you agree to be bound by these terms of service.",
+            "acceptance": {
+                "title": "Acceptance",
+                "text": "Use of the services implies full acceptance of these terms."
+            },
+            "usage": {
+                "title": "Acceptable Use",
+                "text": "You agree not to use the service for any illegal or unauthorized purpose."
+            }
+        },
+        "disclaimer": "This is a demo project. Do not use real sensitive data."
+    },
+    "footer": {
+        "about": "Transforming careers through high-quality technology education.",
+        "quickLinks": "Quick Links",
+        "legal": "Legal",
+        "privacy": "Privacy",
+        "terms": "Terms",
+        "rights": "All rights reserved."
+    }
+}

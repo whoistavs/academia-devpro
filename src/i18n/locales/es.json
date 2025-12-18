@@ -1,0 +1,121 @@
+{
+    "hero.title": "Domina el Código: Front-end, Back-end y Ciencia de Datos",
+    "hero.description": "La Escuela de Programación Completa para transformar tu carrera. Proyectos reales, mentoría y la mejor comunidad.",
+    "hero.cta": "Ver Cursos",
+    "hero.learnMore": "Saber Más",
+    "nav.home": "Inicio",
+    "nav.courses": "Cursos",
+    "nav.contact": "Contacto",
+    "nav.start": "Empezar Ahora",
+    "nav.logout": "Cerrar Sesión",
+    "footer.rights": "Todos los derechos reservados.",
+    "footer.about": "La mejor plataforma para aprender programación de cero a profesional.",
+    "footer.quickLinks": "Enlaces Rápidos",
+    "footer.contact": "Contacto",
+    "home.features.title": "¿Por qué elegir AcademiaDevPro?",
+    "home.features.mentor.title": "Mentoría Especializada",
+    "home.features.mentor.desc": "Aprende de quienes ya están en el mercado y dominan las tecnologías.",
+    "home.features.project.title": "Proyectos Reales",
+    "home.features.project.desc": "Construye portafolio mientras aprendes, con desafíos prácticos.",
+    "home.features.community.title": "Comunidad Activa",
+    "home.features.community.desc": "Intercambia experiencias y crece junto con otros desarrolladores.",
+    "home.categories.title": "Nuestras Categorías",
+    "courses.searchPlaceholder": "Buscar cursos...",
+    "courses.filters.all": "Todos",
+    "courses.filters.frontend": "Front-end",
+    "courses.filters.backend": "Back-end",
+    "courses.filters.datascience": "Ciencia de Datos",
+    "courses.noCourses": "No se encontraron cursos.",
+    "courseCard.details": "Detalles",
+    "courseCard.level": "Nivel",
+    "courseCard.duration": "Duración",
+    "courseDetails.back": "Volver a Cursos",
+    "courseDetails.about": "Sobre el Curso",
+    "courseDetails.learn": "Lo que aprenderás",
+    "courseDetails.content": "Contenido del Curso",
+    "courseDetails.start": "Empezar Curso Ahora",
+    "courseDetails.access": "Acceso inmediato tras inscripción.",
+    "courseDetails.duration": "Duración",
+    "courseDetails.level": "Nivel",
+    "courseDetails.category": "Categoría",
+    "courseDetails.certificate": "Certificado Incluido",
+    "courseDetails.contentCount": "de contenido",
+    "contact": {
+        "title": "Ponte en Contacto",
+        "description": "¿Tienes alguna duda sobre nuestros cursos o necesitas soporte? Envíanos un mensaje y te responderemos lo antes posible.",
+        "info": {
+            "title": "Información de Contacto",
+            "phone": "Teléfono",
+            "email": "Correo",
+            "address": "Dirección"
+        },
+        "form": {
+            "name": "Nombre Completo",
+            "email": "Correo Electrónico",
+            "subject": "Asunto",
+            "message": "Mensaje",
+            "send": "Enviar Mensaje"
+        },
+        "placeholder": {
+            "name": "Tu nombre",
+            "email": "tu@email.com",
+            "subject": "Asunto del mensaje",
+            "message": "Escribe tu mensaje aquí..."
+        },
+        "success": {
+            "title": "¡Mensaje Enviado!",
+            "message": "Gracias por contactarnos. Responderemos pronto.",
+            "new": "Enviar nuevo mensaje"
+        }
+    },
+    "auth": {
+        "login": {
+            "title": "Ingresa a tu cuenta",
+            "newAccount": "o crea una nueva cuenta",
+            "submit": "Entrar",
+            "email": "Dirección de correo",
+            "password": "Contraseña",
+            "error": "Error al iniciar sesión"
+        },
+        "signup": {
+            "title": "Crea tu cuenta",
+            "hasAccount": "¿Ya tienes una cuenta?",
+            "loginLink": "Inicia sesión",
+            "name": "Nombre Completo",
+            "submit": "Registrarse",
+            "error": "Error al registrarse"
+        }
+    },
+    "dashboard": {
+        "welcome": "¡Hola, {{name}}!",
+        "myCourses": "Mis Cursos",
+        "progress": "Progreso",
+        "continue": "Continuar Curso",
+        "deleteAccount": "Eliminar Cuenta",
+        "deleteConfirm": "¿Estás seguro de que quieres eliminar tu cuenta? Esta acción es irreversible."
+    },
+    "lgpd": {
+        "cookieBanner": {
+            "text": "Utilizamos cookies para mejorar tu experiencia. Al continuar, aceptas nuestra",
+            "link": "Política de Privacidad",
+            "accept": "Aceptar"
+        },
+        "privacy": {
+            "title": "Política de Privacidad",
+            "intro": "Esta Política de Privacidad describe cómo recopilamos, usamos y protegemos tu información."
+        },
+        "terms": {
+            "title": "Términos de Uso",
+            "intro": "Al acceder a nuestro sitio, aceptas cumplir con estos términos de servicio."
+        },
+        "disclaimer": "Este es un proyecto de demostración. No uses datos reales sensibles."
+    },
+    "footer": {
+        "about": "Transformando carreras a través de educación tecnológica de alta calidad.",
+        "quickLinks": "Enlaces Rápidos",
+        "legal": "Legal",
+        "privacy": "Privacidad",
+        "terms": "Términos",
+        "rights": "Todos los derechos reservados."
+    }
+}

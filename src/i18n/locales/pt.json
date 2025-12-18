@@ -1,0 +1,162 @@
+{
+    "hero.title": "Domine o Código: Front-end, Back-end e Data Science",
+    "hero.description": "A Escola de Programação Completa para você transformar sua carreira. Projetos reais, mentoria e a melhor comunidade.",
+    "hero.cta": "Ver Cursos",
+    "hero.learnMore": "Saiba Mais",
+    "nav.home": "Home",
+    "nav.courses": "Cursos",
+    "nav.contact": "Contato",
+    "nav.start": "Começar Agora",
+    "nav.logout": "Sair",
+    "footer.rights": "Todos os direitos reservados.",
+    "footer.about": "A melhor plataforma para aprender programação do zero ao profissional.",
+    "footer.quickLinks": "Links Rápidos",
+    "footer.contact": "Contato",
+    "home.features.title": "Por que escolher a DevPro Academy?",
+    "home.features.mentor.title": "Mentoria Especializada",
+    "home.features.mentor.desc": "Aprenda com quem já está no mercado e domina as tecnologias.",
+    "home.features.project.title": "Projetos Reais",
+    "home.features.project.desc": "Construa portfólio enquanto aprende, com desafios práticos.",
+    "home.features.community.title": "Comunidade Ativa",
+    "home.features.community.desc": "Troque experiências e cresça junto com outros desenvolvedores.",
+    "home.categories.title": "Nossas Categorias",
+    "courses.searchPlaceholder": "Buscar cursos...",
+    "courses.filters.all": "Todos",
+    "courses.filters.frontend": "Front-end",
+    "courses.filters.backend": "Back-end",
+    "courses.filters.datascience": "Data Science",
+    "courses.noCourses": "Nenhum curso encontrado.",
+    "courseCard.details": "Detalhes",
+    "courseCard.level": "Nível",
+    "courseCard.duration": "Duração",
+    "courseDetails.back": "Voltar para Cursos",
+    "courseDetails.about": "Sobre o Curso",
+    "courseDetails.learn": "O que você vai aprender",
+    "courseDetails.content": "Conteúdo do Curso",
+    "courseDetails.start": "Começar Curso Agora",
+    "courseDetails.access": "Acesso imediato após inscrição.",
+    "courseDetails.duration": "Duração",
+    "courseDetails.level": "Nível",
+    "courseDetails.category": "Categoria",
+    "courseDetails.certificate": "Certificado Incluso",
+    "courseDetails.contentCount": "de conteúdo",
+    "contact": {
+        "title": "Entre em Contato",
+        "description": "Tem alguma dúvida sobre nossos cursos ou precisa de suporte? Envie uma mensagem e retornaremos o mais breve possível.",
+        "info": {
+            "title": "Informações de Contato",
+            "phone": "Telefone",
+            "email": "E-mail",
+            "address": "Endereço"
+        },
+        "form": {
+            "name": "Nome Completo",
+            "email": "E-mail",
+            "subject": "Assunto",
+            "message": "Mensagem",
+            "send": "Enviar Mensagem"
+        },
+        "placeholder": {
+            "name": "Seu nome",
+            "email": "seu@email.com",
+            "subject": "Assunto da mensagem",
+            "message": "Escreva sua mensagem aqui..."
+        },
+        "success": {
+            "title": "Mensagem Enviada!",
+            "message": "Obrigado pelo seu contato. Responderemos em breve.",
+            "new": "Enviar nova mensagem"
+        }
+    },
+    "auth": {
+        "login": {
+            "title": "Entre na sua conta",
+            "newAccount": "ou crie uma nova conta",
+            "submit": "Entrar",
+            "email": "Endereço de e-mail",
+            "password": "Senha",
+            "error": "Falha no login"
+        },
+        "signup": {
+            "title": "Crie sua conta",
+            "hasAccount": "Já tem uma conta?",
+            "loginLink": "Faça login",
+            "name": "Nome Completo",
+            "submit": "Cadastrar",
+            "error": "Falha no cadastro",
+            "agreeTerms": "Li e concordo com os Termos de Uso e Política de Privacidade"
+        },
+        "dashboard": {
+            "welcome": "Olá, {{name}}!",
+            "myCourses": "Meus Cursos",
+            "progress": "Progresso",
+            "continue": "Continuar Curso",
+            "deleteAccount": "Excluir Conta",
+            "deleteConfirm": "Tem certeza que deseja excluir sua conta? Esta ação é irreversível."
+        }
+    },
+    "lgpd": {
+        "cookieBanner": {
+            "text": "Nós utilizamos cookies para melhorar sua experiência. Ao continuar, você concorda com nossa",
+            "link": "Política de Privacidade",
+            "accept": "Aceitar"
+        },
+        "privacy": {
+            "title": "Política de Privacidade",
+            "intro": "Esta Política de Privacidade foi elaborada em conformidade com a Lei Federal n. 13.709/2018 (Lei Geral de Proteção de Dados Pessoais - LGPD), Marco Civil da Internet (Lei n. 12.965/2014) e Regulamento Geral de Proteção de Dados (GDPR) para usuários europeus.",
+            "collection": {
+                "title": "Coleta de Dados",
+                "text": "Coletamos informações essenciais para a prestação dos serviços, como nome, e-mail e dados de navegação, respeitando os princípios da necessidade e transparência."
+            },
+            "usage": {
+                "title": "Uso e Tratamento dos Dados",
+                "text": "Seus dados são utilizados para autenticação, melhoria da experiência do usuário e comunicação sobre cursos. Garantimos medidas de segurança técnicas e administrativas para proteger seus dados pessoais (Lei de Crimes Cibernéticos nº 12.737/2012)."
+            },
+            "rights": {
+                "title": "Seus Direitos",
+                "text": "Conforme a LGPD, você tem direito à confirmação, acesso, correção, anonimização, bloqueio ou eliminação de dados desnecessários. Para exercer seus direitos, entre em contato através dos nossos canais (CCPA aplicável para residentes da Califórnia)."
+            },
+            "contact": {
+                "title": "4. Canal de Comunicação (Encarregado de Dados)",
+                "text": "Para exercer qualquer um dos seus direitos mencionados acima, ou tirar dúvidas sobre como tratamos seus dados, você pode entrar em contato com o nosso Encarregado de Proteção de Dados (DPO) através do e-mail: dpo@devproacademy.com."
+            },
+            "responsible": {
+                "title": "5. Identificação do Responsável",
+                "text": "Este site é operado por DevPro Academy Ltda, inscrito no CNPJ sob o nº 00.000.000/0001-00, com sede na Av. Paulista, 1000 - São Paulo, SP - Brasil."
+            }
+        },
+        "terms": {
+            "title": "Termos de Uso",
+            "intro": "Bem-vindo à DevPro Academy. Estes Termos de Uso regulam o acesso e uso da nossa plataforma, em conformidade com o Código de Defesa do Consumidor (Lei n. 8.078/1990) e Lei do E-commerce (Decreto n. 7.962/2013).",
+            "acceptance": {
+                "title": "Aceitação dos Termos",
+                "text": "Ao utilizar nossos serviços, você aceita integralmente as presentes normas e compromete-se a observá-las, sob risco de aplicação das penalidades cabíveis."
+            },
+            "ip": {
+                "title": "2. Propriedade Intelectual e Direitos Autorais",
+                "intro": "Todo o conteúdo disponibilizado na DevPro Academy — incluindo vídeos, textos, códigos-fonte, logotipos, gráficos e materiais didáticos — é de propriedade exclusiva de DevPro Academy Ltda ou de seus licenciantes, estando protegido pelas leis brasileiras e tratados internacionais de direitos autorais e propriedade industrial.",
+                "personal": "Uso Pessoal e Intransferível: O acesso ao curso é individual. É proibido compartilhar credenciais de acesso (login e senha) com terceiros.",
+                "prohibitions": "Proibições: É estritamente proibido copiar, reproduzir, distribuir, transmitir, vender, licenciar ou explorar qualquer conteúdo do site para fins comerciais ou públicos sem autorização prévia por escrito.",
+                "download": "Download de Materiais: O download de materiais só é permitido quando expressamente indicado na plataforma (ex: PDFs e arquivos de apoio). Isso não transfere a titularidade do conteúdo ao usuário.",
+                "penalties": "Penalidades: O descumprimento destas regras poderá resultar na suspensão imediata da conta, sem direito a reembolso, além de eventuais medidas judiciais cabíveis por danos morais e materiais."
+            },
+            "refund": {
+                "title": "3. Política de Cancelamento e Reembolso",
+                "intro": "Em conformidade com o Código de Defesa do Consumidor e o Decreto do E-commerce (nº 7.962/2013), garantimos o seu direito de desistência:",
+                "deadline": "Prazo de Arrependimento: Você tem o prazo de 7 (sete) dias corridos, a contar da data da compra ou da liberação do acesso ao curso, para solicitar o cancelamento e o reembolso integral do valor pago.",
+                "request": "Como solicitar: A solicitação deve ser enviada para o e-mail contato@devproacademy.com com o assunto 'Solicitação de Reembolso' e os dados da compra.",
+                "method": "Forma de Estorno: O reembolso será processado através do mesmo método de pagamento utilizado na compra (estorno no cartão de crédito ou depósito em conta para pagamentos via boleto/Pix).",
+                "access": "Acesso ao Conteúdo: Após a solicitação de reembolso, o acesso à plataforma e aos materiais do curso será interrompido imediatamente."
+            }
+        },
+        "disclaimer": "Este projeto segue as diretrizes da Lei Brasileira de Inclusão (Lei nº 13.146/2015) buscando acessibilidade digital."
+    },
+    "footer": {
+        "about": "Transformando carreiras através da educação em tecnologia de alta qualidade.",
+        "quickLinks": "Links Rápidos",
+        "legal": "Legal",
+        "privacy": "Privacidade",
+        "terms": "Termos de Uso",
+        "rights": "Todos os direitos reservados."
+    }
+}
