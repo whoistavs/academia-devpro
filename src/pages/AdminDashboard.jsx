@@ -21,7 +21,8 @@ const AdminDashboard = () => {
 
     const fetchUsers = async () => {
         try {
-            const response = await fetch('http://localhost:3000/api/users', {
+            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+            const response = await fetch(`${API_URL}/api/users`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (response.ok) {
