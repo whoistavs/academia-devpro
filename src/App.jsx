@@ -51,12 +51,15 @@ const Layout = () => {
   );
 };
 
+import ScrollToTop from './components/ScrollToTop';
+
 function App() {
   return (
     <ThemeProvider>
       <LanguageProvider>
         <AuthProvider>
           <Router>
+            <ScrollToTop />
             <Layout />
           </Router>
         </AuthProvider>

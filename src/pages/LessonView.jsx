@@ -28,10 +28,7 @@ const LessonView = () => {
     const course = coursesData.find(c => c.slug === slug);
     const lessonIndex = parseInt(id);
 
-    // Scroll to top when lesson changes
-    React.useEffect(() => {
-        window.scrollTo(0, 0);
-    }, [slug, id]);
+
 
     if (!course || !course.aulas || !course.aulas[lessonIndex]) {
         return <div className="text-center mt-20 text-gray-500">Aula não encontrada.</div>;
