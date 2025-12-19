@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link, Navigate } from 'react-router-dom';
 import { CheckCircle, XCircle, ArrowLeft, Award } from 'lucide-react';
 import coursesData from '../data/cursos.json';
 import { useTranslation } from '../context/LanguageContext';
+import { useAuth } from '../context/AuthContext';
 
 const Quiz = () => {
     const { slug } = useParams();
     const navigate = useNavigate();
     const { language, t } = useTranslation();
+    const { isAuthenticated } = useAuth();
+
+    if (!isAuthenticated) {
+        return <Navigate to="/login" replace />;
+    }
 
     // Quick helper for localizing static strings since t() might not have them yet
     const localStrings = {

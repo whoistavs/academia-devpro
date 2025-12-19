@@ -40,7 +40,8 @@ const AdminDashboard = () => {
         if (!window.confirm('Tem certeza que deseja excluir este usuário?')) return;
 
         try {
-            const response = await fetch(`http://localhost:3000/api/users/${id}`, {
+            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+            const response = await fetch(`${API_URL}/api/users/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -52,6 +53,31 @@ const AdminDashboard = () => {
             }
         } catch (err) {
             alert('Erro ao excluir usuário.');
+        }
+    };
+
+    const handleRoleChange = async (id, currentRole) => {
+        const newRole = currentRole === 'admin' ? 'student' : 'admin';
+        if (!window.confirm(`Deseja alterar o nível de acesso para: ${newRole}?`)) return;
+
+        try {
+            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+            const response = await fetch(`${API_URL}/api/users/${id}/role`, {
+                method: 'PATCH',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ role: newRole })
+            });
+
+            if (response.ok) {
+                setUsers(users.map(u => u.id === id ? { ...u, role: newRole } : u));
+            } else {
+                alert('Erro ao atualizar função.');
+            }
+        } catch (err) {
+            alert('Erro de conexão.');
         }
     };
 
@@ -93,9 +119,14 @@ const AdminDashboard = () => {
                                         <td className="px-6 py-4 font-medium">{u.name}</td>
                                         <td className="px-6 py-4">{u.email}</td>
                                         <td className="px-6 py-4">
-                                            <span className={`px-2 py-1 rounded-full text-xs font-bold ${u.role === 'admin' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}>
+                                            <button
+                                                onClick={() => u.id !== user.id && handleRoleChange(u.id, u.role)}
+                                                className={`px-2 py-1 rounded-full text-xs font-bold cursor-pointer hover:opacity-80 ${u.role === 'admin' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}
+                                                title={u.id !== user.id ? "Clique para alterar nível de acesso" : "Você não pode alterar seu próprio nível"}
+                                                disabled={u.id === user.id}
+                                            >
                                                 {u.role || 'student'}
-                                            </span>
+                                            </button>
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             {u.id !== user.id && (

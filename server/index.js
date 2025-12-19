@@ -52,11 +52,15 @@ app.post('/api/cadastro', (req, res) => {
 
         // Hash password
         const hashedPassword = bcrypt.hashSync(password, 8);
+        const verificationToken = Math.random().toString(36).substring(2) + Date.now().toString(36);
 
         const newUser = {
             name,
             email,
             password: hashedPassword,
+            role: 'student',
+            isVerified: false,
+            verificationToken: verificationToken,
             createdAt: new Date()
         };
 
@@ -65,7 +69,48 @@ app.post('/api/cadastro', (req, res) => {
                 console.error('DB Make Error:', err);
                 return res.status(500).json({ error: 'Erro ao criar usuário.' });
             }
-            res.status(201).json({ message: 'Usuário criado com sucesso!' });
+
+            // SIMULATE EMAIL SENDING
+            const protocol = req.protocol;
+            const host = req.get('host');
+            const validationLink = `${protocol}://${host}/api/verify-email?token=${verificationToken}`;
+
+            console.log("\n==================================================");
+            console.log(`[MOCK EMAIL] Para: ${email}`);
+            console.log(`[MOCK EMAIL] Assunto: Verifique sua conta`);
+            console.log(`[MOCK EMAIL] Link: ${validationLink}`);
+            console.log("==================================================\n");
+
+            res.status(201).json({ message: 'Cadastro realizado! Verifique seu console (ou email simulado) para ativar a conta.' });
+        });
+    });
+});
+
+// Verify Email Endpoint
+app.get('/api/verify-email', (req, res) => {
+    const { token } = req.query;
+    if (!token) return res.status(400).send("Token inválido.");
+
+    db.users.findOne({ verificationToken: token }, (err, user) => {
+        if (err || !user) return res.status(400).send("Link inválido ou expirado.");
+
+        db.users.update({ _id: user._id }, { $set: { isVerified: true, verificationToken: null } }, {}, (err) => {
+            if (err) return res.status(500).send("Erro ao ativar conta.");
+
+            // Redirect to frontend Login
+            // We need to know where the frontend is. Assuming common setups or using Referer if possible, 
+            // but for separated frontend/backend, we usually set a FRONTEND_URL env.
+            // For now, I'll redirect to a generic success page or try to guess.
+            // Since User uses Vercel/Netlify, hard to guess. 
+            // I will return a HTML page with a link to login if I can't redirect automatically, 
+            // OR I will send a simple "Verified!" message.
+            // Better: Redirect to the REFERER's origin if available, or just send a HTML success.
+
+            res.send(`
+                <h1>Conta verificada com sucesso!</h1>
+                <p>Você já pode fechar esta janela e fazer login no site.</p>
+                <script>setTimeout(() => window.close(), 3000);</script>
+            `);
         });
     });
 });
@@ -84,6 +129,14 @@ app.post('/api/login', (req, res) => {
 
         const passwordIsValid = bcrypt.compareSync(password, user.password);
         if (!passwordIsValid) return res.status(401).json({ error: 'Senha incorreta.' });
+
+        // CHECK VERIFICATION
+        // For legacy users (created before this feature), isVerified might be undefined. Treat as true?
+        // Or users created now have isVerified: false.
+        // Let's be strict: if isVerified === false explicitly, block.
+        if (user.isVerified === false) {
+            return res.status(403).json({ error: 'Conta não verificada. Cheque seu e-mail (ou o console do servidor).' });
+        }
 
         const token = jwt.sign({ id: user._id, role: user.role || 'student' }, SECRET_KEY, {
             expiresIn: 86400 // 24 hours
@@ -200,6 +253,22 @@ app.delete('/api/users/:id', verifyAdmin, (req, res) => {
         if (err) return res.status(500).json({ error: 'Erro ao excluir usuário.' });
         if (!numRemoved) return res.status(404).json({ error: 'Usuário não encontrado.' });
         res.json({ message: 'Usuário excluído com sucesso.' });
+    });
+});
+
+// Update user role (Admin)
+app.patch('/api/users/:id/role', verifyAdmin, (req, res) => {
+    const userId = req.params.id;
+    const { role } = req.body;
+
+    if (!['admin', 'student'].includes(role)) {
+        return res.status(400).json({ error: 'Função inválida.' });
+    }
+
+    db.users.update({ _id: userId }, { $set: { role } }, {}, (err, numReplaced) => {
+        if (err) return res.status(500).json({ error: 'Erro ao atualizar função.' });
+        if (!numReplaced) return res.status(404).json({ error: 'Usuário não encontrado.' });
+        res.json({ message: `Função atualizada para ${role}.` });
     });
 });
 

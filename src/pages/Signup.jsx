@@ -125,7 +125,7 @@ const Signup = () => {
                             className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
                         />
                         <label htmlFor="terms" className="ml-2 block text-sm text-gray-900 dark:text-gray-300">
-                            {t('auth.signup.agreeTerms')}
+                            Li e concordo com os <Link to="/termos" className="text-indigo-600 hover:underline">Termos de Serviço</Link> e <Link to="/privacidade" className="text-indigo-600 hover:underline">Política de Privacidade</Link>
                         </label>
                     </div>
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, Navigate } from 'react-router-dom';
 import { ArrowLeft, CheckCircle, BookOpen, Code, Lightbulb } from 'lucide-react';
 import coursesData from '../data/cursos.json';
 import { useAuth } from '../context/AuthContext';
@@ -8,7 +8,11 @@ import ReactMarkdown from 'react-markdown';
 
 const LessonView = () => {
     const { slug, id } = useParams();
-    const { user } = useAuth();
+    const { user, isAuthenticated } = useAuth();
+
+    if (!isAuthenticated) {
+        return <Navigate to="/login" replace />;
+    }
     const { language } = useTranslation();
     const currentLang = language || 'pt'; // 'pt', 'en', 'es', etc.
 
