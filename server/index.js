@@ -257,18 +257,27 @@ app.delete('/api/users/:id', verifyAdmin, (req, res) => {
 });
 
 // Update user role (Admin)
+// Update user role (Admin)
 app.patch('/api/users/:id/role', verifyAdmin, (req, res) => {
     const userId = req.params.id;
     const { role } = req.body;
+    const PROTECTED_EMAIL = "octavio.marvel2018@gmail.com";
 
     if (!['admin', 'student'].includes(role)) {
         return res.status(400).json({ error: 'Função inválida.' });
     }
 
-    db.users.update({ _id: userId }, { $set: { role } }, {}, (err, numReplaced) => {
-        if (err) return res.status(500).json({ error: 'Erro ao atualizar função.' });
-        if (!numReplaced) return res.status(404).json({ error: 'Usuário não encontrado.' });
-        res.json({ message: `Função atualizada para ${role}.` });
+    db.users.findOne({ _id: userId }, (err, targetUser) => {
+        if (err || !targetUser) return res.status(404).json({ error: 'Usuário não encontrado.' });
+
+        if (targetUser.email === PROTECTED_EMAIL) {
+            return res.status(403).json({ error: 'Não é permitido alterar o nível deste usuário mestre.' });
+        }
+
+        db.users.update({ _id: userId }, { $set: { role } }, {}, (err, numReplaced) => {
+            if (err) return res.status(500).json({ error: 'Erro ao atualizar função.' });
+            res.json({ message: `Função atualizada para ${role}.` });
+        });
     });
 });
 
