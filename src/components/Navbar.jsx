@@ -25,6 +25,7 @@ const Navbar = () => {
                     <div className="flex items-center">
                         <Link to="/" className="flex items-center">
                             <img src="/logo.png" alt="DevPro Academy" className="h-10 w-auto bg-white rounded-lg p-1.5" />
+                            <span className="ml-2 text-xl font-bold text-gray-900 dark:text-white">DevPro Academy</span>
                         </Link>
                     </div>
 
@@ -112,7 +113,10 @@ const Navbar = () => {
                     <div className="md:hidden flex items-center space-x-4">
                         {/* Mobile Language Toggle (Simplified) */}
                         <button
-                            onClick={() => setIsLangOpen(!isLangOpen)}
+                            onClick={() => {
+                                setIsOpen(true);
+                                setIsLangOpen(!isLangOpen);
+                            }}
                             className="p-2 rounded-full text-gray-500 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors"
                         >
                             <Globe className="h-5 w-5" />
