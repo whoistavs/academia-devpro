@@ -28,6 +28,11 @@ const LessonView = () => {
     const course = coursesData.find(c => c.slug === slug);
     const lessonIndex = parseInt(id);
 
+    // Scroll to top when lesson changes
+    React.useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [slug, id]);
+
     if (!course || !course.aulas || !course.aulas[lessonIndex]) {
         return <div className="text-center mt-20 text-gray-500">Aula não encontrada.</div>;
     }
@@ -163,10 +168,10 @@ const LessonView = () => {
                                             key={idx}
                                             to={!isItemLocked ? `/curso/${slug}/aula/${idx}` : '#'}
                                             className={`flex items-center p-4 border-b dark:border-gray-700 last:border-0 transition-colors ${idx === lessonIndex
-                                                    ? 'bg-indigo-50 dark:bg-indigo-900/20 border-l-4 border-l-indigo-500'
-                                                    : isItemLocked
-                                                        ? 'opacity-50 cursor-not-allowed bg-gray-50 dark:bg-gray-900/50'
-                                                        : 'hover:bg-gray-50 dark:hover:bg-gray-700/50'
+                                                ? 'bg-indigo-50 dark:bg-indigo-900/20 border-l-4 border-l-indigo-500'
+                                                : isItemLocked
+                                                    ? 'opacity-50 cursor-not-allowed bg-gray-50 dark:bg-gray-900/50'
+                                                    : 'hover:bg-gray-50 dark:hover:bg-gray-700/50'
                                                 }`}
                                         >
                                             <div className={`mr-3 ${isItemCompleted ? 'text-green-500' : 'text-gray-400'}`}>
