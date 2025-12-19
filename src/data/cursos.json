@@ -158,134 +158,181 @@
             "titulo": {
                 "pt": "1. Introdução ao Projeto e Setup",
                 "en": "1. Project Intro & Setup",
-                "es": "1. Introducción al Proyecto y Configuración",
-                "fr": "1. Introduction et Configuration",
-                "de": "1. Einführung und Einrichtung",
-                "zh": "1. 项目介绍与设置",
-                "ar": "1. مقدمة المشروع والإعداد"
+                "es": "1. Introducción al Proyecto y Configuración"
             },
             "duracao": {
                 "pt": "Leitura: 15 min",
                 "en": "Read: 15 min",
-                "es": "Lectura: 15 min",
-                "fr": "Lecture: 15 min",
-                "de": "Lesen: 15 min",
-                "zh": "阅读: 15 分钟",
-                "ar": "قراءة: 15 دقيقة"
+                "es": "Lectura: 15 min"
             },
             "status": "completa",
             "content": {
-                "pt": "# Bem-vindo ao Mundo React!\n\nNesta primeira aula, vamos configurar nosso ambiente de desenvolvimento com **Vite** e entender os **fundamentos da Engenharia da Reatividade**.\n\n### A Evolução do Desenvolvimento Declarativo\nA transição do modelo imperativo (JS tradicional) para o **declarativo** (React) é a pedra angular do domínio técnico. No modelo imperativo, você descreve *como* manipular o DOM passo-a-passo. No React, você define *o que* quer ver (o estado desejado), e a biblioteca reconcilia o DOM para você.\n\n### Virtual DOM\nO React não manipula o DOM real diretamente em primeira instância. Ele usa uma representação intermediária leve, o **Virtual DOM**. Isso permite algoritmos de reconciliação otimizados (Complexidade O(n)), garantindo performance mesmo em SPAs complexas.\n\n### Setup com Vite\n1. `npm create vite@latest meu-projeto -- --template react`\n2. `cd meu-projeto`\n3. `npm install`\n4. `npm run dev`",
-                "en": "# Welcome to the React World!\n\nIn this first lesson, we will set up our development environment to work with React professionally and efficiently. We will use **Vite**, an extremely fast build tool that replaces the old Create React App.\n\n### What is Vite?\n\nVite is a build tool that aims to provide a faster and leaner development experience for modern web projects. It serves your code via native ES modules (ESM) during development and bundles your code with Rollup for production.\n\n### Installation Steps\n\n1.  Ensure you have **Node.js** installed (version 14+).\n2.  Open your terminal.\n3.  Run the create command.\n\n```bash\nnpm create vite@latest my-project -- --template react\n```\n\n4.  Enter the project folder and install dependencies:\n\n```bash\ncd my-project\nnpm install\nnpm run dev\n```\n\nDone! Your local server will be running at `http://localhost:5173`.",
-                "es": "# ¡Bienvenido al Mundo React!\n\nEn esta primera lección, configuraremos nuestro entorno de desarrollo para trabajar con React de manera profesional y eficiente. Utilizaremos **Vite**, una herramienta de compilación extremadamente rápida que reemplaza al antiguo Create React App.\n\n### ¿Qué es Vite?\n\nVite es una herramienta de compilación que tiene como objetivo proporcionar una experiencia de desarrollo más rápida y ligera para proyectos web modernos. Sirve su código a través de módulos ES nativos (ESM) durante el desarrollo y agrupa su código con Rollup para producción.\n\n### Pasos de Instalación\n\n1.  Asegúrate de tener **Node.js** instalado (versión 14+).\n2.  Abre tu terminal.\n3.  Ejecuta el comando de creación.\n\n```bash\nnpm create vite@latest mi-proyecto -- --template react\n```\n\n4.  Entra en la carpeta del proyecto e instala las dependencias:\n\n```bash\ncd mi-proyecto\nnpm install\nnpm run dev\n```\n\n¡Listo! Tu servidor local se estará ejecutando en `http://localhost:5173`.",
-                "fr": "# Bienvenue dans le monde React !\n\nDans cette première leçon, nous allons configurer notre environnement de développement pour travailler avec React de manière professionnelle et efficace. Nous utiliserons **Vite**, un outil de build extrêmement rapide qui remplace l'ancien Create React App.",
-                "de": "# Willkommen in der React-Welt!\n\nIn dieser ersten Lektion richten wir unsere Entwicklungsumgebung ein, um professionell und effizient mit React zu arbeiten. Wir verwenden **Vite**, ein extrem schnelles Build-Tool, das die alte Create React App ersetzt.",
-                "zh": "# 欢迎来到 React 世界！\n\n在这第一课中，我们将配置开发环境，以便专业高效地使用 React。我们将使用 **Vite**，这是一个极快的构建工具，取代了旧的 Create React App。",
-                "ar": "# مرحبًا بك في عالم React!\n\nفي هذا الدرس الأول، سنقوم بإعداد بيئة التطوير الخاصة بنا للعمل مع React بشكل احترافي وفعال. سنستخدم **Vite**، وهي أداة بناء سريعة للغاية تحل محل Create React App القديم."
+                "pt": "# Fundamentos do React\n\nReact mudou a forma como construímos interfaces. Ao invés de manipulação direta do DOM, usamos um modelo declarativo.\n\n### Virtual DOM\nO React mantém uma cópia leve do DOM em memória para calcular a forma mais eficiente de atualizar a tela (Reconciliação).\n\n### Setup Profissional\nHoje usamos **Vite** para criar projetos:\n```bash\nnpm create vite@latest meu-app -- --template react\n```\nIsso gera um ambiente moderno e rápido.",
+                "en": "# React Fundamentals\n\nReact changed UI development. We use declarative code instead of direct DOM manipulation.\n\n### Virtual DOM\nReact keeps a memory copy of the DOM to update UI efficiently (Reconciliation).\n\n### Professional Setup\nUse **Vite**:\n```bash\nnpm create vite@latest my-app\n```"
             },
             "exercise": {
                 "instructions": {
-                    "pt": "Crie um novo projeto React usando Vite, limpe o arquivo App.jsx deixando apenas uma div com um H1 escrito 'Olá Mundo React'.",
-                    "en": "Create a new React project using Vite, clean the App.jsx file leaving only a div with an H1 saying 'Hello World React'.",
-                    "es": "Crea un nuevo proyecto React usando Vite, limpia el archivo App.jsx dejando solo un div con un H1 que diga 'Hola Mundo React'.",
-                    "fr": "Créez un nouveau projet React avec Vite, nettoyez App.jsx en ne laissant qu'une div avec un H1 'Bonjour Monde React'.",
-                    "de": "Erstellen Sie ein neues React-Projekt mit Vite, bereinigen Sie App.jsx und lassen Sie nur ein div mit einem H1 'Hallo Welt React' übrig.",
-                    "zh": "使用 Vite 创建一个新的 React 项目，清理 App.jsx，只保留一个包含 H1 'Hello World React' 的 div。",
-                    "ar": "قم بإنشاء مشروع React جديد باستخدام Vite، ونظف ملف App.jsx مع ترك div واحد فقط بـ H1 يقول 'Hello World React'."
+                    "pt": "Instale o Node.js e crie um novo projeto com o comando do Vite.",
+                    "en": "Install Node.js and create a project with Vite.",
+                    "es": "Instala Node.js y crea un proyecto con Vite."
                 },
-                "code": "function App() {\n  return (\n    <div>\n      <h1>Olá Mundo React</h1>\n    </div>\n  )\n}\n\nexport default App",
+                "code": "npm create vite@latest my-project -- --template react\ncd my-project\nnpm install\nnpm run dev",
                 "solution": {
-                    "pt": "Basta remover todo o boilerplate que vem no App.jsx e substituir pelo código acima.",
-                    "en": "Just remove all the boilerplate that comes in App.jsx and replace it with the code above.",
-                    "es": "Simplemente elimina todo el boilerplate que viene en App.jsx y reemplázalo con el código anterior.",
-                    "fr": "Supprimez simplement tout le boilerplate dans App.jsx et remplacez-le par le code ci-dessus.",
-                    "de": "Entfernen Sie einfach den gesamten Boilerplate in App.jsx und ersetzen Sie ihn durch den obigen Code.",
-                    "zh": "只需删除 App.jsx 中的所有样板代码，并将其替换为上面的代码。",
-                    "ar": "ما عليك سوى إزالة كل النموذج المعياري في App.jsx واستبداله بالكود أعلاه."
+                    "pt": "Siga os passos no terminal para rodar o app.",
+                    "en": "Follow terminal steps to run app.",
+                    "es": "Sigue pasos en terminal."
                 }
-            }
+            },
+            "questions": [
+                {
+                    "id": 1,
+                    "text": {
+                        "pt": "Qual ferramenta substitui o Create React App?",
+                        "en": "What replaces CRA?"
+                    },
+                    "options": [
+                        "Vite",
+                        "Webpack",
+                        "Babel",
+                        "Gulp"
+                    ],
+                    "correct": 0
+                },
+                {
+                    "id": 2,
+                    "text": {
+                        "pt": "O que é o Virtual DOM?",
+                        "en": "What is Virtual DOM?"
+                    },
+                    "options": [
+                        "Uma cópia leve do DOM na memória",
+                        "O DOM do navegador",
+                        "Um banco de dados",
+                        "Um servidor"
+                    ],
+                    "correct": 0
+                }
+            ]
         },
         {
             "titulo": {
-                "pt": "2. Criando Componentes e Props",
-                "en": "2. Creating Components and Props",
-                "es": "2. Creando Componentes y Props",
-                "fr": "2. Création de Composants et Props",
-                "de": "2. Erstellen von Komponenten und Requisiten",
-                "zh": "2. 创建组件和属性",
-                "ar": "2. إنشاء المكونات والخصائص"
+                "pt": "2. Componentes e Props",
+                "en": "2. Components & Props",
+                "es": "2. Componentes y Props"
             },
             "duracao": {
                 "pt": "Leitura: 20 min",
                 "en": "Read: 20 min",
-                "es": "Lectura: 20 min",
-                "fr": "Lecture: 20 min",
-                "de": "Lesen: 20 min",
-                "zh": "阅读: 20 分钟",
-                "ar": "قراءة: 20 دقيقة"
+                "es": "Lectura: 20 min"
             },
-            "status": "completa",
+            "status": "livre",
             "content": {
-                "pt": "# Componentes e Props\n\nO React é baseado em **Componentes**. Componentes permitem dividir a UI em pedaços independentes e reutilizáveis, e pensar sobre cada pedaço isoladamente.\n\n### O que são Props?\nProps (propriedades) são a forma como passamos dados de um componente pai para um componente filho. Elas são somente leitura.\n\n```jsx\nfunction Welcome(props) {\n  return <h1>Olá, {props.name}</h1>;\n}\n```",
-                "en": "# Components and Props\n\nReact is based on **Components**. Components let you split the UI into independent, reusable pieces, and think about each piece in isolation.\n\n### What are Props?\nProps (properties) are how we pass data from a parent component to a child component. They are read-only.",
-                "es": "# Componentes y Props\n\nReact se basa en **Componentes**. Los componentes te permiten dividir la interfaz de usuario en piezas independientes y reutilizables, y pensar en cada pieza de forma aislada.\n\n### ¿Qué son las Props?\nLas props (propiedades) son la forma en que pasamos datos de un componente padre a un componente hijo. Son de solo lectura.",
-                "fr": "# Composants et Props\n\nReact est basé sur des **Composants**. Les composants vous permettent de diviser l'interface utilisateur en éléments indépendants et réutilisables.\n\n### Que sont les Props ?\nLes props (propriétés) sont le moyen de passer des données d'un composant parent à un composant enfant.",
-                "de": "# Komponenten und Props\n\nReact basiert auf **Komponenten**. Komponenten ermöglichen es Ihnen, die Benutzeroberfläche in unabhängige, wiederverwendbare Teile zu unterteilen.",
-                "zh": "# 组件和 Props\n\nReact 基于**组件**。组件允许您将 UI 拆分为独立的可重用部分。",
-                "ar": "# المكونات والخصائص\n\nيعتمد React على **المكونات**. تتيح لك المكونات تقسيم واجهة المستخدم إلى أجزاء مستقلة وقابلة لإعادة الاستخدام."
+                "pt": "# Tudo é Componente\n\nComponentes são funções que retornam JSX (HTML + JS).\n\n### Props\nProps são argumentos passados para componentes. São **somente leitura**.\n\n```jsx\nfunction Card({ titulo }) {\n  return <h2>{titulo}</h2>;\n}\n```\n\nNunca modifique suas props diretamente!",
+                "en": "# Everything is a Component\n\nComponents are functions returning JSX.\n\n### Props\nProps are arguments passed to components. They are **read-only**.\n\n```jsx\nfunction Card({ title }) {\n  return <h2>{title}</h2>;\n}\n```"
             },
             "exercise": {
                 "instructions": {
-                    "pt": "Crie um componente chamado 'Cartao' que receba 'titulo' e 'conteudo' via props e renderize-os.",
-                    "en": "Create a component called 'Card' that receives 'title' and 'content' via props and renders them.",
-                    "es": "Crea un componente llamado 'Tarjeta' que reciba 'titulo' y 'contenido' a través de props y los renderice."
+                    "pt": "Crie um componente Botao que recebe 'label' e 'cor' via props.",
+                    "en": "Create Button component with label and color props.",
+                    "es": "Crea componente Boton con props label y color."
                 },
-                "code": "function Cartao(props) {\n  return (\n    <div className=\"card\">\n      <h2>{props.titulo}</h2>\n      <p>{props.conteudo}</p>\n    </div>\n  );\n}",
+                "code": "function Botao({ label, cor }) {\n  return <button style={{ backgroundColor: cor }}>{label}</button>;\n}",
                 "solution": {
-                    "pt": "Defina a função Cartao acessando props.titulo e props.conteudo dentro do JSX.",
-                    "en": "Define the Card function accessing props.title and props.content inside JSX.",
-                    "es": "Define la función Tarjeta accediendo a props.titulo y props.contenido dentro de JSX."
+                    "pt": "Desestruture as props na função.",
+                    "en": "Destructure props.",
+                    "es": "Desestructura props."
                 }
-            }
+            },
+            "questions": [
+                {
+                    "id": 1,
+                    "text": {
+                        "pt": "As props são:",
+                        "en": "Props are:"
+                    },
+                    "options": [
+                        "Imutáveis (leitura)",
+                        "Mutáveis (escrita)",
+                        "Globais",
+                        "Locais"
+                    ],
+                    "correct": 0
+                },
+                {
+                    "id": 2,
+                    "text": {
+                        "pt": "O que um componente React deve retornar?",
+                        "en": "What must a component return?"
+                    },
+                    "options": [
+                        "JSX",
+                        "HTML String",
+                        "JSON",
+                        "Nada"
+                    ],
+                    "correct": 0
+                }
+            ]
         },
         {
             "titulo": {
                 "pt": "3. Gerenciamento de Estado (useState)",
                 "en": "3. State Management (useState)",
-                "es": "3. Gestión de Estado (useState)",
-                "fr": "3. Gestion d'État (useState)",
-                "de": "3. Zustandsverwaltung (useState)",
-                "zh": "3. 状态管理 (useState)",
-                "ar": "3. إدارة الحالة (useState)"
+                "es": "3. Gestión de Estado (useState)"
             },
             "duracao": {
                 "pt": "Leitura: 25 min",
                 "en": "Read: 25 min",
-                "es": "Lectura: 25 min",
-                "fr": "Lecture: 25 min",
-                "de": "Lesen: 25 min",
-                "zh": "阅读: 25 分钟",
-                "ar": "قراءة: 25 دقيقة"
+                "es": "Lectura: 25 min"
             },
-            "status": "completa",
+            "status": "livre",
             "content": {
-                "pt": "# useState: O Hook Mais Importante\n\nO `useState` é um Hook que permite adicionar estado ao React em componentes funcionais.\n\n### Exemplo Básico\n\n```jsx\nimport React, { useState } from 'react';\n\nfunction Exemplo() {\n  const [count, setCount] = useState(0);\n\n  return (\n    <div>\n      <p>Você clicou {count} vezes</p>\n      <button onClick={() => setCount(count + 1)}>\n        Clique aqui\n      </button>\n    </div>\n  );\n}\n```",
-                "en": "# useState: The Most Important Hook\n\n`useState` is a Hook that lets you add React state to function components.\n\n### Basic Example\n\n```jsx\nimport React, { useState } from 'react';\n\nfunction Example() {\n  const [count, setCount] = useState(0);\n\n  return (\n    <div>\n      <p>You clicked {count} times</p>\n      <button onClick={() => setCount(count + 1)}>\n        Click me\n      </button>\n    </div>\n  );\n}\n```",
-                "es": "# useState: El Hook Más Importante\n\n`useState` es un Hook que te permite añadir estado de React a componentes funcionales."
+                "pt": "# Estado: A Memória do Componente\n\nPara interatividade, usamos **State**.\n\n### useState Hook\n```jsx\nconst [valor, setValor] = useState(inicial);\n```\nChamar `setValor` avisa o React para re-renderizar o componente com a nova informação.\n\n### Regra de Ouro\nNunca mude o estado diretamente (`valor = 10`). Sempre use a função set (`setValor(10)`).",
+                "en": "# State: Component Memory\n\nFor interactivity, we use **State**.\n\n### useState Hook\n```jsx\nconst [value, setValue] = useState(initial);\n```\nCalling `setValue` triggers a re-render."
             },
             "exercise": {
                 "instructions": {
-                    "pt": "Implemente um botão que alterna entre 'Ligado' e 'Desligado' ao ser clicado, e muda a cor do fundo.",
-                    "en": "Implement a button that toggles between 'On' and 'Off' when clicked, and changes the background color.",
-                    "es": "Implementa un botón que alterne entre 'Encendido' y 'Apagado' al hacer clic, y cambie el color de fondo."
+                    "pt": "Crie um contador simples.",
+                    "en": "Create a simple counter.",
+                    "es": "Crea un contador simple."
                 },
-                "code": "function Interruptor() {\n  const [ligado, setLigado] = useState(false);\n  return (\n    <button \n      style={{ background: ligado ? 'green' : 'red' }}\n      onClick={() => setLigado(!ligado)}\n    >\n      {ligado ? 'Ligado' : 'Desligado'}\n    </button>\n  );\n}",
+                "code": "const [count, setCount] = useState(0);\n// ... button onClick={() => setCount(count+1)}",
                 "solution": {
-                    "pt": "Use um booleano no estado e o operador ternário (!ligado) para inverter o valor.",
-                    "en": "Use a boolean in state and the ternary operator (!on) to flip the value.",
-                    "es": "Usa un booleano en el estado y el operador ternario (!encendido) para invertir el valor."
+                    "pt": "Use setCount para incrementar.",
+                    "en": "Use setCount to increment.",
+                    "es": "Usa setCount para incrementar."
                 }
-            }
+            },
+            "questions": [
+                {
+                    "id": 1,
+                    "text": {
+                        "pt": "O que dispara uma re-renderização?",
+                        "en": "What triggers re-render?"
+                    },
+                    "options": [
+                        "Mudança de Estado (State)",
+                        "Mudança de variável let",
+                        "Console.log",
+                        "Comentário"
+                    ],
+                    "correct": 0
+                },
+                {
+                    "id": 2,
+                    "text": {
+                        "pt": "Podemos usar hooks dentro de loops?",
+                        "en": "Can we use hooks in loops?"
+                    },
+                    "options": [
+                        "Não, nunca",
+                        "Sim",
+                        "Às vezes",
+                        "Se for loop curto"
+                    ],
+                    "correct": 0
+                }
+            ]
         },
         {
             "titulo": {

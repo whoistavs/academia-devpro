@@ -29,6 +29,10 @@ const LessonView = () => {
     const lessonIndex = parseInt(id);
 
 
+    // Scroll to top when lesson changes (Backup safety)
+    React.useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'instant' });
+    }, [slug, id]);
 
     if (!course || !course.aulas || !course.aulas[lessonIndex]) {
         return <div className="text-center mt-20 text-gray-500">Aula não encontrada.</div>;
@@ -42,7 +46,6 @@ const LessonView = () => {
     const isLocked = lessonIndex > 0 && !isLessonCompleted(course.id, lessonIndex - 1);
 
     // If locked, redirect or show lock screen.
-    // However, sidebar link might be clicked. Better show "Locked" UI here.
     if (isLocked) {
         return (
             <main className="flex-grow pt-16 bg-gray-50 dark:bg-gray-900 min-h-screen flex items-center justify-center">
@@ -68,6 +71,10 @@ const LessonView = () => {
     const completed = isLessonCompleted(course.id, lessonIndex);
 
     const handleQuizPass = () => {
+        markLessonComplete(course.id, lessonIndex);
+    };
+
+    const handleManualComplete = () => {
         markLessonComplete(course.id, lessonIndex);
     };
 
@@ -106,20 +113,39 @@ const LessonView = () => {
                             <ReactMarkdown>{getContent(lesson.content)}</ReactMarkdown>
                         </div>
 
-                        {lesson.questions && !completed && (
-                            <LessonQuiz
-                                questions={lesson.questions}
-                                onPass={handleQuizPass}
-                                language={currentLang}
-                            />
+                        {/* Logic: If Quiz Exists, show Quiz. If NOT, show 'Complete' button if not completed */}
+                        {lesson.questions && lesson.questions.length > 0 ? (
+                            !completed && (
+                                <LessonQuiz
+                                    questions={lesson.questions}
+                                    onPass={handleQuizPass}
+                                    language={currentLang}
+                                />
+                            )
+                        ) : (
+                            !completed && (
+                                <div className="bg-indigo-50 dark:bg-indigo-900/20 p-6 rounded-xl border border-indigo-100 dark:border-indigo-800 text-center">
+                                    <h3 className="text-lg font-bold text-indigo-900 dark:text-indigo-300 mb-4">
+                                        Conteúdo Estudado?
+                                    </h3>
+                                    <button
+                                        onClick={handleManualComplete}
+                                        className="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-bold shadow-lg transition-transform transform hover:scale-105"
+                                    >
+                                        Marcar como Concluída
+                                    </button>
+                                </div>
+                            )
                         )}
 
                         {completed && (
-                            <div className="bg-green-100 dark:bg-green-900/30 border border-green-200 dark:border-green-800 p-4 rounded-lg flex items-center gap-3">
+                            <div className="bg-green-100 dark:bg-green-900/30 border border-green-200 dark:border-green-800 p-4 rounded-lg flex items-center gap-3 animate-fade-in">
                                 <CheckCircle className="text-green-600 dark:text-green-400 w-6 h-6" />
                                 <div>
                                     <h4 className="font-bold text-green-800 dark:text-green-300">Aula Concluída!</h4>
-                                    <p className="text-green-700 dark:text-green-400 text-sm">Você já passou no teste desta aula.</p>
+                                    <p className="text-green-700 dark:text-green-400 text-sm">
+                                        {lesson.questions ? 'Você passou no teste.' : 'Você finalizou esta aula.'}
+                                    </p>
                                 </div>
                             </div>
                         )}
@@ -137,14 +163,14 @@ const LessonView = () => {
                             {/* Only show Next button if completed */}
                             {completed ? (
                                 <Link
-                                    to={lessonIndex < totalLessons - 1 ? `/curso/${slug}/aula/${lessonIndex + 1}` : `/curso/${slug}/quiz`} // Redirect to Final Quiz if last lesson
+                                    to={lessonIndex < totalLessons - 1 ? `/curso/${slug}/aula/${lessonIndex + 1}` : `/curso/${slug}/prova`}
                                     className="px-6 py-3 rounded-lg font-medium transition-colors bg-indigo-600 text-white hover:bg-indigo-700 shadow-lg shadow-indigo-200 dark:shadow-none"
                                 >
                                     {lessonIndex < totalLessons - 1 ? 'Próxima Aula \u2192' : 'Fazer Prova Final'}
                                 </Link>
                             ) : (
                                 <button disabled className="px-6 py-3 rounded-lg font-medium bg-gray-300 dark:bg-gray-700 text-gray-500 cursor-not-allowed">
-                                    Conclua o Teste para Avançar
+                                    {lesson.questions ? 'Conclua o Teste para Avançar' : 'Conclua a Aula para Avançar'}
                                 </button>
                             )}
                         </div>
