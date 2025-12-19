@@ -41,6 +41,36 @@ const db = {
                 callback(err, null);
             }
         },
+        update: (query, updateObj, options, callback) => {
+            try {
+                const data = fs.readFileSync(DB_FILE);
+                let users = JSON.parse(data);
+                let numReplaced = 0;
+
+                users = users.map(u => {
+                    let match = true;
+                    for (let key in query) {
+                        if (u[key] !== query[key]) match = false;
+                    }
+                    if (match) {
+                        // Handle $set logic manually since this is a mock DB
+                        if (updateObj.$set) {
+                            u = { ...u, ...updateObj.$set };
+                        } else {
+                            // simple overwrite if no $set? logic in index.js uses $set
+                        }
+                        numReplaced++;
+                        return u;
+                    }
+                    return u;
+                });
+
+                fs.writeFileSync(DB_FILE, JSON.stringify(users, null, 2));
+                callback(null, numReplaced); // NeDB style returns numReplaced
+            } catch (err) {
+                callback(err, null);
+            }
+        },
         remove: (query, callback) => {
             try {
                 const data = fs.readFileSync(DB_FILE);
