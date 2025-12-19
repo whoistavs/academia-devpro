@@ -42,8 +42,36 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem('user', JSON.stringify(userData));
     };
 
+    // Progress Tracking
+    const [completedLessons, setCompletedLessons] = useState({}); // { 'courseId': [0, 1, 2] }
+
+    useEffect(() => {
+        const storedProgress = localStorage.getItem('completedLessons');
+        if (storedProgress) {
+            setCompletedLessons(JSON.parse(storedProgress));
+        }
+    }, []);
+
+    const markLessonComplete = (courseId, lessonIndex) => {
+        setCompletedLessons(prev => {
+            const courseProgress = prev[courseId] || [];
+            if (courseProgress.includes(lessonIndex)) return prev;
+
+            const newProgress = {
+                ...prev,
+                [courseId]: [...courseProgress, lessonIndex]
+            };
+            localStorage.setItem('completedLessons', JSON.stringify(newProgress));
+            return newProgress;
+        });
+    };
+
+    const isLessonCompleted = (courseId, lessonIndex) => {
+        return completedLessons[courseId]?.includes(lessonIndex);
+    };
+
     return (
-        <AuthContext.Provider value={{ user, token, isAuthenticated, login, logout, updateUser, loading }}>
+        <AuthContext.Provider value={{ user, token, isAuthenticated, login, logout, updateUser, loading, markLessonComplete, isLessonCompleted, completedLessons }}>
             {children}
         </AuthContext.Provider>
     );

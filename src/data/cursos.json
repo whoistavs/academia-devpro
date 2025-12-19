@@ -493,645 +493,831 @@
                     "es": "Usa inputRef.current.focus() dentro del useEffect de montaje."
                 }
             }
-            {
-                "id": 1,
-                "question": {
-                    "pt": "O que é o React?",
-                    "en": "What is React?",
-                    "es": "¿Qué es React?"
+        "quiz": [
+                {
+                    "id": 1,
+                    "question": {
+                        "pt": "O que é o React?",
+                        "en": "What is React?"
+                    },
+                    "options": {
+                        "pt": [
+                            "Biblioteca JS",
+                            "Framework CSS",
+                            "Banco de dados",
+                            "Linguagem"
+                        ],
+                        "en": [
+                            "JS Lib",
+                            "CSS Framework",
+                            "DB",
+                            "Language"
+                        ]
+                    },
+                    "correctAnswer": 0
                 },
-                "options": {
-                    "pt": [
-                        "Uma linguagem de programação",
-                        "Uma biblioteca JavaScript para interfaces",
-                        "Um banco de dados",
-                        "Um framework CSS"
-                    ],
-                    "en": [
-                        "A programming language",
-                        "A JavaScript library for interfaces",
-                        "A database",
-                        "A CSS framework"
-                    ],
-                    "es": [
-                        "Un lenguaje de programación",
-                        "Una biblioteca JavaScript para interfaces",
-                        "Una base de datos",
-                        "Un framework CSS"
-                    ]
+                {
+                    "id": 2,
+                    "question": {
+                        "pt": "Qual hook gerencia estado?",
+                        "en": "Which hook manages state?"
+                    },
+                    "options": {
+                        "pt": [
+                            "useState",
+                            "useEffect",
+                            "useContext",
+                            "useReducer"
+                        ],
+                        "en": [
+                            "useState",
+                            "useEffect",
+                            "useContext",
+                            "useReducer"
+                        ]
+                    },
+                    "correctAnswer": 0
                 },
-                "correctAnswer": 1
+                {
+                    "id": 3,
+                    "question": {
+                        "pt": "Como passar dados para filhos?",
+                        "en": "How to pass data to children?"
+                    },
+                    "options": {
+                        "pt": [
+                            "Props",
+                            "State",
+                            "Redux",
+                            "Context"
+                        ],
+                        "en": [
+                            "Props",
+                            "State",
+                            "Redux",
+                            "Context"
+                        ]
+                    },
+                    "correctAnswer": 0
+                },
+                {
+                    "id": 4,
+                    "question": {
+                        "pt": "useEffect lida com?",
+                        "en": "useEffect handles?"
+                    },
+                    "options": {
+                        "pt": [
+                            "Efeitos colaterais",
+                            "Renderização",
+                            "Estilo",
+                            "Roteamento"
+                        ],
+                        "en": [
+                            "Side effects",
+                            "Rendering",
+                            "Style",
+                            "Routing"
+                        ]
+                    },
+                    "correctAnswer": 0
+                },
+                {
+                    "id": 5,
+                    "question": {
+                        "pt": "O que é JSX?",
+                        "en": "What is JSX?"
+                    },
+                    "options": {
+                        "pt": [
+                            "Sintaxe que parece HTML",
+                            "Uma função",
+                            "Um componente",
+                            "Uma biblioteca"
+                        ],
+                        "en": [
+                            "HTML-like syntax",
+                            "A function",
+                            "A component",
+                            "A library"
+                        ]
+                    },
+                    "correctAnswer": 0
+                },
+                {
+                    "id": 6,
+                    "question": {
+                        "pt": "Qual o padrão para listas?",
+                        "en": "Standard for lists?"
+                    },
+                    "options": {
+                        "pt": [
+                            "Usar keys",
+                            "Usar index",
+                            "Não usar nada",
+                            "Usar ids aleatórios"
+                        ],
+                        "en": [
+                            "Use keys",
+                            "Use index",
+                            "Nothing",
+                            "Random IDs"
+                        ]
+                    },
+                    "correctAnswer": 0
+                },
+                {
+                    "id": 7,
+                    "question": {
+                        "pt": "O que é o Virtual DOM?",
+                        "en": "What is Virtual DOM?"
+                    },
+                    "options": {
+                        "pt": [
+                            "Representação na memória",
+                            "DOM do Browser",
+                            "HTML puro",
+                            "XML"
+                        ],
+                        "en": [
+                            "In-memory representation",
+                            "Browser DOM",
+                            "Pure HTML",
+                            "XML"
+                        ]
+                    },
+                    "correctAnswer": 0
+                },
+                {
+                    "id": 8,
+                    "question": {
+                        "pt": "Para que serve o useRef?",
+                        "en": "What is useRef for?"
+                    },
+                    "options": {
+                        "pt": [
+                            "Referências mutáveis",
+                            "Estado reativo",
+                            "Efeitos",
+                            "Contexto"
+                        ],
+                        "en": [
+                            "Mutable refs",
+                            "Reactive state",
+                            "Effects",
+                            "Context"
+                        ]
+                    },
+                    "correctAnswer": 0
+                },
+                {
+                    "id": 9,
+                    "question": {
+                        "pt": "O que são Componentes Controlados?",
+                        "en": "What are Controlled Components?"
+                    },
+                    "options": {
+                        "pt": [
+                            "Formulários geridos pelo React",
+                            "Componentes HTML puros",
+                            "Inputs sem estado",
+                            "Botões"
+                        ],
+                        "en": [
+                            "React managed forms",
+                            "Pure HTML",
+                            "Stateless inputs",
+                            "Buttons"
+                        ]
+                    },
+                    "correctAnswer": 0
+                },
+                {
+                    "id": 10,
+                    "question": {
+                        "pt": "Qual método cria o contexto?",
+                        "en": "Method to create context?"
+                    },
+                    "options": {
+                        "pt": [
+                            "createContext",
+                            "useContext",
+                            "Context.Provider",
+                            "Context.Consumer"
+                        ],
+                        "en": [
+                            "createContext",
+                            "useContext",
+                            "Provider",
+                            "Consumer"
+                        ]
+                    },
+                    "correctAnswer": 0
+                },
+                {
+                    "id": 11,
+                    "question": {
+                        "pt": "O que é Prop Drilling?",
+                        "en": "What is Prop Drilling?"
+                    },
+                    "options": {
+                        "pt": [
+                            "Passar props por muitos níveis",
+                            "Furar o monitor",
+                            "Deletar props",
+                            "Criar props"
+                        ],
+                        "en": [
+                            "Passing props deep",
+                            "Drilling monitor",
+                            "Deleting props",
+                            "Creating props"
+                        ]
+                    },
+                    "correctAnswer": 0
+                },
+                {
+                    "id": 12,
+                    "question": {
+                        "pt": "React Router serve para?",
+                        "en": "React Router is for?"
+                    },
+                    "options": {
+                        "pt": [
+                            "Navegação SPA",
+                            "Requisições HTTP",
+                            "Gerenciar Estado",
+                            "Estilização"
+                        ],
+                        "en": [
+                            "SPA Navigation",
+                            "HTTP Requests",
+                            "State Mgmt",
+                            "Styling"
+                        ]
+                    },
+                    "correctAnswer": 0
+                },
+                {
+                    "id": 13,
+                    "question": {
+                        "pt": "O que é SPA?",
+                        "en": "What is SPA?"
+                    },
+                    "options": {
+                        "pt": [
+                            "Single Page Application",
+                            "Simple Page App",
+                            "Super Page App",
+                            "Site Para Amigos"
+                        ],
+                        "en": [
+                            "Single Page Application",
+                            "Simple Page App",
+                            "Super Page App",
+                            "Site For Friends"
+                        ]
+                    },
+                    "correctAnswer": 0
+                },
+                {
+                    "id": 14,
+                    "question": {
+                        "pt": "Qual hook substitui o componentDidMount?",
+                        "en": "Hook replacing componentDidMount?"
+                    },
+                    "options": {
+                        "pt": [
+                            "useEffect([])",
+                            "useState",
+                            "useLayoutEffect",
+                            "useMemo"
+                        ],
+                        "en": [
+                            "useEffect([])",
+                            "useState",
+                            "useLayoutEffect",
+                            "useMemo"
+                        ]
+                    },
+                    "correctAnswer": 0
+                },
+                {
+                    "id": 15,
+                    "question": {
+                        "pt": "O que o React.memo faz?",
+                        "en": "What does React.memo do?"
+                    },
+                    "options": {
+                        "pt": [
+                            "Memoriza componente (performance)",
+                            "Memoriza estado",
+                            "Cria memória",
+                            "Nada"
+                        ],
+                        "en": [
+                            "Memoizes component",
+                            "Memoizes state",
+                            "Creates memory",
+                            "Nothing"
+                        ]
+                    },
+                    "correctAnswer": 0
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "slug": "api-rest-node-express",
+            "title": {
+                "pt": "API REST com Node.js e Express",
+                "en": "REST API with Node.js and Express",
+                "es": "API REST con Node.js y Express",
+                "fr": "API REST avec Node.js et Express",
+                "de": "REST-API mit Node.js und Express",
+                "zh": "使用 Node.js 和 Express 的 REST API",
+                "ar": "REST API مع Node.js و Express"
+            },
+            "category": "Back-end",
+            "description": {
+                "pt": "Construa APIs robustas e escaláveis usando Node.js e Express.",
+                "en": "Build robust and scalable APIs using Node.js and Express.",
+                "es": "Construye APIs robustas y escalables usando Node.js y Express.",
+                "fr": "Construisez des API robustes et évolutives.",
+                "de": "Erstellen Sie robuste und skalierbare APIs.",
+                "zh": "构建健壮且可扩展的 API。",
+                "ar": "بناء واجهات برمجة تطبيقات قوية وقابلة للتطوير."
+            },
+            "descricaoCompleta": {
+                "pt": "Desenvolva o backend de aplicações web modernas utilizando Node.js e o framework Express. Este curso cobre todo o processo de criação de uma API RESTful.",
+                "en": "Develop the backend of modern web applications using Node.js and the Express framework. This course covers the entire process of creating a RESTful API.",
+                "es": "Desarrolla el backend de aplicaciones web modernas utilizando Node.js y el framework Express. Este curso cubre todo el proceso de creación de una API RESTful.",
+                "fr": "Développez le backend d'applications web modernes.",
+                "de": "Entwickeln Sie das Backend moderner Webanwendungen.",
+                "zh": "开发现代 Web 应用程序的后端。",
+                "ar": "تطوير الواجهة الخلفية لتطبيقات الويب الحديثة."
+            },
+            "modulos": [
+                "Fundamentos",
+                "Express",
+                "MongoDB",
+                "Auth",
+                "Arquitetura e Clean Code",
+                "Segurança com JWT"
+            ],
+            "duration": "35h",
+            "level": {
+                "pt": "Avançado",
+                "en": "Advanced",
+                "es": "Avanzado",
+                "fr": "Avancé",
+                "de": "Fortgeschritten",
+                "zh": "高级",
+                "ar": "متقدم"
+            },
+            "image": "https://images.unsplash.com/photo-1627398242454-45a1465c2479?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            "aulas": [
+                {
+                    "titulo": {
+                        "pt": "1. Introdução ao Node.js",
+                        "en": "1. Intro to Node.js",
+                        "es": "1. Introducción a Node.js",
+                        "fr": "1. Introduction à Node.js",
+                        "de": "1. Einführung in Node.js",
+                        "zh": "1. Node.js 简介",
+                        "ar": "1. مقدمة في Node.js"
+                    },
+                    "duracao": {
+                        "pt": "Leitura: 15 min",
+                        "en": "Read: 15 min",
+                        "es": "Lectura: 15 min"
+                    },
+                    "status": "completa",
+                    "content": {
+                        "pt": "# Introdução ao Node.js\n\nO Node.js é um ambiente de execução JavaScript construído sobre o motor V8 do Chrome. Ele permite executar JavaScript fora do navegador, ou seja, no servidor.\n\n### Características Principais\n- **Assíncrono e Orientado a Eventos:** O Node.js não bloqueia a execução enquanto espera por operações de I/O (entrada/saída).\n- **Single Thread:** Ele usa uma única thread com um Loop de Eventos.",
+                        "en": "# Intro to Node.js\n\nNode.js is a JavaScript runtime built on Chrome's V8 JavaScript engine. It allows you to run JavaScript outside the browser, i.e., on the server.\n\n### Key Features\n- **Asynchronous & Event-Driven:** Node.js doesn't block execution while waiting for I/O.\n- **Single Threaded:** It uses a single thread with an Event Loop.",
+                        "es": "# Introducción a Node.js\n\nNode.js es un entorno de ejecución de JavaScript construido sobre el motor de JavaScript V8 de Chrome."
+                    },
+                    "exercise": {
+                        "instructions": {
+                            "pt": "Crie um script simples 'ola.js' que imprima 'Olá, Node!' no terminal.",
+                            "en": "Create a simple script 'hello.js' that prints 'Hello, Node!' to the terminal.",
+                            "es": "Crea un script simple 'hola.js' que imprima '¡Hola, Node!' en la terminal."
+                        },
+                        "code": "console.log('Olá, Node!');",
+                        "solution": {
+                            "pt": "Basta criar o arquivo e rodar `node ola.js` no terminal.",
+                            "en": "Just create the file and run `node hello.js` in the terminal.",
+                            "es": "Simplemente crea el archivo y ejecuta `node hola.js` en la terminal."
+                        }
+                    }
+                },
+                {
+                    "titulo": {
+                        "pt": "2. Criando um Servidor HTTP",
+                        "en": "2. Creating an HTTP Server",
+                        "es": "2. Creando un Servidor HTTP",
+                        "fr": "2. Création d'un serveur HTTP",
+                        "de": "2. Erstellen eines HTTP-Servers",
+                        "zh": "2. 创建 HTTP 服务器",
+                        "ar": "2. إنشاء خادم HTTP"
+                    },
+                    "duracao": {
+                        "pt": "Leitura: 20 min",
+                        "en": "Read: 20 min",
+                        "es": "Lectura: 20 min"
+                    },
+                    "status": "livre",
+                    "content": {
+                        "pt": "# O Módulo HTTP\n\nNode.js possui um módulo nativo chamado `http` que permite criar servidores web sem a necessidade de frameworks externos neste primeiro momento.\n\n```javascript\nconst http = require('http');\n\nconst server = http.createServer((req, res) => {\n  res.statusCode = 200;\n  res.end('Hello World');\n});\n\nserver.listen(3000);\n```",
+                        "en": "# The HTTP Module\n\nNode.js has a built-in module called `http` that allows you to create web servers without external frameworks at this stage.\n\n```javascript\nconst http = require('http');\n\nconst server = http.createServer((req, res) => {\n  res.statusCode = 200;\n  res.end('Hello World');\n});\n\nserver.listen(3000);\n```",
+                        "es": "# El Módulo HTTP\n\nNode.js tiene un módulo integrado llamado `http` que te permite crear servidores web."
+                    },
+                    "exercise": {
+                        "instructions": {
+                            "pt": "Crie um servidor que responda 'Bem-vindo à API' na porta 8080.",
+                            "en": "Create a server that responds 'Welcome to the API' on port 8080.",
+                            "es": "Crea un servidor que responda 'Bienvenido a la API' en el puerto 8080."
+                        },
+                        "code": "http.createServer((req, res) => res.end('Bem-vindo à API')).listen(8080);",
+                        "solution": {
+                            "pt": "Altere a porta no método .listen().",
+                            "en": "Change the port in the .listen() method.",
+                            "es": "Cambia el puerto en el método .listen()."
+                        }
+                    }
+                },
+                {
+                    "titulo": {
+                        "pt": "3. Introdução ao Express",
+                        "en": "3. Intro to Express",
+                        "es": "3. Introducción a Express",
+                        "fr": "3. Introduction à Express",
+                        "de": "3. Einführung in Express",
+                        "zh": "3. Express 简介",
+                        "ar": "3. مقدمة في Express"
+                    },
+                    "duracao": {
+                        "pt": "Leitura: 25 min",
+                        "en": "Read: 25 min",
+                        "es": "Lectura: 25 min"
+                    },
+                    "status": "livre",
+                    "content": {
+                        "pt": "# O Framework Express\n\nExpress é um framework para Node.js mínimo e flexível que fornece um conjunto robusto de recursos para aplicativos web e móveis.\n\n### Instalação\n`npm install express`\n\n### Hello World com Express\n```javascript\nconst express = require('express');\nconst app = express();\n\napp.get('/', (req, res) => {\n  res.send('Hello World!');\n});\n\napp.listen(3000);\n```",
+                        "en": "# The Express Framework\n\nExpress is a minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications.",
+                        "es": "# El Framework Express\n\nExpress es un framework de aplicación web Node.js mínimo y flexible."
+                    },
+                    "exercise": {
+                        "instructions": {
+                            "pt": "Crie uma rota GET '/usuarios' que retorne um JSON com uma lista de nomes.",
+                            "en": "Create a GET route '/users' that returns a JSON with a list of names.",
+                            "es": "Crea una ruta GET '/usuarios' que devuelva un JSON con una lista de nombres."
+                        },
+                        "code": "app.get('/usuarios', (req, res) => {\n  res.json([{name: 'Alice'}, {name: 'Bob'}]);\n});",
+                        "solution": {
+                            "pt": "Use res.json() para enviar arrays ou objetos.",
+                            "en": "Use res.json() to send arrays or objects.",
+                            "es": "Usa res.json() para enviar arrays u objetos."
+                        }
+                    }
+                },
+                {
+                    "titulo": {
+                        "pt": "4. Introdução ao MongoDB",
+                        "en": "4. Intro to MongoDB",
+                        "es": "4. Introducción a MongoDB",
+                        "fr": "4. Introduction à MongoDB",
+                        "de": "4. Einführung in MongoDB",
+                        "zh": "4. MongoDB 简介",
+                        "ar": "4. مقدمة في MongoDB"
+                    },
+                    "duracao": {
+                        "pt": "Leitura: 30 min",
+                        "en": "Read: 30 min",
+                        "es": "Lectura: 30 min"
+                    },
+                    "status": "livre",
+                    "content": {
+                        "pt": "# MongoDB e NoSQL\n\nMongoDB é um banco de dados NoSQL orientado a documentos. Ele armazena dados em documentos do tipo JSON, o que o torna muito flexível e escalável.\n\n### Mongoose\nPara conectar o Node.js ao MongoDB, geralmente usamos o ODM (Object Data Modeling) **Mongoose**.",
+                        "en": "# MongoDB and NoSQL\n\nMongoDB is a document-oriented NoSQL database. It stores data in JSON-like documents, making it very flexible and scalable.\n\n### Mongoose\nTo connect Node.js to MongoDB, we usually use the **Mongoose** ODM.",
+                        "es": "# MongoDB y NoSQL\n\nMongoDB es una base de datos NoSQL orientada a documentos."
+                    },
+                    "exercise": {
+                        "instructions": {
+                            "pt": "Defina um Schema simples para um 'Usuario' com nome e email usando Mongoose.",
+                            "en": "Define a simple Schema for a 'User' with name and email using Mongoose.",
+                            "es": "Define un esquema simple para un 'Usuario' con nombre y correo electrónico usando Mongoose."
+                        },
+                        "code": "const UserSchema = new mongoose.Schema({\n  name: String,\n  email: String\n});",
+                        "solution": {
+                            "pt": "Use mongoose.Schema() passando o objeto de configuração.",
+                            "en": "Use mongoose.Schema() passing the configuration object.",
+                            "es": "Usa mongoose.Schema() pasando el objeto de configuración."
+                        }
+                    }
+                },
+                {
+                    "titulo": {
+                        "pt": "5. Arquitetura e Clean Code",
+                        "en": "5. Architecture & Clean Code",
+                        "es": "5. Arquitectura y Código Limpio"
+                    },
+                    "duracao": {
+                        "pt": "Leitura: 30 min",
+                        "en": "Read: 30 min",
+                        "es": "Lectura: 30 min"
+                    },
+                    "status": "livre",
+                    "content": {
+                        "pt": "# Arquitetura de Software em Node.js\n\nConstruir uma API que escala exige mais do que apenas escrever rotas. A separação de responsabilidades é crucial.\n\n### Padrão MVC (Model-View-Controller)\nEmbora em APIs não tenhamos a 'View' tradicional, a separação entre:\n- **Controllers:** Tratam a requisição HTTP.\n- **Services:** Contêm a regra de negócio.\n- **Models:** Interagem com o banco de dados.\n\n### Clean Code\nMantenha suas funções pequenas, use nomes descritivos e evite o 'Callback Hell' utilizando `async/await`."
+                    },
+                    "exercise": {
+                        "instructions": {
+                            "pt": "Refatore o código conceitual para separar a lógica de banco de dados do controller.",
+                            "en": "Refactor conceptual code.",
+                            "es": "Refactoriza el código conceptual."
+                        },
+                        "code": "// ANTIGO:\napp.get('/users', async (req, res) => {\n  const users = await db.find();\n  res.json(users);\n});",
+                        "solution": {
+                            "pt": "Chame UserService.getAll() dentro do controller.",
+                            "en": "Call UserService.getAll().",
+                            "es": "Llama a UserService.getAll()."
+                        }
+                    }
+                },
+                {
+                    "titulo": {
+                        "pt": "6. Segurança com JWT",
+                        "en": "6. Security with JWT",
+                        "es": "6. Seguridad con JWT"
+                    },
+                    "duracao": {
+                        "pt": "Leitura: 35 min",
+                        "en": "Read: 35 min",
+                        "es": "Lectura: 35 min"
+                    },
+                    "status": "livre",
+                    "content": {
+                        "pt": "# Autenticação via Token (JWT)\n\nAPIs RESTful não devem manter estado (Stateless). Para autenticar usuários entre requisições, utilizamos JSON Web Tokens (JWT).\n\n### Fluxo de Autenticação\n1. O cliente envia credenciais.\n2. O servidor valida e gera um Token.\n3. O cliente envia o Token no Header `Authorization`."
+                    },
+                    "exercise": {
+                        "instructions": {
+                            "pt": "Crie uma função middleware 'verifyToken'.",
+                            "en": "Create 'verifyToken' middleware.",
+                            "es": "Crea función middleware 'verifyToken'."
+                        },
+                        "code": "function verifyToken(req, res, next) {\n  const token = req.headers['authorization'];\n  if (!token) return res.status(403).send('Token required');\n  next();\n}",
+                        "solution": {
+                            "pt": "Verifique req.headers['authorization'].",
+                            "en": "Check req.headers['authorization'].",
+                            "es": "Verifica req.headers['authorization']."
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "slug": "python-data-science",
+            "title": {
+                "pt": "Python para Ciência de Dados e IA",
+                "en": "Python for Data Science & AI",
+                "es": "Python para Ciencia de Datos e IA",
+                "fr": "Python pour la Science des Données et l'IA",
+                "de": "Python für Data Science und KI",
+                "zh": "Python 数据科学与人工智能",
+                "ar": "Python لعلم البيانات والذكاء الاصطناعي"
+            },
+            "category": "Data Science & AI",
+            "description": {
+                "pt": "Aprenda Python, Pandas, Machine Learning e IA Generativa (OpenAI API).",
+                "en": "Learn Python, Pandas, Machine Learning, and Generative AI (OpenAI API).",
+                "es": "Aprende Python, Pandas, Machine Learning e IA Generativa (OpenAI API).",
+                "fr": "Apprenez Python, Pandas, Machine Learning et l'IA Générative.",
+                "de": "Lernen Sie Python, Pandas, Machine Learning und Generative KI.",
+                "zh": "学习 Python、Pandas、机器学习和生成式人工智能。",
+                "ar": "تعلم Python و Pandas و Machine Learning و Generative AI."
+            },
+            "descricaoCompleta": {
+                "pt": "Curso completo: Sintaxe Python, Manipulação com Pandas, Visualização, Machine Learning com Scikit-Learn e integração com Inteligência Artificial (OpenAI).",
+                "en": "Complete course: Python Syntax, Pandas Manipulation, Visualization, Machine Learning with Scikit-Learn, and Artificial Intelligence integration (OpenAI).",
+                "es": "Curso completo: Sintaxis Python, Manipulación con Pandas, Visualización, Machine Learning con Scikit-Learn e integración con Inteligencia Artificial (OpenAI).",
+                "fr": "Cours complet : Syntaxe Python, Pandas, Visualisation, Machine Learning et IA.",
+                "de": "Vollständiger Kurs: Python-Syntax, Pandas, Visualisierung, Machine Learning und KI.",
+                "zh": "完整课程：Python 语法、Pandas 操作、可视化、机器学习和人工智能。",
+                "ar": "دورة كاملة: بناء جملة Python، معالجة Pandas، التصور، تعلم الآلة والذكاء الاصطناعي."
+            },
+            "modulos": [
+                "Python Básico",
+                "Pandas",
+                "Matplotlib"
+            ],
+            "duration": "50h",
+            "level": {
+                "pt": "Iniciante",
+                "en": "Beginner",
+                "es": "Principiante",
+                "fr": "Débutant",
+                "de": "Anfänger",
+                "zh": "初学者",
+                "ar": "مبتدئ"
+            },
+            "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            "aulas": [
+                {
+                    "titulo": {
+                        "pt": "1. Por que Python para Data Science?",
+                        "en": "1. Why Python for Data Science?",
+                        "es": "1. ¿Por qué Python para Ciencia de Datos?",
+                        "fr": "1. Pourquoi Python pour la Science des Données ?",
+                        "de": "1. Warum Python für Data Science?",
+                        "zh": "1. 为什么选择 Python 进行数据科学？",
+                        "ar": "1. لماذا Python لعلم البيانات؟"
+                    },
+                    "duracao": {
+                        "pt": "Leitura: 10 min",
+                        "en": "Read: 10 min",
+                        "es": "Lectura: 10 min"
+                    },
+                    "status": "livre",
+                    "content": {
+                        "pt": "# Python e Data Science\n\nPython se tornou a linguagem número 1 para Ciência de Dados devido à sua simplicidade e ao vasto ecossistema de bibliotecas poderosas.\n\n### Principais Bibliotecas\n- **Pandas:** Para manipulação e análise de dados tabulares.\n- **NumPy:** Para computação numérica de alta performance.\n- **Matplotlib/Seaborn:** Para visualização de dados e gráficos.",
+                        "en": "# Python and Data Science\n\nPython has become the #1 language for Data Science due to its simplicity and vast ecosystem of powerful libraries.\n\n### Key Libraries\n- **Pandas:** For manipulation and analysis of tabular data.\n- **NumPy:** For high-performance numerical computing.\n- **Matplotlib/Seaborn:** For data visualization and plotting.",
+                        "es": "# Python y Ciencia de Datos\n\nPython se ha convertido en el lenguaje número 1 para la Ciencia de Datos debido a su simplicidad."
+                    },
+                    "exercise": {
+                        "instructions": {
+                            "pt": "Instale o Pandas usando pip.",
+                            "en": "Install Pandas using pip.",
+                            "es": "Instala Pandas usando pip."
+                        },
+                        "code": "pip install pandas",
+                        "solution": {
+                            "pt": "Execute o comando no seu terminal.",
+                            "en": "Run the command in your terminal.",
+                            "es": "Ejecuta el comando en tu terminal."
+                        }
+                    }
+                },
+                {
+                    "titulo": {
+                        "pt": "2. Introdução ao Pandas",
+                        "en": "2. Intro to Pandas",
+                        "es": "2. Introducción a Pandas",
+                        "fr": "2. Introduction à Pandas",
+                        "de": "2. Einführung in Pandas",
+                        "zh": "2. Pandas 简介",
+                        "ar": "2. مقدمة في Pandas"
+                    },
+                    "duracao": {
+                        "pt": "Leitura: 30 min",
+                        "en": "Read: 30 min",
+                        "es": "Lectura: 30 min"
+                    },
+                    "status": "livre",
+                    "content": {
+                        "pt": "# O que é Pandas?\n\nPandas é uma biblioteca de código aberto que fornece estruturas de dados e ferramentas de análise de dados de alto desempenho e fáceis de usar.\n\n### DataFrame\nA estrutura mais importante do Pandas é o DataFrame, que é essencialmente uma tabela (como uma planilha Excel) em memória.",
+                        "en": "# What is Pandas?\n\nPandas is an open source library providing high-performance, easy-to-use data structures and data analysis tools.\n\n### DataFrame\nThe most important structure in Pandas is the DataFrame, which is essentially a table (like an Excel sheet) in memory.",
+                        "es": "# ¿Qué es Pandas?\n\nPandas es una biblioteca de código abierto que proporciona estructuras de datos de alto rendimiento."
+                    },
+                    "exercise": {
+                        "instructions": {
+                            "pt": "Crie um DataFrame simples a partir de um dicionário.",
+                            "en": "Create a simple DataFrame from a dictionary.",
+                            "es": "Crea un DataFrame simple a partir de un diccionario."
+                        },
+                        "code": "import pandas as pd\n\ndades = {\n  'Nome': ['Ana', 'João'],\n  'Idade': [23, 30]\n}\n\ndf = pd.DataFrame(data)",
+                        "solution": {
+                            "pt": "Importe pandas as pd e use pd.DataFrame().",
+                            "en": "Import pandas as pd and use pd.DataFrame().",
+                            "es": "Importa pandas as pd y usa pd.DataFrame()."
+                        }
+                    }
+                },
+                {
+                    "titulo": {
+                        "pt": "3. Visualização com Matplotlib",
+                        "en": "3. Visualization with Matplotlib",
+                        "es": "3. Visualización con Matplotlib",
+                        "fr": "3. Visualisation avec Matplotlib",
+                        "de": "3. Visualisierung mit Matplotlib",
+                        "zh": "3. 使用 Matplotlib 可视化",
+                        "ar": "3. التصور باستخدام Matplotlib"
+                    },
+                    "duracao": {
+                        "pt": "Leitura: 25 min",
+                        "en": "Read: 25 min",
+                        "es": "Lectura: 25 min"
+                    },
+                    "status": "livre",
+                    "content": {
+                        "pt": "# Matplotlib\n\nMatplotlib é uma biblioteca de plotagem para a linguagem de programação Python e sua extensão de matemática numérica NumPy.\n\n### Seu Primeiro Gráfico\n```python\nimport matplotlib.pyplot as plt\n\nplt.plot([1, 2, 3, 4])\nplt.ylabel('números')\nplt.show()\n```",
+                        "en": "# Matplotlib\n\nMatplotlib is a plotting library for the Python programming language and its numerical mathematics extension NumPy.",
+                        "es": "# Matplotlib\n\nMatplotlib es una biblioteca de trazado para el lenguaje de programación Python."
+                    },
+                    "exercise": {
+                        "instructions": {
+                            "pt": "Plote um gráfico de linha simples mostrando o crescimento de vendas: [100, 150, 200, 250].",
+                            "en": "Plot a simple line chart showing sales growth: [100, 150, 200, 250].",
+                            "es": "Traza un gráfico de líneas simple que muestre el crecimiento de las ventas: [100, 150, 200, 250]."
+                        },
+                        "code": "plt.plot([100, 150, 200, 250])\nplt.title('Vendas')\nplt.show()",
+                        "solution": {
+                            "pt": "Use plt.plot() passando a lista de valores.",
+                            "en": "Use plt.plot() passing the list of values.",
+                            "es": "Usa plt.plot() pasando la lista de valores."
+                        }
+                    }
+                }
             },
             {
-                "id": 2,
-                "question": {
-                    "pt": "Qual hook é usado para gerenciar estado?",
-                    "en": "Which hook is used to manage state?",
-                    "es": "¿Qué hook se usa para gestionar el estado?"
+                "titulo": {
+                    "pt": "4. Limpeza de Dados Avançada",
+                    "en": "4. Advanced Data Cleaning",
+                    "es": "4. Limpieza de Datos Avanzada"
                 },
-                "options": {
-                    "pt": [
-                        "useEffect",
-                        "useContext",
-                        "useState",
-                        "useReducer"
-                    ],
-                    "en": [
-                        "useEffect",
-                        "useContext",
-                        "useState",
-                        "useReducer"
-                    ],
-                    "es": [
-                        "useEffect",
-                        "useContext",
-                        "useState",
-                        "useReducer"
-                    ]
+                "duracao": {
+                    "pt": "Leitura: 30 min",
+                    "en": "Read: 30 min",
+                    "es": "Lectura: 30 min"
                 },
-                "correctAnswer": 2
+                "status": "livre",
+                "content": {
+                    "pt": "# Tratamento de Dados Reais\n\nNo mundo real, dados são sujos. Eles contêm valores nulos, duplicatas e formatos inconsistentes.\n\n### Lidando com Valores Ausentes (NaN)\nO Pandas oferece métodos poderosos:\n- `dropna()`: Remove linhas com valores nulos.\n- `fillna(value)`: Preenche valores nulos com uma constante ou média."
+                },
+                "exercise": {
+                    "instructions": {
+                        "pt": "Preencha valores NaN da coluna 'idade' com a média.",
+                        "en": "Fill NaN in 'age' with mean.",
+                        "es": "Rellena NaN en 'edad' con la media."
+                    },
+                    "code": "media = df['idade'].mean()\ndf['idade'].fillna(media, inplace=True)",
+                    "solution": {
+                        "pt": "Calcule a média, depois use fillna.",
+                        "en": "Calc mean, then fillna.",
+                        "es": "Calcula media, luego fillna."
+                    }
+                }
             },
             {
-                "id": 3,
-                "question": {
-                    "pt": "Como passamos dados de pai para filho?",
-                    "en": "How do we pass data from parent to child?",
-                    "es": "¿Cómo pasamos datos de padre a hijo?"
+                "titulo": {
+                    "pt": "5. Introdução ao Machine Learning",
+                    "en": "5. Intro to Machine Learning",
+                    "es": "5. Introducción al Machine Learning"
                 },
-                "options": {
-                    "pt": [
-                        "State",
-                        "Props",
-                        "Context",
-                        "Redux"
-                    ],
-                    "en": [
-                        "State",
-                        "Props",
-                        "Context",
-                        "Redux"
-                    ],
-                    "es": [
-                        "State",
-                        "Props",
-                        "Context",
-                        "Redux"
-                    ]
+                "duracao": {
+                    "pt": "Leitura: 40 min",
+                    "en": "Read: 40 min",
+                    "es": "Lectura: 40 min"
                 },
-                "correctAnswer": 1
+                "status": "livre",
+                "content": {
+                    "pt": "# Scikit-Learn e Modelagem\n\nMachine Learning é a prática de usar algoritmos para analisar dados, aprender com eles e fazer previsões.\n\n### Scikit-Learn\nÉ a biblioteca padrão ouro para ML clássico em Python. Oferece algoritmos para:\n- **Classificação:** Spam vs Não-Spam.\n- **Regressão:** Prever preços."
+                },
+                "exercise": {
+                    "instructions": {
+                        "pt": "Importe LinearRegression do sklearn.",
+                        "en": "Import LinearRegression.",
+                        "es": "Importar LinearRegression."
+                    },
+                    "code": "from sklearn.linear_model import LinearRegression",
+                    "solution": {
+                        "pt": "Pacote sklearn.linear_model.",
+                        "en": "Package sklearn.linear_model.",
+                        "es": "Paquete sklearn.linear_model."
+                    }
+                }
             },
             {
-                "id": 4,
-                "question": {
-                    "pt": "O que o useEffect faz?",
-                    "en": "What does useEffect do?",
-                    "es": "¿Qué hace useEffect?"
+                "titulo": {
+                    "pt": "6. Inteligência Artificial com OpenAI",
+                    "en": "6. AI with OpenAI",
+                    "es": "6. Inteligencia Artificial con OpenAI"
                 },
-                "options": {
-                    "pt": [
-                        "Cria componentes",
-                        "Gerencia rotas",
-                        "Lida com efeitos colaterais",
-                        "Estiliza a página"
-                    ],
-                    "en": [
-                        "Creates components",
-                        "Manages routes",
-                        "Handles side effects",
-                        "Styles the page"
-                    ],
-                    "es": [
-                        "Crea componentes",
-                        "Gestiona rutas",
-                        "Maneja efectos secundarios",
-                        "Estila la página"
-                    ]
+                "duracao": {
+                    "pt": "Leitura: 45 min",
+                    "en": "Read: 45 min",
+                    "es": "Lectura: 45 min"
                 },
-                "correctAnswer": 2
-            },
-            {
-                "id": 5,
-                "question": {
-                    "pt": "O JSX é obrigatório no React?",
-                    "en": "Is JSX mandatory in React?",
-                    "es": "¿Es JSX obligatorio en React?"
+                "status": "livre",
+                "content": {
+                    "pt": "# Consumo de APIs de IA\n\nAprenda a integrar seus scripts Python com a API da OpenAI para criar assistentes inteligentes.\n\n### Instalação\n`pip install openai`\n\n### Exemplo\n```python\nfrom openai import OpenAI\nclient = OpenAI(api_key=\"KEY\")\ncompletion = client.chat.completions.create(model=\"gpt-4\", messages=[...])\n```"
                 },
-                "options": {
-                    "pt": [
-                        "Sim",
-                        "Não, mas é recomendado",
-                        "Apenas em classes",
-                        "Nunca"
-                    ],
-                    "en": [
-                        "Yes",
-                        "No, but recommended",
-                        "Only in classes",
-                        "Never"
-                    ],
-                    "es": [
-                        "Sí",
-                        "No, pero recomendado",
-                        "Solo en clases",
-                        "Nunca"
-                    ]
-                },
-                "correctAnswer": 1
+                "exercise": {
+                    "instructions": {
+                        "pt": "Crie um script simulado que gera um poema.",
+                        "en": "Create script to generate poem.",
+                        "es": "Crea script para generar poema."
+                    },
+                    "code": "def gerar_poema(tema):\n    # OpenAI call here\n    return \"Poema...\"",
+                    "solution": {
+                        "pt": "Use a lib oficial da OpenAI.",
+                        "en": "Use official OpenAI lib.",
+                        "es": "Usa la lib oficial de OpenAI."
+                    }
+                }
             }
         ]
-    },
-    {
-        "id": 2,
-        "slug": "api-rest-node-express",
-        "title": {
-            "pt": "API REST com Node.js e Express",
-            "en": "REST API with Node.js and Express",
-            "es": "API REST con Node.js y Express",
-            "fr": "API REST avec Node.js et Express",
-            "de": "REST-API mit Node.js und Express",
-            "zh": "使用 Node.js 和 Express 的 REST API",
-            "ar": "REST API مع Node.js و Express"
-        },
-        "category": "Back-end",
-        "description": {
-            "pt": "Construa APIs robustas e escaláveis usando Node.js e Express.",
-            "en": "Build robust and scalable APIs using Node.js and Express.",
-            "es": "Construye APIs robustas y escalables usando Node.js y Express.",
-            "fr": "Construisez des API robustes et évolutives.",
-            "de": "Erstellen Sie robuste und skalierbare APIs.",
-            "zh": "构建健壮且可扩展的 API。",
-            "ar": "بناء واجهات برمجة تطبيقات قوية وقابلة للتطوير."
-        },
-        "descricaoCompleta": {
-            "pt": "Desenvolva o backend de aplicações web modernas utilizando Node.js e o framework Express. Este curso cobre todo o processo de criação de uma API RESTful.",
-            "en": "Develop the backend of modern web applications using Node.js and the Express framework. This course covers the entire process of creating a RESTful API.",
-            "es": "Desarrolla el backend de aplicaciones web modernas utilizando Node.js y el framework Express. Este curso cubre todo el proceso de creación de una API RESTful.",
-            "fr": "Développez le backend d'applications web modernes.",
-            "de": "Entwickeln Sie das Backend moderner Webanwendungen.",
-            "zh": "开发现代 Web 应用程序的后端。",
-            "ar": "تطوير الواجهة الخلفية لتطبيقات الويب الحديثة."
-        },
-        "modulos": [
-            "Fundamentos",
-            "Express",
-            "MongoDB",
-            "Auth",
-            "Arquitetura e Clean Code",
-            "Segurança com JWT"
-        ],
-        "duration": "35h",
-        "level": {
-            "pt": "Avançado",
-            "en": "Advanced",
-            "es": "Avanzado",
-            "fr": "Avancé",
-            "de": "Fortgeschritten",
-            "zh": "高级",
-            "ar": "متقدم"
-        },
-        "image": "https://images.unsplash.com/photo-1627398242454-45a1465c2479?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-        "aulas": [
-            {
-                "titulo": {
-                    "pt": "1. Introdução ao Node.js",
-                    "en": "1. Intro to Node.js",
-                    "es": "1. Introducción a Node.js",
-                    "fr": "1. Introduction à Node.js",
-                    "de": "1. Einführung in Node.js",
-                    "zh": "1. Node.js 简介",
-                    "ar": "1. مقدمة في Node.js"
-                },
-                "duracao": {
-                    "pt": "Leitura: 15 min",
-                    "en": "Read: 15 min",
-                    "es": "Lectura: 15 min"
-                },
-                "status": "completa",
-                "content": {
-                    "pt": "# Introdução ao Node.js\n\nO Node.js é um ambiente de execução JavaScript construído sobre o motor V8 do Chrome. Ele permite executar JavaScript fora do navegador, ou seja, no servidor.\n\n### Características Principais\n- **Assíncrono e Orientado a Eventos:** O Node.js não bloqueia a execução enquanto espera por operações de I/O (entrada/saída).\n- **Single Thread:** Ele usa uma única thread com um Loop de Eventos.",
-                    "en": "# Intro to Node.js\n\nNode.js is a JavaScript runtime built on Chrome's V8 JavaScript engine. It allows you to run JavaScript outside the browser, i.e., on the server.\n\n### Key Features\n- **Asynchronous & Event-Driven:** Node.js doesn't block execution while waiting for I/O.\n- **Single Threaded:** It uses a single thread with an Event Loop.",
-                    "es": "# Introducción a Node.js\n\nNode.js es un entorno de ejecución de JavaScript construido sobre el motor de JavaScript V8 de Chrome."
-                },
-                "exercise": {
-                    "instructions": {
-                        "pt": "Crie um script simples 'ola.js' que imprima 'Olá, Node!' no terminal.",
-                        "en": "Create a simple script 'hello.js' that prints 'Hello, Node!' to the terminal.",
-                        "es": "Crea un script simple 'hola.js' que imprima '¡Hola, Node!' en la terminal."
-                    },
-                    "code": "console.log('Olá, Node!');",
-                    "solution": {
-                        "pt": "Basta criar o arquivo e rodar `node ola.js` no terminal.",
-                        "en": "Just create the file and run `node hello.js` in the terminal.",
-                        "es": "Simplemente crea el archivo y ejecuta `node hola.js` en la terminal."
-                    }
-                }
-            },
-            {
-                "titulo": {
-                    "pt": "2. Criando um Servidor HTTP",
-                    "en": "2. Creating an HTTP Server",
-                    "es": "2. Creando un Servidor HTTP",
-                    "fr": "2. Création d'un serveur HTTP",
-                    "de": "2. Erstellen eines HTTP-Servers",
-                    "zh": "2. 创建 HTTP 服务器",
-                    "ar": "2. إنشاء خادم HTTP"
-                },
-                "duracao": {
-                    "pt": "Leitura: 20 min",
-                    "en": "Read: 20 min",
-                    "es": "Lectura: 20 min"
-                },
-                "status": "livre",
-                "content": {
-                    "pt": "# O Módulo HTTP\n\nNode.js possui um módulo nativo chamado `http` que permite criar servidores web sem a necessidade de frameworks externos neste primeiro momento.\n\n```javascript\nconst http = require('http');\n\nconst server = http.createServer((req, res) => {\n  res.statusCode = 200;\n  res.end('Hello World');\n});\n\nserver.listen(3000);\n```",
-                    "en": "# The HTTP Module\n\nNode.js has a built-in module called `http` that allows you to create web servers without external frameworks at this stage.\n\n```javascript\nconst http = require('http');\n\nconst server = http.createServer((req, res) => {\n  res.statusCode = 200;\n  res.end('Hello World');\n});\n\nserver.listen(3000);\n```",
-                    "es": "# El Módulo HTTP\n\nNode.js tiene un módulo integrado llamado `http` que te permite crear servidores web."
-                },
-                "exercise": {
-                    "instructions": {
-                        "pt": "Crie um servidor que responda 'Bem-vindo à API' na porta 8080.",
-                        "en": "Create a server that responds 'Welcome to the API' on port 8080.",
-                        "es": "Crea un servidor que responda 'Bienvenido a la API' en el puerto 8080."
-                    },
-                    "code": "http.createServer((req, res) => res.end('Bem-vindo à API')).listen(8080);",
-                    "solution": {
-                        "pt": "Altere a porta no método .listen().",
-                        "en": "Change the port in the .listen() method.",
-                        "es": "Cambia el puerto en el método .listen()."
-                    }
-                }
-            },
-            {
-                "titulo": {
-                    "pt": "3. Introdução ao Express",
-                    "en": "3. Intro to Express",
-                    "es": "3. Introducción a Express",
-                    "fr": "3. Introduction à Express",
-                    "de": "3. Einführung in Express",
-                    "zh": "3. Express 简介",
-                    "ar": "3. مقدمة في Express"
-                },
-                "duracao": {
-                    "pt": "Leitura: 25 min",
-                    "en": "Read: 25 min",
-                    "es": "Lectura: 25 min"
-                },
-                "status": "livre",
-                "content": {
-                    "pt": "# O Framework Express\n\nExpress é um framework para Node.js mínimo e flexível que fornece um conjunto robusto de recursos para aplicativos web e móveis.\n\n### Instalação\n`npm install express`\n\n### Hello World com Express\n```javascript\nconst express = require('express');\nconst app = express();\n\napp.get('/', (req, res) => {\n  res.send('Hello World!');\n});\n\napp.listen(3000);\n```",
-                    "en": "# The Express Framework\n\nExpress is a minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications.",
-                    "es": "# El Framework Express\n\nExpress es un framework de aplicación web Node.js mínimo y flexible."
-                },
-                "exercise": {
-                    "instructions": {
-                        "pt": "Crie uma rota GET '/usuarios' que retorne um JSON com uma lista de nomes.",
-                        "en": "Create a GET route '/users' that returns a JSON with a list of names.",
-                        "es": "Crea una ruta GET '/usuarios' que devuelva un JSON con una lista de nombres."
-                    },
-                    "code": "app.get('/usuarios', (req, res) => {\n  res.json([{name: 'Alice'}, {name: 'Bob'}]);\n});",
-                    "solution": {
-                        "pt": "Use res.json() para enviar arrays ou objetos.",
-                        "en": "Use res.json() to send arrays or objects.",
-                        "es": "Usa res.json() para enviar arrays u objetos."
-                    }
-                }
-            },
-            {
-                "titulo": {
-                    "pt": "4. Introdução ao MongoDB",
-                    "en": "4. Intro to MongoDB",
-                    "es": "4. Introducción a MongoDB",
-                    "fr": "4. Introduction à MongoDB",
-                    "de": "4. Einführung in MongoDB",
-                    "zh": "4. MongoDB 简介",
-                    "ar": "4. مقدمة في MongoDB"
-                },
-                "duracao": {
-                    "pt": "Leitura: 30 min",
-                    "en": "Read: 30 min",
-                    "es": "Lectura: 30 min"
-                },
-                "status": "livre",
-                "content": {
-                    "pt": "# MongoDB e NoSQL\n\nMongoDB é um banco de dados NoSQL orientado a documentos. Ele armazena dados em documentos do tipo JSON, o que o torna muito flexível e escalável.\n\n### Mongoose\nPara conectar o Node.js ao MongoDB, geralmente usamos o ODM (Object Data Modeling) **Mongoose**.",
-                    "en": "# MongoDB and NoSQL\n\nMongoDB is a document-oriented NoSQL database. It stores data in JSON-like documents, making it very flexible and scalable.\n\n### Mongoose\nTo connect Node.js to MongoDB, we usually use the **Mongoose** ODM.",
-                    "es": "# MongoDB y NoSQL\n\nMongoDB es una base de datos NoSQL orientada a documentos."
-                },
-                "exercise": {
-                    "instructions": {
-                        "pt": "Defina um Schema simples para um 'Usuario' com nome e email usando Mongoose.",
-                        "en": "Define a simple Schema for a 'User' with name and email using Mongoose.",
-                        "es": "Define un esquema simple para un 'Usuario' con nombre y correo electrónico usando Mongoose."
-                    },
-                    "code": "const UserSchema = new mongoose.Schema({\n  name: String,\n  email: String\n});",
-                    "solution": {
-                        "pt": "Use mongoose.Schema() passando o objeto de configuração.",
-                        "en": "Use mongoose.Schema() passing the configuration object.",
-                        "es": "Usa mongoose.Schema() pasando el objeto de configuración."
-                    }
-                }
-            },
-            {
-                "titulo": {
-                    "pt": "5. Arquitetura e Clean Code",
-                    "en": "5. Architecture & Clean Code",
-                    "es": "5. Arquitectura y Código Limpio"
-                },
-                "duracao": {
-                    "pt": "Leitura: 30 min",
-                    "en": "Read: 30 min",
-                    "es": "Lectura: 30 min"
-                },
-                "status": "livre",
-                "content": {
-                    "pt": "# Arquitetura de Software em Node.js\n\nConstruir uma API que escala exige mais do que apenas escrever rotas. A separação de responsabilidades é crucial.\n\n### Padrão MVC (Model-View-Controller)\nEmbora em APIs não tenhamos a 'View' tradicional, a separação entre:\n- **Controllers:** Tratam a requisição HTTP.\n- **Services:** Contêm a regra de negócio.\n- **Models:** Interagem com o banco de dados.\n\n### Clean Code\nMantenha suas funções pequenas, use nomes descritivos e evite o 'Callback Hell' utilizando `async/await`."
-                },
-                "exercise": {
-                    "instructions": {
-                        "pt": "Refatore o código conceitual para separar a lógica de banco de dados do controller.",
-                        "en": "Refactor conceptual code.",
-                        "es": "Refactoriza el código conceptual."
-                    },
-                    "code": "// ANTIGO:\napp.get('/users', async (req, res) => {\n  const users = await db.find();\n  res.json(users);\n});",
-                    "solution": {
-                        "pt": "Chame UserService.getAll() dentro do controller.",
-                        "en": "Call UserService.getAll().",
-                        "es": "Llama a UserService.getAll()."
-                    }
-                }
-            },
-            {
-                "titulo": {
-                    "pt": "6. Segurança com JWT",
-                    "en": "6. Security with JWT",
-                    "es": "6. Seguridad con JWT"
-                },
-                "duracao": {
-                    "pt": "Leitura: 35 min",
-                    "en": "Read: 35 min",
-                    "es": "Lectura: 35 min"
-                },
-                "status": "livre",
-                "content": {
-                    "pt": "# Autenticação via Token (JWT)\n\nAPIs RESTful não devem manter estado (Stateless). Para autenticar usuários entre requisições, utilizamos JSON Web Tokens (JWT).\n\n### Fluxo de Autenticação\n1. O cliente envia credenciais.\n2. O servidor valida e gera um Token.\n3. O cliente envia o Token no Header `Authorization`."
-                },
-                "exercise": {
-                    "instructions": {
-                        "pt": "Crie uma função middleware 'verifyToken'.",
-                        "en": "Create 'verifyToken' middleware.",
-                        "es": "Crea función middleware 'verifyToken'."
-                    },
-                    "code": "function verifyToken(req, res, next) {\n  const token = req.headers['authorization'];\n  if (!token) return res.status(403).send('Token required');\n  next();\n}",
-                    "solution": {
-                        "pt": "Verifique req.headers['authorization'].",
-                        "en": "Check req.headers['authorization'].",
-                        "es": "Verifica req.headers['authorization']."
-                    }
-                }
-            }
-        ]
-    },
-    {
-        "id": 3,
-        "slug": "python-data-science",
-        "title": {
-            "pt": "Python para Ciência de Dados e IA",
-            "en": "Python for Data Science & AI",
-            "es": "Python para Ciencia de Datos e IA",
-            "fr": "Python pour la Science des Données et l'IA",
-            "de": "Python für Data Science und KI",
-            "zh": "Python 数据科学与人工智能",
-            "ar": "Python لعلم البيانات والذكاء الاصطناعي"
-        },
-        "category": "Data Science & AI",
-        "description": {
-            "pt": "Aprenda Python, Pandas, Machine Learning e IA Generativa (OpenAI API).",
-            "en": "Learn Python, Pandas, Machine Learning, and Generative AI (OpenAI API).",
-            "es": "Aprende Python, Pandas, Machine Learning e IA Generativa (OpenAI API).",
-            "fr": "Apprenez Python, Pandas, Machine Learning et l'IA Générative.",
-            "de": "Lernen Sie Python, Pandas, Machine Learning und Generative KI.",
-            "zh": "学习 Python、Pandas、机器学习和生成式人工智能。",
-            "ar": "تعلم Python و Pandas و Machine Learning و Generative AI."
-        },
-        "descricaoCompleta": {
-            "pt": "Curso completo: Sintaxe Python, Manipulação com Pandas, Visualização, Machine Learning com Scikit-Learn e integração com Inteligência Artificial (OpenAI).",
-            "en": "Complete course: Python Syntax, Pandas Manipulation, Visualization, Machine Learning with Scikit-Learn, and Artificial Intelligence integration (OpenAI).",
-            "es": "Curso completo: Sintaxis Python, Manipulación con Pandas, Visualización, Machine Learning con Scikit-Learn e integración con Inteligencia Artificial (OpenAI).",
-            "fr": "Cours complet : Syntaxe Python, Pandas, Visualisation, Machine Learning et IA.",
-            "de": "Vollständiger Kurs: Python-Syntax, Pandas, Visualisierung, Machine Learning und KI.",
-            "zh": "完整课程：Python 语法、Pandas 操作、可视化、机器学习和人工智能。",
-            "ar": "دورة كاملة: بناء جملة Python، معالجة Pandas، التصور، تعلم الآلة والذكاء الاصطناعي."
-        },
-        "modulos": [
-            "Python Básico",
-            "Pandas",
-            "Matplotlib"
-        ],
-        "duration": "50h",
-        "level": {
-            "pt": "Iniciante",
-            "en": "Beginner",
-            "es": "Principiante",
-            "fr": "Débutant",
-            "de": "Anfänger",
-            "zh": "初学者",
-            "ar": "مبتدئ"
-        },
-        "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-        "aulas": [
-            {
-                "titulo": {
-                    "pt": "1. Por que Python para Data Science?",
-                    "en": "1. Why Python for Data Science?",
-                    "es": "1. ¿Por qué Python para Ciencia de Datos?",
-                    "fr": "1. Pourquoi Python pour la Science des Données ?",
-                    "de": "1. Warum Python für Data Science?",
-                    "zh": "1. 为什么选择 Python 进行数据科学？",
-                    "ar": "1. لماذا Python لعلم البيانات؟"
-                },
-                "duracao": {
-                    "pt": "Leitura: 10 min",
-                    "en": "Read: 10 min",
-                    "es": "Lectura: 10 min"
-                },
-                "status": "livre",
-                "content": {
-                    "pt": "# Python e Data Science\n\nPython se tornou a linguagem número 1 para Ciência de Dados devido à sua simplicidade e ao vasto ecossistema de bibliotecas poderosas.\n\n### Principais Bibliotecas\n- **Pandas:** Para manipulação e análise de dados tabulares.\n- **NumPy:** Para computação numérica de alta performance.\n- **Matplotlib/Seaborn:** Para visualização de dados e gráficos.",
-                    "en": "# Python and Data Science\n\nPython has become the #1 language for Data Science due to its simplicity and vast ecosystem of powerful libraries.\n\n### Key Libraries\n- **Pandas:** For manipulation and analysis of tabular data.\n- **NumPy:** For high-performance numerical computing.\n- **Matplotlib/Seaborn:** For data visualization and plotting.",
-                    "es": "# Python y Ciencia de Datos\n\nPython se ha convertido en el lenguaje número 1 para la Ciencia de Datos debido a su simplicidad."
-                },
-                "exercise": {
-                    "instructions": {
-                        "pt": "Instale o Pandas usando pip.",
-                        "en": "Install Pandas using pip.",
-                        "es": "Instala Pandas usando pip."
-                    },
-                    "code": "pip install pandas",
-                    "solution": {
-                        "pt": "Execute o comando no seu terminal.",
-                        "en": "Run the command in your terminal.",
-                        "es": "Ejecuta el comando en tu terminal."
-                    }
-                }
-            },
-            {
-                "titulo": {
-                    "pt": "2. Introdução ao Pandas",
-                    "en": "2. Intro to Pandas",
-                    "es": "2. Introducción a Pandas",
-                    "fr": "2. Introduction à Pandas",
-                    "de": "2. Einführung in Pandas",
-                    "zh": "2. Pandas 简介",
-                    "ar": "2. مقدمة في Pandas"
-                },
-                "duracao": {
-                    "pt": "Leitura: 30 min",
-                    "en": "Read: 30 min",
-                    "es": "Lectura: 30 min"
-                },
-                "status": "livre",
-                "content": {
-                    "pt": "# O que é Pandas?\n\nPandas é uma biblioteca de código aberto que fornece estruturas de dados e ferramentas de análise de dados de alto desempenho e fáceis de usar.\n\n### DataFrame\nA estrutura mais importante do Pandas é o DataFrame, que é essencialmente uma tabela (como uma planilha Excel) em memória.",
-                    "en": "# What is Pandas?\n\nPandas is an open source library providing high-performance, easy-to-use data structures and data analysis tools.\n\n### DataFrame\nThe most important structure in Pandas is the DataFrame, which is essentially a table (like an Excel sheet) in memory.",
-                    "es": "# ¿Qué es Pandas?\n\nPandas es una biblioteca de código abierto que proporciona estructuras de datos de alto rendimiento."
-                },
-                "exercise": {
-                    "instructions": {
-                        "pt": "Crie um DataFrame simples a partir de um dicionário.",
-                        "en": "Create a simple DataFrame from a dictionary.",
-                        "es": "Crea un DataFrame simple a partir de un diccionario."
-                    },
-                    "code": "import pandas as pd\n\ndades = {\n  'Nome': ['Ana', 'João'],\n  'Idade': [23, 30]\n}\n\ndf = pd.DataFrame(data)",
-                    "solution": {
-                        "pt": "Importe pandas as pd e use pd.DataFrame().",
-                        "en": "Import pandas as pd and use pd.DataFrame().",
-                        "es": "Importa pandas as pd y usa pd.DataFrame()."
-                    }
-                }
-            },
-            {
-                "titulo": {
-                    "pt": "3. Visualização com Matplotlib",
-                    "en": "3. Visualization with Matplotlib",
-                    "es": "3. Visualización con Matplotlib",
-                    "fr": "3. Visualisation avec Matplotlib",
-                    "de": "3. Visualisierung mit Matplotlib",
-                    "zh": "3. 使用 Matplotlib 可视化",
-                    "ar": "3. التصور باستخدام Matplotlib"
-                },
-                "duracao": {
-                    "pt": "Leitura: 25 min",
-                    "en": "Read: 25 min",
-                    "es": "Lectura: 25 min"
-                },
-                "status": "livre",
-                "content": {
-                    "pt": "# Matplotlib\n\nMatplotlib é uma biblioteca de plotagem para a linguagem de programação Python e sua extensão de matemática numérica NumPy.\n\n### Seu Primeiro Gráfico\n```python\nimport matplotlib.pyplot as plt\n\nplt.plot([1, 2, 3, 4])\nplt.ylabel('números')\nplt.show()\n```",
-                    "en": "# Matplotlib\n\nMatplotlib is a plotting library for the Python programming language and its numerical mathematics extension NumPy.",
-                    "es": "# Matplotlib\n\nMatplotlib es una biblioteca de trazado para el lenguaje de programación Python."
-                },
-                "exercise": {
-                    "instructions": {
-                        "pt": "Plote um gráfico de linha simples mostrando o crescimento de vendas: [100, 150, 200, 250].",
-                        "en": "Plot a simple line chart showing sales growth: [100, 150, 200, 250].",
-                        "es": "Traza un gráfico de líneas simple que muestre el crecimiento de las ventas: [100, 150, 200, 250]."
-                    },
-                    "code": "plt.plot([100, 150, 200, 250])\nplt.title('Vendas')\nplt.show()",
-                    "solution": {
-                        "pt": "Use plt.plot() passando a lista de valores.",
-                        "en": "Use plt.plot() passing the list of values.",
-                        "es": "Usa plt.plot() pasando la lista de valores."
-                    }
-                }
-            }
-        },
-        {
-            "titulo": {
-                "pt": "4. Limpeza de Dados Avançada",
-                "en": "4. Advanced Data Cleaning",
-                "es": "4. Limpieza de Datos Avanzada"
-            },
-            "duracao": {
-                "pt": "Leitura: 30 min",
-                "en": "Read: 30 min",
-                "es": "Lectura: 30 min"
-            },
-            "status": "livre",
-            "content": {
-                "pt": "# Tratamento de Dados Reais\n\nNo mundo real, dados são sujos. Eles contêm valores nulos, duplicatas e formatos inconsistentes.\n\n### Lidando com Valores Ausentes (NaN)\nO Pandas oferece métodos poderosos:\n- `dropna()`: Remove linhas com valores nulos.\n- `fillna(value)`: Preenche valores nulos com uma constante ou média."
-            },
-            "exercise": {
-                "instructions": {
-                    "pt": "Preencha valores NaN da coluna 'idade' com a média.",
-                    "en": "Fill NaN in 'age' with mean.",
-                    "es": "Rellena NaN en 'edad' con la media."
-                },
-                "code": "media = df['idade'].mean()\ndf['idade'].fillna(media, inplace=True)",
-                "solution": {
-                    "pt": "Calcule a média, depois use fillna.",
-                    "en": "Calc mean, then fillna.",
-                    "es": "Calcula media, luego fillna."
-                }
-            }
-        },
-        {
-            "titulo": {
-                "pt": "5. Introdução ao Machine Learning",
-                "en": "5. Intro to Machine Learning",
-                "es": "5. Introducción al Machine Learning"
-            },
-            "duracao": {
-                "pt": "Leitura: 40 min",
-                "en": "Read: 40 min",
-                "es": "Lectura: 40 min"
-            },
-            "status": "livre",
-            "content": {
-                "pt": "# Scikit-Learn e Modelagem\n\nMachine Learning é a prática de usar algoritmos para analisar dados, aprender com eles e fazer previsões.\n\n### Scikit-Learn\nÉ a biblioteca padrão ouro para ML clássico em Python. Oferece algoritmos para:\n- **Classificação:** Spam vs Não-Spam.\n- **Regressão:** Prever preços."
-            },
-            "exercise": {
-                "instructions": {
-                    "pt": "Importe LinearRegression do sklearn.",
-                    "en": "Import LinearRegression.",
-                    "es": "Importar LinearRegression."
-                },
-                "code": "from sklearn.linear_model import LinearRegression",
-                "solution": {
-                    "pt": "Pacote sklearn.linear_model.",
-                    "en": "Package sklearn.linear_model.",
-                    "es": "Paquete sklearn.linear_model."
-                }
-            }
-        },
-        {
-            "titulo": {
-                "pt": "6. Inteligência Artificial com OpenAI",
-                "en": "6. AI with OpenAI",
-                "es": "6. Inteligencia Artificial con OpenAI"
-            },
-            "duracao": {
-                "pt": "Leitura: 45 min",
-                "en": "Read: 45 min",
-                "es": "Lectura: 45 min"
-            },
-            "status": "livre",
-            "content": {
-                "pt": "# Consumo de APIs de IA\n\nAprenda a integrar seus scripts Python com a API da OpenAI para criar assistentes inteligentes.\n\n### Instalação\n`pip install openai`\n\n### Exemplo\n```python\nfrom openai import OpenAI\nclient = OpenAI(api_key=\"KEY\")\ncompletion = client.chat.completions.create(model=\"gpt-4\", messages=[...])\n```"
-            },
-            "exercise": {
-                "instructions": {
-                    "pt": "Crie um script simulado que gera um poema.",
-                    "en": "Create script to generate poem.",
-                    "es": "Crea script para generar poema."
-                },
-                "code": "def gerar_poema(tema):\n    # OpenAI call here\n    return \"Poema...\"",
-                "solution": {
-                    "pt": "Use a lib oficial da OpenAI.",
-                    "en": "Use official OpenAI lib.",
-                    "es": "Usa la lib oficial de OpenAI."
-                }
-            }
-        }
-    ]
-}
+    }
 ]
