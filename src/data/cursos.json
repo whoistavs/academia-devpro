@@ -1,34 +1,39 @@
+```json
 [
     {
         "id": 100,
         "slug": "logica-de-programacao",
         "title": {
-            "pt": "Lógica de Programação e Algoritmos",
-            "en": "Logic & Algorithms",
-            "es": "Lógica y Algoritmos",
-            "fr": "Logique et Algorithmes",
-            "de": "Logik & Algorithmen",
-            "zh": "逻辑与算法",
-            "ar": "المنطق والخوارزميات"
+            "pt": "Python para Ciência de Dados e IA",
+            "en": "Python for Data Science & AI",
+            "es": "Python para Ciencia de Datos e IA",
+            "fr": "Python pour la Science des Données et l'IA",
+            "de": "Python für Data Science und KI",
+            "zh": "Python 数据科学与人工智能",
+            "ar": "Python لعلم البيانات والذكاء الاصطناعي"
         },
-        "category": "Fundamentos",
+        "category": "Data Science & AI",
         "description": {
-            "pt": "O ponto de entrada obrigatório. Aprenda como computadores pensam.",
-            "en": "The mandatory entry point. Learn how computers think.",
-            "es": "El punto de entrada obligatorio. Aprende cómo piensan las computadoras."
+            "pt": "Aprenda Python, Pandas, Machine Learning e IA Generativa (OpenAI API).",
+            "en": "Learn Python, Pandas, Machine Learning, and Generative AI (OpenAI API).",
+            "es": "Aprende Python, Pandas, Machine Learning e IA Generativa.",
+            "fr": "Apprenez Python, Pandas, Machine Learning et IA.",
+            "de": "Lernen Sie Python, Pandas, Machine Learning und KI.",
+            "zh": "学习 Python、Pandas、机器学习和人工智能。",
+            "ar": "تعلم Python و Pandas و ML و AI."
         },
         "descricaoCompleta": {
-            "pt": "Domine a base da programação. Variáveis, Condicionais, Loops e Vetores. Sem isso, você não programa nada.",
-            "en": "Master the base of programming. Variables, Conditionals, Loops, Arrays.",
-            "es": "Domina la base de la programación. Variables, Condicionales, Bucles, Arrays."
+            "pt": "Curso completo: Sintaxe Python, Manipulação com Pandas, Visualização, Machine Learning com Scikit-Learn e integração com Inteligência Artificial (OpenAI).",
+            "en": "Complete course: Python, Pandas, Visualization, Machine Learning (Scikit-Learn) and AI (OpenAI).",
+            "es": "Curso completo: Python, Pandas, Visualización, Machine Learning y IA."
         },
         "modulos": [
-            "Algoritmos",
-            "Variáveis e Tipos",
-            "Operadores",
-            "Condicionais",
-            "Loops",
-            "Vetores e Matrizes"
+            "Python Básico",
+            "Pandas",
+            "Matplotlib",
+            "Limpeza de Dados",
+            "Machine Learning",
+            "IA com OpenAI"
         ],
         "duration": "20h",
         "level": {
@@ -825,6 +830,64 @@
                         "es": "Usa mongoose.Schema() pasando el objeto de configuración."
                     }
                 }
+            },
+            {
+                "titulo": {
+                    "pt": "5. Arquitetura e Clean Code",
+                    "en": "5. Architecture & Clean Code",
+                    "es": "5. Arquitectura y Código Limpio"
+                },
+                "duracao": {
+                    "pt": "Leitura: 30 min",
+                    "en": "Read: 30 min",
+                    "es": "Lectura: 30 min"
+                },
+                "status": "livre",
+                "content": {
+                    "pt": "# Arquitetura de Software em Node.js\n\nConstruir uma API que escala exige mais do que apenas escrever rotas. A separação de responsabilidades é crucial.\n\n### Padrão MVC (Model-View-Controller)\nEmbora em APIs não tenhamos a 'View' tradicional, a separação entre:\n- **Controllers:** Tratam a requisição HTTP.\n- **Services:** Contêm a regra de negócio.\n- **Models:** Interagem com o banco de dados.\n\n### Clean Code\nMantenha suas funções pequenas, use nomes descritivos e evite o 'Callback Hell' utilizando `async/await`."
+                },
+                "exercise": {
+                    "instructions": {
+                        "pt": "Refatore o código conceitual para separar a lógica de banco de dados do controller.",
+                        "en": "Refactor conceptual code.",
+                        "es": "Refactoriza el código conceptual."
+                    },
+                    "code": "// ANTIGO:\napp.get('/users', async (req, res) => {\n  const users = await db.find();\n  res.json(users);\n});",
+                    "solution": {
+                        "pt": "Chame UserService.getAll() dentro do controller.",
+                        "en": "Call UserService.getAll().",
+                        "es": "Llama a UserService.getAll()."
+                    }
+                }
+            },
+            {
+                "titulo": {
+                    "pt": "6. Segurança com JWT",
+                    "en": "6. Security with JWT",
+                    "es": "6. Seguridad con JWT"
+                },
+                "duracao": {
+                    "pt": "Leitura: 35 min",
+                    "en": "Read: 35 min",
+                    "es": "Lectura: 35 min"
+                },
+                "status": "livre",
+                "content": {
+                    "pt": "# Autenticação via Token (JWT)\n\nAPIs RESTful não devem manter estado (Stateless). Para autenticar usuários entre requisições, utilizamos JSON Web Tokens (JWT).\n\n### Fluxo de Autenticação\n1. O cliente envia credenciais.\n2. O servidor valida e gera um Token.\n3. O cliente envia o Token no Header `Authorization`."
+                },
+                "exercise": {
+                    "instructions": {
+                        "pt": "Crie uma função middleware 'verifyToken'.",
+                        "en": "Create 'verifyToken' middleware.",
+                        "es": "Crea función middleware 'verifyToken'."
+                    },
+                    "code": "function verifyToken(req, res, next) {\n  const token = req.headers['authorization'];\n  if (!token) return res.status(403).send('Token required');\n  next();\n}",
+                    "solution": {
+                        "pt": "Verifique req.headers['authorization'].",
+                        "en": "Check req.headers['authorization'].",
+                        "es": "Verifica req.headers['authorization']."
+                    }
+                }
             }
         ]
     },
@@ -981,6 +1044,94 @@
                     }
                 }
             }
-        ]
-    }
+        },
+        {
+            "titulo": {
+                "pt": "4. Limpeza de Dados Avançada",
+                "en": "4. Advanced Data Cleaning",
+                "es": "4. Limpieza de Datos Avanzada"
+            },
+            "duracao": {
+                "pt": "Leitura: 30 min",
+                "en": "Read: 30 min",
+                "es": "Lectura: 30 min"
+            },
+            "status": "livre",
+            "content": {
+                "pt": "# Tratamento de Dados Reais\n\nNo mundo real, dados são sujos. Eles contêm valores nulos, duplicatas e formatos inconsistentes.\n\n### Lidando com Valores Ausentes (NaN)\nO Pandas oferece métodos poderosos:\n- `dropna()`: Remove linhas com valores nulos.\n- `fillna(value)`: Preenche valores nulos com uma constante ou média."
+            },
+            "exercise": {
+                "instructions": {
+                    "pt": "Preencha valores NaN da coluna 'idade' com a média.",
+                    "en": "Fill NaN in 'age' with mean.",
+                    "es": "Rellena NaN en 'edad' con la media."
+                },
+                "code": "media = df['idade'].mean()\ndf['idade'].fillna(media, inplace=True)",
+                "solution": {
+                    "pt": "Calcule a média, depois use fillna.",
+                    "en": "Calc mean, then fillna.",
+                    "es": "Calcula media, luego fillna."
+                }
+            }
+        },
+        {
+            "titulo": {
+                "pt": "5. Introdução ao Machine Learning",
+                "en": "5. Intro to Machine Learning",
+                "es": "5. Introducción al Machine Learning"
+            },
+            "duracao": {
+                "pt": "Leitura: 40 min",
+                "en": "Read: 40 min",
+                "es": "Lectura: 40 min"
+            },
+            "status": "livre",
+            "content": {
+                "pt": "# Scikit-Learn e Modelagem\n\nMachine Learning é a prática de usar algoritmos para analisar dados, aprender com eles e fazer previsões.\n\n### Scikit-Learn\nÉ a biblioteca padrão ouro para ML clássico em Python. Oferece algoritmos para:\n- **Classificação:** Spam vs Não-Spam.\n- **Regressão:** Prever preços."
+            },
+            "exercise": {
+                "instructions": {
+                    "pt": "Importe LinearRegression do sklearn.",
+                    "en": "Import LinearRegression.",
+                    "es": "Importar LinearRegression."
+                },
+                "code": "from sklearn.linear_model import LinearRegression",
+                "solution": {
+                    "pt": "Pacote sklearn.linear_model.",
+                    "en": "Package sklearn.linear_model.",
+                    "es": "Paquete sklearn.linear_model."
+                }
+            }
+        },
+        {
+            "titulo": {
+                "pt": "6. Inteligência Artificial com OpenAI",
+                "en": "6. AI with OpenAI",
+                "es": "6. Inteligencia Artificial con OpenAI"
+            },
+            "duracao": {
+                "pt": "Leitura: 45 min",
+                "en": "Read: 45 min",
+                "es": "Lectura: 45 min"
+            },
+            "status": "livre",
+            "content": {
+                "pt": "# Consumo de APIs de IA\n\nAprenda a integrar seus scripts Python com a API da OpenAI para criar assistentes inteligentes.\n\n### Instalação\n`pip install openai`\n\n### Exemplo\n```python\nfrom openai import OpenAI\nclient = OpenAI(api_key=\"KEY\")\ncompletion = client.chat.completions.create(model=\"gpt-4\", messages=[...])\n```"
+            },
+            "exercise": {
+                "instructions": {
+                    "pt": "Crie um script simulado que gera um poema.",
+                    "en": "Create script to generate poem.",
+                    "es": "Crea script para generar poema."
+                },
+                "code": "def gerar_poema(tema):\n    # OpenAI call here\n    return \"Poema...\"",
+                "solution": {
+                    "pt": "Use a lib oficial da OpenAI.",
+                    "en": "Use official OpenAI lib.",
+                    "es": "Usa la lib oficial de OpenAI."
+                }
+            }
+        }
+    ]
+}
 ]
