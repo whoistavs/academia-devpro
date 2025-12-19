@@ -67,7 +67,10 @@ const Quiz = () => {
         });
 
         const percentage = (correctCount / course.quiz.length) * 100;
-        const passed = percentage >= 70;
+        // User requested 15/20 to pass. 
+        // We will make it dynamic: if exactly 20 questions, require 15. 
+        // Or just >= 75% which is 15/20.
+        const passed = correctCount >= 15;
 
         setResult({
             score: percentage,
