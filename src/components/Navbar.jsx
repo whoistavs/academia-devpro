@@ -25,7 +25,6 @@ const Navbar = () => {
                     <div className="flex items-center">
                         <Link to="/" className="flex items-center">
                             <img src="/logo.png" alt="DevPro Academy" className="h-10 w-auto bg-white rounded-lg p-1.5" />
-                            <span className="ml-2 text-xl font-bold text-gray-900 dark:text-white">DevPro Academy</span>
                         </Link>
                     </div>
 
