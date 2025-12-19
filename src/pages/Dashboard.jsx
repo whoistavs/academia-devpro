@@ -24,7 +24,8 @@ const Dashboard = () => {
 
         try {
             // 1. Upload Image
-            const uploadResponse = await fetch('http://localhost:3000/api/upload', {
+            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+            const uploadResponse = await fetch(`${API_URL}/api/upload`, {
                 method: 'POST',
                 body: formData
             });
@@ -33,7 +34,7 @@ const Dashboard = () => {
             if (!uploadResponse.ok) throw new Error('Falha no upload');
 
             // 2. Update User Profile
-            const updateResponse = await fetch('http://localhost:3000/api/users/me', {
+            const updateResponse = await fetch(`${API_URL}/api/users/me`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -60,7 +61,8 @@ const Dashboard = () => {
     const handleDeleteAccount = async () => {
         if (window.confirm(t('auth.dashboard.deleteConfirm'))) {
             try {
-                const response = await fetch('http://localhost:3000/api/users/me', {
+                const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+                const response = await fetch(`${API_URL}/api/users/me`, {
                     method: 'DELETE',
                     headers: {
                         'Authorization': `Bearer ${token}`
