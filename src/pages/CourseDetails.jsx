@@ -163,14 +163,7 @@ const CourseDetails = () => {
                                 {t('courseDetails.start')}
                             </Link>
 
-                            {/* course.quiz && (
-                                <Link
-                                    to={`/curso/${slug}/prova`}
-                                    className="w-full mt-4 bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 border-2 border-indigo-600 dark:border-indigo-500 py-4 rounded-lg font-bold text-lg hover:bg-indigo-50 dark:hover:bg-gray-600 transition-all block text-center flex items-center justify-center"
-                                >
-                                    <span className="mr-2">📝</span> Prova Final
-                                </Link>
-                            ) */}
+
 
                             <p className="text-xs text-center text-gray-500 dark:text-gray-400 mt-4">
                                 {t('courseDetails.access')}
