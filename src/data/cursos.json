@@ -1,233 +1,770 @@
 [
     {
-        "id": 1,
-        "slug": "react-dominando-o-essencial",
+        "id": 100,
+        "slug": "logica-de-programacao",
         "title": {
-            "pt": "React Dominando o Essencial",
-            "en": "React Mastering the Essentials",
-            "es": "React Dominando lo Esencial",
-            "fr": "React Maîtriser l'Essentiel",
-            "de": "React Grundlagen meistern",
-            "zh": "React 掌握基础",
-            "ar": "إتقان أساسيات React"
+            "pt": "Lógica de Programação e Algoritmos",
+            "en": "Logic & Algorithms",
+            "es": "Lógica y Algoritmos",
+            "fr": "Logique et Algorithmes",
+            "de": "Logik & Algorithmen",
+            "zh": "逻辑与算法",
+            "ar": "المنطق والخوارزميات"
         },
-        "category": "Front-end",
+        "category": "Fundamentos",
         "description": {
-            "pt": "Aprenda a criar interfaces modernas e responsivas com React.js. Domine componentes, hooks, estado e muito mais.",
-            "en": "Learn to create modern and responsive interfaces with React.js. Master components, hooks, state, and more.",
-            "es": "Aprende a crear interfaces modernas y responsivas con React.js. Domina componentes, hooks, estado y mucho más.",
-            "fr": "Apprenez à créer des interfaces modernes et réactives. Maîtrisez les composants, les hooks et plus encore.",
-            "de": "Lernen Sie moderne und reaktionsschnelle Schnittstellen zu erstellen.",
-            "zh": "学习创建现代且响应迅速的界面。",
-            "ar": "تعلم كيفية إنشاء واجهات حديثة وسريعة الاستجابة."
+            "pt": "O ponto de entrada obrigatório. Aprenda como computadores pensam.",
+            "en": "The mandatory entry point. Learn how computers think.",
+            "es": "El punto de entrada obligatorio. Aprende cómo piensan las computadoras."
         },
         "descricaoCompleta": {
-            "pt": "Neste curso abrangente, você mergulhará fundo no ecossistema React. Desde os conceitos fundamentais de componentes e JSX até técnicas avançadas de gerenciamento de estado com Context API e Redux. Você aprenderá a construir Single Page Applications (SPAs) performáticas.",
-            "en": "In this comprehensive course, you will dive deep into the React ecosystem. From fundamental concepts of components and JSX to advanced state management techniques with Context API and Redux. You will learn to build performant Single Page Applications (SPAs).",
-            "es": "En este curso completo, profundizarás en el ecosistema React. Desde los conceptos fundamentales de componentes y JSX hasta técnicas avanzadas de gestión de estado con Context API y Redux. Aprenderás a construir Single Page Applications (SPAs) de alto rendimiento.",
-            "fr": "Plongez dans l'écosystème React, des concepts fondamentaux aux techniques avancées.",
-            "de": "Tauchen Sie tief in das React-Ökosystem ein, von den Grundlagen bis zu fortgeschrittenen Techniken.",
-            "zh": "深入 React 生态系统，从基础概念到高级技术。",
-            "ar": "تعمق في نظام React البيئي، من المفاهيم الأساسية إلى التقنيات المتقدمة."
+            "pt": "Domine a base da programação. Variáveis, Condicionais, Loops e Vetores. Sem isso, você não programa nada.",
+            "en": "Master the base of programming. Variables, Conditionals, Loops, Arrays.",
+            "es": "Domina la base de la programación. Variables, Condicionales, Bucles, Arrays."
         },
         "modulos": [
-            "Introdução ao React e JSX",
-            "Gerenciamento de Estado e Ciclo de Vida",
-            "Hooks Essenciais (useState, useEffect)",
-            "Roteamento com React Router",
-            "Context API",
-            "React 19 e Inovações",
-            "Performance e Arquitetura"
+            "Algoritmos",
+            "Variáveis e Tipos",
+            "Operadores",
+            "Condicionais",
+            "Loops",
+            "Vetores e Matrizes"
         ],
-        "duration": "40h",
+        "duration": "20h",
         "level": {
-            "pt": "Intermediário",
-            "en": "Intermediate",
-            "es": "Intermedio",
-            "fr": "Intermédiaire",
-            "de": "Mittelstufe",
-            "zh": "中级",
-            "ar": "متوسط"
+            "pt": "Iniciante",
+            "en": "Beginner",
+            "es": "Principiante"
         },
-        "image": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+        "image": "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
         "aulas": [
             {
                 "titulo": {
-                    "pt": "1. Introdução ao Projeto e Setup",
-                    "en": "1. Project Intro & Setup",
-                    "es": "1. Introducción al Proyecto y Configuración",
-                    "fr": "1. Introduction et Configuration",
-                    "de": "1. Einführung und Einrichtung",
-                    "zh": "1. 项目介绍与设置",
-                    "ar": "1. مقدمة المشروع والإعداد"
+                    "pt": "1. O que é um Algoritmo?",
+                    "en": "1. What is an Algorithm?",
+                    "es": "1. ¿Qué es un Algoritmo?"
+                },
+                "duracao": {
+                    "pt": "Leitura: 10 min",
+                    "en": "Read: 10 min",
+                    "es": "Lectura: 10 min"
+                },
+                "status": "livre",
+                "content": {
+                    "pt": "# Algoritmos\nUm algoritmo é uma sequência finita de passos para resolver um problema. É como uma receita de bolo."
+                },
+                "exercise": {
+                    "instructions": {
+                        "pt": "Escreva um algoritmo (em português) para trocar uma lâmpada.",
+                        "en": "Write an algorithm to change a lightbulb.",
+                        "es": "Escribe un algoritmo para cambiar una bombilla."
+                    },
+                    "code": "// Exemplo:\n// 1. Pegar escada\n// 2. Subir escada...",
+                    "solution": {
+                        "pt": "Não há código executável, apenas lógica.",
+                        "en": "No code, just logic.",
+                        "es": "Sin código, solo lógica."
+                    }
+                }
+            },
+            {
+                "titulo": {
+                    "pt": "2. Variáveis e Tipos",
+                    "en": "2. Variables & Types",
+                    "es": "2. Variables y Tipos"
                 },
                 "duracao": {
                     "pt": "Leitura: 15 min",
                     "en": "Read: 15 min",
-                    "es": "Lectura: 15 min",
-                    "fr": "Lecture: 15 min",
-                    "de": "Lesen: 15 min",
-                    "zh": "阅读: 15 分钟",
-                    "ar": "قراءة: 15 دقيقة"
+                    "es": "Lectura: 15 min"
                 },
-                "status": "completa",
+                "status": "livre",
                 "content": {
-                    "pt": "# Bem-vindo ao Mundo React!\n\nNesta primeira aula, vamos configurar nosso ambiente de desenvolvimento com **Vite** e entender os **fundamentos da Engenharia da Reatividade**.\n\n### A Evolução do Desenvolvimento Declarativo\nA transição do modelo imperativo (JS tradicional) para o **declarativo** (React) é a pedra angular do domínio técnico. No modelo imperativo, você descreve *como* manipular o DOM passo-a-passo. No React, você define *o que* quer ver (o estado desejado), e a biblioteca reconcilia o DOM para você.\n\n### Virtual DOM\nO React não manipula o DOM real diretamente em primeira instância. Ele usa uma representação intermediária leve, o **Virtual DOM**. Isso permite algoritmos de reconciliação otimizados (Complexidade O(n)), garantindo performance mesmo em SPAs complexas.\n\n### Setup com Vite\n1. `npm create vite@latest meu-projeto -- --template react`\n2. `cd meu-projeto`\n3. `npm install`\n4. `npm run dev`",
-                    "en": "# Welcome to the React World!\n\nIn this first lesson, we will set up our development environment to work with React professionally and efficiently. We will use **Vite**, an extremely fast build tool that replaces the old Create React App.\n\n### What is Vite?\n\nVite is a build tool that aims to provide a faster and leaner development experience for modern web projects. It serves your code via native ES modules (ESM) during development and bundles your code with Rollup for production.\n\n### Installation Steps\n\n1.  Ensure you have **Node.js** installed (version 14+).\n2.  Open your terminal.\n3.  Run the create command.\n\n```bash\nnpm create vite@latest my-project -- --template react\n```\n\n4.  Enter the project folder and install dependencies:\n\n```bash\ncd my-project\nnpm install\nnpm run dev\n```\n\nDone! Your local server will be running at `http://localhost:5173`.",
-                    "es": "# ¡Bienvenido al Mundo React!\n\nEn esta primera lección, configuraremos nuestro entorno de desarrollo para trabajar con React de manera profesional y eficiente. Utilizaremos **Vite**, una herramienta de compilación extremadamente rápida que reemplaza al antiguo Create React App.\n\n### ¿Qué es Vite?\n\nVite es una herramienta de compilación que tiene como objetivo proporcionar una experiencia de desarrollo más rápida y ligera para proyectos web modernos. Sirve su código a través de módulos ES nativos (ESM) durante el desarrollo y agrupa su código con Rollup para producción.\n\n### Pasos de Instalación\n\n1.  Asegúrate de tener **Node.js** instalado (versión 14+).\n2.  Abre tu terminal.\n3.  Ejecuta el comando de creación.\n\n```bash\nnpm create vite@latest mi-proyecto -- --template react\n```\n\n4.  Entra en la carpeta del proyecto e instala las dependencias:\n\n```bash\ncd mi-proyecto\nnpm install\nnpm run dev\n```\n\n¡Listo! Tu servidor local se estará ejecutando en `http://localhost:5173`.",
-                    "fr": "# Bienvenue dans le monde React !\n\nDans cette première leçon, nous allons configurer notre environnement de développement pour travailler avec React de manière professionnelle et efficace. Nous utiliserons **Vite**, un outil de build extrêmement rapide qui remplace l'ancien Create React App.",
-                    "de": "# Willkommen in der React-Welt!\n\nIn dieser ersten Lektion richten wir unsere Entwicklungsumgebung ein, um professionell und effizient mit React zu arbeiten. Wir verwenden **Vite**, ein extrem schnelles Build-Tool, das die alte Create React App ersetzt.",
-                    "zh": "# 欢迎来到 React 世界！\n\n在这第一课中，我们将配置开发环境，以便专业高效地使用 React。我们将使用 **Vite**，这是一个极快的构建工具，取代了旧的 Create React App。",
-                    "ar": "# مرحبًا بك في عالم React!\n\nفي هذا الدرس الأول، سنقوم بإعداد بيئة التطوير الخاصة بنا للعمل مع React بشكل احترافي وفعال. سنستخدم **Vite**، وهي أداة بناء سريعة للغاية تحل محل Create React App القديم."
+                    "pt": "# Tipos de Dados\n- **Inteiros**: 1, 2, -5\n- **Reais/Float**: 1.5, 3.14\n- **Strings**: \"Texto\"\n- **Booleanos**: Verdadeiro/Falso"
                 },
                 "exercise": {
                     "instructions": {
-                        "pt": "Crie um novo projeto React usando Vite, limpe o arquivo App.jsx deixando apenas uma div com um H1 escrito 'Olá Mundo React'.",
-                        "en": "Create a new React project using Vite, clean the App.jsx file leaving only a div with an H1 saying 'Hello World React'.",
-                        "es": "Crea un nuevo proyecto React usando Vite, limpia el archivo App.jsx dejando solo un div con un H1 que diga 'Hola Mundo React'.",
-                        "fr": "Créez un nouveau projet React avec Vite, nettoyez App.jsx en ne laissant qu'une div avec un H1 'Bonjour Monde React'.",
-                        "de": "Erstellen Sie ein neues React-Projekt mit Vite, bereinigen Sie App.jsx und lassen Sie nur ein div mit einem H1 'Hallo Welt React' übrig.",
-                        "zh": "使用 Vite 创建一个新的 React 项目，清理 App.jsx，只保留一个包含 H1 'Hello World React' 的 div。",
-                        "ar": "قم بإنشاء مشروع React جديد باستخدام Vite، ونظف ملف App.jsx مع ترك div واحد فقط بـ H1 يقول 'Hello World React'."
+                        "pt": "declare uma variável inteira idade = 25",
+                        "en": "declare int age = 25",
+                        "es": "declarar int edad = 25"
                     },
-                    "code": "function App() {\n  return (\n    <div>\n      <h1>Olá Mundo React</h1>\n    </div>\n  )\n}\n\nexport default App",
+                    "code": "var idade = 25;",
                     "solution": {
-                        "pt": "Basta remover todo o boilerplate que vem no App.jsx e substituir pelo código acima.",
-                        "en": "Just remove all the boilerplate that comes in App.jsx and replace it with the code above.",
-                        "es": "Simplemente elimina todo el boilerplate que viene en App.jsx y reemplázalo con el código anterior.",
-                        "fr": "Supprimez simplement tout le boilerplate dans App.jsx et remplacez-le par le code ci-dessus.",
-                        "de": "Entfernen Sie einfach den gesamten Boilerplate in App.jsx und ersetzen Sie ihn durch den obigen Code.",
-                        "zh": "只需删除 App.jsx 中的所有样板代码，并将其替换为上面的代码。",
-                        "ar": "ما عليك سوى إزالة كل النموذج المعياري في App.jsx واستبداله بالكود أعلاه."
+                        "pt": "Simples assim.",
+                        "en": "Simple as that.",
+                        "es": "Simple así."
+                    }
+                }
+            }
+        ]
+    },
+    "id": 1,
+    "slug": "react-dominando-o-essencial",
+    "title": {
+        "pt": "React Dominando o Essencial",
+        "en": "React Mastering the Essentials",
+        "es": "React Dominando lo Esencial",
+        "fr": "React Maîtriser l'Essentiel",
+        "de": "React Grundlagen meistern",
+        "zh": "React 掌握基础",
+        "ar": "إتقان أساسيات React"
+    },
+    "category": "Front-end",
+    "description": {
+        "pt": "Aprenda a criar interfaces modernas e responsivas com React.js. Domine componentes, hooks, estado e muito mais.",
+        "en": "Learn to create modern and responsive interfaces with React.js. Master components, hooks, state, and more.",
+        "es": "Aprende a crear interfaces modernas y responsivas con React.js. Domina componentes, hooks, estado y mucho más.",
+        "fr": "Apprenez à créer des interfaces modernes et réactives. Maîtrisez les composants, les hooks et plus encore.",
+        "de": "Lernen Sie moderne und reaktionsschnelle Schnittstellen zu erstellen.",
+        "zh": "学习创建现代且响应迅速的界面。",
+        "ar": "تعلم كيفية إنشاء واجهات حديثة وسريعة الاستجابة."
+    },
+    "descricaoCompleta": {
+        "pt": "Neste curso abrangente, você mergulhará fundo no ecossistema React. Desde os conceitos fundamentais de componentes e JSX até técnicas avançadas de gerenciamento de estado com Context API e Redux. Você aprenderá a construir Single Page Applications (SPAs) performáticas.",
+        "en": "In this comprehensive course, you will dive deep into the React ecosystem. From fundamental concepts of components and JSX to advanced state management techniques with Context API and Redux. You will learn to build performant Single Page Applications (SPAs).",
+        "es": "En este curso completo, profundizarás en el ecosistema React. Desde los conceptos fundamentales de componentes y JSX hasta técnicas avanzadas de gestión de estado con Context API y Redux. Aprenderás a construir Single Page Applications (SPAs) de alto rendimiento.",
+        "fr": "Plongez dans l'écosystème React, des concepts fondamentaux aux techniques avancées.",
+        "de": "Tauchen Sie tief in das React-Ökosystem ein, von den Grundlagen bis zu fortgeschrittenen Techniken.",
+        "zh": "深入 React 生态系统，从基础概念到高级技术。",
+        "ar": "تعمق في نظام React البيئي، من المفاهيم الأساسية إلى التقنيات المتقدمة."
+    },
+    "modulos": [
+        "Introdução ao React e JSX",
+        "Gerenciamento de Estado e Ciclo de Vida",
+        "Hooks Essenciais (useState, useEffect)",
+        "Roteamento com React Router",
+        "Context API",
+        "React 19 e Inovações",
+        "Performance e Arquitetura"
+    ],
+    "duration": "40h",
+    "level": {
+        "pt": "Intermediário",
+        "en": "Intermediate",
+        "es": "Intermedio",
+        "fr": "Intermédiaire",
+        "de": "Mittelstufe",
+        "zh": "中级",
+        "ar": "متوسط"
+    },
+    "image": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "aulas": [
+        {
+            "titulo": {
+                "pt": "1. Introdução ao Projeto e Setup",
+                "en": "1. Project Intro & Setup",
+                "es": "1. Introducción al Proyecto y Configuración",
+                "fr": "1. Introduction et Configuration",
+                "de": "1. Einführung und Einrichtung",
+                "zh": "1. 项目介绍与设置",
+                "ar": "1. مقدمة المشروع والإعداد"
+            },
+            "duracao": {
+                "pt": "Leitura: 15 min",
+                "en": "Read: 15 min",
+                "es": "Lectura: 15 min",
+                "fr": "Lecture: 15 min",
+                "de": "Lesen: 15 min",
+                "zh": "阅读: 15 分钟",
+                "ar": "قراءة: 15 دقيقة"
+            },
+            "status": "completa",
+            "content": {
+                "pt": "# Bem-vindo ao Mundo React!\n\nNesta primeira aula, vamos configurar nosso ambiente de desenvolvimento com **Vite** e entender os **fundamentos da Engenharia da Reatividade**.\n\n### A Evolução do Desenvolvimento Declarativo\nA transição do modelo imperativo (JS tradicional) para o **declarativo** (React) é a pedra angular do domínio técnico. No modelo imperativo, você descreve *como* manipular o DOM passo-a-passo. No React, você define *o que* quer ver (o estado desejado), e a biblioteca reconcilia o DOM para você.\n\n### Virtual DOM\nO React não manipula o DOM real diretamente em primeira instância. Ele usa uma representação intermediária leve, o **Virtual DOM**. Isso permite algoritmos de reconciliação otimizados (Complexidade O(n)), garantindo performance mesmo em SPAs complexas.\n\n### Setup com Vite\n1. `npm create vite@latest meu-projeto -- --template react`\n2. `cd meu-projeto`\n3. `npm install`\n4. `npm run dev`",
+                "en": "# Welcome to the React World!\n\nIn this first lesson, we will set up our development environment to work with React professionally and efficiently. We will use **Vite**, an extremely fast build tool that replaces the old Create React App.\n\n### What is Vite?\n\nVite is a build tool that aims to provide a faster and leaner development experience for modern web projects. It serves your code via native ES modules (ESM) during development and bundles your code with Rollup for production.\n\n### Installation Steps\n\n1.  Ensure you have **Node.js** installed (version 14+).\n2.  Open your terminal.\n3.  Run the create command.\n\n```bash\nnpm create vite@latest my-project -- --template react\n```\n\n4.  Enter the project folder and install dependencies:\n\n```bash\ncd my-project\nnpm install\nnpm run dev\n```\n\nDone! Your local server will be running at `http://localhost:5173`.",
+                "es": "# ¡Bienvenido al Mundo React!\n\nEn esta primera lección, configuraremos nuestro entorno de desarrollo para trabajar con React de manera profesional y eficiente. Utilizaremos **Vite**, una herramienta de compilación extremadamente rápida que reemplaza al antiguo Create React App.\n\n### ¿Qué es Vite?\n\nVite es una herramienta de compilación que tiene como objetivo proporcionar una experiencia de desarrollo más rápida y ligera para proyectos web modernos. Sirve su código a través de módulos ES nativos (ESM) durante el desarrollo y agrupa su código con Rollup para producción.\n\n### Pasos de Instalación\n\n1.  Asegúrate de tener **Node.js** instalado (versión 14+).\n2.  Abre tu terminal.\n3.  Ejecuta el comando de creación.\n\n```bash\nnpm create vite@latest mi-proyecto -- --template react\n```\n\n4.  Entra en la carpeta del proyecto e instala las dependencias:\n\n```bash\ncd mi-proyecto\nnpm install\nnpm run dev\n```\n\n¡Listo! Tu servidor local se estará ejecutando en `http://localhost:5173`.",
+                "fr": "# Bienvenue dans le monde React !\n\nDans cette première leçon, nous allons configurer notre environnement de développement pour travailler avec React de manière professionnelle et efficace. Nous utiliserons **Vite**, un outil de build extrêmement rapide qui remplace l'ancien Create React App.",
+                "de": "# Willkommen in der React-Welt!\n\nIn dieser ersten Lektion richten wir unsere Entwicklungsumgebung ein, um professionell und effizient mit React zu arbeiten. Wir verwenden **Vite**, ein extrem schnelles Build-Tool, das die alte Create React App ersetzt.",
+                "zh": "# 欢迎来到 React 世界！\n\n在这第一课中，我们将配置开发环境，以便专业高效地使用 React。我们将使用 **Vite**，这是一个极快的构建工具，取代了旧的 Create React App。",
+                "ar": "# مرحبًا بك في عالم React!\n\nفي هذا الدرس الأول، سنقوم بإعداد بيئة التطوير الخاصة بنا للعمل مع React بشكل احترافي وفعال. سنستخدم **Vite**، وهي أداة بناء سريعة للغاية تحل محل Create React App القديم."
+            },
+            "exercise": {
+                "instructions": {
+                    "pt": "Crie um novo projeto React usando Vite, limpe o arquivo App.jsx deixando apenas uma div com um H1 escrito 'Olá Mundo React'.",
+                    "en": "Create a new React project using Vite, clean the App.jsx file leaving only a div with an H1 saying 'Hello World React'.",
+                    "es": "Crea un nuevo proyecto React usando Vite, limpia el archivo App.jsx dejando solo un div con un H1 que diga 'Hola Mundo React'.",
+                    "fr": "Créez un nouveau projet React avec Vite, nettoyez App.jsx en ne laissant qu'une div avec un H1 'Bonjour Monde React'.",
+                    "de": "Erstellen Sie ein neues React-Projekt mit Vite, bereinigen Sie App.jsx und lassen Sie nur ein div mit einem H1 'Hallo Welt React' übrig.",
+                    "zh": "使用 Vite 创建一个新的 React 项目，清理 App.jsx，只保留一个包含 H1 'Hello World React' 的 div。",
+                    "ar": "قم بإنشاء مشروع React جديد باستخدام Vite، ونظف ملف App.jsx مع ترك div واحد فقط بـ H1 يقول 'Hello World React'."
+                },
+                "code": "function App() {\n  return (\n    <div>\n      <h1>Olá Mundo React</h1>\n    </div>\n  )\n}\n\nexport default App",
+                "solution": {
+                    "pt": "Basta remover todo o boilerplate que vem no App.jsx e substituir pelo código acima.",
+                    "en": "Just remove all the boilerplate that comes in App.jsx and replace it with the code above.",
+                    "es": "Simplemente elimina todo el boilerplate que viene en App.jsx y reemplázalo con el código anterior.",
+                    "fr": "Supprimez simplement tout le boilerplate dans App.jsx et remplacez-le par le code ci-dessus.",
+                    "de": "Entfernen Sie einfach den gesamten Boilerplate in App.jsx und ersetzen Sie ihn durch den obigen Code.",
+                    "zh": "只需删除 App.jsx 中的所有样板代码，并将其替换为上面的代码。",
+                    "ar": "ما عليك سوى إزالة كل النموذج المعياري في App.jsx واستبداله بالكود أعلاه."
+                }
+            }
+        },
+        {
+            "titulo": {
+                "pt": "2. Criando Componentes e Props",
+                "en": "2. Creating Components and Props",
+                "es": "2. Creando Componentes y Props",
+                "fr": "2. Création de Composants et Props",
+                "de": "2. Erstellen von Komponenten und Requisiten",
+                "zh": "2. 创建组件和属性",
+                "ar": "2. إنشاء المكونات والخصائص"
+            },
+            "duracao": {
+                "pt": "Leitura: 20 min",
+                "en": "Read: 20 min",
+                "es": "Lectura: 20 min",
+                "fr": "Lecture: 20 min",
+                "de": "Lesen: 20 min",
+                "zh": "阅读: 20 分钟",
+                "ar": "قراءة: 20 دقيقة"
+            },
+            "status": "completa",
+            "content": {
+                "pt": "# Componentes e Props\n\nO React é baseado em **Componentes**. Componentes permitem dividir a UI em pedaços independentes e reutilizáveis, e pensar sobre cada pedaço isoladamente.\n\n### O que são Props?\nProps (propriedades) são a forma como passamos dados de um componente pai para um componente filho. Elas são somente leitura.\n\n```jsx\nfunction Welcome(props) {\n  return <h1>Olá, {props.name}</h1>;\n}\n```",
+                "en": "# Components and Props\n\nReact is based on **Components**. Components let you split the UI into independent, reusable pieces, and think about each piece in isolation.\n\n### What are Props?\nProps (properties) are how we pass data from a parent component to a child component. They are read-only.",
+                "es": "# Componentes y Props\n\nReact se basa en **Componentes**. Los componentes te permiten dividir la interfaz de usuario en piezas independientes y reutilizables, y pensar en cada pieza de forma aislada.\n\n### ¿Qué son las Props?\nLas props (propiedades) son la forma en que pasamos datos de un componente padre a un componente hijo. Son de solo lectura.",
+                "fr": "# Composants et Props\n\nReact est basé sur des **Composants**. Les composants vous permettent de diviser l'interface utilisateur en éléments indépendants et réutilisables.\n\n### Que sont les Props ?\nLes props (propriétés) sont le moyen de passer des données d'un composant parent à un composant enfant.",
+                "de": "# Komponenten und Props\n\nReact basiert auf **Komponenten**. Komponenten ermöglichen es Ihnen, die Benutzeroberfläche in unabhängige, wiederverwendbare Teile zu unterteilen.",
+                "zh": "# 组件和 Props\n\nReact 基于**组件**。组件允许您将 UI 拆分为独立的可重用部分。",
+                "ar": "# المكونات والخصائص\n\nيعتمد React على **المكونات**. تتيح لك المكونات تقسيم واجهة المستخدم إلى أجزاء مستقلة وقابلة لإعادة الاستخدام."
+            },
+            "exercise": {
+                "instructions": {
+                    "pt": "Crie um componente chamado 'Cartao' que receba 'titulo' e 'conteudo' via props e renderize-os.",
+                    "en": "Create a component called 'Card' that receives 'title' and 'content' via props and renders them.",
+                    "es": "Crea un componente llamado 'Tarjeta' que reciba 'titulo' y 'contenido' a través de props y los renderice."
+                },
+                "code": "function Cartao(props) {\n  return (\n    <div className=\"card\">\n      <h2>{props.titulo}</h2>\n      <p>{props.conteudo}</p>\n    </div>\n  );\n}",
+                "solution": {
+                    "pt": "Defina a função Cartao acessando props.titulo e props.conteudo dentro do JSX.",
+                    "en": "Define the Card function accessing props.title and props.content inside JSX.",
+                    "es": "Define la función Tarjeta accediendo a props.titulo y props.contenido dentro de JSX."
+                }
+            }
+        },
+        {
+            "titulo": {
+                "pt": "3. Gerenciamento de Estado (useState)",
+                "en": "3. State Management (useState)",
+                "es": "3. Gestión de Estado (useState)",
+                "fr": "3. Gestion d'État (useState)",
+                "de": "3. Zustandsverwaltung (useState)",
+                "zh": "3. 状态管理 (useState)",
+                "ar": "3. إدارة الحالة (useState)"
+            },
+            "duracao": {
+                "pt": "Leitura: 25 min",
+                "en": "Read: 25 min",
+                "es": "Lectura: 25 min",
+                "fr": "Lecture: 25 min",
+                "de": "Lesen: 25 min",
+                "zh": "阅读: 25 分钟",
+                "ar": "قراءة: 25 دقيقة"
+            },
+            "status": "completa",
+            "content": {
+                "pt": "# useState: O Hook Mais Importante\n\nO `useState` é um Hook que permite adicionar estado ao React em componentes funcionais.\n\n### Exemplo Básico\n\n```jsx\nimport React, { useState } from 'react';\n\nfunction Exemplo() {\n  const [count, setCount] = useState(0);\n\n  return (\n    <div>\n      <p>Você clicou {count} vezes</p>\n      <button onClick={() => setCount(count + 1)}>\n        Clique aqui\n      </button>\n    </div>\n  );\n}\n```",
+                "en": "# useState: The Most Important Hook\n\n`useState` is a Hook that lets you add React state to function components.\n\n### Basic Example\n\n```jsx\nimport React, { useState } from 'react';\n\nfunction Example() {\n  const [count, setCount] = useState(0);\n\n  return (\n    <div>\n      <p>You clicked {count} times</p>\n      <button onClick={() => setCount(count + 1)}>\n        Click me\n      </button>\n    </div>\n  );\n}\n```",
+                "es": "# useState: El Hook Más Importante\n\n`useState` es un Hook que te permite añadir estado de React a componentes funcionales."
+            },
+            "exercise": {
+                "instructions": {
+                    "pt": "Implemente um botão que alterna entre 'Ligado' e 'Desligado' ao ser clicado, e muda a cor do fundo.",
+                    "en": "Implement a button that toggles between 'On' and 'Off' when clicked, and changes the background color.",
+                    "es": "Implementa un botón que alterne entre 'Encendido' y 'Apagado' al hacer clic, y cambie el color de fondo."
+                },
+                "code": "function Interruptor() {\n  const [ligado, setLigado] = useState(false);\n  return (\n    <button \n      style={{ background: ligado ? 'green' : 'red' }}\n      onClick={() => setLigado(!ligado)}\n    >\n      {ligado ? 'Ligado' : 'Desligado'}\n    </button>\n  );\n}",
+                "solution": {
+                    "pt": "Use um booleano no estado e o operador ternário (!ligado) para inverter o valor.",
+                    "en": "Use a boolean in state and the ternary operator (!on) to flip the value.",
+                    "es": "Usa un booleano en el estado y el operador ternario (!encendido) para invertir el valor."
+                }
+            }
+        },
+        {
+            "titulo": {
+                "pt": "4. Efeitos Colaterais com useEffect",
+                "en": "4. Side Effects with useEffect",
+                "es": "4. Efectos Secundarios con useEffect",
+                "fr": "4. Effets Secondaires avec useEffect",
+                "de": "4. Nebenwirkungen mit useEffect",
+                "zh": "4. 使用 useEffect 处理副作用",
+                "ar": "4. الآثار الجانبية مع useEffect"
+            },
+            "duracao": {
+                "pt": "Leitura: 30 min",
+                "en": "Read: 30 min",
+                "es": "Lectura: 30 min"
+            },
+            "status": "livre",
+            "content": {
+                "pt": "# O Hook useEffect\n\nO `useEffect` permite executar efeitos colaterais em componentes funcionais. Buscas de dados, subscrições ou manipulação manual do DOM devem ser feitos aqui.\n\n### Ciclo de Vida\n- **Montagem**: Executa uma vez (`[]`).\n- **Atualização**: Executa quando dependências mudam (`[prop]`).\n- **Desmontagem**: Função de retorno para limpeza.",
+                "en": "# The useEffect Hook\n\n`useEffect` lets you perform side effects in function components. Data fetching, setting up a subscription, and manually changing the DOM in React components should happen here.\n\n### Lifecycle\n- **Mount**: Runs once (`[]`).\n- **Update**: Runs when dependencies change (`[prop]`).\n- **Unmount**: Cleanup return function.",
+                "es": "# El Hook useEffect\n\n`useEffect` te permite realizar efectos secundarios en componentes funcionales. La obtención de datos, la configuración de suscripciones y la modificación manual del DOM deben ocurrir aquí."
+            },
+            "exercise": {
+                "instructions": {
+                    "pt": "Crie um componente que mude o título da aba do navegador (document.title) toda vez que um contador for atualizado.",
+                    "en": "Create a component that changes the browser tab title (document.title) every time a counter is updated.",
+                    "es": "Crea un componente que cambie el título de la pestaña del navegador (document.title) cada vez que se actualice un contador."
+                },
+                "code": "useEffect(() => {\n  document.title = `Contagem: ${count}`;\n}, [count]);",
+                "solution": {
+                    "pt": "Adicione 'count' como dependência no array do useEffect.",
+                    "en": "Add 'count' as a dependency in the useEffect array.",
+                    "es": "Añade 'count' como dependencia en el array de useEffect."
+                }
+            }
+        },
+        {
+            "titulo": {
+                "pt": "5. Formulários e Eventos",
+                "en": "5. Forms and Events",
+                "es": "5. Formularios y Eventos",
+                "fr": "5. Formulaires et Événements",
+                "de": "5. Formulare und Ereignisse",
+                "zh": "5. 表单与事件",
+                "ar": "5. النماذج والأحداث"
+            },
+            "duracao": {
+                "pt": "Leitura: 25 min",
+                "en": "Read: 25 min",
+                "es": "Lectura: 25 min"
+            },
+            "status": "livre",
+            "content": {
+                "pt": "# Formulários no React\n\nEm React, o estado mutável é geralmente mantido na propriedade state dos componentes, e só é atualizado por `setState()`. Elementos de formulário HTML funcionam um pouco diferente de outros elementos DOM porque eles mantêm seu próprio estado interno.\n\n### Componentes Controlados\nNós fazemos o React a 'única fonte de verdade' transformando o formulário em um **Componente Controlado**.",
+                "en": "# Forms in React\n\nIn React, mutable state is typically kept in the state property of components, and only updated with `setState()`. HTML form elements work a little differently from other DOM elements because form elements naturally keep some internal state.\n\n### Controlled Components\nWe render the React state as the 'single source of truth', making it a **Controlled Component**.",
+                "es": "# Formularios en React\n\nEn React, el estado mutable normalmente se mantiene en la propiedad state de los componentes y solo se actualiza con `setState()`. Los elementos de formulario HTML funcionan de manera un poco diferente porque mantienen su propio estado interno."
+            },
+            "exercise": {
+                "instructions": {
+                    "pt": "Crie um formulário simples com um input de texto que atualiza o estado e exibe o valor digitado em tempo real abaixo do input.",
+                    "en": "Create a simple form with a text input that updates state and displays the typed value in real-time below the input.",
+                    "es": "Crea un formulario simple con una entrada de texto que actualice el estado y muestre el valor escrito en tiempo real debajo de la entrada."
+                },
+                "code": "const [nome, setNome] = useState('');\n<input value={nome} onChange={e => setNome(e.target.value)} />\n<p>Digitando: {nome}</p>",
+                "solution": {
+                    "pt": "Vincule o value do input ao state e o onChange ao setState.",
+                    "en": "Bind the input value to state and onChange to setState.",
+                    "es": "Vincula el value del input al state y el onChange al setState."
+                }
+            }
+        },
+        {
+            "titulo": {
+                "pt": "6. Consumindo APIs (Fetch/Axios)",
+                "en": "6. Consuming APIs (Fetch/Axios)",
+                "es": "6. Consumiendo APIs (Fetch/Axios)",
+                "fr": "6. Consommer des API (Fetch/Axios)",
+                "de": "6. APIs konsumieren (Fetch/Axios)",
+                "zh": "6. 使用 API (Fetch/Axios)",
+                "ar": "6. استهلاك واجهات برمجة التطبيقات (Fetch/Axios)"
+            },
+            "duracao": {
+                "pt": "Leitura: 35 min",
+                "en": "Read: 35 min",
+                "es": "Lectura: 35 min"
+            },
+            "status": "livre",
+            "content": {
+                "pt": "# Requisições HTTP\n\nA maioria das aplicações web precisa buscar dados de um servidor. Em React, geralmente fazemos isso dentro de um `useEffect`.\n\n### Fetch API\nA Fetch API é nativa do navegador.\n\n```jsx\nuseEffect(() => {\n  fetch('https://api.exemplo.com/dados')\n    .then(response => response.json())\n    .then(data => setDados(data));\n}, []);\n```",
+                "en": "# HTTP Requests\n\nMost web apps need to fetch data from a server. In React, we predominantly do this inside a `useEffect`.\n\n### Fetch API\nThe Fetch API is native to the browser.",
+                "es": "# Peticiones HTTP\n\nLa mayoría de las aplicaciones web necesitan obtener datos de un servidor. En React, generalmente hacemos esto dentro de un `useEffect`."
+            },
+            "exercise": {
+                "instructions": {
+                    "pt": "Faça uma requisição para 'https://jsonplaceholder.typicode.com/todos/1' e exiba o título da tarefa.",
+                    "en": "Make a request to 'https://jsonplaceholder.typicode.com/todos/1' and display the todo title.",
+                    "es": "Realiza una petición a 'https://jsonplaceholder.typicode.com/todos/1' y muestra el título de la tarea."
+                },
+                "code": "const [todo, setTodo] = useState(null);\nuseEffect(() => {\n  fetch('https://jsonplaceholder.typicode.com/todos/1')\n    .then(r => r.json())\n    .then(setTodo);\n}, []);\n\nreturn <div>{todo?.title}</div>;",
+                "solution": {
+                    "pt": "Lembre-se de tratar o cado inicial onde 'todo' é null.",
+                    "en": "Remember to handle the initial case where 'todo' is null.",
+                    "es": "Recuerda manejar el caso inicial donde 'todo' es null."
+                }
+            }
+        },
+        {
+            "titulo": {
+                "pt": "7. Roteamento com React Router",
+                "en": "7. Routing with React Router",
+                "es": "7. Enrutamiento con React Router",
+                "fr": "7. Routage avec React Router",
+                "de": "7. Routing mit React Router",
+                "zh": "7. 使用 React Router 进行路由",
+                "ar": "7. التوجيه باستخدام React Router"
+            },
+            "duracao": {
+                "pt": "Leitura: 30 min",
+                "en": "Read: 30 min",
+                "es": "Lectura: 30 min"
+            },
+            "status": "livre",
+            "content": {
+                "pt": "# React Router\n\nSPAs (Single Page Applications) precisam de um roteador para navegar entre diferentes visualizações sem recarregar a página. O padrão da indústria é o `react-router-dom`.\n\n### Instalação\n`npm install react-router-dom`\n\n### Configuração Básica\nUse `BrowserRouter`, `Routes` e `Route` para definir seus caminhos.",
+                "en": "# React Router\n\nSPAs (Single Page Applications) need a router to navigate between different views without reloading the page. The industry standard is `react-router-dom`.\n\n### Installation\n`npm install react-router-dom`\n\n### Basic Setup\nUse `BrowserRouter`, `Routes`, and `Route` to define your paths.",
+                "es": "# React Router\n\nLas SPAs necesitan un enrutador para navegar entre diferentes vistas."
+            },
+            "exercise": {
+                "instructions": {
+                    "pt": "Configure duas rotas: '/' para Home e '/sobre' para About.",
+                    "en": "Configure two routes: '/' for Home and '/about' for About.",
+                    "es": "Configura dos rutas: '/' para Inicio y '/sobre' para Acerca de."
+                },
+                "code": "<Routes>\n  <Route path='/' element={<Home />} />\n  <Route path='/sobre' element={<About />} />\n</Routes>",
+                "solution": {
+                    "pt": "Envolva os componentes Route dentro de Routes.",
+                    "en": "Wrap Route components inside Routes.",
+                    "es": "Envuelve los componentes Route dentro de Routes."
+                }
+            }
+        },
+        {
+            "titulo": {
+                "pt": "8. React 19 e Inovações",
+                "en": "8. React 19 & Frontiers",
+                "es": "8. React 19 y Fronteras",
+                "fr": "8. React 19 et Frontières",
+                "de": "8. React 19 und Grenzen",
+                "zh": "8. React 19 与前沿",
+                "ar": "8. React 19 والحدود"
+            },
+            "duracao": {
+                "pt": "Leitura: 40 min",
+                "en": "Read: 40 min",
+                "es": "Lectura: 40 min"
+            },
+            "status": "livre",
+            "content": {
+                "pt": "# Inovações de Fronteira: React 19 e Server Components\n\nA evolução do React atingiu um marco histórico com o lançamento da versão 19, que introduz mudanças fundamentais na arquitetura.\n\n### React Server Components (RSC)\nOs RSCs representam uma mudança onde partes da interface são renderizadas exclusivamente no servidor e enviadas ao cliente como um stream de dados leve.\n- **Vantagem:** Redução drástica do JavaScript enviado ao cliente.\n- **Performance:** Melhora métricas de LCP e TTI.\n\n### Server Actions\nPermite definir funções de backend que podem ser chamadas diretamente de componentes de cliente.\n\n### Novos Hooks\n- **use()**: API para ler recursos assíncronos (Promises/Context) em condicionais.\n- **useActionState()**: Gerencia estado de ações (loading/error).\n- **useFormStatus()**: Metadados sobre submissão de formulários.\n- **React Compiler**: Automatiza a memorização (adeus useMemo manual?)."
+            },
+            "exercise": {
+                "instructions": {
+                    "pt": "Simule o uso de uma Server Action (conceitual) que recebe dados de um formulário.",
+                    "en": "Simulate using a Server Action (conceptual) that receives form data.",
+                    "es": "Simula el uso de una Server Action (conceptual) que recibe datos de un formulario."
+                },
+                "code": "// server-action.js\n'use server';\n\nexport async function cadastrarUsuario(formData) {\n  const nome = formData.get('nome');\n  await db.users.create({ nome });\n}",
+                "solution": {
+                    "pt": "Server Actions devem ter a diretiva 'use server' no topo.",
+                    "en": "Server Actions must have the 'use server' directive at the top.",
+                    "es": "Las Server Actions deben tener la directiva 'use server' en la parte superior."
+                }
+            }
+        },
+        {
+            "titulo": {
+                "pt": "9. Performance e Arquitetura",
+                "en": "9. Performance & Architecture",
+                "es": "9. Rendimiento y Arquitectura",
+                "fr": "9. Performance et Architecture",
+                "de": "9. Leistung und Architektur",
+                "zh": "9. 性能与架构",
+                "ar": "9. الأداء والهندسة المعمارية"
+            },
+            "duracao": {
+                "pt": "Leitura: 35 min",
+                "en": "Read: 35 min",
+                "es": "Lectura: 35 min"
+            },
+            "status": "livre",
+            "content": {
+                "pt": "# Estratégias de Otimização\n\n### Reconciliação e Keys\nO processo de \"diffing\" é o coração do React. O uso de **keys** estáveis em listas é obrigatório para evitar bugs e degradação de performance.\n\n### Code Splitting\nUse `React.lazy` e `Suspense` para dividir a aplicação em pedaços menores, carregados sob demanda.\n\n### Portais\n`createPortal` permite renderizar filhos em um nó DOM diferente, crucial para Modais e Tooltips que precisam escapar de `overflow: hidden`.\n\n### Acesso Direto ao DOM (Refs)\nUse `useRef` para valores persistentes que não disparam re-render ou para acessar APIs imperativas do DOM (foco, media players).",
+                "en": "# Optimization Strategies\n\n### Reconciliation & Keys\nThe \"diffing\" process is the heart of React. Using stable **keys** in lists is mandatory.\n\n### Code Splitting\nUse `React.lazy` and `Suspense` to split the app into smaller chunks.\n\n### Portals\n`createPortal` lets you render children into a different DOM node, crucial for Modals."
+            },
+            "exercise": {
+                "instructions": {
+                    "pt": "Crie uma referência (ref) para um input e foque nele automaticamente ao carregar o componente.",
+                    "en": "Create a ref for an input and focus it automatically when the component loads.",
+                    "es": "Crea una referencia (ref) para un input y enfócalo automáticamente al cargar el componente."
+                },
+                "code": "const inputRef = useRef(null);\nuseEffect(() => {\n  inputRef.current.focus();\n}, []);\n\nreturn <input ref={inputRef} />;",
+                "solution": {
+                    "pt": "Use inputRef.current.focus() dentro do useEffect de montagem.",
+                    "en": "Use inputRef.current.focus() inside the mount useEffect.",
+                    "es": "Usa inputRef.current.focus() dentro del useEffect de montaje."
+                }
+            }
+            {
+                "id": 1,
+                "question": {
+                    "pt": "O que é o React?",
+                    "en": "What is React?",
+                    "es": "¿Qué es React?"
+                },
+                "options": {
+                    "pt": [
+                        "Uma linguagem de programação",
+                        "Uma biblioteca JavaScript para interfaces",
+                        "Um banco de dados",
+                        "Um framework CSS"
+                    ],
+                    "en": [
+                        "A programming language",
+                        "A JavaScript library for interfaces",
+                        "A database",
+                        "A CSS framework"
+                    ],
+                    "es": [
+                        "Un lenguaje de programación",
+                        "Una biblioteca JavaScript para interfaces",
+                        "Una base de datos",
+                        "Un framework CSS"
+                    ]
+                },
+                "correctAnswer": 1
+            },
+            {
+                "id": 2,
+                "question": {
+                    "pt": "Qual hook é usado para gerenciar estado?",
+                    "en": "Which hook is used to manage state?",
+                    "es": "¿Qué hook se usa para gestionar el estado?"
+                },
+                "options": {
+                    "pt": [
+                        "useEffect",
+                        "useContext",
+                        "useState",
+                        "useReducer"
+                    ],
+                    "en": [
+                        "useEffect",
+                        "useContext",
+                        "useState",
+                        "useReducer"
+                    ],
+                    "es": [
+                        "useEffect",
+                        "useContext",
+                        "useState",
+                        "useReducer"
+                    ]
+                },
+                "correctAnswer": 2
+            },
+            {
+                "id": 3,
+                "question": {
+                    "pt": "Como passamos dados de pai para filho?",
+                    "en": "How do we pass data from parent to child?",
+                    "es": "¿Cómo pasamos datos de padre a hijo?"
+                },
+                "options": {
+                    "pt": [
+                        "State",
+                        "Props",
+                        "Context",
+                        "Redux"
+                    ],
+                    "en": [
+                        "State",
+                        "Props",
+                        "Context",
+                        "Redux"
+                    ],
+                    "es": [
+                        "State",
+                        "Props",
+                        "Context",
+                        "Redux"
+                    ]
+                },
+                "correctAnswer": 1
+            },
+            {
+                "id": 4,
+                "question": {
+                    "pt": "O que o useEffect faz?",
+                    "en": "What does useEffect do?",
+                    "es": "¿Qué hace useEffect?"
+                },
+                "options": {
+                    "pt": [
+                        "Cria componentes",
+                        "Gerencia rotas",
+                        "Lida com efeitos colaterais",
+                        "Estiliza a página"
+                    ],
+                    "en": [
+                        "Creates components",
+                        "Manages routes",
+                        "Handles side effects",
+                        "Styles the page"
+                    ],
+                    "es": [
+                        "Crea componentes",
+                        "Gestiona rutas",
+                        "Maneja efectos secundarios",
+                        "Estila la página"
+                    ]
+                },
+                "correctAnswer": 2
+            },
+            {
+                "id": 5,
+                "question": {
+                    "pt": "O JSX é obrigatório no React?",
+                    "en": "Is JSX mandatory in React?",
+                    "es": "¿Es JSX obligatorio en React?"
+                },
+                "options": {
+                    "pt": [
+                        "Sim",
+                        "Não, mas é recomendado",
+                        "Apenas em classes",
+                        "Nunca"
+                    ],
+                    "en": [
+                        "Yes",
+                        "No, but recommended",
+                        "Only in classes",
+                        "Never"
+                    ],
+                    "es": [
+                        "Sí",
+                        "No, pero recomendado",
+                        "Solo en clases",
+                        "Nunca"
+                    ]
+                },
+                "correctAnswer": 1
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "slug": "api-rest-node-express",
+        "title": {
+            "pt": "API REST com Node.js e Express",
+            "en": "REST API with Node.js and Express",
+            "es": "API REST con Node.js y Express",
+            "fr": "API REST avec Node.js et Express",
+            "de": "REST-API mit Node.js und Express",
+            "zh": "使用 Node.js 和 Express 的 REST API",
+            "ar": "REST API مع Node.js و Express"
+        },
+        "category": "Back-end",
+        "description": {
+            "pt": "Construa APIs robustas e escaláveis usando Node.js e Express.",
+            "en": "Build robust and scalable APIs using Node.js and Express.",
+            "es": "Construye APIs robustas y escalables usando Node.js y Express.",
+            "fr": "Construisez des API robustes et évolutives.",
+            "de": "Erstellen Sie robuste und skalierbare APIs.",
+            "zh": "构建健壮且可扩展的 API。",
+            "ar": "بناء واجهات برمجة تطبيقات قوية وقابلة للتطوير."
+        },
+        "descricaoCompleta": {
+            "pt": "Desenvolva o backend de aplicações web modernas utilizando Node.js e o framework Express. Este curso cobre todo o processo de criação de uma API RESTful.",
+            "en": "Develop the backend of modern web applications using Node.js and the Express framework. This course covers the entire process of creating a RESTful API.",
+            "es": "Desarrolla el backend de aplicaciones web modernas utilizando Node.js y el framework Express. Este curso cubre todo el proceso de creación de una API RESTful.",
+            "fr": "Développez le backend d'applications web modernes.",
+            "de": "Entwickeln Sie das Backend moderner Webanwendungen.",
+            "zh": "开发现代 Web 应用程序的后端。",
+            "ar": "تطوير الواجهة الخلفية لتطبيقات الويب الحديثة."
+        },
+        "modulos": [
+            "Fundamentos",
+            "Express",
+            "MongoDB",
+            "Auth",
+            "Arquitetura e Clean Code",
+            "Segurança com JWT"
+        ],
+        "duration": "35h",
+        "level": {
+            "pt": "Avançado",
+            "en": "Advanced",
+            "es": "Avanzado",
+            "fr": "Avancé",
+            "de": "Fortgeschritten",
+            "zh": "高级",
+            "ar": "متقدم"
+        },
+        "image": "https://images.unsplash.com/photo-1627398242454-45a1465c2479?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+        "aulas": [
+            {
+                "titulo": {
+                    "pt": "1. Introdução ao Node.js",
+                    "en": "1. Intro to Node.js",
+                    "es": "1. Introducción a Node.js",
+                    "fr": "1. Introduction à Node.js",
+                    "de": "1. Einführung in Node.js",
+                    "zh": "1. Node.js 简介",
+                    "ar": "1. مقدمة في Node.js"
+                },
+                "duracao": {
+                    "pt": "Leitura: 15 min",
+                    "en": "Read: 15 min",
+                    "es": "Lectura: 15 min"
+                },
+                "status": "completa",
+                "content": {
+                    "pt": "# Introdução ao Node.js\n\nO Node.js é um ambiente de execução JavaScript construído sobre o motor V8 do Chrome. Ele permite executar JavaScript fora do navegador, ou seja, no servidor.\n\n### Características Principais\n- **Assíncrono e Orientado a Eventos:** O Node.js não bloqueia a execução enquanto espera por operações de I/O (entrada/saída).\n- **Single Thread:** Ele usa uma única thread com um Loop de Eventos.",
+                    "en": "# Intro to Node.js\n\nNode.js is a JavaScript runtime built on Chrome's V8 JavaScript engine. It allows you to run JavaScript outside the browser, i.e., on the server.\n\n### Key Features\n- **Asynchronous & Event-Driven:** Node.js doesn't block execution while waiting for I/O.\n- **Single Threaded:** It uses a single thread with an Event Loop.",
+                    "es": "# Introducción a Node.js\n\nNode.js es un entorno de ejecución de JavaScript construido sobre el motor de JavaScript V8 de Chrome."
+                },
+                "exercise": {
+                    "instructions": {
+                        "pt": "Crie um script simples 'ola.js' que imprima 'Olá, Node!' no terminal.",
+                        "en": "Create a simple script 'hello.js' that prints 'Hello, Node!' to the terminal.",
+                        "es": "Crea un script simple 'hola.js' que imprima '¡Hola, Node!' en la terminal."
+                    },
+                    "code": "console.log('Olá, Node!');",
+                    "solution": {
+                        "pt": "Basta criar o arquivo e rodar `node ola.js` no terminal.",
+                        "en": "Just create the file and run `node hello.js` in the terminal.",
+                        "es": "Simplemente crea el archivo y ejecuta `node hola.js` en la terminal."
                     }
                 }
             },
             {
                 "titulo": {
-                    "pt": "2. Criando Componentes e Props",
-                    "en": "2. Creating Components and Props",
-                    "es": "2. Creando Componentes y Props",
-                    "fr": "2. Création de Composants et Props",
-                    "de": "2. Erstellen von Komponenten und Requisiten",
-                    "zh": "2. 创建组件和属性",
-                    "ar": "2. إنشاء المكونات والخصائص"
+                    "pt": "2. Criando um Servidor HTTP",
+                    "en": "2. Creating an HTTP Server",
+                    "es": "2. Creando un Servidor HTTP",
+                    "fr": "2. Création d'un serveur HTTP",
+                    "de": "2. Erstellen eines HTTP-Servers",
+                    "zh": "2. 创建 HTTP 服务器",
+                    "ar": "2. إنشاء خادم HTTP"
                 },
                 "duracao": {
                     "pt": "Leitura: 20 min",
                     "en": "Read: 20 min",
-                    "es": "Lectura: 20 min",
-                    "fr": "Lecture: 20 min",
-                    "de": "Lesen: 20 min",
-                    "zh": "阅读: 20 分钟",
-                    "ar": "قراءة: 20 دقيقة"
-                },
-                "status": "completa",
-                "content": {
-                    "pt": "# Componentes e Props\n\nO React é baseado em **Componentes**. Componentes permitem dividir a UI em pedaços independentes e reutilizáveis, e pensar sobre cada pedaço isoladamente.\n\n### O que são Props?\nProps (propriedades) são a forma como passamos dados de um componente pai para um componente filho. Elas são somente leitura.\n\n```jsx\nfunction Welcome(props) {\n  return <h1>Olá, {props.name}</h1>;\n}\n```",
-                    "en": "# Components and Props\n\nReact is based on **Components**. Components let you split the UI into independent, reusable pieces, and think about each piece in isolation.\n\n### What are Props?\nProps (properties) are how we pass data from a parent component to a child component. They are read-only.",
-                    "es": "# Componentes y Props\n\nReact se basa en **Componentes**. Los componentes te permiten dividir la interfaz de usuario en piezas independientes y reutilizables, y pensar en cada pieza de forma aislada.\n\n### ¿Qué son las Props?\nLas props (propiedades) son la forma en que pasamos datos de un componente padre a un componente hijo. Son de solo lectura.",
-                    "fr": "# Composants et Props\n\nReact est basé sur des **Composants**. Les composants vous permettent de diviser l'interface utilisateur en éléments indépendants et réutilisables.\n\n### Que sont les Props ?\nLes props (propriétés) sont le moyen de passer des données d'un composant parent à un composant enfant.",
-                    "de": "# Komponenten und Props\n\nReact basiert auf **Komponenten**. Komponenten ermöglichen es Ihnen, die Benutzeroberfläche in unabhängige, wiederverwendbare Teile zu unterteilen.",
-                    "zh": "# 组件和 Props\n\nReact 基于**组件**。组件允许您将 UI 拆分为独立的可重用部分。",
-                    "ar": "# المكونات والخصائص\n\nيعتمد React على **المكونات**. تتيح لك المكونات تقسيم واجهة المستخدم إلى أجزاء مستقلة وقابلة لإعادة الاستخدام."
-                },
-                "exercise": {
-                    "instructions": {
-                        "pt": "Crie um componente chamado 'Cartao' que receba 'titulo' e 'conteudo' via props e renderize-os.",
-                        "en": "Create a component called 'Card' that receives 'title' and 'content' via props and renders them.",
-                        "es": "Crea un componente llamado 'Tarjeta' que reciba 'titulo' y 'contenido' a través de props y los renderice."
-                    },
-                    "code": "function Cartao(props) {\n  return (\n    <div className=\"card\">\n      <h2>{props.titulo}</h2>\n      <p>{props.conteudo}</p>\n    </div>\n  );\n}",
-                    "solution": {
-                        "pt": "Defina a função Cartao acessando props.titulo e props.conteudo dentro do JSX.",
-                        "en": "Define the Card function accessing props.title and props.content inside JSX.",
-                        "es": "Define la función Tarjeta accediendo a props.titulo y props.contenido dentro de JSX."
-                    }
-                }
-            },
-            {
-                "titulo": {
-                    "pt": "3. Gerenciamento de Estado (useState)",
-                    "en": "3. State Management (useState)",
-                    "es": "3. Gestión de Estado (useState)",
-                    "fr": "3. Gestion d'État (useState)",
-                    "de": "3. Zustandsverwaltung (useState)",
-                    "zh": "3. 状态管理 (useState)",
-                    "ar": "3. إدارة الحالة (useState)"
-                },
-                "duracao": {
-                    "pt": "Leitura: 25 min",
-                    "en": "Read: 25 min",
-                    "es": "Lectura: 25 min",
-                    "fr": "Lecture: 25 min",
-                    "de": "Lesen: 25 min",
-                    "zh": "阅读: 25 分钟",
-                    "ar": "قراءة: 25 دقيقة"
-                },
-                "status": "completa",
-                "content": {
-                    "pt": "# useState: O Hook Mais Importante\n\nO `useState` é um Hook que permite adicionar estado ao React em componentes funcionais.\n\n### Exemplo Básico\n\n```jsx\nimport React, { useState } from 'react';\n\nfunction Exemplo() {\n  const [count, setCount] = useState(0);\n\n  return (\n    <div>\n      <p>Você clicou {count} vezes</p>\n      <button onClick={() => setCount(count + 1)}>\n        Clique aqui\n      </button>\n    </div>\n  );\n}\n```",
-                    "en": "# useState: The Most Important Hook\n\n`useState` is a Hook that lets you add React state to function components.\n\n### Basic Example\n\n```jsx\nimport React, { useState } from 'react';\n\nfunction Example() {\n  const [count, setCount] = useState(0);\n\n  return (\n    <div>\n      <p>You clicked {count} times</p>\n      <button onClick={() => setCount(count + 1)}>\n        Click me\n      </button>\n    </div>\n  );\n}\n```",
-                    "es": "# useState: El Hook Más Importante\n\n`useState` es un Hook que te permite añadir estado de React a componentes funcionales."
-                },
-                "exercise": {
-                    "instructions": {
-                        "pt": "Implemente um botão que alterna entre 'Ligado' e 'Desligado' ao ser clicado, e muda a cor do fundo.",
-                        "en": "Implement a button that toggles between 'On' and 'Off' when clicked, and changes the background color.",
-                        "es": "Implementa un botón que alterne entre 'Encendido' y 'Apagado' al hacer clic, y cambie el color de fondo."
-                    },
-                    "code": "function Interruptor() {\n  const [ligado, setLigado] = useState(false);\n  return (\n    <button \n      style={{ background: ligado ? 'green' : 'red' }}\n      onClick={() => setLigado(!ligado)}\n    >\n      {ligado ? 'Ligado' : 'Desligado'}\n    </button>\n  );\n}",
-                    "solution": {
-                        "pt": "Use um booleano no estado e o operador ternário (!ligado) para inverter o valor.",
-                        "en": "Use a boolean in state and the ternary operator (!on) to flip the value.",
-                        "es": "Usa un booleano en el estado y el operador ternario (!encendido) para invertir el valor."
-                    }
-                }
-            },
-            {
-                "titulo": {
-                    "pt": "4. Efeitos Colaterais com useEffect",
-                    "en": "4. Side Effects with useEffect",
-                    "es": "4. Efectos Secundarios con useEffect",
-                    "fr": "4. Effets Secondaires avec useEffect",
-                    "de": "4. Nebenwirkungen mit useEffect",
-                    "zh": "4. 使用 useEffect 处理副作用",
-                    "ar": "4. الآثار الجانبية مع useEffect"
-                },
-                "duracao": {
-                    "pt": "Leitura: 30 min",
-                    "en": "Read: 30 min",
-                    "es": "Lectura: 30 min"
+                    "es": "Lectura: 20 min"
                 },
                 "status": "livre",
                 "content": {
-                    "pt": "# O Hook useEffect\n\nO `useEffect` permite executar efeitos colaterais em componentes funcionais. Buscas de dados, subscrições ou manipulação manual do DOM devem ser feitos aqui.\n\n### Ciclo de Vida\n- **Montagem**: Executa uma vez (`[]`).\n- **Atualização**: Executa quando dependências mudam (`[prop]`).\n- **Desmontagem**: Função de retorno para limpeza.",
-                    "en": "# The useEffect Hook\n\n`useEffect` lets you perform side effects in function components. Data fetching, setting up a subscription, and manually changing the DOM in React components should happen here.\n\n### Lifecycle\n- **Mount**: Runs once (`[]`).\n- **Update**: Runs when dependencies change (`[prop]`).\n- **Unmount**: Cleanup return function.",
-                    "es": "# El Hook useEffect\n\n`useEffect` te permite realizar efectos secundarios en componentes funcionales. La obtención de datos, la configuración de suscripciones y la modificación manual del DOM deben ocurrir aquí."
+                    "pt": "# O Módulo HTTP\n\nNode.js possui um módulo nativo chamado `http` que permite criar servidores web sem a necessidade de frameworks externos neste primeiro momento.\n\n```javascript\nconst http = require('http');\n\nconst server = http.createServer((req, res) => {\n  res.statusCode = 200;\n  res.end('Hello World');\n});\n\nserver.listen(3000);\n```",
+                    "en": "# The HTTP Module\n\nNode.js has a built-in module called `http` that allows you to create web servers without external frameworks at this stage.\n\n```javascript\nconst http = require('http');\n\nconst server = http.createServer((req, res) => {\n  res.statusCode = 200;\n  res.end('Hello World');\n});\n\nserver.listen(3000);\n```",
+                    "es": "# El Módulo HTTP\n\nNode.js tiene un módulo integrado llamado `http` que te permite crear servidores web."
                 },
                 "exercise": {
                     "instructions": {
-                        "pt": "Crie um componente que mude o título da aba do navegador (document.title) toda vez que um contador for atualizado.",
-                        "en": "Create a component that changes the browser tab title (document.title) every time a counter is updated.",
-                        "es": "Crea un componente que cambie el título de la pestaña del navegador (document.title) cada vez que se actualice un contador."
+                        "pt": "Crie um servidor que responda 'Bem-vindo à API' na porta 8080.",
+                        "en": "Create a server that responds 'Welcome to the API' on port 8080.",
+                        "es": "Crea un servidor que responda 'Bienvenido a la API' en el puerto 8080."
                     },
-                    "code": "useEffect(() => {\n  document.title = `Contagem: ${count}`;\n}, [count]);",
+                    "code": "http.createServer((req, res) => res.end('Bem-vindo à API')).listen(8080);",
                     "solution": {
-                        "pt": "Adicione 'count' como dependência no array do useEffect.",
-                        "en": "Add 'count' as a dependency in the useEffect array.",
-                        "es": "Añade 'count' como dependencia en el array de useEffect."
+                        "pt": "Altere a porta no método .listen().",
+                        "en": "Change the port in the .listen() method.",
+                        "es": "Cambia el puerto en el método .listen()."
                     }
                 }
             },
             {
                 "titulo": {
-                    "pt": "5. Formulários e Eventos",
-                    "en": "5. Forms and Events",
-                    "es": "5. Formularios y Eventos",
-                    "fr": "5. Formulaires et Événements",
-                    "de": "5. Formulare und Ereignisse",
-                    "zh": "5. 表单与事件",
-                    "ar": "5. النماذج والأحداث"
+                    "pt": "3. Introdução ao Express",
+                    "en": "3. Intro to Express",
+                    "es": "3. Introducción a Express",
+                    "fr": "3. Introduction à Express",
+                    "de": "3. Einführung in Express",
+                    "zh": "3. Express 简介",
+                    "ar": "3. مقدمة في Express"
                 },
                 "duracao": {
                     "pt": "Leitura: 25 min",
@@ -236,68 +773,33 @@
                 },
                 "status": "livre",
                 "content": {
-                    "pt": "# Formulários no React\n\nEm React, o estado mutável é geralmente mantido na propriedade state dos componentes, e só é atualizado por `setState()`. Elementos de formulário HTML funcionam um pouco diferente de outros elementos DOM porque eles mantêm seu próprio estado interno.\n\n### Componentes Controlados\nNós fazemos o React a 'única fonte de verdade' transformando o formulário em um **Componente Controlado**.",
-                    "en": "# Forms in React\n\nIn React, mutable state is typically kept in the state property of components, and only updated with `setState()`. HTML form elements work a little differently from other DOM elements because form elements naturally keep some internal state.\n\n### Controlled Components\nWe render the React state as the 'single source of truth', making it a **Controlled Component**.",
-                    "es": "# Formularios en React\n\nEn React, el estado mutable normalmente se mantiene en la propiedad state de los componentes y solo se actualiza con `setState()`. Los elementos de formulario HTML funcionan de manera un poco diferente porque mantienen su propio estado interno."
+                    "pt": "# O Framework Express\n\nExpress é um framework para Node.js mínimo e flexível que fornece um conjunto robusto de recursos para aplicativos web e móveis.\n\n### Instalação\n`npm install express`\n\n### Hello World com Express\n```javascript\nconst express = require('express');\nconst app = express();\n\napp.get('/', (req, res) => {\n  res.send('Hello World!');\n});\n\napp.listen(3000);\n```",
+                    "en": "# The Express Framework\n\nExpress is a minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications.",
+                    "es": "# El Framework Express\n\nExpress es un framework de aplicación web Node.js mínimo y flexible."
                 },
                 "exercise": {
                     "instructions": {
-                        "pt": "Crie um formulário simples com um input de texto que atualiza o estado e exibe o valor digitado em tempo real abaixo do input.",
-                        "en": "Create a simple form with a text input that updates state and displays the typed value in real-time below the input.",
-                        "es": "Crea un formulario simple con una entrada de texto que actualice el estado y muestre el valor escrito en tiempo real debajo de la entrada."
+                        "pt": "Crie uma rota GET '/usuarios' que retorne um JSON com uma lista de nomes.",
+                        "en": "Create a GET route '/users' that returns a JSON with a list of names.",
+                        "es": "Crea una ruta GET '/usuarios' que devuelva un JSON con una lista de nombres."
                     },
-                    "code": "const [nome, setNome] = useState('');\n<input value={nome} onChange={e => setNome(e.target.value)} />\n<p>Digitando: {nome}</p>",
+                    "code": "app.get('/usuarios', (req, res) => {\n  res.json([{name: 'Alice'}, {name: 'Bob'}]);\n});",
                     "solution": {
-                        "pt": "Vincule o value do input ao state e o onChange ao setState.",
-                        "en": "Bind the input value to state and onChange to setState.",
-                        "es": "Vincula el value del input al state y el onChange al setState."
+                        "pt": "Use res.json() para enviar arrays ou objetos.",
+                        "en": "Use res.json() to send arrays or objects.",
+                        "es": "Usa res.json() para enviar arrays u objetos."
                     }
                 }
             },
             {
                 "titulo": {
-                    "pt": "6. Consumindo APIs (Fetch/Axios)",
-                    "en": "6. Consuming APIs (Fetch/Axios)",
-                    "es": "6. Consumiendo APIs (Fetch/Axios)",
-                    "fr": "6. Consommer des API (Fetch/Axios)",
-                    "de": "6. APIs konsumieren (Fetch/Axios)",
-                    "zh": "6. 使用 API (Fetch/Axios)",
-                    "ar": "6. استهلاك واجهات برمجة التطبيقات (Fetch/Axios)"
-                },
-                "duracao": {
-                    "pt": "Leitura: 35 min",
-                    "en": "Read: 35 min",
-                    "es": "Lectura: 35 min"
-                },
-                "status": "livre",
-                "content": {
-                    "pt": "# Requisições HTTP\n\nA maioria das aplicações web precisa buscar dados de um servidor. Em React, geralmente fazemos isso dentro de um `useEffect`.\n\n### Fetch API\nA Fetch API é nativa do navegador.\n\n```jsx\nuseEffect(() => {\n  fetch('https://api.exemplo.com/dados')\n    .then(response => response.json())\n    .then(data => setDados(data));\n}, []);\n```",
-                    "en": "# HTTP Requests\n\nMost web apps need to fetch data from a server. In React, we predominantly do this inside a `useEffect`.\n\n### Fetch API\nThe Fetch API is native to the browser.",
-                    "es": "# Peticiones HTTP\n\nLa mayoría de las aplicaciones web necesitan obtener datos de un servidor. En React, generalmente hacemos esto dentro de un `useEffect`."
-                },
-                "exercise": {
-                    "instructions": {
-                        "pt": "Faça uma requisição para 'https://jsonplaceholder.typicode.com/todos/1' e exiba o título da tarefa.",
-                        "en": "Make a request to 'https://jsonplaceholder.typicode.com/todos/1' and display the todo title.",
-                        "es": "Realiza una petición a 'https://jsonplaceholder.typicode.com/todos/1' y muestra el título de la tarea."
-                    },
-                    "code": "const [todo, setTodo] = useState(null);\nuseEffect(() => {\n  fetch('https://jsonplaceholder.typicode.com/todos/1')\n    .then(r => r.json())\n    .then(setTodo);\n}, []);\n\nreturn <div>{todo?.title}</div>;",
-                    "solution": {
-                        "pt": "Lembre-se de tratar o cado inicial onde 'todo' é null.",
-                        "en": "Remember to handle the initial case where 'todo' is null.",
-                        "es": "Recuerda manejar el caso inicial donde 'todo' es null."
-                    }
-                }
-            },
-            {
-                "titulo": {
-                    "pt": "7. Roteamento com React Router",
-                    "en": "7. Routing with React Router",
-                    "es": "7. Enrutamiento con React Router",
-                    "fr": "7. Routage avec React Router",
-                    "de": "7. Routing mit React Router",
-                    "zh": "7. 使用 React Router 进行路由",
-                    "ar": "7. التوجيه باستخدام React Router"
+                    "pt": "4. Introdução ao MongoDB",
+                    "en": "4. Intro to MongoDB",
+                    "es": "4. Introducción a MongoDB",
+                    "fr": "4. Introduction à MongoDB",
+                    "de": "4. Einführung in MongoDB",
+                    "zh": "4. MongoDB 简介",
+                    "ar": "4. مقدمة في MongoDB"
                 },
                 "duracao": {
                     "pt": "Leitura: 30 min",
@@ -306,583 +808,179 @@
                 },
                 "status": "livre",
                 "content": {
-                    "pt": "# React Router\n\nSPAs (Single Page Applications) precisam de um roteador para navegar entre diferentes visualizações sem recarregar a página. O padrão da indústria é o `react-router-dom`.\n\n### Instalação\n`npm install react-router-dom`\n\n### Configuração Básica\nUse `BrowserRouter`, `Routes` e `Route` para definir seus caminhos.",
-                    "en": "# React Router\n\nSPAs (Single Page Applications) need a router to navigate between different views without reloading the page. The industry standard is `react-router-dom`.\n\n### Installation\n`npm install react-router-dom`\n\n### Basic Setup\nUse `BrowserRouter`, `Routes`, and `Route` to define your paths.",
-                    "es": "# React Router\n\nLas SPAs necesitan un enrutador para navegar entre diferentes vistas."
+                    "pt": "# MongoDB e NoSQL\n\nMongoDB é um banco de dados NoSQL orientado a documentos. Ele armazena dados em documentos do tipo JSON, o que o torna muito flexível e escalável.\n\n### Mongoose\nPara conectar o Node.js ao MongoDB, geralmente usamos o ODM (Object Data Modeling) **Mongoose**.",
+                    "en": "# MongoDB and NoSQL\n\nMongoDB is a document-oriented NoSQL database. It stores data in JSON-like documents, making it very flexible and scalable.\n\n### Mongoose\nTo connect Node.js to MongoDB, we usually use the **Mongoose** ODM.",
+                    "es": "# MongoDB y NoSQL\n\nMongoDB es una base de datos NoSQL orientada a documentos."
                 },
                 "exercise": {
                     "instructions": {
-                        "pt": "Configure duas rotas: '/' para Home e '/sobre' para About.",
-                        "en": "Configure two routes: '/' for Home and '/about' for About.",
-                        "es": "Configura dos rutas: '/' para Inicio y '/sobre' para Acerca de."
+                        "pt": "Defina um Schema simples para um 'Usuario' com nome e email usando Mongoose.",
+                        "en": "Define a simple Schema for a 'User' with name and email using Mongoose.",
+                        "es": "Define un esquema simple para un 'Usuario' con nombre y correo electrónico usando Mongoose."
                     },
-                    "code": "<Routes>\n  <Route path='/' element={<Home />} />\n  <Route path='/sobre' element={<About />} />\n</Routes>",
+                    "code": "const UserSchema = new mongoose.Schema({\n  name: String,\n  email: String\n});",
                     "solution": {
-                        "pt": "Envolva os componentes Route dentro de Routes.",
-                        "en": "Wrap Route components inside Routes.",
-                        "es": "Envuelve los componentes Route dentro de Routes."
+                        "pt": "Use mongoose.Schema() passando o objeto de configuração.",
+                        "en": "Use mongoose.Schema() passing the configuration object.",
+                        "es": "Usa mongoose.Schema() pasando el objeto de configuración."
+                    }
+                }
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "slug": "python-data-science",
+        "title": {
+            "pt": "Python para Ciência de Dados e IA",
+            "en": "Python for Data Science & AI",
+            "es": "Python para Ciencia de Datos e IA",
+            "fr": "Python pour la Science des Données et l'IA",
+            "de": "Python für Data Science und KI",
+            "zh": "Python 数据科学与人工智能",
+            "ar": "Python لعلم البيانات والذكاء الاصطناعي"
+        },
+        "category": "Data Science & AI",
+        "description": {
+            "pt": "Aprenda Python, Pandas, Machine Learning e IA Generativa (OpenAI API).",
+            "en": "Learn Python, Pandas, Machine Learning, and Generative AI (OpenAI API).",
+            "es": "Aprende Python, Pandas, Machine Learning e IA Generativa (OpenAI API).",
+            "fr": "Apprenez Python, Pandas, Machine Learning et l'IA Générative.",
+            "de": "Lernen Sie Python, Pandas, Machine Learning und Generative KI.",
+            "zh": "学习 Python、Pandas、机器学习和生成式人工智能。",
+            "ar": "تعلم Python و Pandas و Machine Learning و Generative AI."
+        },
+        "descricaoCompleta": {
+            "pt": "Curso completo: Sintaxe Python, Manipulação com Pandas, Visualização, Machine Learning com Scikit-Learn e integração com Inteligência Artificial (OpenAI).",
+            "en": "Complete course: Python Syntax, Pandas Manipulation, Visualization, Machine Learning with Scikit-Learn, and Artificial Intelligence integration (OpenAI).",
+            "es": "Curso completo: Sintaxis Python, Manipulación con Pandas, Visualización, Machine Learning con Scikit-Learn e integración con Inteligencia Artificial (OpenAI).",
+            "fr": "Cours complet : Syntaxe Python, Pandas, Visualisation, Machine Learning et IA.",
+            "de": "Vollständiger Kurs: Python-Syntax, Pandas, Visualisierung, Machine Learning und KI.",
+            "zh": "完整课程：Python 语法、Pandas 操作、可视化、机器学习和人工智能。",
+            "ar": "دورة كاملة: بناء جملة Python، معالجة Pandas، التصور، تعلم الآلة والذكاء الاصطناعي."
+        },
+        "modulos": [
+            "Python Básico",
+            "Pandas",
+            "Matplotlib"
+        ],
+        "duration": "50h",
+        "level": {
+            "pt": "Iniciante",
+            "en": "Beginner",
+            "es": "Principiante",
+            "fr": "Débutant",
+            "de": "Anfänger",
+            "zh": "初学者",
+            "ar": "مبتدئ"
+        },
+        "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+        "aulas": [
+            {
+                "titulo": {
+                    "pt": "1. Por que Python para Data Science?",
+                    "en": "1. Why Python for Data Science?",
+                    "es": "1. ¿Por qué Python para Ciencia de Datos?",
+                    "fr": "1. Pourquoi Python pour la Science des Données ?",
+                    "de": "1. Warum Python für Data Science?",
+                    "zh": "1. 为什么选择 Python 进行数据科学？",
+                    "ar": "1. لماذا Python لعلم البيانات؟"
+                },
+                "duracao": {
+                    "pt": "Leitura: 10 min",
+                    "en": "Read: 10 min",
+                    "es": "Lectura: 10 min"
+                },
+                "status": "livre",
+                "content": {
+                    "pt": "# Python e Data Science\n\nPython se tornou a linguagem número 1 para Ciência de Dados devido à sua simplicidade e ao vasto ecossistema de bibliotecas poderosas.\n\n### Principais Bibliotecas\n- **Pandas:** Para manipulação e análise de dados tabulares.\n- **NumPy:** Para computação numérica de alta performance.\n- **Matplotlib/Seaborn:** Para visualização de dados e gráficos.",
+                    "en": "# Python and Data Science\n\nPython has become the #1 language for Data Science due to its simplicity and vast ecosystem of powerful libraries.\n\n### Key Libraries\n- **Pandas:** For manipulation and analysis of tabular data.\n- **NumPy:** For high-performance numerical computing.\n- **Matplotlib/Seaborn:** For data visualization and plotting.",
+                    "es": "# Python y Ciencia de Datos\n\nPython se ha convertido en el lenguaje número 1 para la Ciencia de Datos debido a su simplicidad."
+                },
+                "exercise": {
+                    "instructions": {
+                        "pt": "Instale o Pandas usando pip.",
+                        "en": "Install Pandas using pip.",
+                        "es": "Instala Pandas usando pip."
+                    },
+                    "code": "pip install pandas",
+                    "solution": {
+                        "pt": "Execute o comando no seu terminal.",
+                        "en": "Run the command in your terminal.",
+                        "es": "Ejecuta el comando en tu terminal."
                     }
                 }
             },
             {
                 "titulo": {
-                    "pt": "8. React 19 e Inovações",
-                    "en": "8. React 19 & Frontiers",
-                    "es": "8. React 19 y Fronteras",
-                    "fr": "8. React 19 et Frontières",
-                    "de": "8. React 19 und Grenzen",
-                    "zh": "8. React 19 与前沿",
-                    "ar": "8. React 19 والحدود"
+                    "pt": "2. Introdução ao Pandas",
+                    "en": "2. Intro to Pandas",
+                    "es": "2. Introducción a Pandas",
+                    "fr": "2. Introduction à Pandas",
+                    "de": "2. Einführung in Pandas",
+                    "zh": "2. Pandas 简介",
+                    "ar": "2. مقدمة في Pandas"
                 },
                 "duracao": {
-                    "pt": "Leitura: 40 min",
-                    "en": "Read: 40 min",
-                    "es": "Lectura: 40 min"
+                    "pt": "Leitura: 30 min",
+                    "en": "Read: 30 min",
+                    "es": "Lectura: 30 min"
                 },
                 "status": "livre",
                 "content": {
-                    "pt": "# Inovações de Fronteira: React 19 e Server Components\n\nA evolução do React atingiu um marco histórico com o lançamento da versão 19, que introduz mudanças fundamentais na arquitetura.\n\n### React Server Components (RSC)\nOs RSCs representam uma mudança onde partes da interface são renderizadas exclusivamente no servidor e enviadas ao cliente como um stream de dados leve.\n- **Vantagem:** Redução drástica do JavaScript enviado ao cliente.\n- **Performance:** Melhora métricas de LCP e TTI.\n\n### Server Actions\nPermite definir funções de backend que podem ser chamadas diretamente de componentes de cliente.\n\n### Novos Hooks\n- **use()**: API para ler recursos assíncronos (Promises/Context) em condicionais.\n- **useActionState()**: Gerencia estado de ações (loading/error).\n- **useFormStatus()**: Metadados sobre submissão de formulários.\n- **React Compiler**: Automatiza a memorização (adeus useMemo manual?)."
+                    "pt": "# O que é Pandas?\n\nPandas é uma biblioteca de código aberto que fornece estruturas de dados e ferramentas de análise de dados de alto desempenho e fáceis de usar.\n\n### DataFrame\nA estrutura mais importante do Pandas é o DataFrame, que é essencialmente uma tabela (como uma planilha Excel) em memória.",
+                    "en": "# What is Pandas?\n\nPandas is an open source library providing high-performance, easy-to-use data structures and data analysis tools.\n\n### DataFrame\nThe most important structure in Pandas is the DataFrame, which is essentially a table (like an Excel sheet) in memory.",
+                    "es": "# ¿Qué es Pandas?\n\nPandas es una biblioteca de código abierto que proporciona estructuras de datos de alto rendimiento."
                 },
                 "exercise": {
                     "instructions": {
-                        "pt": "Simule o uso de uma Server Action (conceitual) que recebe dados de um formulário.",
-                        "en": "Simulate using a Server Action (conceptual) that receives form data.",
-                        "es": "Simula el uso de una Server Action (conceptual) que recibe datos de un formulario."
+                        "pt": "Crie um DataFrame simples a partir de um dicionário.",
+                        "en": "Create a simple DataFrame from a dictionary.",
+                        "es": "Crea un DataFrame simple a partir de un diccionario."
                     },
-                    "code": "// server-action.js\n'use server';\n\nexport async function cadastrarUsuario(formData) {\n  const nome = formData.get('nome');\n  await db.users.create({ nome });\n}",
+                    "code": "import pandas as pd\n\ndades = {\n  'Nome': ['Ana', 'João'],\n  'Idade': [23, 30]\n}\n\ndf = pd.DataFrame(data)",
                     "solution": {
-                        "pt": "Server Actions devem ter a diretiva 'use server' no topo.",
-                        "en": "Server Actions must have the 'use server' directive at the top.",
-                        "es": "Las Server Actions deben tener la directiva 'use server' en la parte superior."
+                        "pt": "Importe pandas as pd e use pd.DataFrame().",
+                        "en": "Import pandas as pd and use pd.DataFrame().",
+                        "es": "Importa pandas as pd y usa pd.DataFrame()."
                     }
                 }
             },
             {
                 "titulo": {
-                    "pt": "9. Performance e Arquitetura",
-                    "en": "9. Performance & Architecture",
-                    "es": "9. Rendimiento y Arquitectura",
-                    "fr": "9. Performance et Architecture",
-                    "de": "9. Leistung und Architektur",
-                    "zh": "9. 性能与架构",
-                    "ar": "9. الأداء والهندسة المعمارية"
+                    "pt": "3. Visualização com Matplotlib",
+                    "en": "3. Visualization with Matplotlib",
+                    "es": "3. Visualización con Matplotlib",
+                    "fr": "3. Visualisation avec Matplotlib",
+                    "de": "3. Visualisierung mit Matplotlib",
+                    "zh": "3. 使用 Matplotlib 可视化",
+                    "ar": "3. التصور باستخدام Matplotlib"
                 },
                 "duracao": {
-                    "pt": "Leitura: 35 min",
-                    "en": "Read: 35 min",
-                    "es": "Lectura: 35 min"
+                    "pt": "Leitura: 25 min",
+                    "en": "Read: 25 min",
+                    "es": "Lectura: 25 min"
                 },
                 "status": "livre",
                 "content": {
-                    "pt": "# Estratégias de Otimização\n\n### Reconciliação e Keys\nO processo de \"diffing\" é o coração do React. O uso de **keys** estáveis em listas é obrigatório para evitar bugs e degradação de performance.\n\n### Code Splitting\nUse `React.lazy` e `Suspense` para dividir a aplicação em pedaços menores, carregados sob demanda.\n\n### Portais\n`createPortal` permite renderizar filhos em um nó DOM diferente, crucial para Modais e Tooltips que precisam escapar de `overflow: hidden`.\n\n### Acesso Direto ao DOM (Refs)\nUse `useRef` para valores persistentes que não disparam re-render ou para acessar APIs imperativas do DOM (foco, media players).",
-                    "en": "# Optimization Strategies\n\n### Reconciliation & Keys\nThe \"diffing\" process is the heart of React. Using stable **keys** in lists is mandatory.\n\n### Code Splitting\nUse `React.lazy` and `Suspense` to split the app into smaller chunks.\n\n### Portals\n`createPortal` lets you render children into a different DOM node, crucial for Modals."
+                    "pt": "# Matplotlib\n\nMatplotlib é uma biblioteca de plotagem para a linguagem de programação Python e sua extensão de matemática numérica NumPy.\n\n### Seu Primeiro Gráfico\n```python\nimport matplotlib.pyplot as plt\n\nplt.plot([1, 2, 3, 4])\nplt.ylabel('números')\nplt.show()\n```",
+                    "en": "# Matplotlib\n\nMatplotlib is a plotting library for the Python programming language and its numerical mathematics extension NumPy.",
+                    "es": "# Matplotlib\n\nMatplotlib es una biblioteca de trazado para el lenguaje de programación Python."
                 },
                 "exercise": {
                     "instructions": {
-                        "pt": "Crie uma referência (ref) para um input e foque nele automaticamente ao carregar o componente.",
-                        "en": "Create a ref for an input and focus it automatically when the component loads.",
-                        "es": "Crea una referencia (ref) para un input y enfócalo automáticamente al cargar el componente."
+                        "pt": "Plote um gráfico de linha simples mostrando o crescimento de vendas: [100, 150, 200, 250].",
+                        "en": "Plot a simple line chart showing sales growth: [100, 150, 200, 250].",
+                        "es": "Traza un gráfico de líneas simple que muestre el crecimiento de las ventas: [100, 150, 200, 250]."
                     },
-                    "code": "const inputRef = useRef(null);\nuseEffect(() => {\n  inputRef.current.focus();\n}, []);\n\nreturn <input ref={inputRef} />;",
+                    "code": "plt.plot([100, 150, 200, 250])\nplt.title('Vendas')\nplt.show()",
                     "solution": {
-                        "pt": "Use inputRef.current.focus() dentro do useEffect de montagem.",
-                        "en": "Use inputRef.current.focus() inside the mount useEffect.",
-                        "es": "Usa inputRef.current.focus() dentro del useEffect de montaje."
+                        "pt": "Use plt.plot() passando a lista de valores.",
+                        "en": "Use plt.plot() passing the list of values.",
+                        "es": "Usa plt.plot() pasando la lista de valores."
                     }
                 }
-            {
-                    "id": 1,
-                    "question": {
-                        "pt": "O que é o React?",
-                        "en": "What is React?",
-                        "es": "¿Qué es React?"
-                    },
-                    "options": {
-                        "pt": [
-                            "Uma linguagem de programação",
-                            "Uma biblioteca JavaScript para interfaces",
-                            "Um banco de dados",
-                            "Um framework CSS"
-                        ],
-                        "en": [
-                            "A programming language",
-                            "A JavaScript library for interfaces",
-                            "A database",
-                            "A CSS framework"
-                        ],
-                        "es": [
-                            "Un lenguaje de programación",
-                            "Una biblioteca JavaScript para interfaces",
-                            "Una base de datos",
-                            "Un framework CSS"
-                        ]
-                    },
-                    "correctAnswer": 1
-                },
-                {
-                    "id": 2,
-                    "question": {
-                        "pt": "Qual hook é usado para gerenciar estado?",
-                        "en": "Which hook is used to manage state?",
-                        "es": "¿Qué hook se usa para gestionar el estado?"
-                    },
-                    "options": {
-                        "pt": [
-                            "useEffect",
-                            "useContext",
-                            "useState",
-                            "useReducer"
-                        ],
-                        "en": [
-                            "useEffect",
-                            "useContext",
-                            "useState",
-                            "useReducer"
-                        ],
-                        "es": [
-                            "useEffect",
-                            "useContext",
-                            "useState",
-                            "useReducer"
-                        ]
-                    },
-                    "correctAnswer": 2
-                },
-                {
-                    "id": 3,
-                    "question": {
-                        "pt": "Como passamos dados de pai para filho?",
-                        "en": "How do we pass data from parent to child?",
-                        "es": "¿Cómo pasamos datos de padre a hijo?"
-                    },
-                    "options": {
-                        "pt": [
-                            "State",
-                            "Props",
-                            "Context",
-                            "Redux"
-                        ],
-                        "en": [
-                            "State",
-                            "Props",
-                            "Context",
-                            "Redux"
-                        ],
-                        "es": [
-                            "State",
-                            "Props",
-                            "Context",
-                            "Redux"
-                        ]
-                    },
-                    "correctAnswer": 1
-                },
-                {
-                    "id": 4,
-                    "question": {
-                        "pt": "O que o useEffect faz?",
-                        "en": "What does useEffect do?",
-                        "es": "¿Qué hace useEffect?"
-                    },
-                    "options": {
-                        "pt": [
-                            "Cria componentes",
-                            "Gerencia rotas",
-                            "Lida com efeitos colaterais",
-                            "Estiliza a página"
-                        ],
-                        "en": [
-                            "Creates components",
-                            "Manages routes",
-                            "Handles side effects",
-                            "Styles the page"
-                        ],
-                        "es": [
-                            "Crea componentes",
-                            "Gestiona rutas",
-                            "Maneja efectos secundarios",
-                            "Estila la página"
-                        ]
-                    },
-                    "correctAnswer": 2
-                },
-                {
-                    "id": 5,
-                    "question": {
-                        "pt": "O JSX é obrigatório no React?",
-                        "en": "Is JSX mandatory in React?",
-                        "es": "¿Es JSX obligatorio en React?"
-                    },
-                    "options": {
-                        "pt": [
-                            "Sim",
-                            "Não, mas é recomendado",
-                            "Apenas em classes",
-                            "Nunca"
-                        ],
-                        "en": [
-                            "Yes",
-                            "No, but recommended",
-                            "Only in classes",
-                            "Never"
-                        ],
-                        "es": [
-                            "Sí",
-                            "No, pero recomendado",
-                            "Solo en clases",
-                            "Nunca"
-                        ]
-                    },
-                    "correctAnswer": 1
-                }
-            ]
-        },
-        {
-            "id": 2,
-            "slug": "api-rest-node-express",
-            "title": {
-                "pt": "API REST com Node.js e Express",
-                "en": "REST API with Node.js and Express",
-                "es": "API REST con Node.js y Express",
-                "fr": "API REST avec Node.js et Express",
-                "de": "REST-API mit Node.js und Express",
-                "zh": "使用 Node.js 和 Express 的 REST API",
-                "ar": "REST API مع Node.js و Express"
-            },
-            "category": "Back-end",
-            "description": {
-                "pt": "Construa APIs robustas e escaláveis usando Node.js e Express.",
-                "en": "Build robust and scalable APIs using Node.js and Express.",
-                "es": "Construye APIs robustas y escalables usando Node.js y Express.",
-                "fr": "Construisez des API robustes et évolutives.",
-                "de": "Erstellen Sie robuste und skalierbare APIs.",
-                "zh": "构建健壮且可扩展的 API。",
-                "ar": "بناء واجهات برمجة تطبيقات قوية وقابلة للتطوير."
-            },
-            "descricaoCompleta": {
-                "pt": "Desenvolva o backend de aplicações web modernas utilizando Node.js e o framework Express. Este curso cobre todo o processo de criação de uma API RESTful.",
-                "en": "Develop the backend of modern web applications using Node.js and the Express framework. This course covers the entire process of creating a RESTful API.",
-                "es": "Desarrolla el backend de aplicaciones web modernas utilizando Node.js y el framework Express. Este curso cubre todo el proceso de creación de una API RESTful.",
-                "fr": "Développez le backend d'applications web modernes.",
-                "de": "Entwickeln Sie das Backend moderner Webanwendungen.",
-                "zh": "开发现代 Web 应用程序的后端。",
-                "ar": "تطوير الواجهة الخلفية لتطبيقات الويب الحديثة."
-            },
-            "modulos": [
-                "Fundamentos",
-                "Express",
-                "MongoDB",
-                "Auth",
-                "Arquitetura e Clean Code",
-                "Segurança com JWT"
-            ],
-            "duration": "35h",
-            "level": {
-                "pt": "Avançado",
-                "en": "Advanced",
-                "es": "Avanzado",
-                "fr": "Avancé",
-                "de": "Fortgeschritten",
-                "zh": "高级",
-                "ar": "متقدم"
-            },
-            "image": "https://images.unsplash.com/photo-1627398242454-45a1465c2479?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-            "aulas": [
-                {
-                    "titulo": {
-                        "pt": "1. Introdução ao Node.js",
-                        "en": "1. Intro to Node.js",
-                        "es": "1. Introducción a Node.js",
-                        "fr": "1. Introduction à Node.js",
-                        "de": "1. Einführung in Node.js",
-                        "zh": "1. Node.js 简介",
-                        "ar": "1. مقدمة في Node.js"
-                    },
-                    "duracao": {
-                        "pt": "Leitura: 15 min",
-                        "en": "Read: 15 min",
-                        "es": "Lectura: 15 min"
-                    },
-                    "status": "completa",
-                    "content": {
-                        "pt": "# Introdução ao Node.js\n\nO Node.js é um ambiente de execução JavaScript construído sobre o motor V8 do Chrome. Ele permite executar JavaScript fora do navegador, ou seja, no servidor.\n\n### Características Principais\n- **Assíncrono e Orientado a Eventos:** O Node.js não bloqueia a execução enquanto espera por operações de I/O (entrada/saída).\n- **Single Thread:** Ele usa uma única thread com um Loop de Eventos.",
-                        "en": "# Intro to Node.js\n\nNode.js is a JavaScript runtime built on Chrome's V8 JavaScript engine. It allows you to run JavaScript outside the browser, i.e., on the server.\n\n### Key Features\n- **Asynchronous & Event-Driven:** Node.js doesn't block execution while waiting for I/O.\n- **Single Threaded:** It uses a single thread with an Event Loop.",
-                        "es": "# Introducción a Node.js\n\nNode.js es un entorno de ejecución de JavaScript construido sobre el motor de JavaScript V8 de Chrome."
-                    },
-                    "exercise": {
-                        "instructions": {
-                            "pt": "Crie um script simples 'ola.js' que imprima 'Olá, Node!' no terminal.",
-                            "en": "Create a simple script 'hello.js' that prints 'Hello, Node!' to the terminal.",
-                            "es": "Crea un script simple 'hola.js' que imprima '¡Hola, Node!' en la terminal."
-                        },
-                        "code": "console.log('Olá, Node!');",
-                        "solution": {
-                            "pt": "Basta criar o arquivo e rodar `node ola.js` no terminal.",
-                            "en": "Just create the file and run `node hello.js` in the terminal.",
-                            "es": "Simplemente crea el archivo y ejecuta `node hola.js` en la terminal."
-                        }
-                    }
-                },
-                {
-                    "titulo": {
-                        "pt": "2. Criando um Servidor HTTP",
-                        "en": "2. Creating an HTTP Server",
-                        "es": "2. Creando un Servidor HTTP",
-                        "fr": "2. Création d'un serveur HTTP",
-                        "de": "2. Erstellen eines HTTP-Servers",
-                        "zh": "2. 创建 HTTP 服务器",
-                        "ar": "2. إنشاء خادم HTTP"
-                    },
-                    "duracao": {
-                        "pt": "Leitura: 20 min",
-                        "en": "Read: 20 min",
-                        "es": "Lectura: 20 min"
-                    },
-                    "status": "livre",
-                    "content": {
-                        "pt": "# O Módulo HTTP\n\nNode.js possui um módulo nativo chamado `http` que permite criar servidores web sem a necessidade de frameworks externos neste primeiro momento.\n\n```javascript\nconst http = require('http');\n\nconst server = http.createServer((req, res) => {\n  res.statusCode = 200;\n  res.end('Hello World');\n});\n\nserver.listen(3000);\n```",
-                        "en": "# The HTTP Module\n\nNode.js has a built-in module called `http` that allows you to create web servers without external frameworks at this stage.\n\n```javascript\nconst http = require('http');\n\nconst server = http.createServer((req, res) => {\n  res.statusCode = 200;\n  res.end('Hello World');\n});\n\nserver.listen(3000);\n```",
-                        "es": "# El Módulo HTTP\n\nNode.js tiene un módulo integrado llamado `http` que te permite crear servidores web."
-                    },
-                    "exercise": {
-                        "instructions": {
-                            "pt": "Crie um servidor que responda 'Bem-vindo à API' na porta 8080.",
-                            "en": "Create a server that responds 'Welcome to the API' on port 8080.",
-                            "es": "Crea un servidor que responda 'Bienvenido a la API' en el puerto 8080."
-                        },
-                        "code": "http.createServer((req, res) => res.end('Bem-vindo à API')).listen(8080);",
-                        "solution": {
-                            "pt": "Altere a porta no método .listen().",
-                            "en": "Change the port in the .listen() method.",
-                            "es": "Cambia el puerto en el método .listen()."
-                        }
-                    }
-                },
-                {
-                    "titulo": {
-                        "pt": "3. Introdução ao Express",
-                        "en": "3. Intro to Express",
-                        "es": "3. Introducción a Express",
-                        "fr": "3. Introduction à Express",
-                        "de": "3. Einführung in Express",
-                        "zh": "3. Express 简介",
-                        "ar": "3. مقدمة في Express"
-                    },
-                    "duracao": {
-                        "pt": "Leitura: 25 min",
-                        "en": "Read: 25 min",
-                        "es": "Lectura: 25 min"
-                    },
-                    "status": "livre",
-                    "content": {
-                        "pt": "# O Framework Express\n\nExpress é um framework para Node.js mínimo e flexível que fornece um conjunto robusto de recursos para aplicativos web e móveis.\n\n### Instalação\n`npm install express`\n\n### Hello World com Express\n```javascript\nconst express = require('express');\nconst app = express();\n\napp.get('/', (req, res) => {\n  res.send('Hello World!');\n});\n\napp.listen(3000);\n```",
-                        "en": "# The Express Framework\n\nExpress is a minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications.",
-                        "es": "# El Framework Express\n\nExpress es un framework de aplicación web Node.js mínimo y flexible."
-                    },
-                    "exercise": {
-                        "instructions": {
-                            "pt": "Crie uma rota GET '/usuarios' que retorne um JSON com uma lista de nomes.",
-                            "en": "Create a GET route '/users' that returns a JSON with a list of names.",
-                            "es": "Crea una ruta GET '/usuarios' que devuelva un JSON con una lista de nombres."
-                        },
-                        "code": "app.get('/usuarios', (req, res) => {\n  res.json([{name: 'Alice'}, {name: 'Bob'}]);\n});",
-                        "solution": {
-                            "pt": "Use res.json() para enviar arrays ou objetos.",
-                            "en": "Use res.json() to send arrays or objects.",
-                            "es": "Usa res.json() para enviar arrays u objetos."
-                        }
-                    }
-                },
-                {
-                    "titulo": {
-                        "pt": "4. Introdução ao MongoDB",
-                        "en": "4. Intro to MongoDB",
-                        "es": "4. Introducción a MongoDB",
-                        "fr": "4. Introduction à MongoDB",
-                        "de": "4. Einführung in MongoDB",
-                        "zh": "4. MongoDB 简介",
-                        "ar": "4. مقدمة في MongoDB"
-                    },
-                    "duracao": {
-                        "pt": "Leitura: 30 min",
-                        "en": "Read: 30 min",
-                        "es": "Lectura: 30 min"
-                    },
-                    "status": "livre",
-                    "content": {
-                        "pt": "# MongoDB e NoSQL\n\nMongoDB é um banco de dados NoSQL orientado a documentos. Ele armazena dados em documentos do tipo JSON, o que o torna muito flexível e escalável.\n\n### Mongoose\nPara conectar o Node.js ao MongoDB, geralmente usamos o ODM (Object Data Modeling) **Mongoose**.",
-                        "en": "# MongoDB and NoSQL\n\nMongoDB is a document-oriented NoSQL database. It stores data in JSON-like documents, making it very flexible and scalable.\n\n### Mongoose\nTo connect Node.js to MongoDB, we usually use the **Mongoose** ODM.",
-                        "es": "# MongoDB y NoSQL\n\nMongoDB es una base de datos NoSQL orientada a documentos."
-                    },
-                    "exercise": {
-                        "instructions": {
-                            "pt": "Defina um Schema simples para um 'Usuario' com nome e email usando Mongoose.",
-                            "en": "Define a simple Schema for a 'User' with name and email using Mongoose.",
-                            "es": "Define un esquema simple para un 'Usuario' con nombre y correo electrónico usando Mongoose."
-                        },
-                        "code": "const UserSchema = new mongoose.Schema({\n  name: String,\n  email: String\n});",
-                        "solution": {
-                            "pt": "Use mongoose.Schema() passando o objeto de configuração.",
-                            "en": "Use mongoose.Schema() passing the configuration object.",
-                            "es": "Usa mongoose.Schema() pasando el objeto de configuración."
-                        }
-                    }
-                }
-            ]
-        },
-        {
-            "id": 3,
-            "slug": "python-data-science",
-            "title": {
-                "pt": "Data Science com Python",
-                "en": "Data Science with Python",
-                "es": "Ciencia de Datos con Python",
-                "fr": "Science des Données avec Python",
-                "de": "Data Science mit Python",
-                "zh": "Python 数据科学",
-                "ar": "علم البيانات مع Python"
-            },
-            "category": "Data Science",
-            "description": {
-                "pt": "Inicie sua jornada em Ciência de Dados com Python.",
-                "en": "Start your Data Science journey with Python.",
-                "es": "Comienza tu viaje en Ciencia de Datos con Python.",
-                "fr": "Commencez votre voyage en science des données.",
-                "de": "Beginnen Sie Ihre Data Science-Reise.",
-                "zh": "开始您的数据科学之旅。",
-                "ar": "ابدأ رحلتك في علم البيانات."
-            },
-            "descricaoCompleta": {
-                "pt": "A porta de entrada para o mundo da Ciência de Dados. Aprenda a manipular grandes conjuntos de dados usando Pandas.",
-                "en": "The gateway to the Data Science world. Learn to manipulate large datasets using Pandas.",
-                "es": "La puerta de entrada al mundo de la Ciencia de Datos. Aprende a manipular grandes conjuntos de datos usando Pandas.",
-                "fr": "La porte d'entrée vers le monde de la science des données.",
-                "de": "Das Tor zur Welt der Data Science.",
-                "zh": "通往数据科学世界的大门。",
-                "ar": "بوابة لعالم علم البيانات."
-            },
-            "modulos": [
-                "Python Básico",
-                "Pandas",
-                "Matplotlib"
-            ],
-            "duration": "50h",
-            "level": {
-                "pt": "Iniciante",
-                "en": "Beginner",
-                "es": "Principiante",
-                "fr": "Débutant",
-                "de": "Anfänger",
-                "zh": "初学者",
-                "ar": "مبتدئ"
-            },
-            "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-            "aulas": [
-                {
-                    "titulo": {
-                        "pt": "1. Por que Python para Data Science?",
-                        "en": "1. Why Python for Data Science?",
-                        "es": "1. ¿Por qué Python para Ciencia de Datos?",
-                        "fr": "1. Pourquoi Python pour la Science des Données ?",
-                        "de": "1. Warum Python für Data Science?",
-                        "zh": "1. 为什么选择 Python 进行数据科学？",
-                        "ar": "1. لماذا Python لعلم البيانات؟"
-                    },
-                    "duracao": {
-                        "pt": "Leitura: 10 min",
-                        "en": "Read: 10 min",
-                        "es": "Lectura: 10 min"
-                    },
-                    "status": "livre",
-                    "content": {
-                        "pt": "# Python e Data Science\n\nPython se tornou a linguagem número 1 para Ciência de Dados devido à sua simplicidade e ao vasto ecossistema de bibliotecas poderosas.\n\n### Principais Bibliotecas\n- **Pandas:** Para manipulação e análise de dados tabulares.\n- **NumPy:** Para computação numérica de alta performance.\n- **Matplotlib/Seaborn:** Para visualização de dados e gráficos.",
-                        "en": "# Python and Data Science\n\nPython has become the #1 language for Data Science due to its simplicity and vast ecosystem of powerful libraries.\n\n### Key Libraries\n- **Pandas:** For manipulation and analysis of tabular data.\n- **NumPy:** For high-performance numerical computing.\n- **Matplotlib/Seaborn:** For data visualization and plotting.",
-                        "es": "# Python y Ciencia de Datos\n\nPython se ha convertido en el lenguaje número 1 para la Ciencia de Datos debido a su simplicidad."
-                    },
-                    "exercise": {
-                        "instructions": {
-                            "pt": "Instale o Pandas usando pip.",
-                            "en": "Install Pandas using pip.",
-                            "es": "Instala Pandas usando pip."
-                        },
-                        "code": "pip install pandas",
-                        "solution": {
-                            "pt": "Execute o comando no seu terminal.",
-                            "en": "Run the command in your terminal.",
-                            "es": "Ejecuta el comando en tu terminal."
-                        }
-                    }
-                },
-                {
-                    "titulo": {
-                        "pt": "2. Introdução ao Pandas",
-                        "en": "2. Intro to Pandas",
-                        "es": "2. Introducción a Pandas",
-                        "fr": "2. Introduction à Pandas",
-                        "de": "2. Einführung in Pandas",
-                        "zh": "2. Pandas 简介",
-                        "ar": "2. مقدمة في Pandas"
-                    },
-                    "duracao": {
-                        "pt": "Leitura: 30 min",
-                        "en": "Read: 30 min",
-                        "es": "Lectura: 30 min"
-                    },
-                    "status": "livre",
-                    "content": {
-                        "pt": "# O que é Pandas?\n\nPandas é uma biblioteca de código aberto que fornece estruturas de dados e ferramentas de análise de dados de alto desempenho e fáceis de usar.\n\n### DataFrame\nA estrutura mais importante do Pandas é o DataFrame, que é essencialmente uma tabela (como uma planilha Excel) em memória.",
-                        "en": "# What is Pandas?\n\nPandas is an open source library providing high-performance, easy-to-use data structures and data analysis tools.\n\n### DataFrame\nThe most important structure in Pandas is the DataFrame, which is essentially a table (like an Excel sheet) in memory.",
-                        "es": "# ¿Qué es Pandas?\n\nPandas es una biblioteca de código abierto que proporciona estructuras de datos de alto rendimiento."
-                    },
-                    "exercise": {
-                        "instructions": {
-                            "pt": "Crie um DataFrame simples a partir de um dicionário.",
-                            "en": "Create a simple DataFrame from a dictionary.",
-                            "es": "Crea un DataFrame simple a partir de un diccionario."
-                        },
-                        "code": "import pandas as pd\n\ndades = {\n  'Nome': ['Ana', 'João'],\n  'Idade': [23, 30]\n}\n\ndf = pd.DataFrame(data)",
-                        "solution": {
-                            "pt": "Importe pandas as pd e use pd.DataFrame().",
-                            "en": "Import pandas as pd and use pd.DataFrame().",
-                            "es": "Importa pandas as pd y usa pd.DataFrame()."
-                        }
-                    }
-                },
-                {
-                    "titulo": {
-                        "pt": "3. Visualização com Matplotlib",
-                        "en": "3. Visualization with Matplotlib",
-                        "es": "3. Visualización con Matplotlib",
-                        "fr": "3. Visualisation avec Matplotlib",
-                        "de": "3. Visualisierung mit Matplotlib",
-                        "zh": "3. 使用 Matplotlib 可视化",
-                        "ar": "3. التصور باستخدام Matplotlib"
-                    },
-                    "duracao": {
-                        "pt": "Leitura: 25 min",
-                        "en": "Read: 25 min",
-                        "es": "Lectura: 25 min"
-                    },
-                    "status": "livre",
-                    "content": {
-                        "pt": "# Matplotlib\n\nMatplotlib é uma biblioteca de plotagem para a linguagem de programação Python e sua extensão de matemática numérica NumPy.\n\n### Seu Primeiro Gráfico\n```python\nimport matplotlib.pyplot as plt\n\nplt.plot([1, 2, 3, 4])\nplt.ylabel('números')\nplt.show()\n```",
-                        "en": "# Matplotlib\n\nMatplotlib is a plotting library for the Python programming language and its numerical mathematics extension NumPy.",
-                        "es": "# Matplotlib\n\nMatplotlib es una biblioteca de trazado para el lenguaje de programación Python."
-                    },
-                    "exercise": {
-                        "instructions": {
-                            "pt": "Plote um gráfico de linha simples mostrando o crescimento de vendas: [100, 150, 200, 250].",
-                            "en": "Plot a simple line chart showing sales growth: [100, 150, 200, 250].",
-                            "es": "Traza un gráfico de líneas simple que muestre el crecimiento de las ventas: [100, 150, 200, 250]."
-                        },
-                        "code": "plt.plot([100, 150, 200, 250])\nplt.title('Vendas')\nplt.show()",
-                        "solution": {
-                            "pt": "Use plt.plot() passando a lista de valores.",
-                            "en": "Use plt.plot() passing the list of values.",
-                            "es": "Usa plt.plot() pasando la lista de valores."
-                        }
-                    }
-                }
-            ]
-        }
-    ]
+            }
+        ]
+    }
+]
