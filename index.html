@@ -43,10 +43,24 @@
       height: 0 !important;
     }
 
-    /* Garantir que o Menu Dropdown apareça */
-    .goog-te-menu-frame {
-      z-index: 999999 !important;
+    /* HIDE the top banner container (often a div with class skiptranslate direct child of body) */
+    body>.skiptranslate {
+      display: none !important;
+    }
+
+    /* BUT SHOW the dropdown menu (which is also a skiptranslate direct child of body often) */
+    body>.goog-te-menu-frame.skiptranslate {
       display: block !important;
+      visibility: visible !important;
+      position: fixed !important;
+      z-index: 9999999 !important;
+      top: auto !important;
+      /* Let Google handle positioning relative to click, or fix if needed */
+    }
+
+    /* Ocultar wrapper específico que o Google usa para a barra nova (se não for skiptranslate) */
+    .VIpgJd-ZVi9od-ORHb-OEVmcd {
+      display: none !important;
     }
 
     .goog-te-menu2 {
