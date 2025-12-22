@@ -1,63 +1,63 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const DB_FILE = path.join(__dirname, 'users.json');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-// Initialize DB file if not exists
-if (!fs.existsSync(DB_FILE)) {
-    fs.writeFileSync(DB_FILE, JSON.stringify([]));
-}
+const createCollection = (fileName) => {
+    const filePath = path.join(__dirname, fileName);
+    if (!fs.existsSync(filePath)) {
+        fs.writeFileSync(filePath, JSON.stringify([]));
+    }
 
-const db = {
-    users: {
+    return {
         findOne: (query, callback) => {
             try {
-                const data = fs.readFileSync(DB_FILE);
-                const users = JSON.parse(data);
+                const data = fs.readFileSync(filePath);
+                const items = JSON.parse(data);
 
-                const user = users.find(u => { // Simple query matching
+                const item = items.find(u => {
                     for (let key in query) {
                         if (u[key] !== query[key]) return false;
                     }
                     return true;
                 });
 
-                callback(null, user);
+                callback(null, item);
             } catch (err) {
                 callback(err, null);
             }
         },
-        insert: (user, callback) => {
+        insert: (item, callback) => {
             try {
-                const data = fs.readFileSync(DB_FILE);
-                const users = JSON.parse(data);
+                const data = fs.readFileSync(filePath);
+                const items = JSON.parse(data);
 
-                user._id = Date.now().toString();
-                users.push(user);
+                item._id = Date.now().toString() + Math.random().toString(36).substr(2, 5);
+                item.createdAt = new Date().toISOString();
+                items.push(item);
 
-                fs.writeFileSync(DB_FILE, JSON.stringify(users, null, 2));
-                callback(null, user);
+                fs.writeFileSync(filePath, JSON.stringify(items, null, 2));
+                callback(null, item);
             } catch (err) {
                 callback(err, null);
             }
         },
         update: (query, updateObj, options, callback) => {
             try {
-                const data = fs.readFileSync(DB_FILE);
-                let users = JSON.parse(data);
+                const data = fs.readFileSync(filePath);
+                let items = JSON.parse(data);
                 let numReplaced = 0;
 
-                users = users.map(u => {
+                items = items.map(u => {
                     let match = true;
                     for (let key in query) {
                         if (u[key] !== query[key]) match = false;
                     }
                     if (match) {
-                        // Handle $set logic manually since this is a mock DB
                         if (updateObj.$set) {
                             u = { ...u, ...updateObj.$set };
-                        } else {
-                            // simple overwrite if no $set? logic in index.js uses $set
                         }
                         numReplaced++;
                         return u;
@@ -65,41 +65,37 @@ const db = {
                     return u;
                 });
 
-                fs.writeFileSync(DB_FILE, JSON.stringify(users, null, 2));
-                callback(null, numReplaced); // NeDB style returns numReplaced
+                fs.writeFileSync(filePath, JSON.stringify(items, null, 2));
+                callback(null, numReplaced);
             } catch (err) {
                 callback(err, null);
             }
         },
         remove: (query, callback) => {
             try {
-                const data = fs.readFileSync(DB_FILE);
-                let users = JSON.parse(data);
+                const data = fs.readFileSync(filePath);
+                let items = JSON.parse(data);
 
-                const initialLength = users.length;
-                users = users.filter(u => {
+                const initialLength = items.length;
+                items = items.filter(u => {
                     for (let key in query) {
-                        if (u[key] !== query[key]) return true; // Keep if mismatch
+                        if (u[key] !== query[key]) return true;
                     }
-                    return false; // Remove if match
+                    return false;
                 });
 
-                if (users.length === initialLength) {
-                    // No user found to delete
-                }
-
-                fs.writeFileSync(DB_FILE, JSON.stringify(users, null, 2));
-                callback(null, users.length < initialLength); // Return true if deleted
+                fs.writeFileSync(filePath, JSON.stringify(items, null, 2));
+                callback(null, items.length < initialLength);
             } catch (err) {
                 callback(err, null);
             }
         },
         find: (query, callback) => {
             try {
-                const data = fs.readFileSync(DB_FILE);
-                const users = JSON.parse(data);
+                const data = fs.readFileSync(filePath);
+                const items = JSON.parse(data);
 
-                const results = users.filter(u => {
+                const results = items.filter(u => {
                     for (let key in query) {
                         if (u[key] !== query[key]) return false;
                     }
@@ -111,7 +107,12 @@ const db = {
                 callback(err, null);
             }
         }
-    }
+    };
 };
 
-module.exports = db;
+const db = {
+    users: createCollection('users.json'),
+    messages: createCollection('messages.json')
+};
+
+export default db;

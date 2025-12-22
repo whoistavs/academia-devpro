@@ -14,5 +14,15 @@
     "password": "$2a$08$XYZvvkinyJWwXSxVcPjW2uU6C.zd8ZAO/zkG9wsaqOTGx2qRA3UeO",
     "createdAt": "2025-12-17T16:43:44.888Z",
     "_id": "1765989824889"
+  },
+  {
+    "name": "Octavio Rodrigues Schwab",
+    "email": "octavio.rs2006@outlook.com",
+    "password": "$2a$08$4G5z.9Yg3LqglRsivzHDAeD2qhdW3B42qygkvzi9GPt3RD9yKMycG",
+    "role": "student",
+    "isVerified": false,
+    "verificationToken": "pmhs3n49dzpmjhdec5r",
+    "createdAt": "2025-12-22T16:28:23.440Z",
+    "_id": "1766420903440da3r9"
   }
 ]

@@ -13,21 +13,42 @@ const Contact = () => {
         message: ''
     });
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Simulate form submission
-        console.log('Form submitted:', formData);
-        setIsSubmitted(true);
-        setFormData({ name: '', email: '', subject: '', message: '' });
+        if (isSubmitting) return;
 
-        // Reset success message after 5 seconds
-        setTimeout(() => setIsSubmitted(false), 5000);
+        setIsSubmitting(true);
+
+        try {
+            const response = await fetch('http://localhost:3000/api/contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            if (response.ok) {
+                setIsSubmitted(true);
+                setFormData({ name: '', email: '', subject: '', message: '' });
+                // Reset success message after 5 seconds
+                setTimeout(() => setIsSubmitted(false), 5000);
+            } else {
+                alert('Erro ao enviar mensagem. Tente novamente.');
+            }
+        } catch (error) {
+            console.error('Erro:', error);
+            alert('Erro de conexão. Tente novamente.');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -55,7 +76,7 @@ const Contact = () => {
                                     </div>
                                     <div>
                                         <p className="text-indigo-200 text-sm">{t('contact.info.phone')}</p>
-                                        <p className="font-semibold">+55 (11) 99999-9999</p>
+                                        <p className="font-semibold">19 920033741</p>
                                     </div>
                                 </div>
 
@@ -65,19 +86,11 @@ const Contact = () => {
                                     </div>
                                     <div>
                                         <p className="text-indigo-200 text-sm">{t('contact.info.email')}</p>
-                                        <p className="font-semibold">contato@devproacademy.com</p>
+                                        <p className="font-semibold">octavio.rs2006@outlook.com</p>
                                     </div>
                                 </div>
 
-                                <div className="flex items-center space-x-4">
-                                    <div className="bg-indigo-700 p-3 rounded-full">
-                                        <MapPin className="h-6 w-6" />
-                                    </div>
-                                    <div>
-                                        <p className="text-indigo-200 text-sm">{t('contact.info.address')}</p>
-                                        <p className="font-semibold">Av. Paulista, 1000 - São Paulo, SP</p>
-                                    </div>
-                                </div>
+
                             </div>
                         </div>
 
@@ -169,9 +182,10 @@ const Contact = () => {
 
                                 <button
                                     type="submit"
-                                    className="w-full bg-indigo-600 text-white py-3 rounded-lg font-bold hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200"
+                                    disabled={isSubmitting}
+                                    className={`w-full bg-indigo-600 text-white py-3 rounded-lg font-bold hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
                                 >
-                                    {t('contact.form.send')}
+                                    {isSubmitting ? 'Enviando...' : t('contact.form.send')}
                                 </button>
                             </form>
                         )}

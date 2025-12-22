@@ -1,10 +1,11 @@
-import React from 'react';
-import { Code2, Github, Twitter, Linkedin } from 'lucide-react';
+import { Code2, Github, Twitter, Linkedin, Mail, Phone } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../context/LanguageContext';
+import { useTheme } from '../context/ThemeContext';
 
 const Footer = () => {
     const { t } = useTranslation();
+    const { theme } = useTheme();
 
     return (
         <footer className="bg-gray-900 text-gray-300 py-12 border-t border-gray-800 mt-auto">
@@ -14,11 +15,25 @@ const Footer = () => {
                     {/* Column 1: Logo & Mission */}
                     <div className="flex flex-col">
                         <div className="flex items-center mb-4">
-                            <img src="/logo.png" alt="DevPro Academy" className="h-10 w-auto bg-white rounded-lg p-1.5" />
+                            <img
+                                src={theme === 'dark' ? "/logo-dark.png" : "/logo.png"}
+                                alt="DevPro Academy"
+                                className={`h-10 w-auto rounded-lg p-1.5 ${theme === 'dark' ? '' : 'bg-white'}`}
+                            />
                         </div>
-                        <p className="text-gray-400 max-w-sm">
+                        <p className="text-gray-400 max-w-sm mb-4">
                             {t('footer.about')}
                         </p>
+                        <div className="text-gray-400 text-sm space-y-2">
+                            <div className="flex items-center space-x-2">
+                                <Mail className="h-4 w-4" />
+                                <span>octavio.rs2006@outlook.com</span>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <Phone className="h-4 w-4" />
+                                <span>19 920033741</span>
+                            </div>
+                        </div>
                     </div>
 
                     {/* Column 2: Quick Links */}

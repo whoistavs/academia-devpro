@@ -24,7 +24,11 @@ const Navbar = () => {
                 <div className="flex justify-between h-16">
                     <div className="flex items-center">
                         <Link to="/" className="flex items-center">
-                            <img src="/logo.png" alt="DevPro Academy" className="h-10 w-auto bg-white rounded-lg p-1.5" />
+                            <img
+                                src={theme === 'dark' ? "/logo-dark.png" : "/logo.png"}
+                                alt="DevPro Academy"
+                                className={`h-10 w-auto rounded-lg p-1.5 ${theme === 'dark' ? '' : 'bg-white'}`}
+                            />
                         </Link>
                     </div>
 

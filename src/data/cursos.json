@@ -1,4 +1,4 @@
-﻿[
+[
     {
         "id": 1,
         "slug": "react-dominando-o-essencial",
@@ -15,36 +15,36 @@
         "description": {
             "pt": "Aprenda a criar interfaces modernas e responsivas com React.js. Domine componentes, hooks, estado e muito mais.",
             "en": "Learn to create modern and responsive interfaces with React.js. Master components, hooks, state, and more.",
-            "es": "Aprende a crear interfaces modernas y responsivas con React.js. Domina componentes, hooks, estado y mucho mÃ¡s.",
-            "fr": "Apprenez Ã  crÃ©er des interfaces modernes et rÃ©actives. MaÃ®trisez les composants, les hooks et plus encore.",
+            "es": "Aprende a crear interfaces modernas y responsivas con React.js. Domina componentes, hooks, estado y mucho más.",
+            "fr": "Apprenez à créer des interfaces modernes et réactives. MaÃ®trisez les composants, les hooks et plus encore.",
             "de": "Lernen Sie moderne und reaktionsschnelle Schnittstellen zu erstellen.",
             "zh": "å­¦ä¹ åˆ›å»ºçŽ°ä»£ä¸”å“åº”è¿…é€Ÿçš„ç•Œé¢ã€‚",
             "ar": "ØªØ¹Ù„Ù… ÙƒÙŠÙÙŠØ© Ø¥Ù†Ø´Ø§Ø¡ ÙˆØ§Ø¬Ù‡Ø§Øª Ø­Ø¯ÙŠØ«Ø© ÙˆØ³Ø±ÙŠØ¹Ø© Ø§Ù„Ø§Ø³ØªØ¬Ø§Ø¨Ø©."
         },
         "descricaoCompleta": {
-            "pt": "Neste curso abrangente, vocÃª mergulharÃ¡ fundo no ecossistema React. Desde os conceitos fundamentais de componentes e JSX atÃ© tÃ©cnicas avanÃ§adas de gerenciamento de estado com Context API e Redux. VocÃª aprenderÃ¡ a construir Single Page Applications (SPAs) performÃ¡ticas.",
+            "pt": "Neste curso abrangente, você mergulhará fundo no ecossistema React. Desde os conceitos fundamentais de componentes e JSX até técnicas avançadas de gerenciamento de estado com Context API e Redux. Você aprenderá a construir Single Page Applications (SPAs) performáticas.",
             "en": "In this comprehensive course, you will dive deep into the React ecosystem. From fundamental concepts of components and JSX to advanced state management techniques with Context API and Redux. You will learn to build performant Single Page Applications (SPAs).",
-            "es": "En este curso completo, profundizarÃ¡s en el ecosistema React. Desde los conceptos fundamentales de componentes y JSX hasta tÃ©cnicas avanzadas de gestiÃ³n de estado con Context API y Redux. AprenderÃ¡s a construir Single Page Applications (SPAs) de alto rendimiento.",
-            "fr": "Plongez dans l'Ã©cosystÃ¨me React, des concepts fondamentaux aux techniques avancÃ©es.",
+            "es": "En este curso completo, profundizarás en el ecosistema React. Desde los conceptos fundamentales de componentes y JSX hasta técnicas avanzadas de gestión de estado con Context API y Redux. Aprenderás a construir Single Page Applications (SPAs) de alto rendimiento.",
+            "fr": "Plongez dans l'écosystÃ¨me React, des concepts fondamentaux aux techniques avancées.",
             "de": "Tauchen Sie tief in das React-Ã–kosystem ein, von den Grundlagen bis zu fortgeschrittenen Techniken.",
             "zh": "æ·±å…¥ React ç”Ÿæ€ç³»ç»Ÿï¼Œä»ŽåŸºç¡€æ¦‚å¿µåˆ°é«˜çº§æŠ€æœ¯ã€‚",
             "ar": "ØªØ¹Ù…Ù‚ ÙÙŠ Ù†Ø¸Ø§Ù… React Ø§Ù„Ø¨ÙŠØ¦ÙŠØŒ Ù…Ù† Ø§Ù„Ù…ÙØ§Ù‡ÙŠÙ… Ø§Ù„Ø£Ø³Ø§Ø³ÙŠØ© Ø¥Ù„Ù‰ Ø§Ù„ØªÙ‚Ù†ÙŠØ§Øª Ø§Ù„Ù…ØªÙ‚Ø¯Ù…Ø©."
         },
         "modulos": [
-            "IntroduÃ§Ã£o ao React e JSX",
+            "Introdução ao React e JSX",
             "Gerenciamento de Estado e Ciclo de Vida",
             "Hooks Essenciais (useState, useEffect)",
             "Roteamento com React Router",
             "Context API",
-            "React 19 e InovaÃ§Ãµes",
+            "React 19 e Inovações",
             "Performance e Arquitetura"
         ],
         "duration": "40h",
         "level": {
-            "pt": "IntermediÃ¡rio",
+            "pt": "Intermediário",
             "en": "Intermediate",
             "es": "Intermedio",
-            "fr": "IntermÃ©diaire",
+            "fr": "Intermédiaire",
             "de": "Mittelstufe",
             "zh": "ä¸­çº§",
             "ar": "Ù…ØªÙˆØ³Ø·"
@@ -53,9 +53,9 @@
         "aulas": [
             {
                 "titulo": {
-                    "pt": "1. IntroduÃ§Ã£o ao Projeto e Setup",
+                    "pt": "1. Introdução ao Projeto e Setup",
                     "en": "1. Project Intro & Setup",
-                    "es": "1. IntroducciÃ³n al Proyecto y ConfiguraciÃ³n"
+                    "es": "1. Introducción al Proyecto y Configuración"
                 },
                 "duracao": {
                     "pt": "Leitura: 15 min",
@@ -64,7 +64,7 @@
                 },
                 "status": "completa",
                 "content": {
-                    "pt": "# Fundamentos do React\n\nReact mudou a forma como construÃ­mos interfaces. Ao invÃ©s de manipulaÃ§Ã£o direta do DOM, usamos um modelo declarativo.\n\n### Virtual DOM\nO React mantÃ©m uma cÃ³pia leve do DOM em memÃ³ria para calcular a forma mais eficiente de atualizar a tela (ReconciliaÃ§Ã£o).\n\n### Setup Profissional\nHoje usamos **Vite** para criar projetos:\n```bash\nnpm create vite@latest meu-app -- --template react\n```\nIsso gera um ambiente moderno e rÃ¡pido.",
+                    "pt": "# Fundamentos do React\n\nReact mudou a forma como construímos interfaces. Ao invés de manipulação direta do DOM, usamos um modelo declarativo.\n\n### Virtual DOM\nO React mantém uma cópia leve do DOM em memória para calcular a forma mais eficiente de atualizar a tela (Reconciliação).\n\n### Setup Profissional\nHoje usamos **Vite** para criar projetos:\n```bash\nnpm create vite@latest meu-app -- --template react\n```\nIsso gera um ambiente moderno e rápido.",
                     "en": "# React Fundamentals\n\nReact changed UI development. We use declarative code instead of direct DOM manipulation.\n\n### Virtual DOM\nReact keeps a memory copy of the DOM to update UI efficiently (Reconciliation).\n\n### Professional Setup\nUse **Vite**:\n```bash\nnpm create vite@latest my-app\n```"
                 },
                 "exercise": {
@@ -98,11 +98,11 @@
                     {
                         "id": 2,
                         "text": {
-                            "pt": "O que Ã© o Virtual DOM?",
+                            "pt": "O que é o Virtual DOM?",
                             "en": "What is Virtual DOM?"
                         },
                         "options": [
-                            "Uma cÃ³pia leve do DOM na memÃ³ria",
+                            "Uma cópia leve do DOM na memória",
                             "O DOM do navegador",
                             "Um banco de dados",
                             "Um servidor"
@@ -124,7 +124,7 @@
                 },
                 "status": "livre",
                 "content": {
-                    "pt": "# Tudo Ã© Componente\n\nComponentes sÃ£o funÃ§Ãµes que retornam JSX (HTML + JS).\n\n### Props\nProps sÃ£o argumentos passados para componentes. SÃ£o **somente leitura**.\n\n```jsx\nfunction Card({ titulo }) {\n  return <h2>{titulo}</h2>;\n}\n```\n\nNunca modifique suas props diretamente!",
+                    "pt": "# Tudo é Componente\n\nComponentes são funções que retornam JSX (HTML + JS).\n\n### Props\nProps são argumentos passados para componentes. São **somente leitura**.\n\n```jsx\nfunction Card({ titulo }) {\n  return <h2>{titulo}</h2>;\n}\n```\n\nNunca modifique suas props diretamente!",
                     "en": "# Everything is a Component\n\nComponents are functions returning JSX.\n\n### Props\nProps are arguments passed to components. They are **read-only**.\n\n```jsx\nfunction Card({ title }) {\n  return <h2>{title}</h2>;\n}\n```"
                 },
                 "exercise": {
@@ -135,7 +135,7 @@
                     },
                     "code": "function Botao({ label, cor }) {\n  return <button style={{ backgroundColor: cor }}>{label}</button>;\n}",
                     "solution": {
-                        "pt": "Desestruture as props na funÃ§Ã£o.",
+                        "pt": "Desestruture as props na função.",
                         "en": "Destructure props.",
                         "es": "Desestructura props."
                     }
@@ -144,12 +144,12 @@
                     {
                         "id": 1,
                         "text": {
-                            "pt": "As props sÃ£o:",
+                            "pt": "As props são:",
                             "en": "Props are:"
                         },
                         "options": [
-                            "ImutÃ¡veis (leitura)",
-                            "MutÃ¡veis (escrita)",
+                            "Imutáveis (leitura)",
+                            "Mutáveis (escrita)",
                             "Globais",
                             "Locais"
                         ],
@@ -175,7 +175,7 @@
                 "titulo": {
                     "pt": "3. Gerenciamento de Estado (useState)",
                     "en": "3. State Management (useState)",
-                    "es": "3. GestiÃ³n de Estado (useState)"
+                    "es": "3. Gestión de Estado (useState)"
                 },
                 "duracao": {
                     "pt": "Leitura: 25 min",
@@ -184,7 +184,7 @@
                 },
                 "status": "livre",
                 "content": {
-                    "pt": "# Estado: A MemÃ³ria do Componente\n\nPara interatividade, usamos **State**.\n\n### useState Hook\n```jsx\nconst [valor, setValor] = useState(inicial);\n```\nChamar `setValor` avisa o React para re-renderizar o componente com a nova informaÃ§Ã£o.\n\n### Regra de Ouro\nNunca mude o estado diretamente (`valor = 10`). Sempre use a funÃ§Ã£o set (`setValor(10)`).",
+                    "pt": "# Estado: A Memória do Componente\n\nPara interatividade, usamos **State**.\n\n### useState Hook\n```jsx\nconst [valor, setValor] = useState(inicial);\n```\nChamar `setValor` avisa o React para re-renderizar o componente com a nova informação.\n\n### Regra de Ouro\nNunca mude o estado diretamente (`valor = 10`). Sempre use a função set (`setValor(10)`).",
                     "en": "# State: Component Memory\n\nFor interactivity, we use **State**.\n\n### useState Hook\n```jsx\nconst [value, setValue] = useState(initial);\n```\nCalling `setValue` triggers a re-render."
                 },
                 "exercise": {
@@ -204,14 +204,14 @@
                     {
                         "id": 1,
                         "text": {
-                            "pt": "O que dispara uma re-renderizaÃ§Ã£o?",
+                            "pt": "O que dispara uma re-renderização?",
                             "en": "What triggers re-render?"
                         },
                         "options": [
-                            "MudanÃ§a de Estado (State)",
-                            "MudanÃ§a de variÃ¡vel let",
+                            "Mudança de Estado (State)",
+                            "Mudança de variável let",
                             "Console.log",
-                            "ComentÃ¡rio"
+                            "Comentário"
                         ],
                         "correct": 0
                     },
@@ -222,7 +222,7 @@
                             "en": "Can we use hooks in loops?"
                         },
                         "options": [
-                            "NÃ£o, nunca",
+                            "Não, nunca",
                             "Sim",
                             "Ã€s vezes",
                             "Se for loop curto"
@@ -248,19 +248,19 @@
                 },
                 "status": "livre",
                 "content": {
-                    "pt": "# O Hook useEffect\n\nO `useEffect` permite executar efeitos colaterais em componentes funcionais. Buscas de dados, subscriÃ§Ãµes ou manipulaÃ§Ã£o manual do DOM devem ser feitos aqui.\n\n### Ciclo de Vida\n- **Montagem**: Executa uma vez (`[]`).\n- **AtualizaÃ§Ã£o**: Executa quando dependÃªncias mudam (`[prop]`).\n- **Desmontagem**: FunÃ§Ã£o de retorno para limpeza.",
+                    "pt": "# O Hook useEffect\n\nO `useEffect` permite executar efeitos colaterais em componentes funcionais. Buscas de dados, subscrições ou manipulação manual do DOM devem ser feitos aqui.\n\n### Ciclo de Vida\n- **Montagem**: Executa uma vez (`[]`).\n- **Atualização**: Executa quando dependências mudam (`[prop]`).\n- **Desmontagem**: Função de retorno para limpeza.",
                     "en": "# The useEffect Hook\n\n`useEffect` lets you perform side effects in function components. Data fetching, setting up a subscription, and manually changing the DOM in React components should happen here.\n\n### Lifecycle\n- **Mount**: Runs once (`[]`).\n- **Update**: Runs when dependencies change (`[prop]`).\n- **Unmount**: Cleanup return function.",
-                    "es": "# El Hook useEffect\n\n`useEffect` te permite realizar efectos secundarios en componentes funcionales. La obtenciÃ³n de datos, la configuraciÃ³n de suscripciones y la modificaciÃ³n manual del DOM deben ocurrir aquÃ­."
+                    "es": "# El Hook useEffect\n\n`useEffect` te permite realizar efectos secundarios en componentes funcionales. La obtención de datos, la configuración de suscripciones y la modificación manual del DOM deben ocurrir aquí."
                 },
                 "exercise": {
                     "instructions": {
-                        "pt": "Crie um componente que mude o tÃ­tulo da aba do navegador (document.title) toda vez que um contador for atualizado.",
+                        "pt": "Crie um componente que mude o título da aba do navegador (document.title) toda vez que um contador for atualizado.",
                         "en": "Create a component that changes the browser tab title (document.title) every time a counter is updated.",
-                        "es": "Crea un componente que cambie el tÃ­tulo de la pestaÃ±a del navegador (document.title) cada vez que se actualice un contador."
+                        "es": "Crea un componente que cambie el título de la pestaÃ±a del navegador (document.title) cada vez que se actualice un contador."
                     },
                     "code": "useEffect(() => {\n  document.title = `Contagem: ${count}`;\n}, [count]);",
                     "solution": {
-                        "pt": "Adicione 'count' como dependÃªncia no array do useEffect.",
+                        "pt": "Adicione 'count' como dependência no array do useEffect.",
                         "en": "Add 'count' as a dependency in the useEffect array.",
                         "es": "AÃ±ade 'count' como dependencia en el array de useEffect."
                     }
@@ -268,10 +268,10 @@
             },
             {
                 "titulo": {
-                    "pt": "5. FormulÃ¡rios e Eventos",
+                    "pt": "5. Formulários e Eventos",
                     "en": "5. Forms and Events",
                     "es": "5. Formularios y Eventos",
-                    "fr": "5. Formulaires et Ã‰vÃ©nements",
+                    "fr": "5. Formulaires et Événements",
                     "de": "5. Formulare und Ereignisse",
                     "zh": "5. è¡¨å•ä¸Žäº‹ä»¶",
                     "ar": "5. Ø§Ù„Ù†Ù…Ø§Ø°Ø¬ ÙˆØ§Ù„Ø£Ø­Ø¯Ø§Ø«"
@@ -283,13 +283,13 @@
                 },
                 "status": "livre",
                 "content": {
-                    "pt": "# FormulÃ¡rios no React\n\nEm React, o estado mutÃ¡vel Ã© geralmente mantido na propriedade state dos componentes, e sÃ³ Ã© atualizado por `setState()`. Elementos de formulÃ¡rio HTML funcionam um pouco diferente de outros elementos DOM porque eles mantÃªm seu prÃ³prio estado interno.\n\n### Componentes Controlados\nNÃ³s fazemos o React a 'Ãºnica fonte de verdade' transformando o formulÃ¡rio em um **Componente Controlado**.",
+                    "pt": "# Formulários no React\n\nEm React, o estado mutável é geralmente mantido na propriedade state dos componentes, e só é atualizado por `setState()`. Elementos de formulário HTML funcionam um pouco diferente de outros elementos DOM porque eles mantêm seu próprio estado interno.\n\n### Componentes Controlados\nNós fazemos o React a 'única fonte de verdade' transformando o formulário em um **Componente Controlado**.",
                     "en": "# Forms in React\n\nIn React, mutable state is typically kept in the state property of components, and only updated with `setState()`. HTML form elements work a little differently from other DOM elements because form elements naturally keep some internal state.\n\n### Controlled Components\nWe render the React state as the 'single source of truth', making it a **Controlled Component**.",
                     "es": "# Formularios en React\n\nEn React, el estado mutable normalmente se mantiene en la propiedad state de los componentes y solo se actualiza con `setState()`. Los elementos de formulario HTML funcionan de manera un poco diferente porque mantienen su propio estado interno."
                 },
                 "exercise": {
                     "instructions": {
-                        "pt": "Crie um formulÃ¡rio simples com um input de texto que atualiza o estado e exibe o valor digitado em tempo real abaixo do input.",
+                        "pt": "Crie um formulário simples com um input de texto que atualiza o estado e exibe o valor digitado em tempo real abaixo do input.",
                         "en": "Create a simple form with a text input that updates state and displays the typed value in real-time below the input.",
                         "es": "Crea un formulario simple con una entrada de texto que actualice el estado y muestre el valor escrito en tiempo real debajo de la entrada."
                     },
@@ -318,19 +318,19 @@
                 },
                 "status": "livre",
                 "content": {
-                    "pt": "# RequisiÃ§Ãµes HTTP\n\nA maioria das aplicaÃ§Ãµes web precisa buscar dados de um servidor. Em React, geralmente fazemos isso dentro de um `useEffect`.\n\n### Fetch API\nA Fetch API Ã© nativa do navegador.\n\n```jsx\nuseEffect(() => {\n  fetch('https://api.exemplo.com/dados')\n    .then(response => response.json())\n    .then(data => setDados(data));\n}, []);\n```",
+                    "pt": "# Requisições HTTP\n\nA maioria das aplicações web precisa buscar dados de um servidor. Em React, geralmente fazemos isso dentro de um `useEffect`.\n\n### Fetch API\nA Fetch API é nativa do navegador.\n\n```jsx\nuseEffect(() => {\n  fetch('https://api.exemplo.com/dados')\n    .then(response => response.json())\n    .then(data => setDados(data));\n}, []);\n```",
                     "en": "# HTTP Requests\n\nMost web apps need to fetch data from a server. In React, we predominantly do this inside a `useEffect`.\n\n### Fetch API\nThe Fetch API is native to the browser.",
-                    "es": "# Peticiones HTTP\n\nLa mayorÃ­a de las aplicaciones web necesitan obtener datos de un servidor. En React, generalmente hacemos esto dentro de un `useEffect`."
+                    "es": "# Peticiones HTTP\n\nLa mayoría de las aplicaciones web necesitan obtener datos de un servidor. En React, generalmente hacemos esto dentro de un `useEffect`."
                 },
                 "exercise": {
                     "instructions": {
-                        "pt": "FaÃ§a uma requisiÃ§Ã£o para 'https://jsonplaceholder.typicode.com/todos/1' e exiba o tÃ­tulo da tarefa.",
+                        "pt": "Faça uma requisição para 'https://jsonplaceholder.typicode.com/todos/1' e exiba o título da tarefa.",
                         "en": "Make a request to 'https://jsonplaceholder.typicode.com/todos/1' and display the todo title.",
-                        "es": "Realiza una peticiÃ³n a 'https://jsonplaceholder.typicode.com/todos/1' y muestra el tÃ­tulo de la tarea."
+                        "es": "Realiza una petición a 'https://jsonplaceholder.typicode.com/todos/1' y muestra el título de la tarea."
                     },
                     "code": "const [todo, setTodo] = useState(null);\nuseEffect(() => {\n  fetch('https://jsonplaceholder.typicode.com/todos/1')\n    .then(r => r.json())\n    .then(setTodo);\n}, []);\n\nreturn <div>{todo?.title}</div>;",
                     "solution": {
-                        "pt": "Lembre-se de tratar o cado inicial onde 'todo' Ã© null.",
+                        "pt": "Lembre-se de tratar o cado inicial onde 'todo' é null.",
                         "en": "Remember to handle the initial case where 'todo' is null.",
                         "es": "Recuerda manejar el caso inicial donde 'todo' es null."
                     }
@@ -353,7 +353,7 @@
                 },
                 "status": "livre",
                 "content": {
-                    "pt": "# React Router\n\nSPAs (Single Page Applications) precisam de um roteador para navegar entre diferentes visualizaÃ§Ãµes sem recarregar a pÃ¡gina. O padrÃ£o da indÃºstria Ã© o `react-router-dom`.\n\n### InstalaÃ§Ã£o\n`npm install react-router-dom`\n\n### ConfiguraÃ§Ã£o BÃ¡sica\nUse `BrowserRouter`, `Routes` e `Route` para definir seus caminhos.",
+                    "pt": "# React Router\n\nSPAs (Single Page Applications) precisam de um roteador para navegar entre diferentes visualizações sem recarregar a página. O padrão da indústria é o `react-router-dom`.\n\n### Instalação\n`npm install react-router-dom`\n\n### Configuração Básica\nUse `BrowserRouter`, `Routes` e `Route` para definir seus caminhos.",
                     "en": "# React Router\n\nSPAs (Single Page Applications) need a router to navigate between different views without reloading the page. The industry standard is `react-router-dom`.\n\n### Installation\n`npm install react-router-dom`\n\n### Basic Setup\nUse `BrowserRouter`, `Routes`, and `Route` to define your paths.",
                     "es": "# React Router\n\nLas SPAs necesitan un enrutador para navegar entre diferentes vistas."
                 },
@@ -373,7 +373,7 @@
             },
             {
                 "titulo": {
-                    "pt": "8. React 19 e InovaÃ§Ãµes",
+                    "pt": "8. React 19 e Inovações",
                     "en": "8. React 19 & Frontiers",
                     "es": "8. React 19 y Fronteras",
                     "fr": "8. React 19 et FrontiÃ¨res",
@@ -388,11 +388,11 @@
                 },
                 "status": "livre",
                 "content": {
-                    "pt": "# InovaÃ§Ãµes de Fronteira: React 19 e Server Components\n\nA evoluÃ§Ã£o do React atingiu um marco histÃ³rico com o lanÃ§amento da versÃ£o 19, que introduz mudanÃ§as fundamentais na arquitetura.\n\n### React Server Components (RSC)\nOs RSCs representam uma mudanÃ§a onde partes da interface sÃ£o renderizadas exclusivamente no servidor e enviadas ao cliente como um stream de dados leve.\n- **Vantagem:** ReduÃ§Ã£o drÃ¡stica do JavaScript enviado ao cliente.\n- **Performance:** Melhora mÃ©tricas de LCP e TTI.\n\n### Server Actions\nPermite definir funÃ§Ãµes de backend que podem ser chamadas diretamente de componentes de cliente.\n\n### Novos Hooks\n- **use()**: API para ler recursos assÃ­ncronos (Promises/Context) em condicionais.\n- **useActionState()**: Gerencia estado de aÃ§Ãµes (loading/error).\n- **useFormStatus()**: Metadados sobre submissÃ£o de formulÃ¡rios.\n- **React Compiler**: Automatiza a memorizaÃ§Ã£o (adeus useMemo manual?)."
+                    "pt": "# Inovações de Fronteira: React 19 e Server Components\n\nA evolução do React atingiu um marco histórico com o lançamento da versão 19, que introduz mudanças fundamentais na arquitetura.\n\n### React Server Components (RSC)\nOs RSCs representam uma mudança onde partes da interface são renderizadas exclusivamente no servidor e enviadas ao cliente como um stream de dados leve.\n- **Vantagem:** Redução drástica do JavaScript enviado ao cliente.\n- **Performance:** Melhora métricas de LCP e TTI.\n\n### Server Actions\nPermite definir funções de backend que podem ser chamadas diretamente de componentes de cliente.\n\n### Novos Hooks\n- **use()**: API para ler recursos assíncronos (Promises/Context) em condicionais.\n- **useActionState()**: Gerencia estado de ações (loading/error).\n- **useFormStatus()**: Metadados sobre submissão de formulários.\n- **React Compiler**: Automatiza a memorização (adeus useMemo manual?)."
                 },
                 "exercise": {
                     "instructions": {
-                        "pt": "Simule o uso de uma Server Action (conceitual) que recebe dados de um formulÃ¡rio.",
+                        "pt": "Simule o uso de uma Server Action (conceitual) que recebe dados de um formulário.",
                         "en": "Simulate using a Server Action (conceptual) that receives form data.",
                         "es": "Simula el uso de una Server Action (conceptual) que recibe datos de un formulario."
                     },
@@ -421,14 +421,14 @@
                 },
                 "status": "livre",
                 "content": {
-                    "pt": "# EstratÃ©gias de OtimizaÃ§Ã£o\n\n### ReconciliaÃ§Ã£o e Keys\nO processo de \"diffing\" Ã© o coraÃ§Ã£o do React. O uso de **keys** estÃ¡veis em listas Ã© obrigatÃ³rio para evitar bugs e degradaÃ§Ã£o de performance.\n\n### Code Splitting\nUse `React.lazy` e `Suspense` para dividir a aplicaÃ§Ã£o em pedaÃ§os menores, carregados sob demanda.\n\n### Portais\n`createPortal` permite renderizar filhos em um nÃ³ DOM diferente, crucial para Modais e Tooltips que precisam escapar de `overflow: hidden`.\n\n### Acesso Direto ao DOM (Refs)\nUse `useRef` para valores persistentes que nÃ£o disparam re-render ou para acessar APIs imperativas do DOM (foco, media players).",
+                    "pt": "# Estratégias de Otimização\n\n### Reconciliação e Keys\nO processo de \"diffing\" é o coração do React. O uso de **keys** estáveis em listas é obrigatório para evitar bugs e degradação de performance.\n\n### Code Splitting\nUse `React.lazy` e `Suspense` para dividir a aplicação em pedaços menores, carregados sob demanda.\n\n### Portais\n`createPortal` permite renderizar filhos em um nó DOM diferente, crucial para Modais e Tooltips que precisam escapar de `overflow: hidden`.\n\n### Acesso Direto ao DOM (Refs)\nUse `useRef` para valores persistentes que não disparam re-render ou para acessar APIs imperativas do DOM (foco, media players).",
                     "en": "# Optimization Strategies\n\n### Reconciliation & Keys\nThe \"diffing\" process is the heart of React. Using stable **keys** in lists is mandatory.\n\n### Code Splitting\nUse `React.lazy` and `Suspense` to split the app into smaller chunks.\n\n### Portals\n`createPortal` lets you render children into a different DOM node, crucial for Modals."
                 },
                 "exercise": {
                     "instructions": {
-                        "pt": "Crie uma referÃªncia (ref) para um input e foque nele automaticamente ao carregar o componente.",
+                        "pt": "Crie uma referência (ref) para um input e foque nele automaticamente ao carregar o componente.",
                         "en": "Create a ref for an input and focus it automatically when the component loads.",
-                        "es": "Crea una referencia (ref) para un input y enfÃ³calo automÃ¡ticamente al cargar el componente."
+                        "es": "Crea una referencia (ref) para un input y enfócalo automáticamente al cargar el componente."
                     },
                     "code": "const inputRef = useRef(null);\nuseEffect(() => {\n  inputRef.current.focus();\n}, []);\n\nreturn <input ref={inputRef} />;",
                     "solution": {
@@ -443,7 +443,7 @@
             {
                 "id": 1,
                 "question": {
-                    "pt": "O que Ã© o React?",
+                    "pt": "O que é o React?",
                     "en": "What is React?"
                 },
                 "options": {
@@ -515,7 +515,7 @@
                 "options": {
                     "pt": [
                         "Efeitos colaterais",
-                        "RenderizaÃ§Ã£o",
+                        "Renderização",
                         "Estilo",
                         "Roteamento"
                     ],
@@ -531,13 +531,13 @@
             {
                 "id": 5,
                 "question": {
-                    "pt": "O que Ã© JSX?",
+                    "pt": "O que é JSX?",
                     "en": "What is JSX?"
                 },
                 "options": {
                     "pt": [
                         "Sintaxe que parece HTML",
-                        "Uma funÃ§Ã£o",
+                        "Uma função",
                         "Um componente",
                         "Uma biblioteca"
                     ],
@@ -553,15 +553,15 @@
             {
                 "id": 6,
                 "question": {
-                    "pt": "Qual o padrÃ£o para listas?",
+                    "pt": "Qual o padrão para listas?",
                     "en": "Standard for lists?"
                 },
                 "options": {
                     "pt": [
                         "Usar keys",
                         "Usar index",
-                        "NÃ£o usar nada",
-                        "Usar ids aleatÃ³rios"
+                        "Não usar nada",
+                        "Usar ids aleatórios"
                     ],
                     "en": [
                         "Use keys",
@@ -575,12 +575,12 @@
             {
                 "id": 7,
                 "question": {
-                    "pt": "O que Ã© o Virtual DOM?",
+                    "pt": "O que é o Virtual DOM?",
                     "en": "What is Virtual DOM?"
                 },
                 "options": {
                     "pt": [
-                        "RepresentaÃ§Ã£o na memÃ³ria",
+                        "Representação na memória",
                         "DOM do Browser",
                         "HTML puro",
                         "XML"
@@ -602,7 +602,7 @@
                 },
                 "options": {
                     "pt": [
-                        "ReferÃªncias mutÃ¡veis",
+                        "Referências mutáveis",
                         "Estado reativo",
                         "Efeitos",
                         "Contexto"
@@ -619,15 +619,15 @@
             {
                 "id": 9,
                 "question": {
-                    "pt": "O que sÃ£o Componentes Controlados?",
+                    "pt": "O que são Componentes Controlados?",
                     "en": "What are Controlled Components?"
                 },
                 "options": {
                     "pt": [
-                        "FormulÃ¡rios geridos pelo React",
+                        "Formulários geridos pelo React",
                         "Componentes HTML puros",
                         "Inputs sem estado",
-                        "BotÃµes"
+                        "Botões"
                     ],
                     "en": [
                         "React managed forms",
@@ -641,7 +641,7 @@
             {
                 "id": 10,
                 "question": {
-                    "pt": "Qual mÃ©todo cria o contexto?",
+                    "pt": "Qual método cria o contexto?",
                     "en": "Method to create context?"
                 },
                 "options": {
@@ -663,12 +663,12 @@
             {
                 "id": 11,
                 "question": {
-                    "pt": "O que Ã© Prop Drilling?",
+                    "pt": "O que é Prop Drilling?",
                     "en": "What is Prop Drilling?"
                 },
                 "options": {
                     "pt": [
-                        "Passar props por muitos nÃ­veis",
+                        "Passar props por muitos níveis",
                         "Furar o monitor",
                         "Deletar props",
                         "Criar props"
@@ -690,10 +690,10 @@
                 },
                 "options": {
                     "pt": [
-                        "NavegaÃ§Ã£o SPA",
-                        "RequisiÃ§Ãµes HTTP",
+                        "Navegação SPA",
+                        "Requisições HTTP",
                         "Gerenciar Estado",
-                        "EstilizaÃ§Ã£o"
+                        "Estilização"
                     ],
                     "en": [
                         "SPA Navigation",
@@ -707,7 +707,7 @@
             {
                 "id": 13,
                 "question": {
-                    "pt": "O que Ã© SPA?",
+                    "pt": "O que é SPA?",
                     "en": "What is SPA?"
                 },
                 "options": {
@@ -758,7 +758,7 @@
                     "pt": [
                         "Memoriza componente (performance)",
                         "Memoriza estado",
-                        "Cria memÃ³ria",
+                        "Cria memória",
                         "Nada"
                     ],
                     "en": [
@@ -786,19 +786,19 @@
         },
         "category": "Back-end",
         "description": {
-            "pt": "Construa APIs robustas e escalÃ¡veis usando Node.js e Express.",
+            "pt": "Construa APIs robustas e escaláveis usando Node.js e Express.",
             "en": "Build robust and scalable APIs using Node.js and Express.",
             "es": "Construye APIs robustas y escalables usando Node.js y Express.",
-            "fr": "Construisez des API robustes et Ã©volutives.",
+            "fr": "Construisez des API robustes et évolutives.",
             "de": "Erstellen Sie robuste und skalierbare APIs.",
             "zh": "æž„å»ºå¥å£®ä¸”å¯æ‰©å±•çš„ APIã€‚",
             "ar": "Ø¨Ù†Ø§Ø¡ ÙˆØ§Ø¬Ù‡Ø§Øª Ø¨Ø±Ù…Ø¬Ø© ØªØ·Ø¨ÙŠÙ‚Ø§Øª Ù‚ÙˆÙŠØ© ÙˆÙ‚Ø§Ø¨Ù„Ø© Ù„Ù„ØªØ·ÙˆÙŠØ±."
         },
         "descricaoCompleta": {
-            "pt": "Desenvolva o backend de aplicaÃ§Ãµes web modernas utilizando Node.js e o framework Express. Este curso cobre todo o processo de criaÃ§Ã£o de uma API RESTful.",
+            "pt": "Desenvolva o backend de aplicações web modernas utilizando Node.js e o framework Express. Este curso cobre todo o processo de criação de uma API RESTful.",
             "en": "Develop the backend of modern web applications using Node.js and the Express framework. This course covers the entire process of creating a RESTful API.",
-            "es": "Desarrolla el backend de aplicaciones web modernas utilizando Node.js y el framework Express. Este curso cubre todo el proceso de creaciÃ³n de una API RESTful.",
-            "fr": "DÃ©veloppez le backend d'applications web modernes.",
+            "es": "Desarrolla el backend de aplicaciones web modernas utilizando Node.js y el framework Express. Este curso cubre todo el proceso de creación de una API RESTful.",
+            "fr": "Développez le backend d'applications web modernes.",
             "de": "Entwickeln Sie das Backend moderner Webanwendungen.",
             "zh": "å¼€å‘çŽ°ä»£ Web åº”ç”¨ç¨‹åºçš„åŽç«¯ã€‚",
             "ar": "ØªØ·ÙˆÙŠØ± Ø§Ù„ÙˆØ§Ø¬Ù‡Ø© Ø§Ù„Ø®Ù„ÙÙŠØ© Ù„ØªØ·Ø¨ÙŠÙ‚Ø§Øª Ø§Ù„ÙˆÙŠØ¨ Ø§Ù„Ø­Ø¯ÙŠØ«Ø©."
@@ -809,14 +809,14 @@
             "MongoDB",
             "Auth",
             "Arquitetura e Clean Code",
-            "SeguranÃ§a com JWT"
+            "Segurança com JWT"
         ],
         "duration": "35h",
         "level": {
-            "pt": "AvanÃ§ado",
+            "pt": "Avançado",
             "en": "Advanced",
             "es": "Avanzado",
-            "fr": "AvancÃ©",
+            "fr": "Avancé",
             "de": "Fortgeschritten",
             "zh": "é«˜çº§",
             "ar": "Ù…ØªÙ‚Ø¯Ù…"
@@ -825,9 +825,9 @@
         "aulas": [
             {
                 "titulo": {
-                    "pt": "1. IntroduÃ§Ã£o ao Node.js",
+                    "pt": "1. Introdução ao Node.js",
                     "en": "1. Intro to Node.js",
-                    "es": "1. IntroducciÃ³n a Node.js"
+                    "es": "1. Introducción a Node.js"
                 },
                 "duracao": {
                     "pt": "Leitura: 15 min",
@@ -836,16 +836,16 @@
                 },
                 "status": "completa",
                 "content": {
-                    "pt": "# IntroduÃ§Ã£o ao Node.js\n\nO Node.js Ã© um ambiente de execuÃ§Ã£o JavaScript construÃ­do sobre o motor V8 do Chrome. Ele permite executar JavaScript fora do navegador, transformando-o em uma linguagem poderosa para o backend.\n\n### O que o torna especial?\n- **Event Loop:** O coraÃ§Ã£o do Node.js. Permite gerenciar milhares de conexÃµes simultÃ¢neas sem criar uma thread para cada uma (Non-blocking I/O).\n- **V8 Engine:** O mesmo motor que roda no Google Chrome, compilando JS para cÃ³digo de mÃ¡quina nativo.\n- **NPM:** O maior ecossistema de bibliotecas open-source do mundo.\n\n### Quando usar Node.js?\nIdeal para aplicaÃ§Ãµes em tempo real (Chat, Streaming), APIs RESTful, SPAs e MicroserviÃ§os.",
+                    "pt": "# Introdução ao Node.js\n\nO Node.js é um ambiente de execução JavaScript construído sobre o motor V8 do Chrome. Ele permite executar JavaScript fora do navegador, transformando-o em uma linguagem poderosa para o backend.\n\n### O que o torna especial?\n- **Event Loop:** O coração do Node.js. Permite gerenciar milhares de conexões simultâneas sem criar uma thread para cada uma (Non-blocking I/O).\n- **V8 Engine:** O mesmo motor que roda no Google Chrome, compilando JS para código de máquina nativo.\n- **NPM:** O maior ecossistema de bibliotecas open-source do mundo.\n\n### Quando usar Node.js?\nIdeal para aplicações em tempo real (Chat, Streaming), APIs RESTful, SPAs e Microserviços.",
                     "en": "# Intro to Node.js\n\nNode.js is a JavaScript runtime built on Chrome's V8 JavaScript engine. It moves JS from the browser to the server.\n\n### Highlights\n- **Event Loop:** Non-blocking I/O handling.\n- **V8 Engine:** High performance compilation.\n- **NPM:** Massive package ecosystem."
                 },
                 "exercise": {
                     "instructions": {
-                        "pt": "Crie um script 'index.js' que exiba a versÃ£o do Node instalada.",
+                        "pt": "Crie um script 'index.js' que exiba a versão do Node instalada.",
                         "en": "Create 'index.js' to print Node version.",
-                        "es": "Crea 'index.js' para imprimir la versiÃ³n de Node."
+                        "es": "Crea 'index.js' para imprimir la versión de Node."
                     },
-                    "code": "console.log(`VersÃ£o: ${process.version}`);",
+                    "code": "console.log(`Versão: ${process.version}`);",
                     "solution": {
                         "pt": "Rode 'node index.js' no terminal.",
                         "en": "Run 'node index.js'.",
@@ -870,13 +870,13 @@
                     {
                         "id": 2,
                         "text": {
-                            "pt": "O I/O do Node.js Ã©?",
+                            "pt": "O I/O do Node.js é?",
                             "en": "Node.js I/O is?"
                         },
                         "options": [
-                            "NÃ£o-bloqueante (Non-blocking)",
+                            "Não-bloqueante (Non-blocking)",
                             "Bloqueante",
-                            "SÃ­ncrono apenas",
+                            "Síncrono apenas",
                             "Multithreaded"
                         ],
                         "correct": 0
@@ -884,7 +884,7 @@
                     {
                         "id": 3,
                         "text": {
-                            "pt": "O que Ã© NPM?",
+                            "pt": "O que é NPM?",
                             "en": "What is NPM?"
                         },
                         "options": [
@@ -910,7 +910,7 @@
                 },
                 "status": "livre",
                 "content": {
-                    "pt": "# O MÃ³dulo HTTP\n\nAntes de frameworks como Express, Ã© importante entender o mÃ³dulo nativo `http`. Ele Ã© a base de tudo.\n\n### Request e Response\nTodo servidor web lida com duas coisas:\n- **Request (req):** O que o cliente pediu (URL, Headers, Body).\n- **Response (res):** O que devolvemos (Status Code, Headers, Body).\n\n### Headers e Status Codes\n- **200 OK:** Sucesso.\n- **404 Not Found:** Recurso nÃ£o encontrado.\n- **500 Internal Server Error:** Erro no servidor.\n\n```javascript\nconst http = require('http');\nconst server = http.createServer((req, res) => {\n  res.writeHead(200, { 'Content-Type': 'application/json' });\n  res.end(JSON.stringify({ message: 'OlÃ¡ Mundo' }));\n});\nserver.listen(3000);\n```",
+                    "pt": "# O Módulo HTTP\n\nAntes de frameworks como Express, é importante entender o módulo nativo `http`. Ele é a base de tudo.\n\n### Request e Response\nTodo servidor web lida com duas coisas:\n- **Request (req):** O que o cliente pediu (URL, Headers, Body).\n- **Response (res):** O que devolvemos (Status Code, Headers, Body).\n\n### Headers e Status Codes\n- **200 OK:** Sucesso.\n- **404 Not Found:** Recurso não encontrado.\n- **500 Internal Server Error:** Erro no servidor.\n\n```javascript\nconst http = require('http');\nconst server = http.createServer((req, res) => {\n  res.writeHead(200, { 'Content-Type': 'application/json' });\n  res.end(JSON.stringify({ message: 'Olá Mundo' }));\n});\nserver.listen(3000);\n```",
                     "en": "# The HTTP Module\n\nNode.js built-in `http` module is the foundation of web servers.\n\n### Req & Res\n- **Req:** Incoming data.\n- **Res:** Outgoing data.\n\n### Status Codes\nAlways set proper status codes (200, 404, 500)."
                 },
                 "exercise": {
@@ -930,7 +930,7 @@
                     {
                         "id": 1,
                         "text": {
-                            "pt": "Qual mÃ³dulo nativo cria servidores?",
+                            "pt": "Qual módulo nativo cria servidores?",
                             "en": "Native module for servers?"
                         },
                         "options": [
@@ -944,7 +944,7 @@
                     {
                         "id": 2,
                         "text": {
-                            "pt": "Status code para 'NÃ£o Encontrado'?",
+                            "pt": "Status code para 'Não Encontrado'?",
                             "en": "Status for 'Not Found'?"
                         },
                         "options": [
@@ -973,9 +973,9 @@
             },
             {
                 "titulo": {
-                    "pt": "3. IntroduÃ§Ã£o ao Express",
+                    "pt": "3. Introdução ao Express",
                     "en": "3. Intro to Express",
-                    "es": "3. IntroducciÃ³n a Express"
+                    "es": "3. Introducción a Express"
                 },
                 "duracao": {
                     "pt": "Leitura: 25 min",
@@ -984,7 +984,7 @@
                 },
                 "status": "livre",
                 "content": {
-                    "pt": "# Express: O PadrÃ£o de Mercado\n\nEscrever tudo com o mÃ³dulo `http` Ã© verboso. O **Express** simplifica o roteamento, middlewares e manipulaÃ§Ã£o de requisiÃ§Ãµes.\n\n### Roteamento\n```javascript\napp.get('/', (req, res) => res.send('Home'));\napp.post('/api/users', (req, res) => create(req.body));\n```\n\n### Middlewares\nFunÃ§Ãµes que rodam antes da rota final. Usados para Logs, AutenticaÃ§Ã£o, Body Parsing (`express.json()`).\n\n`app.use(express.json());` -> Transforma body JSON em objeto JS.",
+                    "pt": "# Express: O Padrão de Mercado\n\nEscrever tudo com o módulo `http` é verboso. O **Express** simplifica o roteamento, middlewares e manipulação de requisições.\n\n### Roteamento\n```javascript\napp.get('/', (req, res) => res.send('Home'));\napp.post('/api/users', (req, res) => create(req.body));\n```\n\n### Middlewares\nFunções que rodam antes da rota final. Usados para Logs, Autenticação, Body Parsing (`express.json()`).\n\n`app.use(express.json());` -> Transforma body JSON em objeto JS.",
                     "en": "# Express Framework\n\nSimplifies web routing and middleware.\n\n### Routing\nEasy verbs: app.get, app.post.\n\n### Middlewares\nFunctions executing in the request pipeline."
                 },
                 "exercise": {
@@ -1032,14 +1032,14 @@
                     {
                         "id": 3,
                         "text": {
-                            "pt": "O que sÃ£o middlewares?",
+                            "pt": "O que são middlewares?",
                             "en": "What are middlewares?"
                         },
                         "options": [
-                            "FunÃ§Ãµes intermediÃ¡rias na requisiÃ§Ã£o",
+                            "Funções intermediárias na requisição",
                             "O banco de dados",
                             "O frontend",
-                            "Arquivos estÃ¡ticos"
+                            "Arquivos estáticos"
                         ],
                         "correct": 0
                     }
@@ -1047,9 +1047,9 @@
             },
             {
                 "titulo": {
-                    "pt": "4. IntroduÃ§Ã£o ao MongoDB",
+                    "pt": "4. Introdução ao MongoDB",
                     "en": "4. Intro to MongoDB",
-                    "es": "4. IntroducciÃ³n a MongoDB"
+                    "es": "4. Introducción a MongoDB"
                 },
                 "duracao": {
                     "pt": "Leitura: 30 min",
@@ -1058,7 +1058,7 @@
                 },
                 "status": "livre",
                 "content": {
-                    "pt": "# MongoDB e Mongoose\n\nO MongoDB Ã© um banco NoSQL que salva dados como documentos (parecidos com JSON). Isso casa perfeitamente com JavaScript.\n\n### Mongoose\nÃ‰ o ODM (Object Data Mapper) mais usado. Ele cria **Schemas** para dar estrutura aos seus dados, mesmo num banco Schemaless.\n\n```javascript\nconst UserSchema = new mongoose.Schema({\n  nome: { type: String, required: true },\n  email: { type: String, unique: true }\n});\nconst User = mongoose.model('User', UserSchema);\n```",
+                    "pt": "# MongoDB e Mongoose\n\nO MongoDB é um banco NoSQL que salva dados como documentos (parecidos com JSON). Isso casa perfeitamente com JavaScript.\n\n### Mongoose\nÉ o ODM (Object Data Mapper) mais usado. Ele cria **Schemas** para dar estrutura aos seus dados, mesmo num banco Schemaless.\n\n```javascript\nconst UserSchema = new mongoose.Schema({\n  nome: { type: String, required: true },\n  email: { type: String, unique: true }\n});\nconst User = mongoose.model('User', UserSchema);\n```",
                     "en": "# MongoDB & Mongoose\n\nNoSQL database storing JSON-like documents.\n\n### Mongoose\nAdds schemas and structure to your data."
                 },
                 "exercise": {
@@ -1078,13 +1078,13 @@
                     {
                         "id": 1,
                         "text": {
-                            "pt": "O MongoDB Ã© um banco:",
+                            "pt": "O MongoDB é um banco:",
                             "en": "MongoDB is a:"
                         },
                         "options": [
                             "NoSQL (Documentos)",
                             "Relacional (SQL)",
-                            "Em memÃ³ria apenas",
+                            "Em memória apenas",
                             "Grafos"
                         ],
                         "correct": 0
@@ -1092,13 +1092,13 @@
                     {
                         "id": 2,
                         "text": {
-                            "pt": "Qual a funÃ§Ã£o do Mongoose?",
+                            "pt": "Qual a função do Mongoose?",
                             "en": "Role of Mongoose?"
                         },
                         "options": [
                             "Modelar dados (ODM)",
                             "Servidor Web",
-                            "AutenticaÃ§Ã£o",
+                            "Autenticação",
                             "Testes"
                         ],
                         "correct": 0
@@ -1106,13 +1106,13 @@
                     {
                         "id": 3,
                         "text": {
-                            "pt": "O que Ã© um Schema?",
+                            "pt": "O que é um Schema?",
                             "en": "What is a Schema?"
                         },
                         "options": [
                             "Estrutura/Molde dos dados",
                             "Um dado salvo",
-                            "Uma conexÃ£o",
+                            "Uma conexão",
                             "Uma query"
                         ],
                         "correct": 0
@@ -1123,7 +1123,7 @@
                 "titulo": {
                     "pt": "5. Arquitetura e Clean Code",
                     "en": "5. Architecture & Clean Code",
-                    "es": "5. Arquitectura y CÃ³digo Limpio"
+                    "es": "5. Arquitectura y Código Limpio"
                 },
                 "duracao": {
                     "pt": "Leitura: 30 min",
@@ -1132,20 +1132,20 @@
                 },
                 "status": "livre",
                 "content": {
-                    "pt": "# Arquitetura em Camadas\n\nNÃ£o escreva todo o seu cÃ³digo dentro de `app.get()`. Separe as responsabilidades:\n\n1. **Controller:** Recebe a request, valida dados bÃ¡sicos e chama o Service. Devolve a response.\n2. **Service:** ContÃ©m a LÃ³gica de NegÃ³cios (regras, cÃ¡lculos). NÃ£o sabe o que Ã© HTTP.\n3. **Repository/Model:** Acesso direto ao banco de dados.\n\nIsso facilita testes e manutenÃ§Ã£o.",
+                    "pt": "# Arquitetura em Camadas\n\nNão escreva todo o seu código dentro de `app.get()`. Separe as responsabilidades:\n\n1. **Controller:** Recebe a request, valida dados básicos e chama o Service. Devolve a response.\n2. **Service:** Contém a Lógica de Negócios (regras, cálculos). Não sabe o que é HTTP.\n3. **Repository/Model:** Acesso direto ao banco de dados.\n\nIsso facilita testes e manutenção.",
                     "en": "# Layered Architecture\n\nSeparation of Concerns:\n1. **Controller:** Handles HTTP.\n2. **Service:** Business Logic.\n3. **Model:** Database Access."
                 },
                 "exercise": {
                     "instructions": {
-                        "pt": "Onde devo colocar a lÃ³gica de 'Calcular deconto se usuÃ¡rio for VIP'?",
+                        "pt": "Onde devo colocar a lógica de 'Calcular deconto se usuário for VIP'?",
                         "en": "Where to put 'Calculate discount if VIP' logic?",
-                        "es": "Â¿DÃ³nde poner lÃ³gica de descuento?"
+                        "es": "¿Dónde poner lógica de descuento?"
                     },
                     "code": "// No Service.\nuserService.calculateDiscount(user);",
                     "solution": {
-                        "pt": "LÃ³gica de negÃ³cio vai no Service.",
+                        "pt": "Lógica de negócio vai no Service.",
                         "en": "Business logic goes in Service.",
-                        "es": "LÃ³gica de negocio en Service."
+                        "es": "Lógica de negocio en Service."
                     }
                 },
                 "questions": [
@@ -1166,7 +1166,7 @@
                     {
                         "id": 2,
                         "text": {
-                            "pt": "Onde ficam as Regras de NegÃ³cio?",
+                            "pt": "Onde ficam as Regras de Negócio?",
                             "en": "Where do Business Rules go?"
                         },
                         "options": [
@@ -1184,10 +1184,10 @@
                             "en": "Why layers?"
                         },
                         "options": [
-                            "Facilitar manutenÃ§Ã£o e testes",
-                            "Para escrever mais cÃ³digo",
+                            "Facilitar manutenção e testes",
+                            "Para escrever mais código",
                             "Deixar mais lento",
-                            "Ã‰ regra do Google"
+                            "É regra do Google"
                         ],
                         "correct": 0
                     }
@@ -1195,7 +1195,7 @@
             },
             {
                 "titulo": {
-                    "pt": "6. SeguranÃ§a com JWT",
+                    "pt": "6. Segurança com JWT",
                     "en": "6. Security with JWT",
                     "es": "6. Seguridad con JWT"
                 },
@@ -1206,18 +1206,18 @@
                 },
                 "status": "livre",
                 "content": {
-                    "pt": "# JWT (JSON Web Tokens)\n\nAPIs REST sÃ£o Stateless (sem estado). Como saber quem estÃ¡ fazendo o request?\n\n### O Token\nAo logar, o usuÃ¡rio recebe um Token assinado digitalmente. Ele deve enviar esse token no Header `Authorization: Bearer <token>` em cada request protegido.\n\n### Hash de Senha\nNUNCA salve senhas em texto puro. Use bibliotecas como `bcrypt` para criar um hash irreversÃ­vel antes de salvar no banco.",
+                    "pt": "# JWT (JSON Web Tokens)\n\nAPIs REST são Stateless (sem estado). Como saber quem está fazendo o request?\n\n### O Token\nAo logar, o usuário recebe um Token assinado digitalmente. Ele deve enviar esse token no Header `Authorization: Bearer <token>` em cada request protegido.\n\n### Hash de Senha\nNUNCA salve senhas em texto puro. Use bibliotecas como `bcrypt` para criar um hash irreversível antes de salvar no banco.",
                     "en": "# JWT\n\nStateless authentication.\n\n### The Token\nUser sends `Authorization: Bearer <token>`.\n\n### Password Hashing\nUse `bcrypt` to hash passwords."
                 },
                 "exercise": {
                     "instructions": {
-                        "pt": "Simule a verificaÃ§Ã£o de senha com bcrypt.",
+                        "pt": "Simule a verificação de senha com bcrypt.",
                         "en": "Simulate bcrypt password check.",
-                        "es": "Simula verificaciÃ³n bcrypt."
+                        "es": "Simula verificación bcrypt."
                     },
                     "code": "const match = await bcrypt.compare(senhaDigitada, hashNoBanco);",
                     "solution": {
-                        "pt": "Use o mÃ©todo compare ou compareSync.",
+                        "pt": "Use o método compare ou compareSync.",
                         "en": "Use compare or compareSync.",
                         "es": "Usa compare o compareSync."
                     }
@@ -1230,9 +1230,9 @@
                             "en": "What is Stateless?"
                         },
                         "options": [
-                            "O servidor nÃ£o guarda sessÃ£o do usuÃ¡rio",
-                            "O servidor nÃ£o tem banco",
-                            "O servidor Ã© lento",
+                            "O servidor não guarda sessão do usuário",
+                            "O servidor não tem banco",
+                            "O servidor é lento",
                             "Sem estado civil"
                         ],
                         "correct": 0
@@ -1254,7 +1254,7 @@
                     {
                         "id": 3,
                         "text": {
-                            "pt": "Onde vai o Token na requisiÃ§Ã£o?",
+                            "pt": "Onde vai o Token na requisição?",
                             "en": "Where does the Token go?"
                         },
                         "options": [
@@ -1272,7 +1272,7 @@
             {
                 "id": 1,
                 "question": {
-                    "pt": "O que Ã© Node.js?",
+                    "pt": "O que é Node.js?",
                     "en": "What is Node.js?"
                 },
                 "options": {
@@ -1316,13 +1316,13 @@
             {
                 "id": 3,
                 "question": {
-                    "pt": "Node.js Ã© single-threaded?",
+                    "pt": "Node.js é single-threaded?",
                     "en": "Is Node single-threaded?"
                 },
                 "options": {
                     "pt": [
                         "Sim",
-                        "NÃ£o",
+                        "Não",
                         "Ã€s vezes",
                         "Depende"
                     ],
@@ -1365,7 +1365,7 @@
                 },
                 "options": {
                     "pt": [
-                        "Importar mÃ³dulos",
+                        "Importar módulos",
                         "Exportar",
                         "Deletar",
                         "Criar"
@@ -1382,7 +1382,7 @@
             {
                 "id": 6,
                 "question": {
-                    "pt": "O que Ã© Express?",
+                    "pt": "O que é Express?",
                     "en": "What is Express?"
                 },
                 "options": {
@@ -1404,7 +1404,7 @@
             {
                 "id": 7,
                 "question": {
-                    "pt": "Qual mÃ©todo HTTP pede dados?",
+                    "pt": "Qual método HTTP pede dados?",
                     "en": "Method to get data?"
                 },
                 "options": {
@@ -1426,7 +1426,7 @@
             {
                 "id": 8,
                 "question": {
-                    "pt": "Qual mÃ©todo cria dados?",
+                    "pt": "Qual método cria dados?",
                     "en": "Method to create data?"
                 },
                 "options": {
@@ -1448,13 +1448,13 @@
             {
                 "id": 9,
                 "question": {
-                    "pt": "O que Ã© Middleware?",
+                    "pt": "O que é Middleware?",
                     "en": "What is Middleware?"
                 },
                 "options": {
                     "pt": [
-                        "FunÃ§Ã£o intermediÃ¡ria",
-                        "VÃ­rus",
+                        "Função intermediária",
+                        "Vírus",
                         "Frontend",
                         "Estilo"
                     ],
@@ -1470,7 +1470,7 @@
             {
                 "id": 10,
                 "question": {
-                    "pt": "req.body contÃ©m?",
+                    "pt": "req.body contém?",
                     "en": "req.body contains?"
                 },
                 "options": {
@@ -1499,7 +1499,7 @@
                     "pt": [
                         "Sucesso",
                         "Erro",
-                        "NÃ£o encontrado",
+                        "Não encontrado",
                         "Proibido"
                     ],
                     "en": [
@@ -1519,7 +1519,7 @@
                 },
                 "options": {
                     "pt": [
-                        "NÃ£o encontrado",
+                        "Não encontrado",
                         "Sucesso",
                         "Erro servidor",
                         "Redirecionamento"
@@ -1536,7 +1536,7 @@
             {
                 "id": 13,
                 "question": {
-                    "pt": "MongoDB Ã©?",
+                    "pt": "MongoDB é?",
                     "en": "MongoDB is?"
                 },
                 "options": {
@@ -1558,7 +1558,7 @@
             {
                 "id": 14,
                 "question": {
-                    "pt": "Mongoose Ã© um?",
+                    "pt": "Mongoose é um?",
                     "en": "Mongoose is?"
                 },
                 "options": {
@@ -1602,7 +1602,7 @@
             {
                 "id": 16,
                 "question": {
-                    "pt": "O que Ã© MVC?",
+                    "pt": "O que é MVC?",
                     "en": "What is MVC?"
                 },
                 "options": {
@@ -1624,7 +1624,7 @@
             {
                 "id": 17,
                 "question": {
-                    "pt": "Onde colocar regra de negÃ³cio?",
+                    "pt": "Onde colocar regra de negócio?",
                     "en": "Where biz logic?"
                 },
                 "options": {
@@ -1651,7 +1651,7 @@
                 },
                 "options": {
                     "pt": [
-                        "AutenticaÃ§Ã£o",
+                        "Autenticação",
                         "Criptografar banco",
                         "Comprimir dados",
                         "Enviar email"
@@ -1696,7 +1696,7 @@
                 "options": {
                     "pt": [
                         "Envia resposta JSON",
-                        "LÃª JSON",
+                        "Lê JSON",
                         "Apaga JSON",
                         "Cria arquivo"
                     ],
@@ -1715,10 +1715,10 @@
         "id": 3,
         "slug": "python-data-science",
         "title": {
-            "pt": "Python para CiÃªncia de Dados e IA",
+            "pt": "Python para Ciência de Dados e IA",
             "en": "Python for Data Science & AI",
             "es": "Python para Ciencia de Datos e IA",
-            "fr": "Python pour la Science des DonnÃ©es et l'IA",
+            "fr": "Python pour la Science des Données et l'IA",
             "de": "Python fÃ¼r Data Science und KI",
             "zh": "Python æ•°æ®ç§‘å­¦ä¸Žäººå·¥æ™ºèƒ½",
             "ar": "Python Ù„Ø¹Ù„Ù… Ø§Ù„Ø¨ÙŠØ§Ù†Ø§Øª ÙˆØ§Ù„Ø°ÙƒØ§Ø¡ Ø§Ù„Ø§ØµØ·Ù†Ø§Ø¹ÙŠ"
@@ -1728,22 +1728,22 @@
             "pt": "Aprenda Python, Pandas, Machine Learning e IA Generativa (OpenAI API).",
             "en": "Learn Python, Pandas, Machine Learning, and Generative AI (OpenAI API).",
             "es": "Aprende Python, Pandas, Machine Learning e IA Generativa (OpenAI API).",
-            "fr": "Apprenez Python, Pandas, Machine Learning et l'IA GÃ©nÃ©rative.",
+            "fr": "Apprenez Python, Pandas, Machine Learning et l'IA Générative.",
             "de": "Lernen Sie Python, Pandas, Machine Learning und Generative KI.",
             "zh": "å­¦ä¹  Pythonã€Pandasã€æœºå™¨å­¦ä¹ å’Œç”Ÿæˆå¼äººå·¥æ™ºèƒ½ã€‚",
             "ar": "ØªØ¹Ù„Ù… Python Ùˆ Pandas Ùˆ Machine Learning Ùˆ Generative AI."
         },
         "descricaoCompleta": {
-            "pt": "Curso completo: Sintaxe Python, ManipulaÃ§Ã£o com Pandas, VisualizaÃ§Ã£o, Machine Learning com Scikit-Learn e integraÃ§Ã£o com InteligÃªncia Artificial (OpenAI).",
+            "pt": "Curso completo: Sintaxe Python, Manipulação com Pandas, Visualização, Machine Learning com Scikit-Learn e integração com Inteligência Artificial (OpenAI).",
             "en": "Complete course: Python Syntax, Pandas Manipulation, Visualization, Machine Learning with Scikit-Learn, and Artificial Intelligence integration (OpenAI).",
-            "es": "Curso completo: Sintaxis Python, ManipulaciÃ³n con Pandas, VisualizaciÃ³n, Machine Learning con Scikit-Learn e integraciÃ³n con Inteligencia Artificial (OpenAI).",
+            "es": "Curso completo: Sintaxis Python, Manipulación con Pandas, Visualización, Machine Learning con Scikit-Learn e integración con Inteligencia Artificial (OpenAI).",
             "fr": "Cours complet : Syntaxe Python, Pandas, Visualisation, Machine Learning et IA.",
             "de": "VollstÃ¤ndiger Kurs: Python-Syntax, Pandas, Visualisierung, Machine Learning und KI.",
             "zh": "å®Œæ•´è¯¾ç¨‹ï¼šPython è¯­æ³•ã€Pandas æ“ä½œã€å¯è§†åŒ–ã€æœºå™¨å­¦ä¹ å’Œäººå·¥æ™ºèƒ½ã€‚",
             "ar": "Ø¯ÙˆØ±Ø© ÙƒØ§Ù…Ù„Ø©: Ø¨Ù†Ø§Ø¡ Ø¬Ù…Ù„Ø© PythonØŒ Ù…Ø¹Ø§Ù„Ø¬Ø© PandasØŒ Ø§Ù„ØªØµÙˆØ±ØŒ ØªØ¹Ù„Ù… Ø§Ù„Ø¢Ù„Ø© ÙˆØ§Ù„Ø°ÙƒØ§Ø¡ Ø§Ù„Ø§ØµØ·Ù†Ø§Ø¹ÙŠ."
         },
         "modulos": [
-            "Python BÃ¡sico",
+            "Python Básico",
             "Pandas",
             "Matplotlib"
         ],
@@ -1752,7 +1752,7 @@
             "pt": "Iniciante",
             "en": "Beginner",
             "es": "Principiante",
-            "fr": "DÃ©butant",
+            "fr": "Débutant",
             "de": "AnfÃ¤nger",
             "zh": "åˆå­¦è€…",
             "ar": "Ù…Ø¨ØªØ¯Ø¦"
@@ -1763,7 +1763,7 @@
                 "titulo": {
                     "pt": "1. Por que Python para Data Science?",
                     "en": "1. Why Python for Data Science?",
-                    "es": "1. Â¿Por quÃ© Python para Ciencia de Datos?"
+                    "es": "1. ¿Por qué Python para Ciencia de Datos?"
                 },
                 "duracao": {
                     "pt": "Leitura: 15 min",
@@ -1772,7 +1772,7 @@
                 },
                 "status": "livre",
                 "content": {
-                    "pt": "# Python e Data Science\n\nPython se tornou a linguagem dominante para CiÃªncia de Dados e IA.\n\n### Por que Python?\n1. **Simplicidade:** Sintaxe limpa e legÃ­vel.\n2. **Ecossistema:** Bibliotecas robustas como Pandas, NumPy e Scikit-Learn.\n3. **Comunidade:** Vasto suporte e documentaÃ§Ã£o.\n\n### Principais Bibliotecas\n- **Pandas:** ManipulaÃ§Ã£o de dados estruturados (CSV, Excel, SQL).\n- **NumPy:** Ãlgebra linear e computaÃ§Ã£o numÃ©rica.\n- **Matplotlib/Seaborn:** VisualizaÃ§Ã£o de dados.\n- **Scikit-Learn:** Machine Learning clÃ¡ssico.\n- **TensorFlow/PyTorch:** Deep Learning e Redes Neurais.",
+                    "pt": "# Python e Data Science\n\nPython se tornou a linguagem dominante para Ciência de Dados e IA.\n\n### Por que Python?\n1. **Simplicidade:** Sintaxe limpa e legível.\n2. **Ecossistema:** Bibliotecas robustas como Pandas, NumPy e Scikit-Learn.\n3. **Comunidade:** Vasto suporte e documentação.\n\n### Principais Bibliotecas\n- **Pandas:** Manipulação de dados estruturados (CSV, Excel, SQL).\n- **NumPy:** Ãlgebra linear e computação numérica.\n- **Matplotlib/Seaborn:** Visualização de dados.\n- **Scikit-Learn:** Machine Learning clássico.\n- **TensorFlow/PyTorch:** Deep Learning e Redes Neurais.",
                     "en": "# Python and Data Science\n\nPython has become the dominant language for Data Science and AI.\n\n### Why Python?\n1. **Simplicity:** Clean and readable syntax.\n2. **Ecosystem:** Robust libraries like Pandas, NumPy, and Scikit-Learn.\n3. **Community:** Vast support and documentation.\n\n### Key Libraries\n- **Pandas:** Structured data manipulation.\n- **NumPy:** Numerical computing.\n- **Matplotlib/Seaborn:** Data visualization.\n- **Scikit-Learn:** Classic Machine Learning."
                 },
                 "exercise": {
@@ -1796,9 +1796,9 @@
                             "en": "Main use of Pandas?"
                         },
                         "options": [
-                            "ManipulaÃ§Ã£o de Dados Tabulares",
-                            "CriaÃ§Ã£o de Jogos",
-                            "EdiÃ§Ã£o de VÃ­deo",
+                            "Manipulação de Dados Tabulares",
+                            "Criação de Jogos",
+                            "Edição de Vídeo",
                             "Servidor Web"
                         ],
                         "correct": 0
@@ -1806,7 +1806,7 @@
                     {
                         "id": 2,
                         "text": {
-                            "pt": "Qual biblioteca foca em MatemÃ¡tica NumÃ©rica?",
+                            "pt": "Qual biblioteca foca em Matemática Numérica?",
                             "en": "Library for Numerical Math?"
                         },
                         "options": [
@@ -1820,14 +1820,14 @@
                     {
                         "id": 3,
                         "text": {
-                            "pt": "Python Ã© popular em Data Science por quÃª?",
+                            "pt": "Python é popular em Data Science por quê?",
                             "en": "Why is Python popular in DS?"
                         },
                         "options": [
                             "Simplicidade e Ecossistema",
-                            "Ã‰ a linguagem mais rÃ¡pida",
-                            "Ã‰ compilada",
-                            "NÃ£o suporta objetos"
+                            "É a linguagem mais rápida",
+                            "É compilada",
+                            "Não suporta objetos"
                         ],
                         "correct": 0
                     }
@@ -1835,9 +1835,9 @@
             },
             {
                 "titulo": {
-                    "pt": "2. IntroduÃ§Ã£o ao Pandas",
+                    "pt": "2. Introdução ao Pandas",
                     "en": "2. Intro to Pandas",
-                    "es": "2. IntroducciÃ³n a Pandas"
+                    "es": "2. Introducción a Pandas"
                 },
                 "duracao": {
                     "pt": "Leitura: 25 min",
@@ -1846,7 +1846,7 @@
                 },
                 "status": "livre",
                 "content": {
-                    "pt": "# Dominando o Pandas\n\nO Pandas Ã© essencial para qualquer cientista de dados.\n\n### DataFrames\nO `DataFrame` Ã© uma tabela onde cada coluna tem um nome e os dados sÃ£o indexados.\n\n### Comandos Essenciais\n```python\nimport pandas as pd\n\n# Carregar dados\ndf = pd.read_csv('dados.csv')\n\n# Primeiras linhas\ndf.head()\n\n# InformaÃ§Ãµes gerais (tipos, nulos)\ndf.info()\n\n# EstatÃ­sticas descritivas\ndf.describe()\n```",
+                    "pt": "# Dominando o Pandas\n\nO Pandas é essencial para qualquer cientista de dados.\n\n### DataFrames\nO `DataFrame` é uma tabela onde cada coluna tem um nome e os dados são indexados.\n\n### Comandos Essenciais\n```python\nimport pandas as pd\n\n# Carregar dados\ndf = pd.read_csv('dados.csv')\n\n# Primeiras linhas\ndf.head()\n\n# Informações gerais (tipos, nulos)\ndf.info()\n\n# Estatísticas descritivas\ndf.describe()\n```",
                     "en": "# Mastering Pandas\n\nPandas is essential for any data scientist.\n\n### DataFrames\nA `DataFrame` is a table where each column has a name and data is indexed.\n\n### Essential Commands\n```python\nimport pandas as pd\n\ndf = pd.read_csv('data.csv')\ndf.head()\ndf.info()\ndf.describe()\n```"
                 },
                 "exercise": {
@@ -1898,8 +1898,8 @@
                             "en": "What does df.describe() do?"
                         },
                         "options": [
-                            "Mostra estatÃ­sticas (mÃ©dia, min, max)",
-                            "Mostra o cÃ³digo fonte",
+                            "Mostra estatísticas (média, min, max)",
+                            "Mostra o código fonte",
                             "Mostra erros",
                             "Deleta dados"
                         ],
@@ -1909,9 +1909,9 @@
             },
             {
                 "titulo": {
-                    "pt": "3. VisualizaÃ§Ã£o com Matplotlib",
+                    "pt": "3. Visualização com Matplotlib",
                     "en": "3. Visualization with Matplotlib",
-                    "es": "3. VisualizaciÃ³n con Matplotlib"
+                    "es": "3. Visualización con Matplotlib"
                 },
                 "duracao": {
                     "pt": "Leitura: 30 min",
@@ -1920,14 +1920,14 @@
                 },
                 "status": "livre",
                 "content": {
-                    "pt": "# VisualizaÃ§Ã£o de Dados\n\nGrÃ¡ficos contam histÃ³rias que nÃºmeros brutos nÃ£o conseguem.\n\n### Matplotlib BÃ¡sico\n```python\nimport matplotlib.pyplot as plt\n\n# Dados\nx = [1, 2, 3]\ny = [10, 20, 30]\n\n# Criar grÃ¡fico\nplt.plot(x, y, label='Crescimento')\n\n# Personalizar\nplt.title('Meu GrÃ¡fico')\nplt.xlabel('Tempo')\nplt.ylabel('Valor')\nplt.legend()\n\n# Mostrar\nplt.show()\n```",
+                    "pt": "# Visualização de Dados\n\nGráficos contam histórias que números brutos não conseguem.\n\n### Matplotlib Básico\n```python\nimport matplotlib.pyplot as plt\n\n# Dados\nx = [1, 2, 3]\ny = [10, 20, 30]\n\n# Criar gráfico\nplt.plot(x, y, label='Crescimento')\n\n# Personalizar\nplt.title('Meu Gráfico')\nplt.xlabel('Tempo')\nplt.ylabel('Valor')\nplt.legend()\n\n# Mostrar\nplt.show()\n```",
                     "en": "# Data Visualization\n\nPlots tell stories raw numbers cannot.\n\n### Matplotlib Basics\n```python\nimport matplotlib.pyplot as plt\n\nx = [1, 2, 3]\ny = [10, 20, 30]\n\nplt.plot(x, y)\nplt.title('My Plot')\nplt.show()\n```"
                 },
                 "exercise": {
                     "instructions": {
-                        "pt": "Crie um grÃ¡fico de barras com categorias ['A', 'B'] e valores [10, 50].",
+                        "pt": "Crie um gráfico de barras com categorias ['A', 'B'] e valores [10, 50].",
                         "en": "Create bar chart.",
-                        "es": "Crea grÃ¡fico de barras."
+                        "es": "Crea gráfico de barras."
                     },
                     "code": "plt.bar(['A', 'B'], [10, 50])\nplt.show()",
                     "solution": {
@@ -1940,7 +1940,7 @@
                     {
                         "id": 1,
                         "text": {
-                            "pt": "Qual funÃ§Ã£o cria um grÃ¡fico de linha?",
+                            "pt": "Qual função cria um gráfico de linha?",
                             "en": "Function for line plot?"
                         },
                         "options": [
@@ -1958,17 +1958,17 @@
                             "en": "What does plt.show() do?"
                         },
                         "options": [
-                            "Exibe o grÃ¡fico",
-                            "Salva o grÃ¡fico",
-                            "Apaga o grÃ¡fico",
-                            "Calcula mÃ©dia"
+                            "Exibe o gráfico",
+                            "Salva o gráfico",
+                            "Apaga o gráfico",
+                            "Calcula média"
                         ],
                         "correct": 0
                     },
                     {
                         "id": 3,
                         "text": {
-                            "pt": "Como adicionar tÃ­tulo?",
+                            "pt": "Como adicionar título?",
                             "en": "How to add title?"
                         },
                         "options": [
@@ -1983,7 +1983,7 @@
             },
             {
                 "titulo": {
-                    "pt": "4. Limpeza de Dados AvanÃ§ada",
+                    "pt": "4. Limpeza de Dados Avançada",
                     "en": "4. Advanced Data Cleaning",
                     "es": "4. Limpieza de Datos Avanzada"
                 },
@@ -1994,7 +1994,7 @@
                 },
                 "status": "livre",
                 "content": {
-                    "pt": "# Limpeza de Dados (Data Cleaning)\n\nDados do mundo real sÃ£o 'sujos': contÃªm nulos, duplicatas e erros.\n\n### Tratando Valores Nulos (NaN)\n```python\n# Remover linhas com NaN\ndf_limpo = df.dropna()\n\n# Preencher NaN com zero ou mÃ©dia\ndf['coluna'].fillna(0, inplace=True)\n```\n\n### Removendo Duplicatas\n```python\ndf.drop_duplicates(inplace=True)\n```",
+                    "pt": "# Limpeza de Dados (Data Cleaning)\n\nDados do mundo real são 'sujos': contêm nulos, duplicatas e erros.\n\n### Tratando Valores Nulos (NaN)\n```python\n# Remover linhas com NaN\ndf_limpo = df.dropna()\n\n# Preencher NaN com zero ou média\ndf['coluna'].fillna(0, inplace=True)\n```\n\n### Removendo Duplicatas\n```python\ndf.drop_duplicates(inplace=True)\n```",
                     "en": "# Data Cleaning\n\nReal world data is 'dirty'.\n\n### Handling Nulls\n```python\ndf.dropna() # Drop rows\ndf.fillna(0) # Fill with value\n```\n\n### Duplicates\n```python\ndf.drop_duplicates()\n```"
                 },
                 "exercise": {
@@ -2005,9 +2005,9 @@
                     },
                     "code": "df.dropna(inplace=True)",
                     "solution": {
-                        "pt": "MÃ©todo dropna().",
+                        "pt": "Método dropna().",
                         "en": "Method dropna().",
-                        "es": "MÃ©todo dropna()."
+                        "es": "Método dropna()."
                     }
                 },
                 "questions": [
@@ -2047,7 +2047,7 @@
                         },
                         "options": [
                             "Modifica o objeto atual sem retornar novo",
-                            "Cria uma cÃ³pia",
+                            "Cria uma cópia",
                             "Faz backup",
                             "Imprime na tela"
                         ],
@@ -2057,9 +2057,9 @@
             },
             {
                 "titulo": {
-                    "pt": "5. IntroduÃ§Ã£o ao Machine Learning",
+                    "pt": "5. Introdução ao Machine Learning",
                     "en": "5. Intro to Machine Learning",
-                    "es": "5. IntroducciÃ³n al Machine Learning"
+                    "es": "5. Introducción al Machine Learning"
                 },
                 "duracao": {
                     "pt": "Leitura: 40 min",
@@ -2068,7 +2068,7 @@
                 },
                 "status": "livre",
                 "content": {
-                    "pt": "# IntroduÃ§Ã£o ao Scikit-Learn\n\nMachine Learning permite criar modelos preditivos.\n\n### Fluxo BÃ¡sico\n1. **Separar Dados:** Treino (X_train, y_train) e Teste (X_test, y_test).\n2. **Escolher Modelo:** Ex: RegressÃ£o Linear.\n3. **Treinar (Fit):** O modelo aprende com os dados de treino.\n4. **Prever (Predict):** O modelo faz previsÃµes em novos dados.\n\n```python\nfrom sklearn.linear_model import LinearRegression\n\nmodelo = LinearRegression()\nmodelo.fit(X_train, y_train)\nprevisoes = modelo.predict(X_test)\n```",
+                    "pt": "# Introdução ao Scikit-Learn\n\nMachine Learning permite criar modelos preditivos.\n\n### Fluxo Básico\n1. **Separar Dados:** Treino (X_train, y_train) e Teste (X_test, y_test).\n2. **Escolher Modelo:** Ex: Regressão Linear.\n3. **Treinar (Fit):** O modelo aprende com os dados de treino.\n4. **Prever (Predict):** O modelo faz previsões em novos dados.\n\n```python\nfrom sklearn.linear_model import LinearRegression\n\nmodelo = LinearRegression()\nmodelo.fit(X_train, y_train)\nprevisoes = modelo.predict(X_test)\n```",
                     "en": "# Scikit-Learn Intro\n\n### Basic Flow\n1. **Split Data**\n2. **Choose Model**\n3. **Fit**\n4. **Predict**\n\n```python\nmodel = LinearRegression()\nmodel.fit(X, y)\npred = model.predict(new_data)\n```"
                 },
                 "exercise": {
@@ -2079,7 +2079,7 @@
                     },
                     "code": "clf.fit(X, y)",
                     "solution": {
-                        "pt": "Use o mÃ©todo .fit().",
+                        "pt": "Use o método .fit().",
                         "en": "Use .fit() method.",
                         "es": "Usa .fit()."
                     }
@@ -2088,7 +2088,7 @@
                     {
                         "id": 1,
                         "text": {
-                            "pt": "Qual mÃ©todo treina o modelo?",
+                            "pt": "Qual método treina o modelo?",
                             "en": "Which method trains?"
                         },
                         "options": [
@@ -2102,7 +2102,7 @@
                     {
                         "id": 2,
                         "text": {
-                            "pt": "Qual mÃ©todo faz previsÃµes?",
+                            "pt": "Qual método faz previsões?",
                             "en": "Which method predicts?"
                         },
                         "options": [
@@ -2116,11 +2116,11 @@
                     {
                         "id": 3,
                         "text": {
-                            "pt": "Scikit-Learn Ã© focado em?",
+                            "pt": "Scikit-Learn é focado em?",
                             "en": "Scikit-Learn focuses on?"
                         },
                         "options": [
-                            "Machine Learning ClÃ¡ssico",
+                            "Machine Learning Clássico",
                             "Deep Learning",
                             "Web Dev",
                             "Games"
@@ -2131,7 +2131,7 @@
             },
             {
                 "titulo": {
-                    "pt": "6. InteligÃªncia Artificial com OpenAI",
+                    "pt": "6. Inteligência Artificial com OpenAI",
                     "en": "6. AI with OpenAI",
                     "es": "6. Inteligencia Artificial con OpenAI"
                 },
@@ -2142,7 +2142,7 @@
                 },
                 "status": "livre",
                 "content": {
-                    "pt": "# IntegraÃ§Ã£o com OpenAI (GPT)\n\nPodemos usar LLMs (Large Language Models) em nossos aplicativos Python.\n\n### OpenAI API\nInstale: `pip install openai`\n\n```python\nfrom openai import OpenAI\n\nclient = OpenAI(api_key='SUA_CHAVE')\n\nresposta = client.chat.completions.create(\n    model='gpt-4',\n    messages=[{'role': 'user', 'content': 'OlÃ¡ AI!'}]\n)\n\nprint(resposta.choices[0].message.content)\n```",
+                    "pt": "# Integração com OpenAI (GPT)\n\nPodemos usar LLMs (Large Language Models) em nossos aplicativos Python.\n\n### OpenAI API\nInstale: `pip install openai`\n\n```python\nfrom openai import OpenAI\n\nclient = OpenAI(api_key='SUA_CHAVE')\n\nresposta = client.chat.completions.create(\n    model='gpt-4',\n    messages=[{'role': 'user', 'content': 'Olá AI!'}]\n)\n\nprint(resposta.choices[0].message.content)\n```",
                     "en": "# OpenAI Integration\n\nUsing LLMs in Python.\n\n### OpenAI API\n`pip install openai`\n\n```python\nfrom openai import OpenAI\nclient = OpenAI(api_key='KEY')\nresponse = client.chat.completions.create(...)\n```"
                 },
                 "exercise": {
@@ -2151,7 +2151,7 @@
                         "en": "Define 'system' role.",
                         "es": "Define role 'system'."
                     },
-                    "code": "messages=[{'role': 'system', 'content': 'VocÃª Ã© um poeta.'}]",
+                    "code": "messages=[{'role': 'system', 'content': 'Você é um poeta.'}]",
                     "solution": {
                         "pt": "Role 'system' define o contexto.",
                         "en": "Role 'system' sets context.",
@@ -2176,7 +2176,7 @@
                     {
                         "id": 2,
                         "text": {
-                            "pt": "Qual mÃ©todo cria a completaÃ§Ã£o?",
+                            "pt": "Qual método cria a completação?",
                             "en": "Method to create completion?"
                         },
                         "options": [
@@ -2190,13 +2190,13 @@
                     {
                         "id": 3,
                         "text": {
-                            "pt": "Ã‰ seguro expor a API Key no cÃ³digo client-side?",
+                            "pt": "É seguro expor a API Key no código client-side?",
                             "en": "Safe to expose API Key?"
                         },
                         "options": [
-                            "NÃ£o, nunca",
+                            "Não, nunca",
                             "Sim, tranquilo",
-                            "SÃ³ em testes",
+                            "Só em testes",
                             "Depende do dia"
                         ],
                         "correct": 0
@@ -2208,7 +2208,7 @@
             {
                 "id": 1,
                 "question": {
-                    "pt": "Qual palavra-chave define uma funÃ§Ã£o em Python?",
+                    "pt": "Qual palavra-chave define uma função em Python?",
                     "en": "Keyword for function?"
                 },
                 "options": {
@@ -2274,7 +2274,7 @@
             {
                 "id": 4,
                 "question": {
-                    "pt": "Biblioteca padrÃ£o para grÃ¡ficos?",
+                    "pt": "Biblioteca padrão para gráficos?",
                     "en": "Standard plot library?"
                 },
                 "options": {
@@ -2296,7 +2296,7 @@
             {
                 "id": 5,
                 "question": {
-                    "pt": "O que Ã© NaN?",
+                    "pt": "O que é NaN?",
                     "en": "What is NaN?"
                 },
                 "options": {
@@ -2318,7 +2318,7 @@
             {
                 "id": 6,
                 "question": {
-                    "pt": "MÃ©todo para remover duplicatas?",
+                    "pt": "Método para remover duplicatas?",
                     "en": "Method to drop dupes?"
                 },
                 "options": {
@@ -2340,7 +2340,7 @@
             {
                 "id": 7,
                 "question": {
-                    "pt": "MÃ©todo de treino no Scikit-Learn?",
+                    "pt": "Método de treino no Scikit-Learn?",
                     "en": "Training method sklearn?"
                 },
                 "options": {
@@ -2362,7 +2362,7 @@
             {
                 "id": 8,
                 "question": {
-                    "pt": "O que Ã© Jupyter Notebook?",
+                    "pt": "O que é Jupyter Notebook?",
                     "en": "What is Jupyter?"
                 },
                 "options": {
@@ -2384,7 +2384,7 @@
             {
                 "id": 9,
                 "question": {
-                    "pt": "Comando para importar mÃ³dulo?",
+                    "pt": "Comando para importar módulo?",
                     "en": "Import command?"
                 },
                 "options": {
@@ -2428,7 +2428,7 @@
             {
                 "id": 11,
                 "question": {
-                    "pt": "Qual o tipo de lista imutÃ¡vel?",
+                    "pt": "Qual o tipo de lista imutável?",
                     "en": "Immutable list type?"
                 },
                 "options": {
@@ -2450,13 +2450,13 @@
             {
                 "id": 12,
                 "question": {
-                    "pt": "DicionÃ¡rios usam?",
+                    "pt": "Dicionários usam?",
                     "en": "Dictionaries use?"
                 },
                 "options": {
                     "pt": [
                         "Chave: Valor",
-                        "Ãndice numÃ©rico",
+                        "Ãndice numérico",
                         "Apenas valores",
                         "Linhas"
                     ],
@@ -2472,7 +2472,7 @@
             {
                 "id": 13,
                 "question": {
-                    "pt": "Para ler as Ãºltimas linhas do DF?",
+                    "pt": "Para ler as últimas linhas do DF?",
                     "en": "Read last rows DF?"
                 },
                 "options": {
@@ -2494,12 +2494,12 @@
             {
                 "id": 14,
                 "question": {
-                    "pt": "NumPy Ã© bom para?",
+                    "pt": "NumPy é bom para?",
                     "en": "NumPy is good for?"
                 },
                 "options": {
                     "pt": [
-                        "ComputaÃ§Ã£o cientÃ­fica",
+                        "Computação científica",
                         "Criar sites",
                         "Enviar e-mail",
                         "CSS"
@@ -2516,7 +2516,7 @@
             {
                 "id": 15,
                 "question": {
-                    "pt": "O que Ã© 'Overfitting'?",
+                    "pt": "O que é 'Overfitting'?",
                     "en": "What is Overfitting?"
                 },
                 "options": {
@@ -2538,13 +2538,13 @@
             {
                 "id": 16,
                 "question": {
-                    "pt": "GPT-4 Ã© um exemplo de?",
+                    "pt": "GPT-4 é um exemplo de?",
                     "en": "GPT-4 is ex of?"
                 },
                 "options": {
                     "pt": [
                         "LLM / IA Generativa",
-                        "RegressÃ£o Linear",
+                        "Regressão Linear",
                         "Banco SQL",
                         "Hardware"
                     ],
@@ -2582,7 +2582,7 @@
             {
                 "id": 18,
                 "question": {
-                    "pt": "ComentÃ¡rios em Python usam?",
+                    "pt": "Comentários em Python usam?",
                     "en": "Python comments?"
                 },
                 "options": {
@@ -2604,15 +2604,15 @@
             {
                 "id": 19,
                 "question": {
-                    "pt": "IndentaÃ§Ã£o em Python Ã©?",
+                    "pt": "Indentação em Python é?",
                     "en": "Indentation in Python?"
                 },
                 "options": {
                     "pt": [
-                        "ObrigatÃ³ria",
+                        "Obrigatória",
                         "Opcional",
-                        "EstÃ©tica",
-                        "DesnecessÃ¡ria"
+                        "Estética",
+                        "Desnecessária"
                     ],
                     "en": [
                         "Mandatory",
@@ -2626,7 +2626,7 @@
             {
                 "id": 20,
                 "question": {
-                    "pt": "Qual funÃ§Ã£o imprime no console?",
+                    "pt": "Qual função imprime no console?",
                     "en": "Print to console?"
                 },
                 "options": {

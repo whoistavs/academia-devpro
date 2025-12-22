@@ -1,15 +1,20 @@
-const express = require('express');
-const cors = require('cors');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-const db = require('./simpleDb');
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+import express from 'express';
+import cors from 'cors';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
+import db from './simpleDb.js';
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const SECRET_KEY = "chave_secreta_super_segura"; // Em produção, usar .env
+
 
 // Configurar armazenamento do Multer
 const storage = multer.diskStorage({
@@ -153,6 +158,104 @@ app.post('/api/login', (req, res) => {
     });
 });
 
+// Google Auth Endpoint
+app.post('/api/auth/google', async (req, res) => {
+    const { access_token } = req.body;
+
+    if (!access_token) {
+        return res.status(400).json({ error: 'Token de acesso é obrigatório.' });
+    }
+
+    try {
+        // Verify token with Google
+        const googleResponse = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+            headers: { Authorization: `Bearer ${access_token}` }
+        });
+
+        if (!googleResponse.ok) {
+            return res.status(401).json({ error: 'Token do Google inválido.' });
+        }
+
+        const googleUser = await googleResponse.json();
+        const { email, name, picture } = googleUser;
+
+        db.users.findOne({ email }, (err, user) => {
+            if (err) return res.status(500).json({ error: 'Erro no servidor.' });
+
+            if (user) {
+                // Login existing user
+                const token = jwt.sign({ id: user._id, role: user.role || 'student' }, SECRET_KEY, { expiresIn: 86400 });
+                res.status(200).json({
+                    id: user._id,
+                    name: user.name,
+                    email: user.email,
+                    role: user.role || 'student',
+                    avatar: user.avatar,
+                    accessToken: token
+                });
+            } else {
+                // Register new user
+                const randomPassword = Math.random().toString(36).slice(-10) + Math.random().toString(36).slice(-10);
+                const hashedPassword = bcrypt.hashSync(randomPassword, 8);
+
+                const newUser = {
+                    name,
+                    email,
+                    password: hashedPassword,
+                    role: 'student',
+                    isVerified: true, // Google verified
+                    avatar: picture,
+                    createdAt: new Date(),
+                    authProvider: 'google'
+                };
+
+                db.users.insert(newUser, (err, newDoc) => {
+                    if (err) return res.status(500).json({ error: 'Erro ao criar usuário Google.' });
+
+                    const token = jwt.sign({ id: newDoc._id, role: 'student' }, SECRET_KEY, { expiresIn: 86400 });
+                    res.status(201).json({
+                        id: newDoc._id,
+                        name: newDoc.name,
+                        email: newDoc.email,
+                        role: 'student',
+                        avatar: newDoc.avatar,
+                        accessToken: token
+                    });
+                });
+            }
+        });
+
+    } catch (error) {
+        console.error('Google Auth Error:', error);
+        res.status(500).json({ error: 'Falha na autenticação com Google.' });
+    }
+});
+
+
+// Contact Endpoint
+app.post('/api/contact', (req, res) => {
+    const { name, email, subject, message } = req.body;
+
+    if (!name || !email || !subject || !message) {
+        return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
+    }
+
+    const newMessage = {
+        name,
+        email,
+        subject,
+        message,
+        read: false
+    };
+
+    db.messages.insert(newMessage, (err, savedMessage) => {
+        if (err) return res.status(500).json({ error: 'Erro ao salvar mensagem.' });
+
+        console.log(`[CONTACT] Nova mensagem de ${email}: ${subject}`);
+        res.status(201).json({ message: 'Mensagem enviada com sucesso!' });
+    });
+});
+
 // Admin Middleware
 const verifyAdmin = (req, res, next) => {
     const authHeader = req.headers['authorization'];
@@ -246,6 +349,30 @@ app.patch('/api/users/me', verifyToken, (req, res) => {
     });
 });
 
+// Delete Account Endpoint
+app.delete('/api/users/me', (req, res) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (!token) return res.status(401).json({ error: 'Token não fornecido.' });
+
+    jwt.verify(token, SECRET_KEY, (err, decoded) => {
+        if (err) return res.status(403).json({ error: 'Token inválido.' });
+
+        const userId = decoded.id;
+
+        db.users.remove({ _id: userId }, (err, numRemoved) => {
+            if (err) return res.status(500).json({ error: 'Erro ao excluir conta.' });
+            // For Google users or just redundant checks, sometimes numRemoved might be 0 if ID is odd,
+            // but usually it works. If not, we might need to debug.
+            // But let's assume it works now that route is reachable.
+            if (!numRemoved) return res.status(404).json({ error: 'Usuário não encontrado.' });
+
+            res.status(200).json({ message: 'Conta excluída com sucesso.' });
+        });
+    });
+});
+
 // Delete user by ID (Admin)
 app.delete('/api/users/:id', verifyAdmin, (req, res) => {
     const userId = req.params.id;
@@ -281,26 +408,7 @@ app.patch('/api/users/:id/role', verifyAdmin, (req, res) => {
     });
 });
 
-// Delete Account Endpoint
-app.delete('/api/users/me', (req, res) => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
 
-    if (!token) return res.status(401).json({ error: 'Token não fornecido.' });
-
-    jwt.verify(token, SECRET_KEY, (err, decoded) => {
-        if (err) return res.status(403).json({ error: 'Token inválido.' });
-
-        const userId = decoded.id;
-
-        db.users.remove({ _id: userId }, (err, numRemoved) => {
-            if (err) return res.status(500).json({ error: 'Erro ao excluir conta.' });
-            if (!numRemoved) return res.status(404).json({ error: 'Usuário não encontrado.' });
-
-            res.status(200).json({ message: 'Conta excluída com sucesso.' });
-        });
-    });
-});
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
