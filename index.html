@@ -43,9 +43,15 @@
       height: 0 !important;
     }
 
-    /* Prevenir que o body desça */
-    body>.skiptranslate {
-      display: none !important;
+    /* Garantir que o Menu Dropdown apareça */
+    .goog-te-menu-frame {
+      z-index: 999999 !important;
+      display: block !important;
+    }
+
+    .goog-te-menu2 {
+      max-width: 100% !important;
+      background-color: white !important;
     }
 
     /* Estilo básico para o widget ficar mais bonito */
