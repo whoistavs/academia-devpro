@@ -47,32 +47,10 @@ const Navbar = () => {
                                 {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
                             </button>
 
-                            {/* Language Dropdown */}
-                            <div className="relative">
-                                <button
-                                    onClick={() => setIsLangOpen(!isLangOpen)}
-                                    className="flex items-center space-x-1 text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors focus:outline-none"
-                                >
-                                    <Globe className="h-5 w-5" />
-                                    <span className="uppercase text-sm">{language.replace('-pt', 'pt')}</span>
-                                </button>
-
-                                {isLangOpen && (
-                                    <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 border border-gray-100 dark:border-gray-700 ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                        {availableLanguages.map((lang) => (
-                                            <button
-                                                key={lang.code}
-                                                onClick={() => {
-                                                    changeLanguage(lang.code);
-                                                    setIsLangOpen(false);
-                                                }}
-                                                className={`block w-full text-left px-4 py-2 text-sm ${language === lang.code ? 'bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'}`}
-                                            >
-                                                {lang.label}
-                                            </button>
-                                        ))}
-                                    </div>
-                                )}
+                            {/* Language Dropdown (Google Translate) */}
+                            <div className="relative flex items-center">
+                                <Globe className="h-5 w-5 text-gray-500 dark:text-gray-400 mr-2" />
+                                <div id="google_translate_element" className="google-translate-container"></div>
                             </div>
                         </div>
 
@@ -147,25 +125,8 @@ const Navbar = () => {
                         <Link to="/cursos" onClick={() => setIsOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-gray-50 dark:hover:bg-gray-800">{t('nav.courses')}</Link>
                         <Link to="/contato" onClick={() => setIsOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-gray-50 dark:hover:bg-gray-800">{t('nav.contact')}</Link>
 
-                        {/* Mobile Language Selection */}
-                        {isLangOpen && (
-                            <div className="border-t border-gray-200 dark:border-gray-700 mt-2 pt-2">
-                                <p className="px-3 text-xs uppercase text-gray-500 dark:text-gray-400 font-bold mb-2">Idiomas</p>
-                                {availableLanguages.map((lang) => (
-                                    <button
-                                        key={lang.code}
-                                        onClick={() => {
-                                            changeLanguage(lang.code);
-                                            setIsLangOpen(false);
-                                            setIsOpen(false);
-                                        }}
-                                        className={`block w-full text-left px-3 py-2 rounded-md text-sm ${language === lang.code ? 'bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 font-bold' : 'text-gray-600 dark:text-gray-400'}`}
-                                    >
-                                        {lang.label}
-                                    </button>
-                                ))}
-                            </div>
-                        )}
+                        {/* Mobile Language Selection (Google Translate is global, but we can show a hint or just hide it as it might break layout if duplicated) */}
+                        {/* Ideally we move the #google_translate_element to a shared location or handle it better, but for now we hide manual selection */}
 
                         {isAuthenticated ? (
                             <>
