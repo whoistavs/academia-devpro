@@ -49,6 +49,34 @@
     .goog-te-gadget-simple span {
       color: inherit !important;
     }
+
+    /* Dark Mode Support for Google Translate */
+    html.dark .goog-te-gadget-simple span {
+      color: #e5e7eb !important;
+      /* gray-200 */
+    }
+
+    html.dark .goog-te-gadget-simple {
+      color: #e5e7eb !important;
+    }
+
+    /* Dropdown Styling */
+    .goog-te-menu-value {
+      display: flex !important;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .goog-te-menu-value span:nth-child(5) {
+      display: none !important;
+      /* Hide arrows if they look bad */
+    }
+
+    /* Fix the massive dropdown width issue if possible */
+    .goog-te-menu-frame {
+      max-width: 100vw !important;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+    }
   </style>
 </body>
 
