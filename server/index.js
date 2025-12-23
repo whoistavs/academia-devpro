@@ -162,7 +162,7 @@ app.post('/api/cadastro', (req, res) => {
 // Test Email Endpoint
 app.get('/api/test-email', async (req, res) => {
     const testToken = 'teste123';
-    const sent = await sendVerificationEmail(process.env.EMAIL_USER, testToken); // Send to self
+    const sent = await sendVerificationEmail('devproacademy@outlook.com', testToken); // Send to self
     if (sent) {
         res.send('Email enviado com sucesso! Verifique sua caixa de entrada (e spam).');
     } else {
