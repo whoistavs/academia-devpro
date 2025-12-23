@@ -7,13 +7,78 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
+import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
+
+dotenv.config({ path: '../.env' }); // Load from root .env
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const SECRET_KEY = "chave_secreta_super_segura"; // Em produção, usar .env
+const SECRET_KEY = "chave_secreta_super_segura";
+
+// Email Transporter Configuration
+const transporter = nodemailer.createTransport({
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
+    secure: process.env.EMAIL_SECURE === 'true', // false for TLS
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+    }
+});
+
+// Verify Transporter Connection
+transporter.verify(function (error, success) {
+    if (error) {
+        console.log('Error verifying email connection:', error);
+    } else {
+        console.log('Server is ready to take our messages. SMTP Host:', process.env.EMAIL_HOST);
+    }
+});
+
+const sendVerificationEmail = async (email, token) => {
+    const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http'; // Simplification
+    // In production user uses Netlify for frontend, so we should allow passing the base URL or hardcode it as requested
+    const baseUrl = 'https://devproacademy.netlify.app'; // Requested by user
+    const verificationLink = `${baseUrl}/verify?token=${token}`;
+
+    const mailOptions = {
+        from: `"DevPro Academy" <devproacademy@outlook.com>`,
+        to: email,
+        subject: 'Verifique sua conta - DevPro Academy',
+        html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
+                <div style="text-align: center; padding-bottom: 20px;">
+                    <h1 style="color: #4F46E5;">DevPro Academy</h1>
+                </div>
+                <div style="padding: 20px; background-color: #f9fafb; border-radius: 8px;">
+                    <h2 style="color: #1f2937;">Olá!</h2>
+                    <p style="color: #4b5563; line-height: 1.6;">Obrigado por se cadastrar na DevPro Academy. Para confirmar sua conta e começar a aprender, clique no botão abaixo:</p>
+                    <div style="text-align: center; margin: 30px 0;">
+                        <a href="${verificationLink}" style="background-color: #4F46E5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">Confirmar Cadastro</a>
+                    </div>
+                    <p style="color: #4b5563; font-size: 14px;">Ou copie e cole o link abaixo no seu navegador:</p>
+                    <p style="background-color: #e5e7eb; padding: 10px; border-radius: 4px; word-break: break-all; color: #6b7280; font-size: 12px;">${verificationLink}</p>
+                </div>
+                <div style="text-align: center; margin-top: 20px; color: #9ca3af; font-size: 12px;">
+                    <p>&copy; ${new Date().getFullYear()} DevPro Academy. Todos os direitos reservados.</p>
+                </div>
+            </div>
+        `
+    };
+
+    try {
+        const info = await transporter.sendMail(mailOptions);
+        console.log('Message sent: %s', info.messageId);
+        return true;
+    } catch (error) {
+        console.error('Error sending email:', error);
+        return false;
+    }
+};
 
 
 // Configurar armazenamento do Multer
@@ -76,19 +141,33 @@ app.post('/api/cadastro', (req, res) => {
             }
 
             // SIMULATE EMAIL SENDING
-            const protocol = req.protocol;
-            const host = req.get('host');
-            const validationLink = `${protocol}://${host}/api/verify-email?token=${verificationToken}`;
+            // const protocol = req.protocol;
+            // const host = req.get('host');
+            // const validationLink = `${protocol}://${host}/api/verify-email?token=${verificationToken}`;
 
-            console.log("\n==================================================");
-            console.log(`[MOCK EMAIL] Para: ${email}`);
-            console.log(`[MOCK EMAIL] Assunto: Verifique sua conta`);
-            console.log(`[MOCK EMAIL] Link: ${validationLink}`);
-            console.log("==================================================\n");
+            // console.log("\n==================================================");
+            // console.log(`[MOCK EMAIL] Para: ${email}`);
+            // console.log(`[MOCK EMAIL] Assunto: Verifique sua conta`);
+            // console.log(`[MOCK EMAIL] Link: ${validationLink}`);
+            // console.log("==================================================\n");
 
-            res.status(201).json({ message: 'Cadastro realizado! Verifique seu console (ou email simulado) para ativar a conta.' });
+            // REAL EMAIL SENDING
+            sendVerificationEmail(email, verificationToken);
+
+            res.status(201).json({ message: 'Cadastro realizado! Verifique seu e-mail para ativar a conta.' });
         });
     });
+});
+
+// Test Email Endpoint
+app.get('/api/test-email', async (req, res) => {
+    const testToken = 'teste123';
+    const sent = await sendVerificationEmail(process.env.EMAIL_USER, testToken); // Send to self
+    if (sent) {
+        res.send('Email enviado com sucesso! Verifique sua caixa de entrada (e spam).');
+    } else {
+        res.status(500).send('Falha ao enviar email. Verifique o console do servidor.');
+    }
 });
 
 // Verify Email Endpoint
@@ -101,15 +180,6 @@ app.get('/api/verify-email', (req, res) => {
 
         db.users.update({ _id: user._id }, { $set: { isVerified: true, verificationToken: null } }, {}, (err) => {
             if (err) return res.status(500).send("Erro ao ativar conta.");
-
-            // Redirect to frontend Login
-            // We need to know where the frontend is. Assuming common setups or using Referer if possible, 
-            // but for separated frontend/backend, we usually set a FRONTEND_URL env.
-            // For now, I'll redirect to a generic success page or try to guess.
-            // Since User uses Vercel/Netlify, hard to guess. 
-            // I will return a HTML page with a link to login if I can't redirect automatically, 
-            // OR I will send a simple "Verified!" message.
-            // Better: Redirect to the REFERER's origin if available, or just send a HTML success.
 
             res.send(`
                 <h1>Conta verificada com sucesso!</h1>

@@ -26,7 +26,6 @@
     src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   <style>
     /* Ocultar barra superior do Google */
-    /* Ocultar barra superior do Google */
     body {
       top: 0 !important;
       position: static !important;
@@ -43,73 +42,30 @@
       height: 0 !important;
     }
 
-    /* HIDE the top banner container (often a div with class skiptranslate direct child of body) */
+    /* HIDE the top banner container */
     body>.skiptranslate {
       display: none !important;
     }
 
-    /* BUT SHOW the dropdown menu (which is also a skiptranslate direct child of body often) */
-    body>.goog-te-menu-frame.skiptranslate {
-      display: block !important;
-      visibility: visible !important;
-      position: fixed !important;
-      z-index: 9999999 !important;
-      top: auto !important;
-      /* Let Google handle positioning relative to click, or fix if needed */
+    /* HIDE the widget container itself */
+    #google_translate_element {
+      /* Do not use display: none, otherwise the dropdown won't render */
+      opacity: 0;
+      pointer-events: none;
+      position: absolute;
+      top: -9999px;
     }
 
-    /* Ocultar wrapper específico que o Google usa para a barra nova (se não for skiptranslate) */
-    .VIpgJd-ZVi9od-ORHb-OEVmcd {
+    /* Ocultar qualquer tooltip ou pop-up do Google */
+    .goog-tooltip,
+    .goog-tooltip:hover {
       display: none !important;
+      visibility: hidden !important;
     }
 
-    .goog-te-menu2 {
-      max-width: 100% !important;
-      background-color: white !important;
-    }
-
-    /* Estilo básico para o widget ficar mais bonito */
-    .goog-te-gadget-simple {
+    .goog-text-highlight {
       background-color: transparent !important;
-      border: none !important;
-      padding: 0 !important;
-      font-family: inherit !important;
-    }
-
-    .goog-te-gadget-simple img {
-      display: none !important;
-    }
-
-    .goog-te-gadget-simple span {
-      color: inherit !important;
-    }
-
-    /* Dark Mode Support for Google Translate */
-    html.dark .goog-te-gadget-simple span {
-      color: #e5e7eb !important;
-      /* gray-200 */
-    }
-
-    html.dark .goog-te-gadget-simple {
-      color: #e5e7eb !important;
-    }
-
-    /* Dropdown Styling */
-    .goog-te-menu-value {
-      display: flex !important;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .goog-te-menu-value span:nth-child(5) {
-      display: none !important;
-      /* Hide arrows if they look bad */
-    }
-
-    /* Fix the massive dropdown width issue if possible */
-    .goog-te-menu-frame {
-      max-width: 100vw !important;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+      box-shadow: none !important;
     }
   </style>
 </body>

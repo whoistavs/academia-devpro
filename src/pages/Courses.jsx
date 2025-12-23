@@ -47,7 +47,21 @@ const Courses = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="mb-12">
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">{t('nav.courses')}</h1>
-                    <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">{t('courses.searchPlaceholder')}</p> {/* Re-using placeholder as description for now or create new key */}
+                    <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">{t('courses.description')}</p>
+
+                    {/* Search Bar */}
+                    <div className="relative max-w-md w-full mb-8">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <Search className="h-5 w-5 text-gray-400" />
+                        </div>
+                        <input
+                            type="text"
+                            className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg leading-5 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out"
+                            placeholder={t('courses.searchPlaceholder') || "Pesquisar..."} // Fallback or reuse key
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
 
                     {/* Filter UI */}
                     <div className="flex flex-wrap gap-4">

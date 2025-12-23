@@ -24,5 +24,15 @@
     "verificationToken": "pmhs3n49dzpmjhdec5r",
     "createdAt": "2025-12-22T16:28:23.440Z",
     "_id": "1766420903440da3r9"
+  },
+  {
+    "name": "Teste",
+    "email": "suporte@adonairh.com",
+    "password": "$2a$08$OOXj0EaNel0VbnijjNiyNOpwWmalj/GVXGOazUK80XNHHmgA08qCC",
+    "role": "student",
+    "isVerified": false,
+    "verificationToken": "o1t7oh2stzmjim9cds",
+    "createdAt": "2025-12-23T13:24:13.169Z",
+    "_id": "1766496253169ydt5c"
   }
 ]

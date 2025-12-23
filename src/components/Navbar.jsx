@@ -1,6 +1,8 @@
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Menu, X, Code2, Sun, Moon, User, LogOut, Settings, Globe } from 'lucide-react';
+import LanguageSelector from './LanguageSelector';
 import { useTheme } from '../context/ThemeContext';
 import { useTranslation } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
@@ -27,7 +29,7 @@ const Navbar = () => {
                             <img
                                 src={theme === 'dark' ? "/logo-dark.png" : "/logo.png"}
                                 alt="DevPro Academy"
-                                className={`h-10 w-auto rounded-lg p-1.5 ${theme === 'dark' ? '' : 'bg-white'}`}
+                                className={`h-10 w-auto rounded-lg p-1.5 ${theme === 'dark' ? '' : 'bg-white'} `}
                             />
                         </Link>
                     </div>
@@ -48,10 +50,7 @@ const Navbar = () => {
                             </button>
 
                             {/* Language Dropdown (Google Translate) */}
-                            <div className="relative flex items-center">
-                                <Globe className="h-5 w-5 text-gray-500 dark:text-gray-400 mr-2" />
-                                <div id="google_translate_element" className="google-translate-container"></div>
-                            </div>
+                            <LanguageSelector />
                         </div>
 
                         {isAuthenticated ? (

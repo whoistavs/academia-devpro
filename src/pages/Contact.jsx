@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, Instagram, Twitter, Linkedin } from 'lucide-react';
 import { useTranslation } from '../context/LanguageContext';
 
 const Contact = () => {
@@ -76,7 +76,7 @@ const Contact = () => {
                                     </div>
                                     <div>
                                         <p className="text-indigo-200 text-sm">{t('contact.info.phone')}</p>
-                                        <p className="font-semibold">19 920033741</p>
+                                        <p className="font-semibold">+55 (19) 92003-3741</p>
                                     </div>
                                 </div>
 
@@ -86,7 +86,7 @@ const Contact = () => {
                                     </div>
                                     <div>
                                         <p className="text-indigo-200 text-sm">{t('contact.info.email')}</p>
-                                        <p className="font-semibold">octavio.rs2006@outlook.com</p>
+                                        <p className="font-semibold">devproacademy@outlook.com</p>
                                     </div>
                                 </div>
 
@@ -96,10 +96,16 @@ const Contact = () => {
 
                         <div className="mt-12">
                             <div className="flex space-x-4">
-                                {/* Social Icons Placeholder */}
-                                <div className="w-10 h-10 bg-indigo-700 rounded-full flex items-center justify-center hover:bg-white hover:text-indigo-900 transition-colors cursor-pointer">IG</div>
-                                <div className="w-10 h-10 bg-indigo-700 rounded-full flex items-center justify-center hover:bg-white hover:text-indigo-900 transition-colors cursor-pointer">TW</div>
-                                <div className="w-10 h-10 bg-indigo-700 rounded-full flex items-center justify-center hover:bg-white hover:text-indigo-900 transition-colors cursor-pointer">LI</div>
+                                {/* Social Icons */}
+                                <a href="#" className="w-10 h-10 bg-indigo-700 rounded-full flex items-center justify-center hover:bg-white hover:text-indigo-900 transition-colors shadow-lg" aria-label="Instagram">
+                                    <Instagram className="h-5 w-5" />
+                                </a>
+                                <a href="#" className="w-10 h-10 bg-indigo-700 rounded-full flex items-center justify-center hover:bg-white hover:text-indigo-900 transition-colors shadow-lg" aria-label="Twitter">
+                                    <Twitter className="h-5 w-5" />
+                                </a>
+                                <a href="#" className="w-10 h-10 bg-indigo-700 rounded-full flex items-center justify-center hover:bg-white hover:text-indigo-900 transition-colors shadow-lg" aria-label="LinkedIn">
+                                    <Linkedin className="h-5 w-5" />
+                                </a>
                             </div>
                         </div>
                     </div>
