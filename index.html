@@ -11,63 +11,6 @@
 <body>
   <div id="root"></div>
   <script type="module" src="/src/main.jsx"></script>
-
-  <!-- Google Translate Script -->
-  <script type="text/javascript">
-    function googleTranslateElementInit() {
-      new google.translate.TranslateElement({
-        pageLanguage: 'pt',
-        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-        autoDisplay: false
-      }, 'google_translate_element');
-    }
-  </script>
-  <script type="text/javascript"
-    src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-  <style>
-    /* Ocultar barra superior do Google */
-    body {
-      top: 0 !important;
-      position: static !important;
-    }
-
-    .goog-te-banner-frame.skiptranslate {
-      display: none !important;
-    }
-
-    /* Ocultar a barra azul/branca que aparece no topo */
-    iframe.goog-te-banner-frame {
-      display: none !important;
-      visibility: hidden !important;
-      height: 0 !important;
-    }
-
-    /* HIDE the top banner container */
-    body>.skiptranslate {
-      display: none !important;
-    }
-
-    /* HIDE the widget container itself */
-    #google_translate_element {
-      /* Do not use display: none, otherwise the dropdown won't render */
-      opacity: 0;
-      pointer-events: none;
-      position: absolute;
-      top: -9999px;
-    }
-
-    /* Ocultar qualquer tooltip ou pop-up do Google */
-    .goog-tooltip,
-    .goog-tooltip:hover {
-      display: none !important;
-      visibility: hidden !important;
-    }
-
-    .goog-text-highlight {
-      background-color: transparent !important;
-      box-shadow: none !important;
-    }
-  </style>
 </body>
 
 </html>

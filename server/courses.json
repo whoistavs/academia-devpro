@@ -1,0 +1,1148 @@
+[
+  {
+    "id": 1,
+    "slug": "logica-de-programacao",
+    "title": {
+      "pt": "Lógica de Programação",
+      "en": "Programming Logic"
+    },
+    "category": "Fundamentos",
+    "description": {
+      "pt": "Domine a base da programação: algoritmos, fluxogramas e estruturas de controle fundamentais para qualquer linguagem.",
+      "en": "Master the basics of programming: algorithms, flowcharts, and fundamental control structures for any language."
+    },
+    "descricaoCompleta": {
+      "pt": "Este curso é o ponto de partida ideal. Você aprenderá a pensar como um programador, quebrando problemas complexos em passos lógicos e estruturados. Essencial antes de aprender qualquer sintaxe.",
+      "en": "This course is the ideal starting point. You will learn to think like a programmer, breaking down complex problems into logical and structured steps. Essential before learning any syntax."
+    },
+    "modulos": [
+      "Módulo 1: Mentalidade Algorítmica e Fluxogramas",
+      "Módulo 2: Variáveis, Constantes e Tipos de Dados Primitivos",
+      "Módulo 3: Estruturas de Controle: Condicionais e Laços de Repetição",
+      "Módulo 4: Funções, Escopo e Resolução de Problemas Complexos"
+    ],
+    "duration": "20h",
+    "level": {
+      "pt": "Iniciante",
+      "en": "Beginner"
+    },
+    "image": "https://images.unsplash.com/photo-1555099962-4199c345e5dd?auto=format&fit=crop&w=800&q=80",
+    "aulas": [
+      {
+        "titulo": {
+          "pt": "1. A Ciência da Abstração e Algoritmos",
+          "en": "1. The Science of Abstraction & Algorithms"
+        },
+        "duracao": {
+          "pt": "Estudo: 4h",
+          "en": "Study: 4h"
+        },
+        "status": "livre",
+        "content": {
+          "pt": "# 1. Introdução: O Que é Programar?\n\nMuitos acreditam que programar é aprender uma linguagem como Python ou JavaScript. Na verdade, a linguagem é apenas a ferramenta. A programação é a arte de resolver problemas através da **abstração**.\n\n> **Abstração** é a capacidade de isolar os detalhes irrelevantes e focar apenas no que é essencial para o funcionamento do sistema.\n\n**Exemplo:** Ao criar um sistema de GPS, não importa a cor dos carros nas ruas (detalhe irrelevante), mas sim a distância entre as coordenadas (essencial).\n\n---\n\n# 2. Anatomia de um Algoritmo\n\nUm algoritmo de nível profissional precisa de três características:\n\n1.  **Finitude**: Deve ter um fim claro.\n2.  **Definição**: Cada passo deve ser inequívoco (o computador não \"acha\" nada).\n3.  **Eficácia**: Deve resolver o problema de forma otimizada.\n\n### 🧠 Exercício Mental 01\nPense no processo de sacar dinheiro em um caixa eletrônico. Liste 10 passos detalhados, prevendo erros (ex: \"E se a senha estiver errada?\", \"E se o dinheiro acabar?\"). Note como a lógica se torna complexa quando cobrimos as falhas.\n\n---\n\n# 3. Representação Lógica e Fluxogramas\n\nPara durar 4 horas, você deve dominar a representação visual antes de tocar no código.\n\n*   **Pseudocódigo**: Uma forma de escrever lógica usando linguagem humana estruturada. É o rascunho entre o pensamento e a máquina.\n*   **Fluxogramas**: A representação visual de caminhos.\n\n### As 4 Estruturas Fundamentais\n1.  **Sequencial**: Instruções executadas uma após a outra.\n2.  **Condicional (Seleção)**: Onde o fluxo se divide baseando-se em uma pergunta (Sim/Não).\n3.  **Repetição (Iteração)**: Onde um bloco de ações se repete até que uma condição seja atingida.\n4.  **Recursão**: Quando um problema é resolvido em partes menores de si mesmo.\n\n---\n\n# 4. Estudo de Caso: O Algoritmo de Busca\n\nImagine que você tem uma lista de 100 nomes e quer encontrar \"Ana\".\n\n*   **Busca Linear**: Você olha um por um do início ao fim. (Lento, mas simples).\n*   **Busca Binária**: Se a lista estiver em ordem alfabética, você olha no meio. Se Ana vem antes, você descarta a metade de baixo. Repete o processo até encontrar. (Extremamente rápido).\n\n> **Reflexão Técnica**: A lógica de programação estuda qual desses caminhos custa menos memória e tempo para o computador. Isso é o que chamamos de **Complexidade de Algoritmo**.\n\n---\n\n# 5. Desafio de Construção de Algoritmo\n\nEste é o exercício prático que consumirá o restante do tempo de estudo do aluno.\n\n### O Problema do Semáforo Inteligente 🚦\n\nVocê foi contratado para projetar a lógica de um semáforo em um cruzamento perigoso que possui um sensor de pedestres e um sensor de ambulância.\n\n**Regras:**\n1.  O sinal verde dura 30 segundos por padrão.\n2.  Se um pedestre apertar o botão, o sinal deve fechar após 5 segundos, mas apenas se o sinal verde já estiver aberto há pelo menos 15 segundos.\n3.  Se uma ambulância for detectada (sensor de som/sinal), todos os outros sinais devem fechar imediatamente e o sinal da ambulância deve abrir em 2 segundos.\n\n**Tarefa:** Escreva o pseudocódigo para solucionar este problema abaixo.",
+          "en": "# 1. Introduction: What is Programming?\n\nProgramming is the art of solving problems through **abstraction**.\n\n> **Abstraction** is the ability to isolate irrelevant details and focus only on what is essential.\n\n---\n\n# 5. Challenge: Smart Traffic Light 🚦\n\nDesign the logic for a smart traffic light.\n\n**Rules:**\n1. Green light lasts 30s.\n2. Pedestrian button reduces it to 5s (min 15s green).\n3. Ambulance closes all lights immediately and opens its own in 2s.\n\n**Task:** Write the pseudocode below."
+        },
+        "challenge": {
+          "id": "c1m1",
+          "instruction": {
+            "pt": "Escreva seu pseudocódigo ou desenhe o fluxo em texto aqui:",
+            "en": "Write your pseudocode or text flowchart here:"
+          }
+        }
+      },
+      {
+        "titulo": {
+          "pt": "2. Variáveis, Constantes e Tipos de Dados",
+          "en": "2. Variables, Constants & Data Types"
+        },
+        "duracao": {
+          "pt": "Estudo: 4h",
+          "en": "Study: 4h"
+        },
+        "status": "livre",
+        "content": {
+          "pt": "# 1. O Conceito de Memória (30 min)\n\nProgramas computacionais manipulam dados. Para manipular dados, precisamos armazená-los. Imagine a memória RAM do computador como um gigantesco armário cheio de gavetas numeradas (endereços de memória).\n\nQuando criamos uma **variável**, estamos basicamente colando uma etiqueta com um nome em uma dessas gavetas para podermos guardar e encontrar informações depois.\n\n*   **Declaração**: \"Reserva essa gaveta pra mim.\"\n*   **Atribuição**: \"Guarda esse valor dentro da gaveta.\"\n\n---\n\n# 2. Anatomia de uma Variável (45 min)\n\nEm linguagens modernas, uma variável tem propriedades além do valor:\n\n1.  **Nome (Identificador)**: Como a chamamos.\n2.  **Tipo**: Que tipo de dado ela guarda (texto, número...).\n3.  **Escopo**: Onde ela existe (visibilidade).\n4.  **Mutabilidade**: Se ela pode mudar ou não.\n\n### `var`, `let` e `const` (JavaScript)\n*   **`var`**: Antigo, vaza escopo. Evite.\n*   **`let`**: Mutável. Use quando o valor precisar mudar (ex: placar de jogo).\n*   **`const`**: Imutável (a referência). Use por padrão. Protege seu código contra reatribuições acidentais.\n\n---\n\n# 3. Tipos Primitivos vs Referência (1h)\n\nEntender isso separa juniores de plenos.\n\n### Primitivos (Valor Direto)\nSão dados simples: `String`, `Number`, `Boolean`, `Null`, `Undefined`. Eles ficam na **Stack** (memória rápida).\n*   Se `a = 10` e `b = a`, `b` cria uma cópia. Mudar `b` não afeta `a`.\n\n### Referência (Objetos e Arrays)\nSão dados complexos. Eles ficam na **Heap** (memória grande).\n*   A variável guarda apenas o **endereço** (o número da gaveta), não o dado em si.\n*   Se `listaA = [1, 2]` e `listaB = listaA`, ambas apontam para o MESMO lugar. Mudar `listaB` **ALTERA** `listaA`!\n\n---\n\n# 4. Tipagem: Estática vs Dinâmica (45 min)\n\n*   **Estática (Java, C#)**: Você avisa o tipo antes (`int idade = 25`). O compilador te xinga se tentar guardar texto.\n*   **Dinâmica (JS, Python)**: O tipo é definido pelo valor (`let x = 25`). Se depois você fizer `x = 'texto'`, o JS aceita. Isso dá flexibilidade, mas gera bugs silenciosos (ex: somar texto '5' com número 5 vira '55').\n\n---\n\n# 5. Desafio de Tipos e Lógica\n\n### O Bug da Carteira Digital 💸\n\nVocê está analisando um código de banco e encontrou um erro crítico.\n\n**O Código (Pseudocódigo):**\n```js\nsaldoUsuario = \"1000.00\" // Note as aspas, veio de um input de texto\ndeposito = 500.00\nnovoSaldo = saldo + deposito\n```\n\n**Resultado Esperado**: 1500.00\n**Resultado Real**: \"1000.00500.00\" (Concatenação de string)\n\n**Tarefa:** Explique tecnicamente por que isso aconteceu e escreva o pseudocódigo da correção, garantindo que operações matemáticas sejam seguras.",
+          "en": "# 1. Memory Concept\nVariables are labels for memory addresses.\n\n# 3. Primitives vs Reference\n*   **Primitives** (Stack): Pass by value.\n*   **Reference** (Heap): Pass by reference (Objects/Arrays).\n\n# 5. Challenge: The Wallet Bug 💸\nText '1000' + Number 500 = '1000500'. Explain why and fix it."
+        },
+        "challenge": {
+          "id": "c1m2",
+          "instruction": {
+            "pt": "Sua explicação e correção:",
+            "en": "Your explanation and fix:"
+          }
+        }
+      },
+      {
+        "titulo": {
+          "pt": "3. Estruturas de Controle: Condicionais e Laços",
+          "en": "3. Control Structures"
+        },
+        "duracao": {
+          "pt": "Estudo: 4h",
+          "en": "Study: 4h"
+        },
+        "status": "livre",
+        "content": {
+          "pt": "# 1. O Poder das Decisões (1h)\n\nAté agora, nossos programas seguiam uma linha reta. Mas a vida é feita de escolhas. As **Estruturas Condicionais** permitem que o código tome caminhos diferentes.\n\n### `if`, `else if`, `else`\nNão limitem-se ao básico. Entendam a **Lógica Booleana** por trás.\n*   `&&` (AND): Tudo tem que ser verdade.\n*   `||` (OR): Pelo menos um tem que ser verdade.\n*   `!` (NOT): Inverte o valor.\n\n> **Dica Pro**: Evite aninhamento excessivo (`if` dentro de `if` dentro de `if`). Isso chama-se \"Arrow Code\" e destrói a legibilidade. Use `return` cedo (Guard Clauses) para limpar o código.\n\n### `switch` vs `if`\nUse `switch` quando estiver comparando uma única variável contra múltiplos valores estáticos. É mais limpo e, em algumas linguagens, mais rápido.\n\n---\n\n# 2. Laços de Repetição (Loops) (1.5h)\n\nComputadores são excelentes em tarefas repetitivas. Nós não.\n\n### `while` vs `do...while`\n*   **`while`**: Verifica, depois faz. Pode nunca rodar.\n*   **`do...while`**: Faz, depois verifica. Roda pelo menos uma vez.\n\n### `for` clássico vs `for...of`\nO `for` com contador (`let i=0`) é poderoso, mas propenso a erros (Off-by-one error). Prefira iteradores modernos como `for...of` (JS) ou `foreach` (outras linguagens) quando possível.\n\n---\n\n# 3. Controle de Fluxo Avançado (1h)\n\n*   **`break`**: Sai do loop imediatamente (Eject!).\n*   **`continue`**: Pula a iteração atual e vai para a próxima.\n\n### Loop Infinito\nO pesadelo de todo dev. Acontece quando a condição de parada nunca é atingida. `while(true)` sem `break` trava o navegador/servidor.\n\n---\n\n# 4. Desafio: O Clássico FizzBuzz 🐝\n\nEste é o teste de entrevista mais famoso do mundo. Parece simples, mas reprova muitos candidatos.\n\n**Regras:**\n1.  O sistema deve contar de 1 a 100.\n2.  Se o número for divisível por 3, imprima \"Fizz\".\n3.  Se for divisível por 5, imprima \"Buzz\".\n4.  Se for divisível por **ambos** (3 e 5), imprima \"FizzBuzz\".\n5.  Caso contrário, imprima o próprio número.\n\n**Exemplo de Saída**: `1, 2, Fizz, 4, Buzz, Fizz, 7, 8, Fizz, Buzz, 11, Fizz, 13, 14, FizzBuzz...`",
+          "en": "# 1. Decisions\nConditional logic (`if/else`, `switch`) allows code to branch.\n\n# 2. Loops\n`while`, `do...while`, and `for` loops automate repetition.\n\n# 4. Challenge: FizzBuzz 🐝\nCount 1 to 100. Divisible by 3 -> \"Fizz\". By 5 -> \"Buzz\". Both -> \"FizzBuzz\"."
+        },
+        "challenge": {
+          "id": "c1m3",
+          "instruction": {
+            "pt": "Escreva o algoritmo do FizzBuzz (Pseudocódigo ou JS):",
+            "en": "Write the FizzBuzz algorithm (Pseudocode or JS):"
+          }
+        }
+      },
+      {
+        "titulo": {
+          "pt": "4. Funções e Modularização",
+          "en": "4. Functions"
+        },
+        "duracao": {
+          "pt": "Estudo: 4h",
+          "en": "Study: 4h"
+        },
+        "status": "livre",
+        "content": {
+          "pt": "# 1. O Que São Funções? (1h)\n\nFunções são \"miniprogramas\" dentro do seu programa. Elas encapsulam um comportamento para ser reutilizado.\n\n### Princípio DRY (Don't Repeat Yourself)\nSe você copiou e colou código mais de duas vezes, crie uma função. Duplicação é a raiz de todo mal na manutenção de software.\n\n---\n\n# 2. Parâmetros e Retorno (1h)\n\n*   **Parâmetros**: O que a função precisa para trabalhar (Inputs). Ex: `function dobrar(numero)`.\n*   **Argumentos**: O valor real que você passa. Ex: `dobrar(10)`.\n*   **Retorno**: O resultado final. Uma função sem `return` (void) apenas executa uma ação (efeito colateral).\n\n> **Funções Puras**: São funções que, para a mesma entrada, sempre dão a mesma saída e não alteram nada fora delas. São o \"santo graal\" da previsibilidade.\n\n---\n\n# 3. Escopo (Scope) (1h)\n\nOnde sua variável vive?\n*   **Escopo Global**: Acessível por todos (Perigoso! Qualquer um pode estragar).\n*   **Escopo Local/Função**: Nasce e morre na função.\n*   **Escopo de Bloco**: Nasce e morre dentro do `if` ou `for` (com `let`/`const`).\n\nEntender escopo evita o bug \"undefined variable\" ou variáveis sendo sobrescritas misteriosamente.\n\n---\n\n# 4. Introdução à Recursão (30 min)\n\nUma função que chama a si mesma. É mágica, mas cuidado com o estouro de pilha (Stack Overflow)!\nExemplo: Fatorial `5! = 5 * 4 * 3 * 2 * 1`.\n\n---\n\n# 5. Desafio Final: Fatorial ❗\n\nCrie uma função que calcule o Fatorial de um número `n`.\nLembre-se: `fatorial(0)` é 1.\n\n**Exemplo:**\n`calcularFatorial(5)` deve retornar `120`.",
+          "en": "# 1. Functions\nReconnectable code blocks. Follow DRY (Don't Repeat Yourself).\n\n# 2. Parameters & Return\nInputs and Outputs. Pure functions are predictable.\n\n# 3. Scope\nGlobal vs Local vs Block scope.\n\n# 5. Challenge: Factorial ❗\nCreate a function to calculate factorial of n."
+        },
+        "challenge": {
+          "id": "c1m4",
+          "instruction": {
+            "pt": "Sua lógica para o Fatorial:",
+            "en": "Your logic for Factorial:"
+          }
+        }
+      }
+    ],
+    "quiz": [
+      {
+        "id": 1,
+        "question": {
+          "pt": "O que é um algoritmo?",
+          "en": "What is an algorithm?"
+        },
+        "options": {
+          "pt": [
+            "Um tipo de vírus de computador",
+            "Uma sequência finita de passos bem definidos para resolver um problema",
+            "Uma peça de hardware do processador",
+            "Uma linguagem de programação"
+          ],
+          "en": [
+            "A type of computer virus",
+            "A finite sequence of well-defined steps to solve a problem",
+            "A piece of processor hardware",
+            "A programming language"
+          ]
+        },
+        "answer": 1
+      },
+      {
+        "id": 2,
+        "question": {
+          "pt": "Qual estrutura é usada para tomar decisões no código?",
+          "en": "Which structure is used to make decisions in code?"
+        },
+        "options": {
+          "pt": [
+            "Loop (Repetição)",
+            "Variável",
+            "Condicional (if/else)",
+            "Função"
+          ],
+          "en": [
+            "Loop",
+            "Variable",
+            "Conditional (if/else)",
+            "Function"
+          ]
+        },
+        "answer": 2
+      },
+      {
+        "id": 3,
+        "question": {
+          "pt": "O que acontece se um loop 'while' nunca tiver sua condição falsa?",
+          "en": "What happens if a 'while' loop never has a false condition?"
+        },
+        "options": {
+          "pt": [
+            "O programa fecha sozinho",
+            "Loop Infinito (travamento)",
+            "O computador desliga",
+            "Nada, ele ignora o loop"
+          ],
+          "en": [
+            "Program closes",
+            "Infinite Loop (crash)",
+            "Computer shuts down",
+            "Nothing, ignores loop"
+          ]
+        },
+        "answer": 1
+      },
+      {
+        "id": 4,
+        "question": {
+          "pt": "Qual o resultado de: NOT (Verdadeiro OR Falso)?",
+          "en": "What is the result of: NOT (True OR False)?"
+        },
+        "options": {
+          "pt": [
+            "Verdadeiro",
+            "Falso",
+            "Erro",
+            "Talvez"
+          ],
+          "en": [
+            "True",
+            "False",
+            "Error",
+            "Maybe"
+          ]
+        },
+        "answer": 1
+      },
+      {
+        "id": 5,
+        "question": {
+          "pt": "Para que serve uma variável?",
+          "en": "What is a variable used for?"
+        },
+        "options": {
+          "pt": [
+            "Para deixar o código colorido",
+            "Para armazenar dados na memória",
+            "Para conectar com a internet",
+            "Para limpar a tela"
+          ],
+          "en": [
+            "To color the code",
+            "To store data in memory",
+            "To connect to internet",
+            "To clear screen"
+          ]
+        },
+        "answer": 1
+      },
+      {
+        "id": 6,
+        "question": {
+          "pt": "Qual destes é um tipo de dado primitivo?",
+          "en": "Which of these is a primitive data type?"
+        },
+        "options": {
+          "pt": [
+            "HTML",
+            "Boolean (Verdadeiro/Falso)",
+            "Wifi",
+            "MP3"
+          ],
+          "en": [
+            "HTML",
+            "Boolean (True/False)",
+            "Wifi",
+            "MP3"
+          ]
+        },
+        "answer": 1
+      },
+      {
+        "id": 7,
+        "question": {
+          "pt": "O que significa DRY?",
+          "en": "What does DRY stand for?"
+        },
+        "options": {
+          "pt": [
+            "Do Repeat Yourself",
+            "Don't Repeat Yourself (Não se repita)",
+            "Data Run Yearly",
+            "Disk Read Yellow"
+          ],
+          "en": [
+            "Do Repeat Yourself",
+            "Don't Repeat Yourself",
+            "Data Run Yearly",
+            "Disk Read Yellow"
+          ]
+        },
+        "answer": 1
+      },
+      {
+        "id": 8,
+        "question": {
+          "pt": "Como acessamos o primeiro item de um array (lista)?",
+          "en": "How do we access the first item of an array?"
+        },
+        "options": {
+          "pt": [
+            "Índice 1",
+            "Índice 0",
+            "Índice -1",
+            "Índice A"
+          ],
+          "en": [
+            "Index 1",
+            "Index 0",
+            "Index -1",
+            "Index A"
+          ]
+        },
+        "answer": 1
+      },
+      {
+        "id": 9,
+        "question": {
+          "pt": "Qual a diferença entre '==' e '===' em JavaScript?",
+          "en": "Difference between '==' and '===' in JavaScript?"
+        },
+        "options": {
+          "pt": [
+            "Não há diferença",
+            "== compara valor, === compara valor e tipo",
+            "== é mais rápido",
+            "=== é para texto apenas"
+          ],
+          "en": [
+            "No difference",
+            "== compares value, === compares value and type",
+            "== is faster",
+            "=== is for text only"
+          ]
+        },
+        "answer": 1
+      },
+      {
+        "id": 10,
+        "question": {
+          "pt": "O que é 'Escopo Global'?",
+          "en": "What is 'Global Scope'?"
+        },
+        "options": {
+          "pt": [
+            "Uma variável visível em todo o código",
+            "Uma variável dentro de uma função",
+            "Um site mundial",
+            "Um erro de sistema"
+          ],
+          "en": [
+            "Variable visible everywhere",
+            "Variable inside a function",
+            "A worldwide site",
+            "System error"
+          ]
+        },
+        "answer": 0
+      },
+      {
+        "id": 11,
+        "question": {
+          "pt": "Pseudocódigo é...",
+          "en": "Pseudocode is..."
+        },
+        "options": {
+          "pt": [
+            "Um código falso que não roda",
+            "Uma representação da lógica em linguagem natural",
+            "Um vírus",
+            "Uma linguagem antiga"
+          ],
+          "en": [
+            "Fake code that doesn't run",
+            "Logic representation in natural language",
+            "A virus",
+            "Old language"
+          ]
+        },
+        "answer": 1
+      },
+      {
+        "id": 12,
+        "question": {
+          "pt": "Para que serve o 'return' em uma função?",
+          "en": "What is 'return' used for in a function?"
+        },
+        "options": {
+          "pt": [
+            "Para voltar ao início do código",
+            "Para devolver um resultado processado",
+            "Para desligar o computador",
+            "Para repetir a função"
+          ],
+          "en": [
+            "Go back to start",
+            "Return a processed result",
+            "Shut down computer",
+            "Repeat function"
+          ]
+        },
+        "answer": 1
+      },
+      {
+        "id": 13,
+        "question": {
+          "pt": "O que é um Fluxograma?",
+          "en": "What is a Flowchart?"
+        },
+        "options": {
+          "pt": [
+            "Um gráfico da bolsa de valores",
+            "Representação visual de um algoritmo",
+            "Um tipo de memória RAM",
+            "Um aplicativo de música"
+          ],
+          "en": [
+            "Stock market graph",
+            "Visual algorithm representation",
+            "Type of RAM",
+            "Music app"
+          ]
+        },
+        "answer": 1
+      },
+      {
+        "id": 14,
+        "question": {
+          "pt": "Qual o valor de x? let x = 10; x = x + 5;",
+          "en": "Value of x? let x = 10; x = x + 5;"
+        },
+        "options": {
+          "pt": [
+            "10",
+            "15",
+            "5",
+            "Erro"
+          ],
+          "en": [
+            "10",
+            "15",
+            "5",
+            "Error"
+          ]
+        },
+        "answer": 1
+      },
+      {
+        "id": 15,
+        "question": {
+          "pt": "Recursão é quando...",
+          "en": "Recursion is when..."
+        },
+        "options": {
+          "pt": [
+            "O computador quebra",
+            "Uma função chama a si mesma",
+            "Usamos muitos loops",
+            "A internet cai"
+          ],
+          "en": [
+            "Computer breaks",
+            "Function calls itself",
+            "We use many loops",
+            "Internet goes down"
+          ]
+        },
+        "answer": 1
+      }
+    ],
+    "_id": "1766510293117g9bf7",
+    "createdAt": "2025-12-23T17:18:13.118Z"
+  },
+  {
+    "id": 2,
+    "slug": "git-github",
+    "title": {
+      "pt": "Git & GitHub",
+      "en": "Git & GitHub"
+    },
+    "category": "Ferramentas",
+    "description": {
+      "pt": "Controle de versão essencial para equipes.",
+      "en": "Essential version control for teams."
+    },
+    "descricaoCompleta": {
+      "pt": "Dominar o Git é obrigatório. Vamos do básico ao avançado.",
+      "en": "Mastering Git is mandatory. Basic to advanced."
+    },
+    "modulos": [
+      "Módulo 1: Ciclo de Vida de um Arquivo (Tracked vs Untracked)",
+      "Módulo 2: Gestão de Branches e Estratégias de Merge",
+      "Módulo 3: Trabalho em Equipe: Pull Requests e Code Review",
+      "Módulo 4: Histórico, Rebase e Recuperação de Erros"
+    ],
+    "duration": "15h",
+    "level": {
+      "pt": "Iniciante",
+      "en": "Beginner"
+    },
+    "image": "https://images.unsplash.com/photo-1556075798-4825dfaaf498?auto=format&fit=crop&w=800&q=80",
+    "aulas": [],
+    "quiz": [],
+    "_id": "1766510293121w80ee",
+    "createdAt": "2025-12-23T17:18:13.121Z"
+  },
+  {
+    "id": 3,
+    "slug": "html5-css3-moderno",
+    "title": {
+      "pt": "HTML5 & CSS3 Moderno",
+      "en": "Modern HTML5 & CSS3"
+    },
+    "category": "Front-end",
+    "description": {
+      "pt": "Crie layouts semânticos e responsivos.",
+      "en": "Create semantic layouts."
+    },
+    "descricaoCompleta": {
+      "pt": "Flexbox, Grid, Animações.",
+      "en": "Flexbox, Grid, Animations."
+    },
+    "modulos": [
+      "Módulo 1",
+      "Módulo 2",
+      "Módulo 3",
+      "Módulo 4"
+    ],
+    "duration": "30h",
+    "level": {
+      "pt": "Iniciante",
+      "en": "Beginner"
+    },
+    "image": "https://images.unsplash.com/photo-1621839673705-6617adf9e890?auto=format&fit=crop&w=800&q=80",
+    "aulas": [],
+    "quiz": [],
+    "_id": "1766510293124ndktl",
+    "createdAt": "2025-12-23T17:18:13.124Z"
+  },
+  {
+    "id": 4,
+    "slug": "javascript-deep-dive",
+    "title": {
+      "pt": "JavaScript Deep Dive",
+      "en": "JavaScript Deep Dive"
+    },
+    "category": "Front-end",
+    "description": {
+      "pt": "Entenda o motor do JS.",
+      "en": "Understand JS engine."
+    },
+    "descricaoCompleta": {
+      "pt": "Closures, Prototyping, Async.",
+      "en": "Closures, Prototyping, Async."
+    },
+    "modulos": [
+      "Módulo 1",
+      "Módulo 2",
+      "Módulo 3",
+      "Módulo 4"
+    ],
+    "duration": "40h",
+    "level": {
+      "pt": "Avançado",
+      "en": "Advanced"
+    },
+    "image": "https://images.unsplash.com/photo-1579468118864-1b9ea3c0db4a?auto=format&fit=crop&w=800&q=80",
+    "aulas": [],
+    "quiz": [],
+    "_id": "1766510293126aghjq",
+    "createdAt": "2025-12-23T17:18:13.126Z"
+  },
+  {
+    "id": 5,
+    "slug": "typescript-essentials",
+    "title": {
+      "pt": "TypeScript Essentials",
+      "en": "TypeScript Essentials"
+    },
+    "category": "Front-end",
+    "description": {
+      "pt": "Tipagem estática e segurança.",
+      "en": "Static typing."
+    },
+    "descricaoCompleta": {
+      "pt": "Interfaces, Generics.",
+      "en": "Interfaces, Generics."
+    },
+    "modulos": [
+      "Módulo 1",
+      "Módulo 2",
+      "Módulo 3",
+      "Módulo 4"
+    ],
+    "duration": "25h",
+    "level": {
+      "pt": "Intermediário",
+      "en": "Intermediate"
+    },
+    "image": "https://images.unsplash.com/photo-1516116216624-53e697fedbea?auto=format&fit=crop&w=800&q=80",
+    "aulas": [],
+    "quiz": [],
+    "_id": "1766510293128e8fix",
+    "createdAt": "2025-12-23T17:18:13.128Z"
+  },
+  {
+    "id": 6,
+    "slug": "react-js-componentizacao",
+    "title": {
+      "pt": "React.js (Componentização)",
+      "en": "React.js"
+    },
+    "category": "Front-end",
+    "description": {
+      "pt": "Biblioteca popular.",
+      "en": "Popular library."
+    },
+    "descricaoCompleta": {
+      "pt": "Hooks, Context.",
+      "en": "Hooks, Context."
+    },
+    "modulos": [
+      "Módulo 1",
+      "Módulo 2",
+      "Módulo 3",
+      "Módulo 4"
+    ],
+    "duration": "40h",
+    "level": {
+      "pt": "Intermediário",
+      "en": "Intermediate"
+    },
+    "image": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&w=800&q=80",
+    "aulas": [],
+    "quiz": [],
+    "_id": "1766510293131nkbix",
+    "createdAt": "2025-12-23T17:18:13.131Z"
+  },
+  {
+    "id": 7,
+    "slug": "next-js-fullstack",
+    "title": {
+      "pt": "Next.js (Fullstack Framework)",
+      "en": "Next.js"
+    },
+    "category": "Front-end",
+    "description": {
+      "pt": "Framework React para produção.",
+      "en": "React framework for production."
+    },
+    "descricaoCompleta": {
+      "pt": "App Router, SSR.",
+      "en": "App Router, SSR."
+    },
+    "modulos": [
+      "Módulo 1",
+      "Módulo 2",
+      "Módulo 3",
+      "Módulo 4"
+    ],
+    "duration": "35h",
+    "level": {
+      "pt": "Avançado",
+      "en": "Advanced"
+    },
+    "image": "https://images.unsplash.com/photo-1649180556628-9ba704115795?auto=format&fit=crop&w=800&q=80",
+    "aulas": [],
+    "quiz": [],
+    "_id": "1766510293132kw5s4",
+    "createdAt": "2025-12-23T17:18:13.132Z"
+  },
+  {
+    "id": 8,
+    "slug": "tailwind-css",
+    "title": {
+      "pt": "Tailwind CSS",
+      "en": "Tailwind CSS"
+    },
+    "category": "Front-end",
+    "description": {
+      "pt": "Estilização rápida.",
+      "en": "Fast styling."
+    },
+    "descricaoCompleta": {
+      "pt": "Utility-first CSS.",
+      "en": "Utility-first CSS."
+    },
+    "modulos": [
+      "Módulo 1",
+      "Módulo 2",
+      "Módulo 3",
+      "Módulo 4"
+    ],
+    "duration": "20h",
+    "level": {
+      "pt": "Iniciante",
+      "en": "Beginner"
+    },
+    "image": "https://images.unsplash.com/photo-1587620962725-abab7fe55159?auto=format&fit=crop&w=800&q=80",
+    "aulas": [],
+    "quiz": [],
+    "_id": "1766510293134uiru3",
+    "createdAt": "2025-12-23T17:18:13.134Z"
+  },
+  {
+    "id": 9,
+    "slug": "node-js-express",
+    "title": {
+      "pt": "Node.js & Express",
+      "en": "Node.js & Express"
+    },
+    "category": "Back-end",
+    "description": {
+      "pt": "JS no servidor.",
+      "en": "JS on server."
+    },
+    "descricaoCompleta": {
+      "pt": "APIs REST, Event Loop.",
+      "en": "REST APIs, Event Loop."
+    },
+    "modulos": [
+      "Módulo 1",
+      "Módulo 2",
+      "Módulo 3",
+      "Módulo 4"
+    ],
+    "duration": "40h",
+    "level": {
+      "pt": "Intermediário",
+      "en": "Intermediate"
+    },
+    "image": "https://images.unsplash.com/photo-1627398242454-45a1465c2479?auto=format&fit=crop&w=800&q=80",
+    "aulas": [],
+    "quiz": [],
+    "_id": "1766510293135mju9v",
+    "createdAt": "2025-12-23T17:18:13.135Z"
+  },
+  {
+    "id": 10,
+    "slug": "postgresql-sql",
+    "title": {
+      "pt": "PostgreSQL (SQL)",
+      "en": "PostgreSQL"
+    },
+    "category": "Banco de Dados",
+    "description": {
+      "pt": "Bancos relacionais.",
+      "en": "Relational DBs."
+    },
+    "descricaoCompleta": {
+      "pt": "SQL, Joins, ACID.",
+      "en": "SQL, Joins, ACID."
+    },
+    "modulos": [
+      "Módulo 1",
+      "Módulo 2",
+      "Módulo 3",
+      "Módulo 4"
+    ],
+    "duration": "35h",
+    "level": {
+      "pt": "Intermediário",
+      "en": "Intermediate"
+    },
+    "image": "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?auto=format&fit=crop&w=800&q=80",
+    "aulas": [],
+    "quiz": [],
+    "_id": "176651029313807qzf",
+    "createdAt": "2025-12-23T17:18:13.138Z"
+  },
+  {
+    "id": 11,
+    "slug": "mongodb-nosql",
+    "title": {
+      "pt": "MongoDB (NoSQL)",
+      "en": "MongoDB"
+    },
+    "category": "Banco de Dados",
+    "description": {
+      "pt": "Bancos NoSQL.",
+      "en": "NoSQL DBs."
+    },
+    "descricaoCompleta": {
+      "pt": "Documentos, Sharding.",
+      "en": "Documents, Sharding."
+    },
+    "modulos": [
+      "Módulo 1",
+      "Módulo 2",
+      "Módulo 3",
+      "Módulo 4"
+    ],
+    "duration": "25h",
+    "level": {
+      "pt": "Intermediário",
+      "en": "Intermediate"
+    },
+    "image": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80",
+    "aulas": [],
+    "quiz": [],
+    "_id": "1766510293141qi17y",
+    "createdAt": "2025-12-23T17:18:13.141Z"
+  },
+  {
+    "id": 12,
+    "slug": "prisma-orm",
+    "title": {
+      "pt": "Prisma ORM",
+      "en": "Prisma ORM"
+    },
+    "category": "Back-end",
+    "description": {
+      "pt": "Modern Data Access.",
+      "en": "Modern Data Access."
+    },
+    "descricaoCompleta": {
+      "pt": "Type-safety, Migrations.",
+      "en": "Type-safety, Migrations."
+    },
+    "modulos": [
+      "Módulo 1",
+      "Módulo 2",
+      "Módulo 3",
+      "Módulo 4"
+    ],
+    "duration": "15h",
+    "level": {
+      "pt": "Intermediário",
+      "en": "Intermediate"
+    },
+    "image": "https://images.unsplash.com/photo-1506729623306-b5a934d88b53?auto=format&fit=crop&w=800&q=80",
+    "aulas": [],
+    "quiz": [],
+    "_id": "1766510293143dl6vm",
+    "createdAt": "2025-12-23T17:18:13.143Z"
+  },
+  {
+    "id": 13,
+    "slug": "arquitetura-de-software",
+    "title": {
+      "pt": "Arquitetura de Software",
+      "en": "Software Architecture"
+    },
+    "category": "Engenharia",
+    "description": {
+      "pt": "Sistemas sustentáveis.",
+      "en": "Sustainable systems."
+    },
+    "descricaoCompleta": {
+      "pt": "SOLID, Clean Arch.",
+      "en": "SOLID, Clean Arch."
+    },
+    "modulos": [
+      "Módulo 1",
+      "Módulo 2",
+      "Módulo 3",
+      "Módulo 4"
+    ],
+    "duration": "45h",
+    "level": {
+      "pt": "Avançado",
+      "en": "Advanced"
+    },
+    "image": "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=800&q=80",
+    "aulas": [],
+    "quiz": [],
+    "_id": "1766510293145sw1yh",
+    "createdAt": "2025-12-23T17:18:13.145Z"
+  },
+  {
+    "id": 14,
+    "slug": "seguranca-autenticacao",
+    "title": {
+      "pt": "Segurança e Autenticação",
+      "en": "Security"
+    },
+    "category": "Segurança",
+    "description": {
+      "pt": "Proteja seus dados.",
+      "en": "Protect your data."
+    },
+    "descricaoCompleta": {
+      "pt": "OAuth2, JWT.",
+      "en": "OAuth2, JWT."
+    },
+    "modulos": [
+      "Módulo 1",
+      "Módulo 2",
+      "Módulo 3",
+      "Módulo 4"
+    ],
+    "duration": "30h",
+    "level": {
+      "pt": "Avançado",
+      "en": "Advanced"
+    },
+    "image": "https://images.unsplash.com/photo-1614064641938-3bcee52970f9?auto=format&fit=crop&w=800&q=80",
+    "aulas": [],
+    "quiz": [],
+    "_id": "1766510293148ixilt",
+    "createdAt": "2025-12-23T17:18:13.148Z"
+  },
+  {
+    "id": 15,
+    "slug": "docker-containers",
+    "title": {
+      "pt": "Docker & Containers",
+      "en": "Docker"
+    },
+    "category": "DevOps",
+    "description": {
+      "pt": "Ambientes isolados.",
+      "en": "Isolated environments."
+    },
+    "descricaoCompleta": {
+      "pt": "Imagens, Containers.",
+      "en": "Images, Containers."
+    },
+    "modulos": [
+      "Módulo 1",
+      "Módulo 2",
+      "Módulo 3",
+      "Módulo 4"
+    ],
+    "duration": "25h",
+    "level": {
+      "pt": "Intermediário",
+      "en": "Intermediate"
+    },
+    "image": "https://images.unsplash.com/photo-1605745341112-85968b19335b?auto=format&fit=crop&w=800&q=80",
+    "aulas": [],
+    "quiz": [],
+    "_id": "1766510293150jht57",
+    "createdAt": "2025-12-23T17:18:13.150Z"
+  },
+  {
+    "id": 16,
+    "slug": "aws-cloud-foundation",
+    "title": {
+      "pt": "AWS Cloud Foundation",
+      "en": "AWS Cloud"
+    },
+    "category": "Cloud",
+    "description": {
+      "pt": "Nuvem líder.",
+      "en": "Leading cloud."
+    },
+    "descricaoCompleta": {
+      "pt": "EC2, S3, Lambda.",
+      "en": "EC2, S3, Lambda."
+    },
+    "modulos": [
+      "Módulo 1",
+      "Módulo 2",
+      "Módulo 3",
+      "Módulo 4"
+    ],
+    "duration": "40h",
+    "level": {
+      "pt": "Intermediário",
+      "en": "Intermediate"
+    },
+    "image": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80",
+    "aulas": [],
+    "quiz": [],
+    "_id": "1766510293151ti8vh",
+    "createdAt": "2025-12-23T17:18:13.151Z"
+  },
+  {
+    "id": 17,
+    "slug": "react-native-mobile",
+    "title": {
+      "pt": "React Native (Mobile)",
+      "en": "React Native"
+    },
+    "category": "Mobile",
+    "description": {
+      "pt": "Apps nativos com JS.",
+      "en": "Native apps with JS."
+    },
+    "descricaoCompleta": {
+      "pt": "iOS, Android.",
+      "en": "iOS, Android."
+    },
+    "modulos": [
+      "Módulo 1",
+      "Módulo 2",
+      "Módulo 3",
+      "Módulo 4"
+    ],
+    "duration": "40h",
+    "level": {
+      "pt": "Intermediário",
+      "en": "Intermediate"
+    },
+    "image": "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=800&q=80",
+    "aulas": [],
+    "quiz": [],
+    "_id": "1766510293154215qt",
+    "createdAt": "2025-12-23T17:18:13.154Z"
+  },
+  {
+    "id": 18,
+    "slug": "testes-automatizados",
+    "title": {
+      "pt": "Testes Automatizados",
+      "en": "Automated Testing"
+    },
+    "category": "QA/Testing",
+    "description": {
+      "pt": "Garanta qualidade.",
+      "en": "Ensure quality."
+    },
+    "descricaoCompleta": {
+      "pt": "Jest, Cypress.",
+      "en": "Jest, Cypress."
+    },
+    "modulos": [
+      "Módulo 1",
+      "Módulo 2",
+      "Módulo 3",
+      "Módulo 4"
+    ],
+    "duration": "30h",
+    "level": {
+      "pt": "Intermediário",
+      "en": "Intermediate"
+    },
+    "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=800&q=80",
+    "aulas": [],
+    "quiz": [],
+    "_id": "17665102931568lmrr",
+    "createdAt": "2025-12-23T17:18:13.156Z"
+  },
+  {
+    "id": 19,
+    "slug": "ci-cd-pipelines",
+    "title": {
+      "pt": "CI/CD Pipelines",
+      "en": "CI/CD"
+    },
+    "category": "DevOps",
+    "description": {
+      "pt": "Automatize o ciclo.",
+      "en": "Automate cycle."
+    },
+    "descricaoCompleta": {
+      "pt": "GitHub Actions.",
+      "en": "GitHub Actions."
+    },
+    "modulos": [
+      "Módulo 1",
+      "Módulo 2",
+      "Módulo 3",
+      "Módulo 4"
+    ],
+    "duration": "25h",
+    "level": {
+      "pt": "Avançado",
+      "en": "Advanced"
+    },
+    "image": "https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?auto=format&fit=crop&w=800&q=80",
+    "aulas": [],
+    "quiz": [],
+    "_id": "1766510293158i474o",
+    "createdAt": "2025-12-23T17:18:13.158Z"
+  },
+  {
+    "id": 20,
+    "slug": "python-automacao",
+    "title": {
+      "pt": "Python para Automação",
+      "en": "Python Automation"
+    },
+    "category": "Automação",
+    "description": {
+      "pt": "Simplifique tarefas.",
+      "en": "Simplify tasks."
+    },
+    "descricaoCompleta": {
+      "pt": "Scripts, Scraping.",
+      "en": "Scripts, Scraping."
+    },
+    "modulos": [
+      "Módulo 1",
+      "Módulo 2",
+      "Módulo 3",
+      "Módulo 4"
+    ],
+    "duration": "20h",
+    "level": {
+      "pt": "Iniciante",
+      "en": "Beginner"
+    },
+    "image": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
+    "aulas": [],
+    "quiz": [],
+    "_id": "1766510293160tjyh3",
+    "createdAt": "2025-12-23T17:18:13.160Z"
+  },
+  {
+    "id": 21,
+    "slug": "ia-para-desenvolvedores",
+    "title": {
+      "pt": "IA para Desenvolvedores",
+      "en": "AI for Developers"
+    },
+    "category": "IA",
+    "description": {
+      "pt": "Integre IA.",
+      "en": "Integrate AI."
+    },
+    "descricaoCompleta": {
+      "pt": "LLMs, OpenAI.",
+      "en": "LLMs, OpenAI."
+    },
+    "modulos": [
+      "Módulo 1",
+      "Módulo 2",
+      "Módulo 3",
+      "Módulo 4"
+    ],
+    "duration": "25h",
+    "level": {
+      "pt": "Avançado",
+      "en": "Advanced"
+    },
+    "image": "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80",
+    "aulas": [],
+    "quiz": [],
+    "_id": "1766510293162duqqg",
+    "createdAt": "2025-12-23T17:18:13.162Z"
+  },
+  {
+    "id": 22,
+    "slug": "carreira-soft-skills",
+    "title": {
+      "pt": "Carreira & Soft Skills",
+      "en": "Career & Soft Skills"
+    },
+    "category": "Carreira",
+    "description": {
+      "pt": "Cresça na profissão.",
+      "en": "Grow in career."
+    },
+    "descricaoCompleta": {
+      "pt": "LinkedIn, Agile.",
+      "en": "LinkedIn, Agile."
+    },
+    "modulos": [
+      "Módulo 1",
+      "Módulo 2",
+      "Módulo 3",
+      "Módulo 4"
+    ],
+    "duration": "15h",
+    "level": {
+      "pt": "Iniciante",
+      "en": "Beginner"
+    },
+    "image": "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=800&q=80",
+    "aulas": [],
+    "quiz": [],
+    "_id": "17665102931645mqc2",
+    "createdAt": "2025-12-23T17:18:13.164Z"
+  }
+]

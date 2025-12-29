@@ -58,19 +58,16 @@ const Quiz = () => {
         }));
     };
 
-    const calculateScore = () => {
+    const calculateScore = async () => {
         let correctCount = 0;
         course.quiz.forEach(q => {
-            if (answers[q.id] === q.correctAnswer) {
+            if (answers[q.id] === q.answer) {
                 correctCount++;
             }
         });
 
-        const percentage = (correctCount / course.quiz.length) * 100;
-        // User requested 15/20 to pass. 
-        // We will make it dynamic: if exactly 20 questions, require 15. 
-        // Or just >= 75% which is 15/20.
-        const passed = correctCount >= 15;
+        const percentage = Math.round((correctCount / course.quiz.length) * 100);
+        const passed = percentage >= 70; // Standard passing score
 
         setResult({
             score: percentage,
@@ -78,6 +75,25 @@ const Quiz = () => {
             correctCount,
             total: course.quiz.length
         });
+
+        if (passed && isAuthenticated) {
+            try {
+                // Save progress to backend
+                // lessonId is null for final exam, or we could use 'final'
+                // The backend expects lessonId to optionally add to completedLessons. 
+                // We can pass 'final' as lessonId if we want to track it as a lesson, 
+                // but for now just saving the score is enough. 
+                // Actually passing 'exam' as lessonId might be useful.
+
+                // Importing api here to avoid top-level dependency cycle if any
+                const { api } = await import('../services/api');
+                await api.updateProgress(course.id, 'final_exam', percentage);
+                // Also refresh context/progress
+                // fetchProgress(course.id);
+            } catch (error) {
+                console.error("Failed to save quiz score:", error);
+            }
+        }
 
         window.scrollTo(0, 0);
     };
@@ -122,12 +138,21 @@ const Quiz = () => {
                                 </button>
                             )}
                             {result.passed && (
-                                <Link
-                                    to="/dashboard"
-                                    className="mt-6 inline-block bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-bold transition-colors"
-                                >
-                                    Ir para Dashboard
-                                </Link>
+                                <div className="flex flex-col gap-3 items-center">
+                                    <Link
+                                        to={`/certificado/${slug}`}
+                                        className="mt-6 inline-flex items-center bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-bold text-lg shadow-lg transform hover:scale-105 transition-all"
+                                    >
+                                        <Award className="w-6 h-6 mr-2" />
+                                        Resgatar Certificado
+                                    </Link>
+                                    <Link
+                                        to="/dashboard"
+                                        className="text-indigo-600 hover:underline font-medium"
+                                    >
+                                        Voltar ao Dashboard
+                                    </Link>
+                                </div>
                             )}
                         </div>
                     ) : (

@@ -7,10 +7,13 @@
     "nav.courses": "Cursos",
     "nav.contact": "Contacto",
     "nav.start": "Empezar Ahora",
+    "nav.login": "Iniciar Sesión",
+    "nav.myArea": "Mi Área",
     "nav.logout": "Cerrar Sesión",
     "footer.rights": "Todos los derechos reservados.",
     "footer.about": "La mejor plataforma para aprender programación de cero a profesional.",
     "footer.quickLinks": "Enlaces Rápidos",
+    "footer.socials": "Redes Sociales",
     "footer.contact": "Contacto",
     "home.features.title": "¿Por qué elegir AcademiaDevPro?",
     "home.features.mentor.title": "Mentoría Especializada",
@@ -20,6 +23,9 @@
     "home.features.community.title": "Comunidad Activa",
     "home.features.community.desc": "Intercambia experiencias y crece junto con otros desarrolladores.",
     "home.categories.title": "Nuestras Categorías",
+    "home.categories.frontend.desc": "Crea interfaces increíbles y responsivas para web y móvil.",
+    "home.categories.backend.desc": "Domina el servidor, bases de datos y lógica de negocio.",
+    "home.categories.datascience.desc": "Transforma datos en insights valiosos e inteligencia.",
     "courses.searchPlaceholder": "Buscar cursos...",
     "courses.filters.all": "Todos",
     "courses.filters.frontend": "Front-end",
@@ -96,19 +102,59 @@
     },
     "lgpd": {
         "cookieBanner": {
-            "text": "Utilizamos cookies para mejorar tu experiencia. Al continuar, aceptas nuestra",
+            "text": "Utilizamos cookies para mejorar su experiencia. Al continuar, acepta nuestra",
             "link": "Política de Privacidad",
             "accept": "Aceptar"
         },
         "privacy": {
             "title": "Política de Privacidad",
-            "intro": "Esta Política de Privacidad describe cómo recopilamos, usamos y protegemos tu información."
+            "intro": "Esta Política de Privacidad fue elaborada en cumplimiento con la Ley Federal n. 13.709/2018 (Ley General de Protección de Datos Personales - LGPD), Marco Civil de Internet (Ley n. 12.965/2014) y el Reglamento General de Protección de Datos (GDPR) para usuarios europeos.",
+            "collection": {
+                "title": "Recolección de Datos",
+                "text": "Recopilamos información esencial para la prestación de servicios, como nombre, correo electrónico y datos de navegación, respetando los principios de necesidad y transparencia."
+            },
+            "usage": {
+                "title": "Uso y Tratamiento de Datos",
+                "text": "Sus datos se utilizan para autenticación, mejora de la experiencia del usuario y comunicación sobre cursos. Garantizamos medidas de seguridad técnicas y administrativas para proteger sus datos personales (Ley de Delitos Cibernéticos nº 12.737/2012)."
+            },
+            "rights": {
+                "title": "Sus Derechos",
+                "text": "Conforme a la LGPD, usted tiene derecho a la confirmación, acceso, corrección, anonimización, bloqueo o eliminación de datos innecesarios. Para ejercer sus derechos, contáctenos a través de nuestros canales (CCPA aplicable para residentes de California)."
+            },
+            "contact": {
+                "title": "4. Canal de Comunicación (Encargado de Datos)",
+                "text": "Para ejercer cualquiera de sus derechos mencionados anteriormente, o aclarar dudas sobre cómo tratamos sus datos, puede contactar a nuestro Encargado de Protección de Datos (DPO) a través del correo: devproacademy@outlook.com."
+            },
+            "responsible": {
+                "title": "5. Identificación del Responsable",
+                "text": "Este sitio es operado por DevPro Academy."
+            }
         },
         "terms": {
             "title": "Términos de Uso",
-            "intro": "Al acceder a nuestro sitio, aceptas cumplir con estos términos de servicio."
+            "intro": "Bienvenido a DevPro Academy. Estos Términos de Uso regulan el acceso y uso de nuestra plataforma, en conformidad con el Código de Defensa del Consumidor (Ley n. 8.078/1990) y la Ley de Comercio Electrónico (Decreto n. 7.962/2013).",
+            "acceptance": {
+                "title": "Aceptación de los Términos",
+                "text": "Al utilizar nuestros servicios, usted acepta integralmente las presentes normas y se compromete a observarlas, bajo riesgo de aplicación de las penas correspondientes."
+            },
+            "ip": {
+                "title": "2. Propiedad Intelectual y Derechos de Autor",
+                "intro": "Todo el contenido disponible en DevPro Academy — incluyendo videos, textos, códigos fuente, logotipos, gráficos y materiales didácticos — es propiedad exclusiva de DevPro Academy Ltda o de sus licenciantes, estando protegido por las leyes brasileñas y tratados internacionales de derechos de autor y propiedad industrial.",
+                "personal": "Uso Personal e Intransferible: El acceso al curso es individual. Está prohibido compartir credenciales de acceso (login y contraseña) con terceros.",
+                "prohibitions": "Prohibiciones: Está estrictamente prohibido copiar, reproducir, distribuir, transmitir, vender, licenciar o explotar cualquier contenido del sitio para fines comerciales o públicos sin autorización previa por escrito.",
+                "download": "Descarga de Materiales: La descarga de materiales solo está permitida cuando se indique expresamente en la plataforma (ej: PDFs y archivos de apoyo). Esto no transfiere la titularidad del contenido al usuario.",
+                "penalties": "Penalidades: El incumplimiento de estas reglas podrá resultar en la suspensión inmediata de la cuenta, sin derecho a reembolso, además de eventuales medidas judiciales pertinentes por daños morales y materiales."
+            },
+            "refund": {
+                "title": "3. Política de Cancelación y Reembolso",
+                "intro": "En conformidad con el Código de Defensa del Consumidor y el Decreto de Comercio Electrónico (nº 7.962/2013), garantizamos su derecho de desistimiento:",
+                "deadline": "Plazo de Arrepentimiento: Usted tiene el plazo de 7 (siete) días corridos, a contar desde la fecha de compra o de la liberación del acceso al curso, para solicitar la cancelación y el reembolso integral del valor pagado.",
+                "request": "Cómo solicitar: La solicitud debe ser enviada al correo devproacademy@outlook.com con el asunto 'Solicitud de Reembolso' y los datos de la compra.",
+                "method": "Forma de Reembolso: El reembolso será procesado a través del mismo método de pago utilizado en la compra (devolución en tarjeta de crédito o depósito en cuenta para pagos vía boleto/Pix).",
+                "access": "Acceso al Contenido: Tras la solicitud de reembolso, el acceso a la plataforma y a los materiales del curso será interrumpido inmediatamente."
+            }
         },
-        "disclaimer": "Este es un proyecto de demostración. No uses datos reales sensibles."
+        "disclaimer": "Este proyecto sigue las directrices de la Ley Brasileña de Inclusión (Ley nº 13.146/2015) buscando accesibilidad digital."
     },
     "footer": {
         "about": "Transformando carreras a través de educación tecnológica de alta calidad.",

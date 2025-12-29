@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
+import { api } from '../services/api';
+
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -21,11 +23,11 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
     }, []);
 
-    const login = (token, userData) => {
-        setToken(token);
+    const login = (userData, accessToken) => {
+        setToken(accessToken);
         setUser(userData);
         setIsAuthenticated(true);
-        localStorage.setItem('token', token);
+        localStorage.setItem('token', accessToken);
         localStorage.setItem('user', JSON.stringify(userData));
     };
 
@@ -45,25 +47,39 @@ export const AuthProvider = ({ children }) => {
     // Progress Tracking
     const [completedLessons, setCompletedLessons] = useState({}); // { 'courseId': [0, 1, 2] }
 
-    useEffect(() => {
-        const storedProgress = localStorage.getItem('completedLessons');
-        if (storedProgress) {
-            setCompletedLessons(JSON.parse(storedProgress));
+    const fetchProgress = async (courseId) => {
+        if (!isAuthenticated) return;
+        try {
+            const progress = await api.getProgress(courseId);
+            setCompletedLessons(prev => ({
+                ...prev,
+                [courseId]: progress.completedLessons || []
+            }));
+        } catch (error) {
+            console.error("Error fetching progress:", error);
         }
-    }, []);
+    };
 
-    const markLessonComplete = (courseId, lessonIndex) => {
+    const markLessonComplete = async (courseId, lessonIndex) => {
+        // Optimistic update
         setCompletedLessons(prev => {
             const courseProgress = prev[courseId] || [];
             if (courseProgress.includes(lessonIndex)) return prev;
-
-            const newProgress = {
+            return {
                 ...prev,
                 [courseId]: [...courseProgress, lessonIndex]
             };
-            localStorage.setItem('completedLessons', JSON.stringify(newProgress));
-            return newProgress;
         });
+
+        if (isAuthenticated) {
+            try {
+                // lessonId in this simple app is just the index
+                await api.updateProgress(courseId, lessonIndex);
+            } catch (error) {
+                console.error("Failed to save progress:", error);
+                // Rollback if needed, but for now we keep optimistic state
+            }
+        }
     };
 
     const isLessonCompleted = (courseId, lessonIndex) => {
@@ -71,7 +87,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, token, isAuthenticated, login, logout, updateUser, loading, markLessonComplete, isLessonCompleted, completedLessons }}>
+        <AuthContext.Provider value={{ user, token, isAuthenticated, login, logout, updateUser, loading, markLessonComplete, isLessonCompleted, completedLessons, fetchProgress }}>
             {children}
         </AuthContext.Provider>
     );

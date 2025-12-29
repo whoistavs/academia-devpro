@@ -7,10 +7,13 @@
     "nav.courses": "Cursos",
     "nav.contact": "Contato",
     "nav.start": "Começar Agora",
+    "nav.login": "Entrar",
+    "nav.myArea": "Minha Área",
     "nav.logout": "Sair",
     "footer.rights": "Todos os direitos reservados.",
     "footer.about": "A melhor plataforma para aprender programação do zero ao profissional.",
     "footer.quickLinks": "Links Rápidos",
+    "footer.socials": "Redes Sociais",
     "footer.contact": "Contato",
     "home.features.title": "Por que escolher a DevPro Academy?",
     "home.features.mentor.title": "Mentoria Especializada",
@@ -20,6 +23,9 @@
     "home.features.community.title": "Comunidade Ativa",
     "home.features.community.desc": "Troque experiências e cresça junto com outros desenvolvedores.",
     "home.categories.title": "Nossas Categorias",
+    "home.categories.frontend.desc": "Crie interfaces incríveis e responsivas para web e mobile.",
+    "home.categories.backend.desc": "Domine o servidor, bancos de dados e lógica de negócios.",
+    "home.categories.datascience.desc": "Transforme dados em insights valiosos e inteligência.",
     "courses.description": "Explore nossos cursos e transforme sua carreira com conhecimento prático.",
     "courses.searchPlaceholder": "Buscar pelo nome do curso...",
     "courses.filters.all": "Todos",
@@ -119,7 +125,7 @@
             },
             "contact": {
                 "title": "4. Canal de Comunicação (Encarregado de Dados)",
-                "text": "Para exercer qualquer um dos seus direitos mencionados acima, ou tirar dúvidas sobre como tratamos seus dados, você pode entrar em contato com o nosso Encarregado de Proteção de Dados (DPO) através do e-mail: dpo@devproacademy.com."
+                "text": "Para exercer qualquer um dos seus direitos mencionados acima, ou tirar dúvidas sobre como tratamos seus dados, você pode entrar em contato com o nosso Encarregado de Proteção de Dados (DPO) através do e-mail: devproacademy@outlook.com."
             },
             "responsible": {
                 "title": "5. Identificação do Responsável",
@@ -145,7 +151,7 @@
                 "title": "3. Política de Cancelamento e Reembolso",
                 "intro": "Em conformidade com o Código de Defesa do Consumidor e o Decreto do E-commerce (nº 7.962/2013), garantimos o seu direito de desistência:",
                 "deadline": "Prazo de Arrependimento: Você tem o prazo de 7 (sete) dias corridos, a contar da data da compra ou da liberação do acesso ao curso, para solicitar o cancelamento e o reembolso integral do valor pago.",
-                "request": "Como solicitar: A solicitação deve ser enviada para o e-mail contato@devproacademy.com com o assunto 'Solicitação de Reembolso' e os dados da compra.",
+                "request": "Como solicitar: A solicitação deve ser enviada para o e-mail devproacademy@outlook.com com o assunto 'Solicitação de Reembolso' e os dados da compra.",
                 "method": "Forma de Estorno: O reembolso será processado através do mesmo método de pagamento utilizado na compra (estorno no cartão de crédito ou depósito em conta para pagamentos via boleto/Pix).",
                 "access": "Acesso ao Conteúdo: Após a solicitação de reembolso, o acesso à plataforma e aos materiais do curso será interrompido imediatamente."
             }

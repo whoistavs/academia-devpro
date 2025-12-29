@@ -1,13 +1,29 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Clock, BarChart, BookOpen, CheckCircle, PlayCircle, ArrowLeft, User } from 'lucide-react';
-import coursesData from '../data/cursos.json';
+import { api } from '../services/api';
 import { useTranslation } from '../context/LanguageContext';
 
 const CourseDetails = () => {
     const { slug } = useParams();
     const { language, t } = useTranslation();
     const currentLang = language || 'pt';
+    const [course, setCourse] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchCourse = async () => {
+            try {
+                const data = await api.getCourse(slug);
+                setCourse(data);
+            } catch (error) {
+                console.error("Error loading course:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchCourse();
+    }, [slug]);
 
     // Helper to get content based on language
     const getContent = (data) => {
@@ -17,12 +33,18 @@ const CourseDetails = () => {
         return data[langCode] || data['pt'] || data['en'] || Object.values(data)[0];
     };
 
-    const course = coursesData.find(c => c.slug === slug);
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-screen bg-gray-50 dark:bg-gray-900">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+            </div>
+        );
+    }
 
     if (!course) {
         return (
-            <main className="flex-grow flex flex-col items-center justify-center pt-20">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('courses.noCourses')}</h2>
+            <main className="flex-grow flex flex-col items-center justify-center pt-20 bg-gray-50 dark:bg-gray-900 h-screen">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">{t('courses.noCourses')}</h2>
                 <Link to="/cursos" className="text-indigo-600 hover:text-indigo-800 font-medium">
                     {t('courseDetails.back')}
                 </Link>

@@ -14,21 +14,21 @@ const Home = () => {
             id: 1,
             name: t('courses.filters.frontend'),
             icon: <Layers className="h-12 w-12 text-blue-500" />,
-            description: 'Crie interfaces incríveis e responsivas para web e mobile.', // Keeping desc hardcoded for now or add to json if critical
+            description: t('home.categories.frontend.desc'),
             color: 'bg-blue-50'
         },
         {
             id: 2,
             name: t('courses.filters.backend'),
             icon: <Database className="h-12 w-12 text-green-500" />,
-            description: 'Domine o servidor, bancos de dados e lógica de negócios.',
+            description: t('home.categories.backend.desc'),
             color: 'bg-green-50'
         },
         {
             id: 3,
             name: t('courses.filters.datascience'),
             icon: <Cpu className="h-12 w-12 text-purple-500" />,
-            description: 'Transforme dados em insights valiosos e inteligência.',
+            description: t('home.categories.datascience.desc'),
             color: 'bg-purple-50'
         }
     ];

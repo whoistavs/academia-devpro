@@ -1,17 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import CourseCard from '../components/CourseCard';
-import coursesData from '../data/cursos.json';
+import { api } from '../services/api';
 import { useTranslation } from '../context/LanguageContext';
 import { Search, Filter, BookOpen, Clock, BarChart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Courses = () => {
     const { t, language } = useTranslation();
+    const [courses, setCourses] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('Todas');
     const currentLang = language || 'pt';
+
+    useEffect(() => {
+        const fetchCourses = async () => {
+            try {
+                const data = await api.getCourses();
+                setCourses(data);
+            } catch (error) {
+                console.error("Error loading courses:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchCourses();
+    }, []);
 
     // Helper to get content based on language
     const getContent = (data) => {
@@ -34,7 +50,7 @@ const Courses = () => {
         return map[cat] || cat;
     };
 
-    const filteredCourses = coursesData.filter(course => {
+    const filteredCourses = courses.filter(course => {
         const matchesSearch = getContent(course.title).toLowerCase().includes(searchTerm.toLowerCase()) ||
             getContent(course.description).toLowerCase().includes(searchTerm.toLowerCase());
         const matchesCategory = selectedCategory === 'Todas' || course.category === selectedCategory;
@@ -80,16 +96,24 @@ const Courses = () => {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {filteredCourses.map(course => (
-                        <CourseCard key={course.id} course={course} getContent={getContent} />
-                    ))}
-                </div>
-
-                {filteredCourses.length === 0 && (
-                    <div className="text-center py-20">
-                        <p className="text-gray-500 dark:text-gray-400 text-lg">{t('courses.noCourses')}</p>
+                {loading ? (
+                    <div className="flex justify-center items-center h-64">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
                     </div>
+                ) : (
+                    <>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {filteredCourses.map(course => (
+                                <CourseCard key={course.id} course={course} getContent={getContent} />
+                            ))}
+                        </div>
+
+                        {filteredCourses.length === 0 && (
+                            <div className="text-center py-20">
+                                <p className="text-gray-500 dark:text-gray-400 text-lg">{t('courses.noCourses')}</p>
+                            </div>
+                        )}
+                    </>
                 )}
             </div>
         </main>

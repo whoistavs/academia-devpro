@@ -7,10 +7,13 @@
     "nav.courses": "Cursos",
     "nav.contact": "Contacto",
     "nav.start": "Começar Agora",
+    "nav.login": "Entrar",
+    "nav.myArea": "A Minha Área",
     "nav.logout": "Sair",
     "footer.rights": "Todos os direitos reservados.",
     "footer.about": "A melhor plataforma para aprender programação do zero ao profissional.",
     "footer.quickLinks": "Links Rápidos",
+    "footer.socials": "Redes Sociais",
     "footer.contact": "Contacto",
     "home.features.title": "Porquê escolher a AcademiaDevPro?",
     "home.features.mentor.title": "Mentoria Especializada",
@@ -20,6 +23,9 @@
     "home.features.community.title": "Comunidade Ativa",
     "home.features.community.desc": "Troque experiências e cresça junto com outros programadores.",
     "home.categories.title": "As Nossas Categorias",
+    "home.categories.frontend.desc": "Crie interfaces incríveis e responsivas para web e telemóvel.",
+    "home.categories.backend.desc": "Domine o servidor, bases de dados e lógica de negócio.",
+    "home.categories.datascience.desc": "Transforme dados em informações valiosas e inteligência.",
     "courses.searchPlaceholder": "Pesquisar cursos...",
     "courses.filters.all": "Todos",
     "courses.filters.frontend": "Front-end",
@@ -102,13 +108,53 @@
         },
         "privacy": {
             "title": "Política de Privacidade",
-            "intro": "Esta Política de Privacidade descreve como recolhemos, usamos e protegemos as suas informações."
+            "intro": "Esta Política de Privacidade foi elaborada em conformidade com a Lei Federal n. 13.709/2018 (Lei Geral de Proteção de Dados Pessoais - LGPD), Marco Civil da Internet (Lei n. 12.965/2014) e Regulamento Geral de Proteção de Dados (GDPR) para utilizadores europeus.",
+            "collection": {
+                "title": "Recolha de Dados",
+                "text": "Recolhemos informações essenciais para a prestação dos serviços, como nome, e-mail e dados de navegação, respeitando os princípios da necessidade e transparência."
+            },
+            "usage": {
+                "title": "Uso e Tratamento dos Dados",
+                "text": "Os seus dados são utilizados para autenticação, melhoria da experiência do utilizador e comunicação sobre cursos. Garantimos medidas de segurança técnicas e administrativas para proteger os seus dados pessoais (Lei de Crimes Cibernéticos nº 12.737/2012)."
+            },
+            "rights": {
+                "title": "Os Seus Direitos",
+                "text": "Conforme a LGPD, tem direito à confirmação, acesso, correção, anonimização, bloqueio ou eliminação de dados desnecessários. Para exercer os seus direitos, entre em contacto através dos nossos canais (CCPA aplicável para residentes da Califórnia)."
+            },
+            "contact": {
+                "title": "4. Canal de Comunicação (Encarregado de Dados)",
+                "text": "Para exercer qualquer um dos seus direitos mencionados acima, ou tirar dúvidas sobre como tratamos os seus dados, pode entrar em contacto com o nosso Encarregado de Proteção de Dados (DPO) através do e-mail: devproacademy@outlook.com."
+            },
+            "responsible": {
+                "title": "5. Identificação do Responsável",
+                "text": "Este site é operado por DevPro Academy."
+            }
         },
         "terms": {
             "title": "Termos de Uso",
-            "intro": "Ao aceder ao nosso site, concorda em cumprir estes termos de serviço."
+            "intro": "Bem-vindo à DevPro Academy. Estes Termos de Uso regulam o acesso e uso da nossa plataforma, em conformidade com o Código de Defesa do Consumidor (Lei n. 8.078/1990) e Lei do E-commerce (Decreto n. 7.962/2013).",
+            "acceptance": {
+                "title": "Aceitação dos Termos",
+                "text": "Ao utilizar os nossos serviços, aceita integralmente as presentes normas e compromete-se a observá-las, sob risco de aplicação das penalidades cabíveis."
+            },
+            "ip": {
+                "title": "2. Propriedade Intelectual e Direitos de Autor",
+                "intro": "Todo o conteúdo disponibilizado na DevPro Academy — incluindo vídeos, textos, códigos-fonte, logotipos, gráficos e materiais didáticos — é de propriedade exclusiva de DevPro Academy Ltda ou de seus licenciantes, estando protegido pelas leis brasileiras e tratados internacionais de direitos de autor e propriedade industrial.",
+                "personal": "Uso Pessoal e Intransferível: O acesso ao curso é individual. É proibido partilhar credenciais de acesso (login e palavra-passe) com terceiros.",
+                "prohibitions": "Proibições: É estritamente proibido copiar, reproduzir, distribuir, transmitir, vender, licenciar ou explorar qualquer conteúdo do site para fins comerciais ou públicos sem autorização prévia por escrito.",
+                "download": "Download de Materiais: O download de materiais só é permitido quando expressamente indicado na plataforma (ex: PDFs e arquivos de apoio). Isso não transfere a titularidade do conteúdo ao utilizador.",
+                "penalties": "Penalidades: O incumprimento destas regras poderá resultar na suspensão imediata da conta, sem direito a reembolso, além de eventuais medidas judiciais cabíveis por danos morais e materiais."
+            },
+            "refund": {
+                "title": "3. Política de Cancelamento e Reembolso",
+                "intro": "Em conformidade com o Código de Defesa do Consumidor e o Decreto do E-commerce (nº 7.962/2013), garantimos o seu direito de desistência:",
+                "deadline": "Prazo de Arrependimento: Tem o prazo de 7 (sete) dias corridos, a contar da data da compra ou da libertação do acesso ao curso, para solicitar o cancelamento e o reembolso integral do valor pago.",
+                "request": "Como solicitar: A solicitação deve ser enviada para o e-mail devproacademy@outlook.com com o assunto 'Solicitação de Reembolso' e os dados da compra.",
+                "method": "Forma de Reembolso: O reembolso será processado através do mesmo método de pagamento utilizado na compra (estorno no cartão de crédito ou depósito em conta para pagamentos via boleto/Pix).",
+                "access": "Acesso ao Conteúdo: Após a solicitação de reembolso, o acesso à plataforma e aos materiais do curso será interrompido imediatamente."
+            }
         },
-        "disclaimer": "Este é um projeto de demonstração. Não utilize dados reais sensíveis."
+        "disclaimer": "Este projeto segue as diretrizes da Lei Brasileira de Inclusão (Lei nº 13.146/2015) procurando acessibilidade digital."
     },
     "footer": {
         "about": "A transformar carreiras através da educação em tecnologia de alta qualidade.",

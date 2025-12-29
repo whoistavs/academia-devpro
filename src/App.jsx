@@ -19,9 +19,12 @@ import React from 'react';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Terms from './pages/Terms';
 import AdminDashboard from './pages/AdminDashboard';
+import ProfessorDashboard from './pages/ProfessorDashboard';
+import CourseEditor from './pages/CourseEditor';
 import LessonView from './pages/LessonView';
 import Quiz from './pages/Quiz';
 import CookieBanner from './components/CookieBanner';
+import Certificate from './pages/Certificate';
 
 const Layout = () => {
   const { theme } = useTheme();
@@ -42,8 +45,12 @@ const Layout = () => {
         <Route path="/contato" element={<Contact />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/professor" element={<ProfessorDashboard />} />
+        <Route path="/professor/editor" element={<CourseEditor />} />
+        <Route path="/professor/editor/:id" element={<CourseEditor />} />
         <Route path="/privacidade" element={<PrivacyPolicy />} />
         <Route path="/termos" element={<Terms />} />
+        <Route path="/certificado/:slug" element={<Certificate />} />
       </Routes>
       <Footer />
       <CookieBanner />

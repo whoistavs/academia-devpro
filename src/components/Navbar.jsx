@@ -61,6 +61,12 @@ const Navbar = () => {
                                         <span>Admin</span>
                                     </Link>
                                 )}
+                                {(user?.role === 'professor' || user?.role === 'admin') && (
+                                    <Link to="/professor" className="flex items-center text-amber-600 hover:text-amber-800 dark:text-amber-400 dark:hover:text-amber-300 font-bold transition-colors">
+                                        <Code2 className="h-5 w-5 mr-1" />
+                                        <span>Professor</span>
+                                    </Link>
+                                )}
                                 <Link to="/dashboard" className="flex items-center text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium">
                                     {user.avatar ? (
                                         <div className="h-8 w-8 rounded-full overflow-hidden mr-2 border border-indigo-200 dark:border-indigo-700">
@@ -69,7 +75,7 @@ const Navbar = () => {
                                     ) : (
                                         <User className="h-5 w-5 mr-2" />
                                     )}
-                                    <span>Minha Área</span>
+                                    <span>{t('nav.myArea')}</span>
                                 </Link>
                                 <button
                                     onClick={handleLogout}
@@ -81,7 +87,7 @@ const Navbar = () => {
                         ) : (
                             <div className="flex items-center space-x-4">
                                 <Link to="/login" className="text-indigo-600 font-medium hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300">
-                                    Entrar
+                                    {t('nav.login')}
                                 </Link>
                                 <Link to="/cadastro" className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors">
                                     {t('nav.start')}
@@ -133,16 +139,19 @@ const Navbar = () => {
                                 {user?.role === 'admin' && (
                                     <Link to="/admin" onClick={() => setIsOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-red-600 font-bold hover:bg-gray-50 dark:hover:bg-gray-800">Admin</Link>
                                 )}
+                                {(user?.role === 'professor' || user?.role === 'admin') && (
+                                    <Link to="/professor" onClick={() => setIsOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-amber-600 font-bold hover:bg-gray-50 dark:hover:bg-gray-800">Professor</Link>
+                                )}
                                 <Link to="/dashboard" onClick={() => setIsOpen(false)} className="px-3 py-2 rounded-md text-base font-medium text-indigo-600 dark:text-indigo-400 font-bold hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center">
                                     {user.avatar && <img src={user.avatar} alt="Profile" className="h-6 w-6 rounded-full mr-2 object-cover" />}
-                                    Minha Área
+                                    {t('nav.myArea')}
                                 </Link>
                                 <button onClick={() => { handleLogout(); setIsOpen(false); }} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-500 hover:bg-gray-50 dark:hover:bg-gray-800">{t('nav.logout')}</button>
                             </>
                         ) : (
                             <>
                                 <div className="border-t border-gray-200 dark:border-gray-700 my-2"></div>
-                                <Link to="/login" onClick={() => setIsOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-gray-50 dark:hover:bg-gray-800">Entrar</Link>
+                                <Link to="/login" onClick={() => setIsOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-gray-50 dark:hover:bg-gray-800">{t('nav.login')}</Link>
                                 <Link to="/cadastro" onClick={() => setIsOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium bg-indigo-600 text-white hover:bg-indigo-700">{t('nav.start')}</Link>
                             </>
                         )}

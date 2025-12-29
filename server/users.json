@@ -28,11 +28,11 @@
   {
     "name": "Teste",
     "email": "suporte@adonairh.com",
-    "password": "$2a$08$OOXj0EaNel0VbnijjNiyNOpwWmalj/GVXGOazUK80XNHHmgA08qCC",
+    "password": "$2a$08$zpdNp4aHQ25y7XNkm4hqQOLnGd1q.PZ5it9d5utSKdHNv8riy5yym",
     "role": "student",
     "isVerified": false,
-    "verificationToken": "o1t7oh2stzmjim9cds",
-    "createdAt": "2025-12-23T13:24:13.169Z",
-    "_id": "1766496253169ydt5c"
+    "verificationToken": "9hvdpv06lscmjint1q2",
+    "createdAt": "2025-12-23T14:07:32.090Z",
+    "_id": "1766498852090v7zys"
   }
 ]

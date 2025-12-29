@@ -7,10 +7,13 @@
     "nav.courses": "Courses",
     "nav.contact": "Contact",
     "nav.start": "Start Now",
+    "nav.login": "Sign In",
+    "nav.myArea": "My Area",
     "nav.logout": "Logout",
     "footer.rights": "All rights reserved.",
     "footer.about": "The best platform to learn programming from zero to professional.",
     "footer.quickLinks": "Quick Links",
+    "footer.socials": "Social Media",
     "footer.contact": "Contact",
     "home.features.title": "Why choose DevPro Academy?",
     "home.features.mentor.title": "Specialized Mentorship",
@@ -20,6 +23,9 @@
     "home.features.community.title": "Active Community",
     "home.features.community.desc": "Exchange experiences and grow together with other developers.",
     "home.categories.title": "Our Categories",
+    "home.categories.frontend.desc": "Create amazing and responsive interfaces for web and mobile.",
+    "home.categories.backend.desc": "Master the server, databases, and business logic.",
+    "home.categories.datascience.desc": "Transform data into valuable insights and intelligence.",
     "courses.description": "Explore our courses and transform your career with practical knowledge.",
     "courses.searchPlaceholder": "Search by course name...",
     "courses.filters.all": "All",
@@ -103,33 +109,53 @@
         },
         "privacy": {
             "title": "Privacy Policy",
-            "intro": "This Privacy Policy describes how we collect, use, and protect your information.",
+            "intro": "This Privacy Policy was prepared in compliance with Federal Law No. 13.709/2018 (General Data Protection Law - LGPD), the Internet Bill of Rights (Law No. 12.965/2014), and the General Data Protection Regulation (GDPR) for European users.",
             "collection": {
                 "title": "Data Collection",
-                "text": "We collect information you provide directly to us, such as name and email when you register."
+                "text": "We collect essential information for the provision of services, such as name, email, and navigation data, respecting the principles of necessity and transparency."
             },
             "usage": {
-                "title": "Data Usage",
-                "text": "We use your data to provide and improve our services, and to personalize your experience."
+                "title": "Data Usage and Processing",
+                "text": "Your data is used for authentication, user experience improvement, and course communication. We ensure technical and administrative security measures to protect your personal data (Cybercrime Law No. 12.737/2012)."
             },
             "rights": {
                 "title": "Your Rights",
-                "text": "You have the right to access, correct, or delete your personal data at any time."
+                "text": "According to the LGPD, you have the right to confirmation, access, correction, anonymization, blocking, or elimination of unnecessary data. To exercise your rights, contact us through our channels (CCPA applicable for California residents)."
+            },
+            "contact": {
+                "title": "4. Communication Channel (Data Protection Officer)",
+                "text": "To exercise any of your rights mentioned above, or to ask questions about how we process your data, you can contact our Data Protection Officer (DPO) via email: devproacademy@outlook.com."
+            },
+            "responsible": {
+                "title": "5. Responsible Party Identification",
+                "text": "This site is operated by DevPro Academy."
             }
         },
         "terms": {
-            "title": "Terms of Service",
-            "intro": "By accessing our website, you agree to be bound by these terms of service.",
+            "title": "Terms of Use",
+            "intro": "Welcome to DevPro Academy. These Terms of Use regulate the access and use of our platform, in compliance with the Consumer Defense Code (Law No. 8.078/1990) and the E-commerce Law (Decree No. 7.962/2013).",
             "acceptance": {
-                "title": "Acceptance",
-                "text": "Use of the services implies full acceptance of these terms."
+                "title": "Acceptance of Terms",
+                "text": "By using our services, you fully accept these rules and commit to observing them, under risk of applicable penalties."
             },
-            "usage": {
-                "title": "Acceptable Use",
-                "text": "You agree not to use the service for any illegal or unauthorized purpose."
+            "ip": {
+                "title": "2. Intellectual Property and Copyright",
+                "intro": "All content made available at DevPro Academy — including videos, texts, source codes, logos, graphics, and teaching materials — is the exclusive property of DevPro Academy Ltda or its licensors, protected by Brazilian laws and international copyright and industrial property treaties.",
+                "personal": "Personal and Non-Transferable Use: Course access is individual. Sharing access credentials (login and password) with third parties is prohibited.",
+                "prohibitions": "Prohibitions: It is strictly prohibited to copy, reproduce, distribute, transmit, sell, license, or exploit any site content for commercial or public purposes without prior written authorization.",
+                "download": "Material Download: Downloading materials is only permitted when expressly indicated on the platform (e.g., PDFs and support files). This does not transfer content ownership to the user.",
+                "penalties": "Penalties: Non-compliance with these rules may result in immediate account suspension, without right to refund, in addition to potential legal measures for moral and material damages."
+            },
+            "refund": {
+                "title": "3. Cancellation and Refund Policy",
+                "intro": "In compliance with the Consumer Defense Code and the E-commerce Decree (No. 7.962/2013), we guarantee your right of withdrawal:",
+                "deadline": "Regret Period: You have a period of 7 (seven) calendar days, starting from the date of purchase or course access release, to request cancellation and a full refund of the amount paid.",
+                "request": "How to request: The request must be sent to the email devproacademy@outlook.com with the subject 'Refund Request' and purchase details.",
+                "method": "Refund Method: The refund will be processed through the same payment method used in the purchase (credit card reversal or account deposit for payments via slip/Pix).",
+                "access": "Content Access: After the refund request, access to the platform and course materials will be interrupted immediately."
             }
         },
-        "disclaimer": "This is a demo project. Do not use real sensitive data."
+        "disclaimer": "This project follows the guidelines of the Brazilian Law of Inclusion (Law No. 13.146/2015) seeking digital accessibility."
     },
     "footer": {
         "about": "Transforming careers through high-quality technology education.",

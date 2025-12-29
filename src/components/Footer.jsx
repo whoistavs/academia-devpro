@@ -48,7 +48,7 @@ const Footer = () => {
 
                     {/* Column 3: Social Media */}
                     <div>
-                        <h3 className="text-white font-semibold uppercase tracking-wider mb-4">Redes Sociais</h3>
+                        <h3 className="text-white font-semibold uppercase tracking-wider mb-4">{t('footer.socials')}</h3>
                         <ul className="flex space-x-6">
                             <li>
                                 <a href="#" className="hover:text-white transition-colors" aria-label="Github">

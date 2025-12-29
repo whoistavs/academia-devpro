@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { ArrowLeft, CheckCircle, BookOpen, Code, Lightbulb } from 'lucide-react';
 import coursesData from '../data/cursos.json';
@@ -10,13 +10,33 @@ import { LessonQuiz } from '../components/LessonQuiz';
 
 const LessonView = () => {
     const { slug, id } = useParams();
-    const { user, isAuthenticated, markLessonComplete, isLessonCompleted } = useAuth();
+    const { user, isAuthenticated, markLessonComplete, isLessonCompleted, fetchProgress } = useAuth();
+    const [challengeAnswer, setChallengeAnswer] = useState('');
+    const [aiFeedback, setAiFeedback] = useState(null);
+    const [isAnalysing, setIsAnalysing] = useState(false);
+
+    // Reset state when lesson changes
+    useEffect(() => {
+        setChallengeAnswer('');
+        setAiFeedback(null);
+        setIsAnalysing(false);
+    }, [slug, id]);
+
+    const course = coursesData.find(c => c.slug === slug);
+
+    useEffect(() => {
+        if (course && isAuthenticated) {
+            fetchProgress(course.id);
+        }
+    }, [course?.id, isAuthenticated]);
 
     if (!isAuthenticated) {
         return <Navigate to="/login" replace />;
     }
     const { language } = useTranslation();
     const currentLang = language || 'pt';
+
+
 
     const getContent = (data) => {
         if (!data) return "";
@@ -25,12 +45,30 @@ const LessonView = () => {
         return data[langCode] || data['pt'] || data['en'] || Object.values(data)[0];
     };
 
-    const course = coursesData.find(c => c.slug === slug);
+    const slugify = (text) => {
+        return text
+            .toString()
+            .toLowerCase()
+            .normalize('NFD') // Separate accents
+            .replace(/[\u0300-\u036f]/g, '') // Remove accents
+            .replace(/\s+/g, '-')
+            .replace(/[^\w\-]+/g, '')
+            .replace(/\-\-+/g, '-')
+            .replace(/^-+/, '')
+            .replace(/-+$/, '');
+    };
+
+    const MarkdownComponents = {
+        h1: ({ children }) => <h1 id={slugify(children)} className="text-3xl font-bold mb-4 mt-8 scroll-mt-24">{children}</h1>,
+        h2: ({ children }) => <h2 id={slugify(children)} className="text-2xl font-bold mb-3 mt-6 scroll-mt-24 border-b pb-2 dark:border-gray-700">{children}</h2>,
+        h3: ({ children }) => <h3 id={slugify(children)} className="text-xl font-bold mb-2 mt-4 scroll-mt-24 text-indigo-600 dark:text-indigo-400">{children}</h3>,
+    };
+
+    const [toc, setTocState] = useState([]);
     const lessonIndex = parseInt(id);
 
-
-    // Scroll to top when lesson changes (Backup safety)
-    React.useEffect(() => {
+    // Scroll to top when lesson changes
+    useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'instant' });
     }, [slug, id]);
 
@@ -41,11 +79,25 @@ const LessonView = () => {
     const lesson = course.aulas[lessonIndex];
     const totalLessons = course.aulas.length;
 
-    // Check if previous lesson is completed (Locking Logic)
-    // If index 0, always unlocked. If > 0, check index-1.
+    useEffect(() => {
+        if (!lesson || !lesson.content) return;
+
+        const content = getContent(lesson.content);
+        const lines = content.split('\n');
+        const extracted = lines
+            .filter(line => line.startsWith('#'))
+            .map(line => {
+                const level = line.match(/^#+/)[0].length;
+                const text = line.replace(/^#+\s+/, '');
+                const id = slugify(text);
+                return { id, text, level };
+            });
+
+        setTocState(extracted);
+    }, [lesson, language]);
+
     const isLocked = lessonIndex > 0 && !isLessonCompleted(course.id, lessonIndex - 1);
 
-    // If locked, redirect or show lock screen.
     if (isLocked) {
         return (
             <main className="flex-grow pt-16 bg-gray-50 dark:bg-gray-900 min-h-screen flex items-center justify-center">
@@ -78,6 +130,51 @@ const LessonView = () => {
         markLessonComplete(course.id, lessonIndex);
     };
 
+    const handleChallengeSubmit = async () => {
+        if (challengeAnswer.trim().length > 10) {
+            setIsAnalysing(true);
+            setAiFeedback(null);
+
+            try {
+                // Call Mock AI Endpoint
+                // We need to import api service dynamically or assume it's available.
+                // Better to import at top, but for safety in this snippet:
+                const { api } = await import('../services/api');
+
+                // We don't have this method in api.js yet, so we'll fetch directly or add it.
+                // Let's add it to api.js in a moment. For now, fetch.
+                const token = localStorage.getItem('token');
+                const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
+                const res = await fetch(`${API_URL}/api/ai/evaluate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        lessonId: lessonIndex,
+                        challengeId: lesson.challenge.id,
+                        userResponse: challengeAnswer
+                    })
+                });
+
+                const data = await res.json();
+                setAiFeedback(data);
+
+                if (data.isCorrect) {
+                    markLessonComplete(course.id, lessonIndex);
+                }
+
+            } catch (error) {
+                console.error("AI Error:", error);
+                setAiFeedback({ feedback: "Erro ao conectar com a IA. Tente novamente.", isCorrect: false });
+            } finally {
+                setIsAnalysing(false);
+            }
+        }
+    };
+
     return (
         <main className="flex-grow pt-16 bg-gray-50 dark:bg-gray-900 transition-colors duration-300 min-h-screen">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -106,14 +203,22 @@ const LessonView = () => {
                             <div className="flex items-center text-gray-500 dark:text-gray-400 text-sm mb-6">
                                 <BookOpen className="w-4 h-4 mr-2" />
                                 <span>{getContent(lesson.duracao)}</span>
+                                {lesson.challenge && (
+                                    <span className="ml-4 flex items-center text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/20 px-2 py-1 rounded text-xs font-bold border border-indigo-100 dark:border-indigo-800">
+                                        <Code className="w-3 h-3 mr-1" />
+                                        Desafio Prático
+                                    </span>
+                                )}
                             </div>
                         </div>
 
                         <div className="bg-white dark:bg-gray-800 p-8 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm prose dark:prose-invert max-w-none">
-                            <ReactMarkdown>{getContent(lesson.content)}</ReactMarkdown>
+                            <ReactMarkdown components={MarkdownComponents}>
+                                {getContent(lesson.content)}
+                            </ReactMarkdown>
                         </div>
 
-                        {/* Logic: If Quiz Exists, show Quiz. If NOT, show 'Complete' button if not completed */}
+                        {/* Logic: Quiz OR Challenge OR Manual Complete */}
                         {lesson.questions && lesson.questions.length > 0 ? (
                             !completed && (
                                 <LessonQuiz
@@ -122,17 +227,67 @@ const LessonView = () => {
                                     language={currentLang}
                                 />
                             )
+                        ) : lesson.challenge ? (
+                            !completed && (
+                                <div className="mt-8 bg-indigo-50 dark:bg-gray-800 p-6 rounded-xl border border-indigo-100 dark:border-gray-700 shadow-sm animate-fade-in">
+                                    <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-indigo-900 dark:text-indigo-300">
+                                        <Lightbulb className="w-6 h-6 text-amber-500" />
+                                        {language === 'en' ? 'Practical Challenge' : 'Desafio Prático'}
+                                    </h3>
+                                    <p className="mb-4 text-gray-700 dark:text-gray-300 italic">
+                                        {getContent(lesson.challenge.instruction)}
+                                    </p>
+
+                                    <div className="relative">
+                                        <textarea
+                                            className="w-full h-48 p-4 rounded-lg bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 font-mono text-sm text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none transition-shadow"
+                                            placeholder={language === 'en' ? "// Write your logic/pseudocode here..." : "// Escreva sua lógica/pseudocódigo aqui..."}
+                                            value={challengeAnswer}
+                                            onChange={(e) => setChallengeAnswer(e.target.value)}
+                                        />
+                                        <div className="absolute bottom-4 right-4 text-xs text-gray-400">
+                                            {challengeAnswer.length} chars
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-4 flex justify-between items-center">
+                                        {aiFeedback && (
+                                            <div className={`flex-1 mr-4 p-3 rounded-lg text-sm ${aiFeedback.isCorrect ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'}`}>
+                                                <strong>{aiFeedback.isCorrect ? 'Sucesso!' : 'Revisão Necessária:'}</strong> {aiFeedback.feedback}
+                                            </div>
+                                        )}
+                                        <button
+                                            onClick={handleChallengeSubmit}
+                                            disabled={challengeAnswer.trim().length < 10 || isAnalysing}
+                                            className={`px-6 py-2 text-white rounded-lg font-bold shadow-md transition-all flex items-center ${isAnalysing ? 'bg-indigo-400 cursor-wait' : 'bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-400'
+                                                }`}
+                                        >
+                                            {isAnalysing ? (
+                                                <>
+                                                    <span className="animate-spin h-4 w-4 mr-2 border-2 border-white border-t-transparent rounded-full"></span>
+                                                    Analisando...
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Code className="w-4 h-4 mr-2" />
+                                                    {language === 'en' ? 'Submit Solution' : 'Enviar Solução'}
+                                                </>
+                                            )}
+                                        </button>
+                                    </div>
+                                </div>
+                            )
                         ) : (
                             !completed && (
                                 <div className="bg-indigo-50 dark:bg-indigo-900/20 p-6 rounded-xl border border-indigo-100 dark:border-indigo-800 text-center">
                                     <h3 className="text-lg font-bold text-indigo-900 dark:text-indigo-300 mb-4">
-                                        Conteúdo Estudado?
+                                        {getContent({ pt: "Conteúdo Estudado?", en: "Content Studied?" })}
                                     </h3>
                                     <button
                                         onClick={handleManualComplete}
                                         className="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-bold shadow-lg transition-transform transform hover:scale-105"
                                     >
-                                        Marcar como Concluída
+                                        {getContent({ pt: "Marcar como Concluída", en: "Mark as Complete" })}
                                     </button>
                                 </div>
                             )
@@ -176,8 +331,40 @@ const LessonView = () => {
                         </div>
                     </div>
 
-                    <div className="lg:col-span-1">
-                        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden sticky top-24">
+                    <div className="lg:col-span-1 space-y-6">
+                        {/* Table of Contents - Only if we have headings */}
+                        {toc.length > 0 && (
+                            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden sticky top-24">
+                                <div className="p-4 bg-indigo-50 dark:bg-indigo-900/10 border-b border-indigo-100 dark:border-gray-700">
+                                    <h3 className="font-bold text-indigo-900 dark:text-indigo-300 flex items-center">
+                                        <div className="w-2 h-2 rounded-full bg-indigo-500 mr-2"></div>
+                                        {language === 'en' ? 'On this page' : 'Nesta Aula'}
+                                    </h3>
+                                </div>
+                                <div className="p-4 max-h-[40vh] overflow-y-auto">
+                                    <nav className="flex flex-col space-y-2">
+                                        {toc.map((item, idx) => (
+                                            <a
+                                                key={idx}
+                                                href={`#${item.id}`}
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    document.getElementById(item.id)?.scrollIntoView({ behavior: 'smooth' });
+                                                }}
+                                                className={`text-sm transition-colors hover:text-indigo-600 dark:hover:text-indigo-400 ${item.level === 1 ? 'font-bold text-gray-800 dark:text-gray-200' :
+                                                    item.level === 2 ? 'ml-3 text-gray-600 dark:text-gray-400' :
+                                                        'ml-6 text-gray-500 dark:text-gray-500 italic'
+                                                    }`}
+                                            >
+                                                {item.text}
+                                            </a>
+                                        ))}
+                                    </nav>
+                                </div>
+                            </div>
+                        )}
+
+                        <div className={`bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden ${toc.length === 0 ? 'sticky top-24' : ''}`}>
                             <div className="p-4 bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                                 <h3 className="font-bold text-gray-900 dark:text-white">Conteúdo do Curso</h3>
                             </div>

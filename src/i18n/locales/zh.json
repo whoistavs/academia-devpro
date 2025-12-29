@@ -7,10 +7,13 @@
     "nav.courses": "课程",
     "nav.contact": "联系我们",
     "nav.start": "立即开始",
+    "nav.login": "登录",
+    "nav.myArea": "我的区域",
     "nav.logout": "退出登录",
     "footer.rights": "版权所有。",
     "footer.about": "从零到专业学习编程的最佳平台。",
     "footer.quickLinks": "快速链接",
+    "footer.socials": "社交媒体",
     "footer.contact": "联系方式",
     "home.features.title": "为什么选择 AcademiaDevPro？",
     "home.features.mentor.title": "专业导师",
@@ -20,6 +23,9 @@
     "home.features.community.title": "活跃社区",
     "home.features.community.desc": "与其他开发者交流经验，共同成长。",
     "home.categories.title": "我们的分类",
+    "home.categories.frontend.desc": "为 Web 和移动设备创建令人惊叹的响应式界面。",
+    "home.categories.backend.desc": "掌握服务器、数据库和业务逻辑。",
+    "home.categories.datascience.desc": "将数据转化为有价值的见解和智慧。",
     "courses.searchPlaceholder": "搜索课程...",
     "courses.filters.all": "全部",
     "courses.filters.frontend": "前端",
@@ -96,19 +102,59 @@
     },
     "lgpd": {
         "cookieBanner": {
-            "text": "我们使用 cookie 来改善你的体验。继续即表示你同意我们的",
+            "text": "我们使用 cookie 来改善您的体验。继续即表示您同意我们的",
             "link": "隐私政策",
             "accept": "接受"
         },
         "privacy": {
             "title": "隐私政策",
-            "intro": "本隐私政策描述了我们如何收集、使用和保护你的信息。"
+            "intro": "本隐私政策是根据第 13.709/2018 号联邦法律（通用数据保护法 - LGPD）、互联网权利法案（第 12.965/2014 号法律）以及针对欧洲用户的通用数据保护条例（GDPR）制定的。",
+            "collection": {
+                "title": "数据收集",
+                "text": "我们收集提供服务所需的基本信息，如姓名、电子邮件和导航数据，并遵守必要性和透明度的原则。"
+            },
+            "usage": {
+                "title": "数据使用与处理",
+                "text": "您的数据用于身份验证、用户体验改进和课程沟通。我们保证采取技术和管理安全措施来保护您的个人数据（第 12.737/2012 号网络犯罪法）。"
+            },
+            "rights": {
+                "title": "您的权利",
+                "text": "根据 LGPD，您有权确认、访问、更正、匿名化、阻止或消除不必要的数据。要行使您的权利，请通过我们的渠道联系我们（CCPA 适用于加利福尼亚居民）。"
+            },
+            "contact": {
+                "title": "4. 沟通渠道（数据保护官）",
+                "text": "要行使上述任何权利，或对我们需要如何处理您的数据有疑问，您可以通过电子邮件联系我们的数据保护官 (DPO)：devproacademy@outlook.com。"
+            },
+            "responsible": {
+                "title": "5. 负责人识别",
+                "text": "本网站由 DevPro Academy 运营。"
+            }
         },
         "terms": {
-            "title": "服务条款",
-            "intro": "访问我们的网站即表示你同意遵守这些服务条款。"
+            "title": "使用条款",
+            "intro": "欢迎来到 DevPro Academy。这些使用条款规范我们在符合消费者保护法（第 8.078/1990 号法律）和电子商务法（第 7.962/2013 号法令）的情况下访问和使用我们的平台。",
+            "acceptance": {
+                "title": "接受条款",
+                "text": "使用我们的服务即表示您完全接受这些规则并承诺遵守这些规则，否则将面临相应的处罚。"
+            },
+            "ip": {
+                "title": "2. 知识产权和版权",
+                "intro": "DevPro Academy 上提供的所有内容——包括视频、文本、源代码、徽标、图形和教学材料——均为 DevPro Academy Ltda 或其许可方的专有财产，受巴西法律以及国际版权和工业产权条约的保护。",
+                "personal": "个人和不可转让使用：课程访问是个人的。禁止与第三方共享访问凭证（登录名和密码）。",
+                "prohibitions": "禁令：严禁未经事先书面授权，出于商业或公共目的复制、转载、分发、传输、销售、许可或利用网站的任何内容。",
+                "download": "资料下载：仅在平台明确注明（例如：PDF 和支持文件）时才允许下载资料。这不会将内容所有权转让给用户。",
+                "penalties": "处罚：不遵守这些规则可能会导致帐户立即暂停，无权退款，此外还可能因精神和物质损失而采取法律措施。"
+            },
+            "refund": {
+                "title": "3. 取消和退款政策",
+                "intro": "根据消费者保护法和电子商务法令（第 7.962/2013 号），我们保证您的撤回权：",
+                "deadline": "后悔期：自购买之日或课程访问发布之日起，您有 7（七）个日历日的期限申请取消并全额退还已支付的金额。",
+                "request": "如何申请：申请必须发送至电子邮件 devproacademy@outlook.com，以此为主题 '退款申请' 并附上购买详细信息。",
+                "method": "退款方式：退款将通过购买时使用的相同付款方式处理（信用卡冲正或通过 slip/Pix 付款的账户存款）。",
+                "access": "内容访问：退款申请后，对平台和课程材料的访问将立即中断。"
+            }
         },
-        "disclaimer": "这是一个演示项目。请勿使用真实的敏感数据。"
+        "disclaimer": "该项目遵循巴西包容法（第 13.146/2015 号法律）的指导方针，寻求数字无障碍。"
     },
     "footer": {
         "about": "通过高质量的技术教育改变职业生涯。",

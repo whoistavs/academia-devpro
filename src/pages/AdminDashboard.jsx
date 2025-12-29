@@ -9,6 +9,7 @@ const AdminDashboard = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const [users, setUsers] = useState([]);
+    const [courses, setCourses] = useState([]);
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -17,6 +18,7 @@ const AdminDashboard = () => {
             return;
         }
         fetchUsers();
+        fetchCourses();
     }, [user, navigate]);
 
     const fetchUsers = async () => {
@@ -28,11 +30,24 @@ const AdminDashboard = () => {
             if (response.ok) {
                 const data = await response.json();
                 setUsers(data);
-            } else {
-                setError('Falha ao carregar usuários.');
             }
         } catch (err) {
             setError('Erro de conexão.');
+        }
+    };
+
+    const fetchCourses = async () => {
+        try {
+            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+            const response = await fetch(`${API_URL}/api/courses?all=true`, { // Helper param logic in backend to explicit
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setCourses(data);
+            }
+        } catch (err) {
+            console.error(err);
         }
     };
 
@@ -57,7 +72,12 @@ const AdminDashboard = () => {
     };
 
     const handleRoleChange = async (id, currentRole) => {
-        const newRole = currentRole === 'admin' ? 'student' : 'admin';
+        // Cycle: student -> professor -> admin -> student
+        let newRole = 'student';
+        if (currentRole === 'student' || !currentRole) newRole = 'professor';
+        else if (currentRole === 'professor') newRole = 'admin';
+        else if (currentRole === 'admin') newRole = 'student';
+
         if (!window.confirm(`Deseja alterar o nível de acesso para: ${newRole}?`)) return;
 
         try {
@@ -81,7 +101,29 @@ const AdminDashboard = () => {
         }
     };
 
+    const handleCourseStatus = async (courseId, status) => {
+        if (!window.confirm(`Deseja mudar o status para: ${status}?`)) return;
+        try {
+            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+            const response = await fetch(`${API_URL}/api/courses/${courseId}/status`, {
+                method: 'PATCH',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ status })
+            });
+            if (response.ok) {
+                setCourses(courses.map(c => c._id === courseId || c.id === courseId ? { ...c, status } : c));
+            }
+        } catch (e) {
+            alert("Erro ao moderar curso");
+        }
+    };
+
     if (!user || user.role !== 'admin') return null;
+
+    const pendingCourses = courses.filter(c => c.status === 'pending');
 
     return (
         <main className="flex-grow pt-24 pb-20 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
@@ -94,6 +136,48 @@ const AdminDashboard = () => {
                 </div>
 
                 {error && <div className="bg-red-100 text-red-700 p-4 rounded mb-4">{error}</div>}
+
+                {/* COURSE APPROVALS */}
+                {pendingCourses.length > 0 && (
+                    <div className="bg-white dark:bg-gray-800 shadow-xl rounded-lg overflow-hidden border border-amber-200 dark:border-amber-700 mb-8">
+                        <div className="p-6 border-b border-gray-200 dark:border-gray-700 bg-amber-50 dark:bg-amber-900/20">
+                            <h2 className="text-xl font-semibold text-amber-800 dark:text-amber-100 flex items-center">
+                                <ShieldAlert className="w-5 h-5 mr-2" />
+                                Aprovação de Cursos Pendentes ({pendingCourses.length})
+                            </h2>
+                        </div>
+                        <div className="p-6">
+                            <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+                                {pendingCourses.map(course => (
+                                    <li key={course.id} className="py-4 flex items-center justify-between">
+                                        <div>
+                                            <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+                                                {typeof course.title === 'string' ? course.title : (course.title.pt || course.title.en)}
+                                            </h3>
+                                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                                                Autor ID: {course.authorId} | Categoria: {course.category}
+                                            </p>
+                                        </div>
+                                        <div className="flex space-x-2">
+                                            <button
+                                                onClick={() => handleCourseStatus(course._id || course.id, 'published')}
+                                                className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-sm"
+                                            >
+                                                Aprovar
+                                            </button>
+                                            <button
+                                                onClick={() => handleCourseStatus(course._id || course.id, 'rejected')}
+                                                className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-sm"
+                                            >
+                                                Rejeitar
+                                            </button>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+                )}
 
                 <div className="bg-white dark:bg-gray-800 shadow-xl rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
                     <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
@@ -121,8 +205,10 @@ const AdminDashboard = () => {
                                         <td className="px-6 py-4">
                                             <button
                                                 onClick={() => u.id !== user.id && handleRoleChange(u.id, u.role)}
-                                                className={`px-2 py-1 rounded-full text-xs font-bold cursor-pointer hover:opacity-80 ${u.role === 'admin' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}
-                                                title={u.id !== user.id ? "Clique para alterar nível de acesso" : "Você não pode alterar seu próprio nível"}
+                                                className={`px-2 py-1 rounded-full text-xs font-bold cursor-pointer hover:opacity-80 transition-colors 
+                                                    ${u.role === 'admin' ? 'bg-red-100 text-red-800' :
+                                                        u.role === 'professor' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'}`}
+                                                title={u.id !== user.id ? "Clique para alterar: Aluno -> Prof -> Admin -> Aluno" : "Você não pode alterar seu próprio nível"}
                                                 disabled={u.id === user.id}
                                             >
                                                 {u.role || 'student'}

@@ -112,7 +112,9 @@ const createCollection = (fileName) => {
 
 const db = {
     users: createCollection('users.json'),
-    messages: createCollection('messages.json')
+    messages: createCollection('messages.json'),
+    courses: createCollection('courses.json'),
+    progress: createCollection('progress.json')
 };
 
 export default db;
