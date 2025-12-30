@@ -256,8 +256,19 @@ app.put('/api/courses/:id', verifyToken, async (req, res) => {
         const course = await Course.findById(req.params.id);
         if (!course) return res.status(404).json({ error: 'Curso não encontrado.' });
 
-        if (req.user.role !== 'admin' && course.authorId !== req.user.id) {
-            return res.status(403).json({ error: 'Sem permissão.' });
+        // Permission Logic:
+        // 1. Admin can edit their own courses.
+        // 2. Admin can edit "System" courses (where authorId is 'admin' or missing).
+        // 3. Admin CANNOT edit courses owned by other professors (privacy).
+        // 4. Professors can ONLY edit their own courses.
+
+        const isOwner = course.authorId === req.user.id;
+        const isSystemCourse = !course.authorId || course.authorId === 'admin';
+        const isAdmin = req.user.role === 'admin';
+
+        // Allowed if: It's my course OR (I'm admin AND it's a system course)
+        if (!isOwner && !(isAdmin && isSystemCourse)) {
+            return res.status(403).json({ error: 'Permissão negada. Admin só edita cursos do Sistema ou Próprios.' });
         }
 
         Object.assign(course, req.body);
