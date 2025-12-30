@@ -72,21 +72,46 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-// Configure Multer (Cloudinary later, currently local fallback if verified user didn't give keys yet? 
-// User GAVE password but NOT keys. I'll stick to local storage for now for images, but DATA is safe in Mongo)
-// Ideally we would switch to Cloudinary here.
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        const uploadDir = 'server/uploads';
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true });
-        }
-        cb(null, uploadDir);
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname));
-    }
+import { v2 as cloudinary } from 'cloudinary';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
+
+// Configure Cloudinary
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
 });
+
+// Configure Storage
+let storage;
+if (process.env.CLOUDINARY_CLOUD_NAME) {
+    // Usage Cloudinary
+    storage = new CloudinaryStorage({
+        cloudinary: cloudinary,
+        params: {
+            folder: 'devpro_academy', // Folder name in Cloudinary
+            allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
+            transformation: [{ width: 800, height: 800, crop: 'limit' }] // Optimisation
+        },
+    });
+    console.log("Using Cloudinary Storage");
+} else {
+    // Fallback Local
+    storage = multer.diskStorage({
+        destination: (req, file, cb) => {
+            const uploadDir = 'server/uploads';
+            if (!fs.existsSync(uploadDir)) {
+                fs.mkdirSync(uploadDir, { recursive: true });
+            }
+            cb(null, uploadDir);
+        },
+        filename: (req, file, cb) => {
+            cb(null, Date.now() + path.extname(file.originalname));
+        }
+    });
+    console.log("Using Local Disk Storage (FALLBACK)");
+}
+
 const upload = multer({ storage: storage });
 
 app.use(cors());
@@ -437,17 +462,23 @@ app.patch('/api/users/me', verifyToken, async (req, res) => {
     }
 });
 
+
 app.post('/api/upload', upload.single('image'), (req, res) => {
     if (!req.file) return res.status(400).json({ error: 'No file' });
 
-    const protocol = req.protocol;
-    const host = req.get('host');
-    // In production (Render), this URL is temporary/local. 
-    // We NEED Cloudinary but user didn't provide keys yet.
-    // For now, this lets the app "function" in the session but data is lost on restart.
-    const url = `${protocol}://${host}/uploads/${req.file.filename}`;
-    res.json({ url });
+    // Cloudinary returns file.path as the secure URL automatically
+    let imageUrl = req.file.path;
+
+    // If fallback to local storage (file.path is not http...), construct URL manually
+    if (!imageUrl || !imageUrl.startsWith('http')) {
+        const protocol = req.protocol;
+        const host = req.get('host');
+        imageUrl = `${protocol}://${host}/uploads/${req.file.filename}`;
+    }
+
+    res.json({ url: imageUrl });
 });
+
 
 app.post('/api/contact', async (req, res) => {
     try {
