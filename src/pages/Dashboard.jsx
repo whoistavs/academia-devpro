@@ -14,6 +14,7 @@ const Dashboard = () => {
     const fileInputRef = React.useRef(null);
     const [courses, setCourses] = useState([]);
     const [isLoadingCourses, setIsLoadingCourses] = useState(true);
+
     // Mask functions
     const formatCPF = (value) => {
         return value
@@ -136,7 +137,7 @@ const Dashboard = () => {
         if (apiSuccess) {
             alert("Perfil atualizado com sucesso!");
         } else {
-            alert("Dados do certificado salvos localmente! (Aviso: Houve um erro ao sincronizar o nome com o servidor, mas CPF/RG foram salvos).");
+            alert("Dados salvos! (Nota: O servidor não aceitou a mudança de nome, mas salvamos CPF/RG localmente para o certificado).");
         }
     };
 
@@ -185,6 +186,20 @@ const Dashboard = () => {
         } catch (error) {
             console.error("Upload Error:", error);
             alert(`Erro ao atualizar foto: ${error.message}`);
+        }
+    };
+
+    const handleRemoveImage = async () => {
+        if (!window.confirm("Remover foto de perfil?")) return;
+        try {
+            // Send empty string to clear avatar
+            await api.updateMe({ avatar: "" });
+            updateUser({ ...user, avatar: "" });
+            alert("Foto removida!");
+        } catch (error) {
+            console.error(error);
+            alert("Erro ao remover foto. Mas removemos visualmente.");
+            updateUser({ ...user, avatar: "" }); // Optimistic update
         }
     };
 
@@ -248,6 +263,8 @@ const Dashboard = () => {
                                     <User className="h-12 w-12 text-indigo-600 dark:text-indigo-400" />
                                 )}
                             </div>
+
+                            {/* Camera Button */}
                             <button
                                 onClick={() => fileInputRef.current.click()}
                                 className="absolute bottom-0 right-0 bg-indigo-600 text-white p-2 rounded-full hover:bg-indigo-700 transition-colors shadow-md transform hover:scale-110"
@@ -255,6 +272,18 @@ const Dashboard = () => {
                             >
                                 <Camera className="h-4 w-4" />
                             </button>
+
+                            {/* Remove Photo Button (Only if avatar exists) */}
+                            {user.avatar && (
+                                <button
+                                    onClick={handleRemoveImage}
+                                    className="absolute bottom-0 left-0 bg-red-600 text-white p-2 rounded-full hover:bg-red-700 transition-colors shadow-md transform hover:scale-110"
+                                    title="Remover foto"
+                                >
+                                    <Trash2 className="h-4 w-4" />
+                                </button>
+                            )}
+
                             <input
                                 type="file"
                                 ref={fileInputRef}
