@@ -10,16 +10,8 @@ const courseSchema = new mongoose.Schema({
     duration: { type: String },
     slug: { type: String, required: true, unique: true },
 
-    // Structure for modules and lessons
-    modulos: [{
-        id: Number,
-        title: String,
-        aulas: [{
-            id: Number,
-            title: String,
-            videoUrl: String
-        }]
-    }],
+    // Flexible modules to prevent seeding crashes
+    modulos: [{ type: mongoose.Schema.Types.Mixed }],
 
     // Legacy flat lessons support if needed, or strictly modules
     aulas: [{ type: mongoose.Schema.Types.Mixed }],
