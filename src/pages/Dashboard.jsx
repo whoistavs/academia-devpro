@@ -88,11 +88,13 @@ const Dashboard = () => {
     const handleDeleteAccount = async () => {
         if (window.confirm(t('auth.dashboard.deleteConfirm'))) {
             try {
-                const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-                const response = await fetch(`${API_URL}/api/users/me`, {
+                // Use explicit URL to match api.js hardcoded style
+                const API_URL = "https://devpro-backend.onrender.com/api";
+                const response = await fetch(`${API_URL}/users/me`, {
                     method: 'DELETE',
                     headers: {
-                        'Authorization': `Bearer ${token}`
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
                     }
                 });
 
@@ -100,11 +102,13 @@ const Dashboard = () => {
                     logout();
                     navigate('/');
                 } else {
+                    const errText = await response.text();
+                    console.error("Delete Error:", errText);
                     alert('Erro ao excluir conta.');
                 }
             } catch (error) {
                 console.error('Erro:', error);
-                alert('Erro ao excluir conta.');
+                alert('Erro de conexão ao excluir conta.');
             }
         }
     };
