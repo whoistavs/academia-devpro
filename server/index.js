@@ -380,7 +380,11 @@ app.post('/api/auth/google', async (req, res) => {
 
         if (!googleRes.ok) return res.status(401).json({ error: 'Invalid Google Token' });
 
-        const { email, name, picture } = await googleRes.json();
+        const googleData = await googleRes.json();
+        const { email, picture } = googleData;
+
+        // Robust name extraction
+        const name = googleData.name || googleData.given_name || 'Usuário';
 
         let user = await User.findOne({ email });
 
@@ -395,6 +399,18 @@ app.post('/api/auth/google', async (req, res) => {
                 authProvider: 'google'
             });
             await user.save();
+        } else {
+            // Fix "undefined" name issue for existing users
+            let changed = false;
+            if (!user.name || user.name === 'undefined') {
+                user.name = name;
+                changed = true;
+            }
+            if (!user.avatar && picture) {
+                user.avatar = picture;
+                changed = true;
+            }
+            if (changed) await user.save();
         }
 
         const token = jwt.sign({ id: user._id, role: user.role }, SECRET_KEY, { expiresIn: '24h' });
