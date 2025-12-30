@@ -128,7 +128,13 @@ if (process.env.CLOUDINARY_CLOUD_NAME) {
 
 const upload = multer({ storage: storage });
 
-app.use(cors());
+// Enable CORS for ALL origins (Wildcard) to guarantee connection
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
 app.use('/uploads', express.static('server/uploads'));
 
