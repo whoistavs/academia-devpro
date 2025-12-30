@@ -117,7 +117,9 @@ const CourseDetails = () => {
                                             <div className="flex-shrink-0 bg-white dark:bg-gray-700 p-1 rounded-full border border-indigo-100 dark:border-gray-600 shadow-sm mr-4">
                                                 <BookOpen className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
                                             </div>
-                                            <span className="text-gray-700 dark:text-gray-300 font-medium pt-1">{modulo}</span>
+                                            <span className="text-gray-700 dark:text-gray-300 font-medium pt-1">
+                                                {typeof modulo === 'object' ? getContent(modulo) : modulo}
+                                            </span>
                                         </li>
                                     ))}
                                 </ul>

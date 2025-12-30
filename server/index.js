@@ -16,6 +16,8 @@ import User from './models/User.js';
 import Course from './models/Course.js';
 import Progress from './models/Progress.js';
 import Message from './models/Message.js';
+import Comment from './models/Comment.js';
+
 
 dotenv.config();
 
@@ -554,6 +556,39 @@ app.post('/api/contact', async (req, res) => {
         res.status(201).json({ message: 'Sent' });
     } catch (e) {
         res.status(500).json({ error: 'Erro.' });
+    }
+});
+
+
+// --- COMMENTS ---
+app.get('/api/comments/:courseSlug/:lessonIndex', async (req, res) => {
+    try {
+        const { courseSlug, lessonIndex } = req.params;
+        const comments = await Comment.find({ courseSlug, lessonIndex }).sort({ createdAt: -1 });
+        res.json(comments);
+    } catch (e) {
+        res.status(500).json({ error: 'Erro ao buscar comentários' });
+    }
+});
+
+app.post('/api/comments', verifyToken, async (req, res) => {
+    try {
+        const { courseSlug, lessonIndex, content } = req.body;
+        const user = await User.findById(req.user.id);
+
+        const newComment = new Comment({
+            courseSlug,
+            lessonIndex,
+            userId: user._id,
+            userName: user.name,
+            userAvatar: user.avatar,
+            content
+        });
+
+        await newComment.save();
+        res.status(201).json(newComment);
+    } catch (e) {
+        res.status(500).json({ error: 'Erro ao postar comentário' });
     }
 });
 

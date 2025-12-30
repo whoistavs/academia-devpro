@@ -90,15 +90,15 @@
             "name": "Nombre Completo",
             "submit": "Registrarse",
             "error": "Error al registrarse"
+        },
+        "dashboard": {
+            "welcome": "¡Hola, {{name}}!",
+            "myCourses": "Mis Cursos",
+            "progress": "Progreso",
+            "continue": "Continuar Curso",
+            "deleteAccount": "Eliminar Cuenta",
+            "deleteConfirm": "¿Estás seguro de que quieres eliminar tu cuenta? Esta acción es irreversible."
         }
-    },
-    "dashboard": {
-        "welcome": "¡Hola, {{name}}!",
-        "myCourses": "Mis Cursos",
-        "progress": "Progreso",
-        "continue": "Continuar Curso",
-        "deleteAccount": "Eliminar Cuenta",
-        "deleteConfirm": "¿Estás seguro de que quieres eliminar tu cuenta? Esta acción es irreversible."
     },
     "lgpd": {
         "cookieBanner": {

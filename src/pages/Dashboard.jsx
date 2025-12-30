@@ -1,17 +1,68 @@
+
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from '../context/LanguageContext';
-import { BookOpen, Award, User, LogOut, Trash2, Camera } from 'lucide-react';
+import { BookOpen, User, LogOut, Trash2, Camera, Edit } from 'lucide-react';
+
 import { Navigate, useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
 
 const Dashboard = () => {
-    const { user, isAuthenticated, loading, logout, token, updateUser, isLessonCompleted, fetchProgress } = useAuth();
+    const { user, isAuthenticated, loading, logout, updateUser, isLessonCompleted, fetchProgress } = useAuth();
     const { t } = useTranslation();
     const navigate = useNavigate();
     const fileInputRef = React.useRef(null);
     const [courses, setCourses] = useState([]);
     const [isLoadingCourses, setIsLoadingCourses] = useState(true);
+
+    // Profile Edit State
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [editData, setEditData] = useState({
+        name: '',
+        cpf: '',
+        rg: ''
+    });
+
+    useEffect(() => {
+        if (user) {
+            // Load extra data from localStorage since backend might not have it yet
+            const savedCpf = localStorage.getItem(`user_cpf_${user.id}`);
+            const savedRg = localStorage.getItem(`user_rg_${user.id}`);
+
+            setEditData({
+                name: user.name || '',
+                cpf: savedCpf || user.cpf || '',
+                rg: savedRg || user.rg || ''
+            });
+        }
+    }, [user]);
+
+    const handleSaveProfile = async (e) => {
+        e.preventDefault();
+        try {
+            // 1. Update basic info (name) via API
+            await api.updateMe({ name: editData.name });
+
+            // 2. Persist extra data locally (Backend fallback)
+            localStorage.setItem(`user_cpf_${user.id}`, editData.cpf);
+            localStorage.setItem(`user_rg_${user.id}`, editData.rg);
+
+            // 3. Update Context
+            updateUser({
+                ...user,
+                name: editData.name, // Force name update in context
+                cpf: editData.cpf,
+                rg: editData.rg
+            });
+
+            setShowEditModal(false);
+            alert("Perfil atualizado com sucesso!");
+        } catch (error) {
+            console.error(error);
+            alert("Erro ao atualizar perfil.");
+        }
+    };
+
 
     useEffect(() => {
         const loadData = async () => {
@@ -19,13 +70,11 @@ const Dashboard = () => {
                 const data = await api.getCourses();
                 setCourses(data);
 
-                // Fetch progress for all courses
-                // We do this here so the dashboard shows up-to-date stats
                 if (isAuthenticated) {
                     await Promise.all(data.map(c => fetchProgress(c.id)));
                 }
             } catch (error) {
-                console.error("Failed to load courses:", error);
+                console.error("Failed to load courses/progress:", error);
             } finally {
                 setIsLoadingCourses(false);
             }
@@ -34,7 +83,7 @@ const Dashboard = () => {
         if (isAuthenticated) {
             loadData();
         }
-    }, [isAuthenticated]); // Only run when auth is confirmed
+    }, [isAuthenticated]);
 
     const handleLogout = () => {
         logout();
@@ -45,82 +94,40 @@ const Dashboard = () => {
         const file = event.target.files[0];
         if (!file) return;
 
-        const formData = new FormData();
-        formData.append('image', file);
-
         try {
-            // 1. Upload Image
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-            const uploadResponse = await fetch(`${API_URL}/api/upload`, {
-                method: 'POST',
-                body: formData
-            });
-            const uploadData = await uploadResponse.json();
+            // 1. Upload
+            const uploadData = await api.uploadImage(file);
 
-            if (!uploadResponse.ok) {
-                console.error("Upload Error Details:", uploadData);
-                throw new Error(uploadData.error || 'Falha no upload');
-            }
-
-            // 2. Update User Profile
-            const updateResponse = await fetch(`${API_URL}/api/users/me`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ avatar: uploadData.url })
-            });
-
-            const updateData = await updateResponse.json();
-            if (!updateResponse.ok) throw new Error(updateData.error || 'Falha ao atualizar perfil');
+            // 2. Update Profile
+            const updateData = await api.updateMe({ avatar: uploadData.url });
 
             // 3. Update Context
             updateUser(updateData.user);
             alert('Foto de perfil atualizada!');
 
         } catch (error) {
-            console.error("Full Upload Flow Error:", error);
-            alert(`Erro: ${error.message}`);
+            console.error("Upload Error:", error);
+            alert(`Erro ao atualizar foto: ${error.message}`);
         }
     };
 
     const handleDeleteAccount = async () => {
         if (window.confirm(t('auth.dashboard.deleteConfirm'))) {
             try {
-                // Use explicit URL to match api.js hardcoded style
-                const API_URL = "https://devpro-backend.onrender.com/api";
+                await api.deleteMe();
+                alert("Sua conta foi excluída com sucesso.");
+                logout();
+                navigate('/');
+            } catch (error) {
+                console.error('Delete Error:', error);
 
-                // Try POST fail-safe method first to avoid DELETE method blocking
-                const response = await fetch(`${API_URL}/users/delete-me`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                if (response.ok) {
+                if (error.message === 'ACCOUNT_GONE') {
+                    alert('Sessão inválida ou conta já inexistente. Realizando logout.');
                     logout();
                     navigate('/');
                 } else {
-                    // Smart handling: If server says 401 (Unauthorized) or 404 (Not Found),
-                    // it means the account is already gone or token is bad.
-                    // In this case, force logout to clear the ghost session.
-                    if (response.status === 401 || response.status === 403 || response.status === 404) {
-                        alert('Sessão inválida ou conta já inexistente. Realizando limpeza local.');
-                        logout();
-                        navigate('/');
-                        return;
-                    }
-
-                    const errText = await response.text();
-                    console.error("Delete Error:", errText);
-                    alert('Erro ao excluir conta: ' + response.status + ' - Tente fazer Logout primeiro.');
+                    alert('Erro ao excluir conta. Tente sair e entrar novamente.');
                 }
-            } catch (error) {
-                console.error('Erro:', error);
-                alert('Erro de conexão ao excluir conta.');
             }
         }
     };
@@ -129,23 +136,21 @@ const Dashboard = () => {
         return <div className="min-h-screen flex items-center justify-center">Carregando...</div>;
     }
 
-    if (!isAuthenticated) {
+    if (!isAuthenticated || !user) {
         return <Navigate to="/login" />;
     }
 
-    const greeting = t('auth.dashboard.welcome').replace('{{name}}', user.name);
+    const userName = user.name || user.given_name || 'Usuário';
+    const welcomeText = t('auth.dashboard.welcome') || 'Bem-vindo, {{name}}!';
+    const greeting = welcomeText.replace('{{name}}', userName);
 
-    // Helper to check progress safely
     const getProgressStats = (course) => {
         const totalLessons = course.totalLessons || 0;
         if (totalLessons === 0) return { percentage: 0 };
 
         let completedCount = 0;
-        // Check completions for indices 0 to totalLessons-1
         for (let i = 0; i < totalLessons; i++) {
-            if (isLessonCompleted(course.id, i)) {
-                completedCount++;
-            }
+            if (isLessonCompleted(course.id, i)) completedCount++;
         }
 
         const percentage = Math.round((completedCount / totalLessons) * 100);
@@ -155,6 +160,7 @@ const Dashboard = () => {
     return (
         <main className="flex-grow pt-24 pb-20 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                {/* Profile Header */}
                 <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 mb-8 border border-gray-100 dark:border-gray-700">
                     <div className="flex items-center space-x-6">
                         <div className="relative group">
@@ -167,7 +173,7 @@ const Dashboard = () => {
                             </div>
                             <button
                                 onClick={() => fileInputRef.current.click()}
-                                className="absolute bottom-0 right-0 bg-indigo-600 text-white p-2 rounded-full hover:bg-indigo-700 transition-colors shadow-md"
+                                className="absolute bottom-0 right-0 bg-indigo-600 text-white p-2 rounded-full hover:bg-indigo-700 transition-colors shadow-md transform hover:scale-110"
                                 title="Alterar foto"
                             >
                                 <Camera className="h-4 w-4" />
@@ -181,7 +187,16 @@ const Dashboard = () => {
                             />
                         </div>
                         <div>
-                            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{greeting}</h1>
+                            <div className="flex items-center gap-3">
+                                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{greeting}</h1>
+                                <button
+                                    onClick={() => setShowEditModal(true)}
+                                    className="p-1.5 text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                                    title="Editar Perfil"
+                                >
+                                    <Edit className="w-5 h-5" />
+                                </button>
+                            </div>
                             <p className="text-gray-600 dark:text-gray-400">{user.email}</p>
                             <p className="text-sm text-indigo-600 dark:text-indigo-400 font-medium capitalize mt-1 border border-indigo-200 dark:border-indigo-800 rounded-full px-3 py-0.5 inline-block bg-indigo-50 dark:bg-indigo-900/20">
                                 {user.role || 'student'}
@@ -190,37 +205,34 @@ const Dashboard = () => {
                     </div>
                 </div>
 
-                {/* Dashboard Content */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {/* Main Content Area */}
+                    {/* Courses Area */}
                     <div className="lg:col-span-2 space-y-8">
-                        {/* My Courses Section */}
                         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 border border-gray-100 dark:border-gray-700">
                             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
                                 <BookOpen className="h-5 w-5 mr-2 text-indigo-500" />
                                 {t('auth.dashboard.myCourses')}
                             </h2>
 
-                            {/* Course List Dynamic */}
                             <div className="space-y-4">
                                 {courses.map(course => {
                                     const { percentage, totalLessons } = getProgressStats(course);
 
-                                    // Filter logic: Show if started (>0%) OR if it's the first course (id=1, logic course)
-                                    // Using == for loose comparison if IDs are strings/numbers
+                                    // Show Logic course (id:1) always, others only if started
                                     if (percentage === 0 && course.id != 1) return null;
 
-                                    // Helper for title safely
                                     const getTitle = (c) => {
                                         if (typeof c.title === 'string') return c.title;
-                                        return c.title?.[user.language?.split('-')[0]] || c.title?.['pt'] || 'Curso';
+                                        // Simple safe access to title object
+                                        if (c.title) return c.title.pt || c.title.en || Object.values(c.title)[0] || 'Curso';
+                                        return 'Curso';
                                     }
 
                                     return (
-                                        <div key={course.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                        <div key={course.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow group">
                                             <div className="flex justify-between items-start">
                                                 <div>
-                                                    <h3 className="font-semibold text-gray-900 dark:text-white">
+                                                    <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
                                                         {getTitle(course)}
                                                     </h3>
                                                     <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
@@ -228,8 +240,8 @@ const Dashboard = () => {
                                                     </p>
                                                 </div>
                                                 <span className={`text-xs px-2 py-1 rounded-full font-medium ${percentage === 100
-                                                    ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
-                                                    : 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400'
+                                                    ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                                                    : 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400'
                                                     }`}>
                                                     {percentage === 100 ? 'Concluído' : 'Em andamento'}
                                                 </span>
@@ -248,7 +260,7 @@ const Dashboard = () => {
                                             </div>
                                             <button
                                                 onClick={() => navigate(`/curso/${course.slug}`)}
-                                                className="mt-4 text-indigo-600 dark:text-indigo-400 text-sm font-semibold hover:text-indigo-800 dark:hover:text-indigo-300"
+                                                className="mt-4 text-indigo-600 dark:text-indigo-400 text-sm font-semibold hover:text-indigo-800 dark:hover:text-indigo-300 flex items-center"
                                             >
                                                 {percentage === 100 ? 'Revisar Curso' : t('auth.dashboard.continue')} &rarr;
                                             </button>
@@ -256,10 +268,6 @@ const Dashboard = () => {
                                     );
                                 })}
 
-                                {/* Fallback if no courses started and Logic course is not present/started?? 
-                                    Actually, if logic course is 0% it will show up due to the exception above.
-                                    So the fallback is basically if NO courses are returned from API.
-                                */}
                                 {courses.length === 0 && (
                                     <div className="text-center py-8">
                                         <p className="text-gray-500 dark:text-gray-400 mb-4">Nenhum curso disponível.</p>
@@ -271,7 +279,6 @@ const Dashboard = () => {
 
                     {/* Sidebar */}
                     <div className="space-y-8">
-                        {/* Account Actions */}
                         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 border border-gray-100 dark:border-gray-700">
                             <h3 className="font-bold text-gray-900 dark:text-white mb-4">Conta</h3>
                             <button
@@ -295,7 +302,67 @@ const Dashboard = () => {
                     </div>
                 </div>
             </div>
+
+            {/* EDIT PROFILE MODAL */}
+            {showEditModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm p-4">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-md p-6 border border-gray-200 dark:border-gray-700">
+                        <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Editar Perfil</h2>
+
+                        <form onSubmit={handleSaveProfile} className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nome Completo</label>
+                                <input
+                                    type="text"
+                                    value={editData.name}
+                                    onChange={(e) => setEditData({ ...editData, name: e.target.value })}
+                                    className="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border"
+                                    required
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">CPF <span className="text-xs text-gray-500">(Para certificado)</span></label>
+                                <input
+                                    type="text"
+                                    value={editData.cpf}
+                                    onChange={(e) => setEditData({ ...editData, cpf: e.target.value })}
+                                    placeholder="000.000.000-00"
+                                    className="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">RG <span className="text-xs text-gray-500">(Opcional)</span></label>
+                                <input
+                                    type="text"
+                                    value={editData.rg}
+                                    onChange={(e) => setEditData({ ...editData, rg: e.target.value })}
+                                    className="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border"
+                                />
+                            </div>
+
+                            <div className="flex justify-end gap-3 mt-6">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowEditModal(false)}
+                                    className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                                >
+                                    Cancelar
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition-colors shadow-sm"
+                                >
+                                    Salvar Alterações
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </main>
+
     );
 };
 

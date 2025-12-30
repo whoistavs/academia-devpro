@@ -91,15 +91,15 @@
             "name": "Full Name",
             "submit": "Sign up",
             "error": "Signup failed"
+        },
+        "dashboard": {
+            "welcome": "Hello, {{name}}!",
+            "myCourses": "My Courses",
+            "progress": "Progress",
+            "continue": "Continue Course",
+            "deleteAccount": "Delete Account",
+            "deleteConfirm": "Are you sure you want to delete your account? This action cannot be undone."
         }
-    },
-    "dashboard": {
-        "welcome": "Hello, {{name}}!",
-        "myCourses": "My Courses",
-        "progress": "Progress",
-        "continue": "Continue Course",
-        "deleteAccount": "Delete Account",
-        "deleteConfirm": "Are you sure you want to delete your account? This action cannot be undone."
     },
     "lgpd": {
         "cookieBanner": {

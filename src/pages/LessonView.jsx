@@ -7,6 +7,7 @@ import { useTranslation } from '../context/LanguageContext';
 import ReactMarkdown from 'react-markdown';
 
 import { LessonQuiz } from '../components/LessonQuiz';
+import CommentsSection from '../components/CommentsSection';
 
 const LessonView = () => {
     const { slug, id } = useParams();
@@ -305,6 +306,7 @@ const LessonView = () => {
                             </div>
                         )}
 
+
                         <div className="flex justify-between pt-4">
                             <Link
                                 to={lessonIndex > 0 ? `/curso/${slug}/aula/${lessonIndex - 1}` : '#'}
@@ -329,6 +331,8 @@ const LessonView = () => {
                                 </button>
                             )}
                         </div>
+
+                        <CommentsSection slug={slug} lessonIndex={lessonIndex} />
                     </div>
 
                     <div className="lg:col-span-1 space-y-6">

@@ -90,15 +90,15 @@
             "name": "Nome Completo",
             "submit": "Registar",
             "error": "Falha no registo"
+        },
+        "dashboard": {
+            "welcome": "Olá, {{name}}!",
+            "myCourses": "Os Meus Cursos",
+            "progress": "Progresso",
+            "continue": "Continuar Curso",
+            "deleteAccount": "Apagar Conta",
+            "deleteConfirm": "Tem a certeza que deseja apagar a sua conta? Esta ação é irreversível."
         }
-    },
-    "dashboard": {
-        "welcome": "Olá, {{name}}!",
-        "myCourses": "Os Meus Cursos",
-        "progress": "Progresso",
-        "continue": "Continuar Curso",
-        "deleteAccount": "Apagar Conta",
-        "deleteConfirm": "Tem a certeza que deseja apagar a sua conta? Esta ação é irreversível."
     },
     "lgpd": {
         "cookieBanner": {

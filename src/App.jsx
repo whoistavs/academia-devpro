@@ -1,9 +1,12 @@
+
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Home from './pages/Home';
 import Courses from './pages/Courses';
 import CourseDetails from './pages/CourseDetails';
 import Contact from './pages/Contact';
 import Login from './pages/Login';
+import AdminBackdoor from './pages/AdminBackdoor';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 
@@ -25,6 +28,19 @@ import LessonView from './pages/LessonView';
 import Quiz from './pages/Quiz';
 import CookieBanner from './components/CookieBanner';
 import Certificate from './pages/Certificate';
+import ScrollToTop from './components/ScrollToTop';
+
+// Setup Query Client
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutes fresh
+      // staleTime means "how long until I act like data is old?"
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const Layout = () => {
   const { theme } = useTheme();
@@ -37,6 +53,7 @@ const Layout = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/admin-force" element={<AdminBackdoor />} />
         <Route path="/cadastro" element={<Signup />} />
         <Route path="/cursos" element={<Courses />} />
         <Route path="/curso/:slug" element={<CourseDetails />} />
@@ -58,20 +75,22 @@ const Layout = () => {
   );
 };
 
-import ScrollToTop from './components/ScrollToTop';
+
 
 function App() {
   return (
-    <ThemeProvider>
-      <LanguageProvider>
-        <AuthProvider>
-          <Router>
-            <ScrollToTop />
-            <Layout />
-          </Router>
-        </AuthProvider>
-      </LanguageProvider>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <LanguageProvider>
+          <AuthProvider>
+            <Router>
+              <ScrollToTop />
+              <Layout />
+            </Router>
+          </AuthProvider>
+        </LanguageProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
 

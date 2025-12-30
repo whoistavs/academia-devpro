@@ -40,31 +40,41 @@ const CourseEditor = () => {
     }, [id]);
 
     const fetchCourse = async () => {
-        setLoading(true); // Assuming API endpoint supports get by ID? 
-        // Our backend GET /api/courses/:slug supports slug. 
-        // We passed _id in the link. We should probably update backend or iterate pending courses?
-        // Let's try to fetch all professor courses and find by ID for now since we don't have a direct ID endpoint for editing specifically implemented yet (only PUT).
-        // Actually PUT /api/courses/:id exists. GET /api/courses/:id does NOT exist in my previous edit (only slug).
-        // I should have added GET /api/courses/:id.
-        // Workaround: Fetch all professor courses and find.
+        setLoading(true);
         try {
-            const courses = await api.getProfessorCourses();
+            let courses = [];
+
+            // Logic: If Admin, fetch ALL courses. If Professor, fetch only mine.
+            if (user?.role === 'admin') {
+                courses = await api.getCourses("all=true");
+            } else {
+                courses = await api.getProfessorCourses();
+            }
+
             const found = courses.find(c => c._id === id || c.id == id);
+
             if (found) {
                 // Flatten localized fields for editing simplicity
                 setCourse({
                     ...found,
-                    title: typeof found.title === 'string' ? found.title : (found.title.pt || found.title.en),
-                    description: typeof found.description === 'string' ? found.description : (found.description.pt || found.description.en),
-                    level: typeof found.level === 'string' ? found.level : (found.level.pt || found.level.en),
+                    title: typeof found.title === 'string' ? found.title : (found.title?.pt || found.title?.en || ''),
+                    description: typeof found.description === 'string' ? found.description : (found.description?.pt || found.description?.en || ''),
+                    level: typeof found.level === 'string' ? found.level : (found.level?.pt || found.level?.en || 'Iniciante'),
+                    image: found.image || '',
+                    category: found.category || 'Front-end',
+                    duration: found.duration || '',
+                    modulos: found.modulos || [],
+                    aulas: found.aulas || []
                 });
             }
         } catch (e) {
             console.error(e);
+            alert("Erro ao carregar dados do curso.");
         } finally {
             setLoading(false);
         }
     };
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;

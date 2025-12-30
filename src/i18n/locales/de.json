@@ -90,15 +90,15 @@
             "name": "Vollständiger Name",
             "submit": "Registrieren",
             "error": "Registrierung fehlgeschlagen"
+        },
+        "dashboard": {
+            "welcome": "Hallo, {{name}}!",
+            "myCourses": "Meine Kurse",
+            "progress": "Fortschritt",
+            "continue": "Kurs fortsetzen",
+            "deleteAccount": "Konto löschen",
+            "deleteConfirm": "Bist du sicher, dass du dein Konto löschen möchtest? Diese Aktion ist unwiderruflich."
         }
-    },
-    "dashboard": {
-        "welcome": "Hallo, {{name}}!",
-        "myCourses": "Meine Kurse",
-        "progress": "Fortschritt",
-        "continue": "Kurs fortsetzen",
-        "deleteAccount": "Konto löschen",
-        "deleteConfirm": "Bist du sicher, dass du dein Konto löschen möchtest? Diese Aktion ist unwiderruflich."
     },
     "lgpd": {
         "cookieBanner": {

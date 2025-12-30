@@ -1,33 +1,27 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import CourseCard from '../components/CourseCard';
+import CourseSkeleton from '../components/CourseSkeleton';
 import { api } from '../services/api';
 import { useTranslation } from '../context/LanguageContext';
 import { Search, Filter, BookOpen, Clock, BarChart } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 
 const Courses = () => {
     const { t, language } = useTranslation();
-    const [courses, setCourses] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('Todas');
     const currentLang = language || 'pt';
 
-    useEffect(() => {
-        const fetchCourses = async () => {
-            try {
-                const data = await api.getCourses();
-                setCourses(data);
-            } catch (error) {
-                console.error("Error loading courses:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchCourses();
-    }, []);
+    // React Query usage
+    const { data: courses = [], isLoading, error } = useQuery({
+        queryKey: ['courses'],
+        queryFn: () => api.getCourses(),
+        staleTime: 1000 * 60 * 5, // 5 min
+    });
 
     // Helper to get content based on language
     const getContent = (data) => {
@@ -73,7 +67,7 @@ const Courses = () => {
                         <input
                             type="text"
                             className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg leading-5 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out"
-                            placeholder={t('courses.searchPlaceholder') || "Pesquisar..."} // Fallback or reuse key
+                            placeholder={t('courses.searchPlaceholder') || "Pesquisar..."}
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
@@ -96,9 +90,14 @@ const Courses = () => {
                     </div>
                 </div>
 
-                {loading ? (
-                    <div className="flex justify-center items-center h-64">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+                {isLoading ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {/* Show 6 skeletons while loading */}
+                        {[...Array(6)].map((_, i) => <CourseSkeleton key={i} />)}
+                    </div>
+                ) : error ? (
+                    <div className="text-center py-20 text-red-500">
+                        Falha ao carregar cursos. Tente novamente.
                     </div>
                 ) : (
                     <>

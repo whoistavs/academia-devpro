@@ -90,15 +90,15 @@
             "name": "Nom Complet",
             "submit": "S'inscrire",
             "error": "Échec de l'inscription"
+        },
+        "dashboard": {
+            "welcome": "Bonjour, {{name}} !",
+            "myCourses": "Mes Cours",
+            "progress": "Progrès",
+            "continue": "Continuer le cours",
+            "deleteAccount": "Supprimer le compte",
+            "deleteConfirm": "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible."
         }
-    },
-    "dashboard": {
-        "welcome": "Bonjour, {{name}} !",
-        "myCourses": "Mes Cours",
-        "progress": "Progrès",
-        "continue": "Continuer le cours",
-        "deleteAccount": "Supprimer le compte",
-        "deleteConfirm": "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible."
     },
     "lgpd": {
         "cookieBanner": {
