@@ -14,6 +14,61 @@ const Dashboard = () => {
     const fileInputRef = React.useRef(null);
     const [courses, setCourses] = useState([]);
     const [isLoadingCourses, setIsLoadingCourses] = useState(true);
+    // Mask functions
+    const formatCPF = (value) => {
+        return value
+            .replace(/\D/g, '') // Remove non-digits
+            .replace(/(\d{3})(\d)/, '$1.$2')
+            .replace(/(\d{3})(\d)/, '$1.$2')
+            .replace(/(\d{3})(\d{1,2})/, '$1-$2')
+            .replace(/(-\d{2})\d+?$/, '$1'); // Limit length
+    };
+
+    const formatRG = (value) => {
+        return value
+            .replace(/\D/g, '') // Remove non-digits
+            .replace(/(\d{2})(\d)/, '$1.$2')
+            .replace(/(\d{3})(\d)/, '$1.$2')
+            .replace(/(\d{3})(\d{1,2})/, '$1-$2') // Adjusted to allow typing flow
+            .replace(/(-\d{1})\d+?$/, '$1'); // Limit
+    };
+
+    // CPF Validation Algorithm (Standard for Brazil)
+    const isValidCPF = (cpf) => {
+        if (!cpf) return false;
+        cpf = cpf.replace(/[^\d]+/g, '');
+        if (cpf === '') return false;
+        // Eliminate known invalid CPFs
+        if (cpf.length !== 11 ||
+            cpf === "00000000000" ||
+            cpf === "11111111111" ||
+            cpf === "22222222222" ||
+            cpf === "33333333333" ||
+            cpf === "44444444444" ||
+            cpf === "55555555555" ||
+            cpf === "66666666666" ||
+            cpf === "77777777777" ||
+            cpf === "88888888888" ||
+            cpf === "99999999999")
+            return false;
+
+        // Validate 1st digit
+        let add = 0;
+        for (let i = 0; i < 9; i++)
+            add += parseInt(cpf.charAt(i)) * (10 - i);
+        let rev = 11 - (add % 11);
+        if (rev === 10 || rev === 11) rev = 0;
+        if (rev !== parseInt(cpf.charAt(9))) return false;
+
+        // Validate 2nd digit
+        add = 0;
+        for (let i = 0; i < 10; i++)
+            add += parseInt(cpf.charAt(i)) * (11 - i);
+        rev = 11 - (add % 11);
+        if (rev === 10 || rev === 11) rev = 0;
+        if (rev !== parseInt(cpf.charAt(10))) return false;
+        return true;
+    };
 
     // Profile Edit State
     const [showEditModal, setShowEditModal] = useState(false);
@@ -39,27 +94,49 @@ const Dashboard = () => {
 
     const handleSaveProfile = async (e) => {
         e.preventDefault();
-        try {
-            // 1. Update basic info (name) via API
-            await api.updateMe({ name: editData.name });
 
-            // 2. Persist extra data locally (Backend fallback)
+        // 0. Validate CPF
+        if (editData.cpf && !isValidCPF(editData.cpf)) {
+            alert("CPF inválido! Por favor verifique o número.");
+            return;
+        }
+
+        // 1. Always save extra data locally first (Certified data needs this)
+        try {
             localStorage.setItem(`user_cpf_${user.id}`, editData.cpf);
             localStorage.setItem(`user_rg_${user.id}`, editData.rg);
+        } catch (localError) {
+            console.error("Local storage error:", localError);
+        }
 
-            // 3. Update Context
-            updateUser({
-                ...user,
-                name: editData.name, // Force name update in context
-                cpf: editData.cpf,
-                rg: editData.rg
-            });
-
-            setShowEditModal(false);
-            alert("Perfil atualizado com sucesso!");
+        let apiSuccess = false;
+        try {
+            // 2. Try to update basic info (name) via API
+            if (editData.name !== user.name) {
+                await api.updateMe({ name: editData.name });
+                apiSuccess = true;
+            } else {
+                apiSuccess = true; // No name change needed
+            }
         } catch (error) {
-            console.error(error);
-            alert("Erro ao atualizar perfil.");
+            console.error("API update failed:", error);
+            // Don't block the UI flow, just warn user
+        }
+
+        // 3. Update Context to reflect changes in UI immediately
+        updateUser({
+            ...user,
+            name: editData.name,
+            cpf: editData.cpf,
+            rg: editData.rg
+        });
+
+        setShowEditModal(false);
+
+        if (apiSuccess) {
+            alert("Perfil atualizado com sucesso!");
+        } else {
+            alert("Dados do certificado salvos localmente! (Aviso: Houve um erro ao sincronizar o nome com o servidor, mas CPF/RG foram salvos).");
         }
     };
 
@@ -326,8 +403,9 @@ const Dashboard = () => {
                                 <input
                                     type="text"
                                     value={editData.cpf}
-                                    onChange={(e) => setEditData({ ...editData, cpf: e.target.value })}
+                                    onChange={(e) => setEditData({ ...editData, cpf: formatCPF(e.target.value) })}
                                     placeholder="000.000.000-00"
+                                    maxLength={14}
                                     className="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border"
                                 />
                             </div>
@@ -337,7 +415,9 @@ const Dashboard = () => {
                                 <input
                                     type="text"
                                     value={editData.rg}
-                                    onChange={(e) => setEditData({ ...editData, rg: e.target.value })}
+                                    onChange={(e) => setEditData({ ...editData, rg: formatRG(e.target.value) })}
+                                    placeholder="00.000.000-0"
+                                    maxLength={12}
                                     className="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border"
                                 />
                             </div>
