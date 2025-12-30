@@ -32,13 +32,13 @@ const Signup = () => {
 
                 if (!response.ok) throw new Error(data.error);
 
-                login(data.accessToken, {
+                login({
                     id: data.id,
                     name: data.name,
                     email: data.email,
                     role: data.role,
                     avatar: data.avatar
-                });
+                }, data.accessToken);
                 navigate('/dashboard');
             } catch (err) {
                 setError("Falha no cadastro com Google. Verifique se o ID do Cliente está configurado.");
