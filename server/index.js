@@ -45,12 +45,26 @@ connectDB().then(async () => {
                     // We remove _id from source if it conflicts, or just create new.
                     const { _id, ...courseData } = c;
 
+
+                    // Sanitize Modules structure
+                    // If 'modulos' is array of strings, convert to objects to satisfy Schema
+                    let modulos = c.modulos || [];
+                    if (Array.isArray(modulos) && modulos.length > 0 && typeof modulos[0] === 'string') {
+                        modulos = modulos.map((m, i) => ({
+                            id: i + 1,
+                            title: m,
+                            aulas: []
+                        }));
+                    }
+
                     await Course.create({
                         ...courseData,
+                        modulos,
                         slug,
                         authorId: 'admin',
                         status: 'published'
                     });
+
                 }
                 console.log("Seeding complete.");
             }
