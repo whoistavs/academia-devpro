@@ -57,7 +57,10 @@ const Dashboard = () => {
             });
             const uploadData = await uploadResponse.json();
 
-            if (!uploadResponse.ok) throw new Error('Falha no upload');
+            if (!uploadResponse.ok) {
+                console.error("Upload Error Details:", uploadData);
+                throw new Error(uploadData.error || 'Falha no upload');
+            }
 
             // 2. Update User Profile
             const updateResponse = await fetch(`${API_URL}/api/users/me`, {
@@ -70,15 +73,15 @@ const Dashboard = () => {
             });
 
             const updateData = await updateResponse.json();
-            if (!updateResponse.ok) throw new Error('Falha ao atualizar perfil');
+            if (!updateResponse.ok) throw new Error(updateData.error || 'Falha ao atualizar perfil');
 
             // 3. Update Context
             updateUser(updateData.user);
             alert('Foto de perfil atualizada!');
 
         } catch (error) {
-            console.error(error);
-            alert('Erro ao atualizar foto de perfil.');
+            console.error("Full Upload Flow Error:", error);
+            alert(`Erro: ${error.message}`);
         }
     };
 
