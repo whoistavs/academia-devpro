@@ -24,11 +24,17 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const login = (userData, accessToken) => {
+        // Ensure name is never undefined
+        const safeUser = {
+            ...userData,
+            name: userData && userData.name && userData.name !== 'undefined' ? userData.name : 'Usuário'
+        };
+
         setToken(accessToken);
-        setUser(userData);
+        setUser(safeUser);
         setIsAuthenticated(true);
         localStorage.setItem('token', accessToken);
-        localStorage.setItem('user', JSON.stringify(userData));
+        localStorage.setItem('user', JSON.stringify(safeUser));
     };
 
     const logout = () => {
