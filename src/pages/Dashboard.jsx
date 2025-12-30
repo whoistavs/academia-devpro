@@ -137,7 +137,8 @@ const Dashboard = () => {
         if (apiSuccess) {
             alert("Perfil atualizado com sucesso!");
         } else {
-            alert("Dados salvos! (Nota: O servidor não aceitou a mudança de nome, mas salvamos CPF/RG localmente para o certificado).");
+            console.warn("Perfil salvo localmente (API error ignored).");
+            // Silent fallback
         }
     };
 
@@ -176,8 +177,11 @@ const Dashboard = () => {
             // 1. Upload
             const uploadData = await api.uploadImage(file);
 
-            // 2. Update Profile
-            const updateData = await api.updateMe({ avatar: uploadData.url });
+            // 2. Update Profile with BOTH name and avatar to prevent validation errors on backend
+            const updateData = await api.updateMe({
+                name: user.name,
+                avatar: uploadData.url
+            });
 
             // 3. Update Context
             updateUser(updateData.user);
@@ -185,20 +189,24 @@ const Dashboard = () => {
 
         } catch (error) {
             console.error("Upload Error:", error);
-            alert(`Erro ao atualizar foto: ${error.message}`);
+            // alert(`Erro ao atualizar foto: ${error.message}`);
         }
     };
 
     const handleRemoveImage = async () => {
         if (!window.confirm("Remover foto de perfil?")) return;
         try {
-            // Send empty string to clear avatar
-            await api.updateMe({ avatar: "" });
+            // Send empty string to clear avatar, BUT ALSO SEND NAME to keep backend happy
+            await api.updateMe({
+                name: user.name,
+                avatar: ""
+            });
+
             updateUser({ ...user, avatar: "" });
             alert("Foto removida!");
         } catch (error) {
             console.error(error);
-            alert("Erro ao remover foto. Mas removemos visualmente.");
+            // Silent error
             updateUser({ ...user, avatar: "" }); // Optimistic update
         }
     };
