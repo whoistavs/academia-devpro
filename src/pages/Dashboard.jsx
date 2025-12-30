@@ -104,9 +104,19 @@ const Dashboard = () => {
                     logout();
                     navigate('/');
                 } else {
+                    // Smart handling: If server says 401 (Unauthorized) or 404 (Not Found),
+                    // it means the account is already gone or token is bad.
+                    // In this case, force logout to clear the ghost session.
+                    if (response.status === 401 || response.status === 403 || response.status === 404) {
+                        alert('Sessão inválida ou conta já inexistente. Realizando limpeza local.');
+                        logout();
+                        navigate('/');
+                        return;
+                    }
+
                     const errText = await response.text();
                     console.error("Delete Error:", errText);
-                    alert('Erro ao excluir conta.');
+                    alert('Erro ao excluir conta: ' + response.status + ' - Tente fazer Logout primeiro.');
                 }
             } catch (error) {
                 console.error('Erro:', error);
