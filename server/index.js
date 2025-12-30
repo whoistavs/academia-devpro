@@ -498,6 +498,15 @@ app.patch('/api/users/me', verifyToken, async (req, res) => {
     }
 });
 
+app.post('/api/users/delete-me', verifyToken, async (req, res) => {
+    try {
+        await User.findByIdAndDelete(req.user.id);
+        res.json({ message: 'Conta excluída com sucesso.' });
+    } catch (e) {
+        res.status(500).json({ error: 'Erro ao excluir conta.' });
+    }
+});
+
 app.delete('/api/users/me', verifyToken, async (req, res) => {
     try {
         await User.findByIdAndDelete(req.user.id);

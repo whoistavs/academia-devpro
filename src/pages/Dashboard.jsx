@@ -90,8 +90,10 @@ const Dashboard = () => {
             try {
                 // Use explicit URL to match api.js hardcoded style
                 const API_URL = "https://devpro-backend.onrender.com/api";
-                const response = await fetch(`${API_URL}/users/me`, {
-                    method: 'DELETE',
+
+                // Try POST fail-safe method first to avoid DELETE method blocking
+                const response = await fetch(`${API_URL}/users/delete-me`, {
+                    method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
