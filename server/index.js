@@ -478,6 +478,16 @@ app.patch('/api/users/me', verifyToken, async (req, res) => {
     }
 });
 
+app.delete('/api/users/me', verifyToken, async (req, res) => {
+    try {
+        await User.findByIdAndDelete(req.user.id);
+        res.json({ message: 'Conta excluída com sucesso.' });
+    } catch (e) {
+        res.status(500).json({ error: 'Erro ao excluir conta.' });
+    }
+});
+
+
 
 app.post('/api/upload', upload.single('image'), (req, res) => {
     if (!req.file) return res.status(400).json({ error: 'No file' });
