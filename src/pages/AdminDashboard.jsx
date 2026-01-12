@@ -1,18 +1,166 @@
-
-import React from 'react';
+import React, { useState } from 'react';
+import { useTranslation } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
-import { Trash2, Users, ShieldAlert, Edit, BookOpen } from 'lucide-react';
+import { Trash2, Users, ShieldAlert, Edit, BookOpen, DollarSign, TrendingUp, Wallet, ArrowUpRight, Check, Ban, Clock } from 'lucide-react';
 
 import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import TableSkeleton from '../components/TableSkeleton';
-import CourseSkeleton from '../components/CourseSkeleton'; // Reuse for pending courses maybe? or just generic loading text for that small section
+import CourseSkeleton from '../components/CourseSkeleton';
+import BankDetailsModal from '../components/BankDetailsModal';
+
+const ProfessorDebtsSection = () => {
+    const queryClient = useQueryClient();
+    const { data: debts = [], isLoading } = useQuery({
+        queryKey: ['professorDebts'],
+        queryFn: api.getProfessorDebts
+    });
+
+    const handlePay = async (professorId, balance, name) => {
+        const amountStr = prompt(`Quanto você pagou para ${name}? (Saldo Total: R$ ${balance.toFixed(2)})`, balance.toString());
+        if (!amountStr) return;
+        const amount = parseFloat(amountStr.replace(',', '.'));
+        if (isNaN(amount) || amount <= 0) return alert("Valor inválido");
+
+        const notes = prompt("Observação / Comprovante (Opcional):", "Transferência Pix");
+
+        try {
+            await api.registerManualPayout({ professorId, amount, notes });
+            alert("Pagamento registrado!");
+            queryClient.invalidateQueries({ queryKey: ['professorDebts'] });
+            queryClient.invalidateQueries({ queryKey: ['financials'] });
+        } catch (e) {
+            alert("Erro ao registrar pagamento");
+        }
+    };
+
+    if (isLoading) return <TableSkeleton rows={2} />;
+    if (debts.length === 0) return null;
+
+    return (
+        <div className="bg-white dark:bg-gray-800 shadow-xl rounded-lg overflow-hidden border border-purple-200 dark:border-purple-900">
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700 bg-purple-50 dark:bg-purple-900/20">
+                <h2 className="text-xl font-semibold text-purple-800 dark:text-purple-100 flex items-center">
+                    <Wallet className="w-5 h-5 mr-2" />
+                    Contas a Pagar (Professores)
+                </h2>
+            </div>
+            <div className="p-6">
+                <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+                    {debts.map(d => (
+                        <li key={d.professorId} className="py-4 flex items-center justify-between">
+                            <div>
+                                <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+                                    {d.name}
+                                </h3>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">
+                                    Chave Pix: <span className="font-mono bg-gray-100 dark:bg-gray-700 px-1 rounded">{d.pixKey}</span>
+                                </p>
+                                <p className="text-xs text-purple-600 dark:text-purple-400 mt-1">
+                                    Vendas: R$ {d.totalEarned.toFixed(2)} | Já Pago: R$ {d.totalPaid.toFixed(2)}
+                                </p>
+                            </div>
+                            <div className="flex items-center space-x-4">
+                                <div className="text-right">
+                                    <span className="block text-sm text-gray-500 dark:text-gray-400">Saldo a Pagar</span>
+                                    <span className="block text-xl font-bold text-green-600 dark:text-green-400">R$ {d.balance.toFixed(2)}</span>
+                                </div>
+                                <button
+                                    onClick={() => handlePay(d.professorId, d.balance, d.name)}
+                                    className="flex items-center px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 text-sm font-medium transition-colors"
+                                >
+                                    <Check className="w-4 h-4 mr-1" /> Pagar Manualmente
+                                </button>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </div>
+    );
+};
+
+const PendingPaymentsSection = () => {
+    const queryClient = useQueryClient();
+    const { data: approvals = [], isLoading } = useQuery({
+        queryKey: ['approvals'],
+        queryFn: api.getPendingApprovals
+    });
+
+    const handleApprove = async (id) => {
+        if (!window.confirm("Confirmar recebimento e liberar curso?")) return;
+        try {
+            await api.approveTransaction(id);
+            alert("Pagamento aprovado!");
+            queryClient.invalidateQueries({ queryKey: ['approvals'] });
+            queryClient.invalidateQueries({ queryKey: ['financials'] });
+        } catch (e) { alert("Erro ao aprovar"); }
+    };
+
+    const handleReject = async (id) => {
+        if (!window.confirm("Rejeitar este pagamento?")) return;
+        try {
+            await api.rejectTransaction(id);
+            queryClient.invalidateQueries({ queryKey: ['approvals'] });
+        } catch (e) { alert("Erro ao rejeitar"); }
+    };
+
+    if (isLoading) return <TableSkeleton rows={2} />;
+    if (approvals.length === 0) return null;
+
+    return (
+        <div className="bg-white dark:bg-gray-800 shadow-xl rounded-lg overflow-hidden border border-blue-200 dark:border-blue-900">
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700 bg-blue-50 dark:bg-blue-900/20">
+                <h2 className="text-xl font-semibold text-blue-800 dark:text-blue-100 flex items-center">
+                    <Clock className="w-5 h-5 mr-2" />
+                    Aprovações de Pagamento Pendentes ({approvals.length})
+                </h2>
+            </div>
+            <div className="p-6">
+                <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+                    {approvals.map(t => (
+                        <li key={t._id} className="py-4 flex items-center justify-between">
+                            <div>
+                                <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+                                    {t.courseTitle}
+                                </h3>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">
+                                    Aluno: <span className="font-semibold">{t.buyerName}</span> ({t.buyerEmail})
+                                </p>
+                                <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
+                                    Valor: R$ {t.amount?.toFixed(2)} • ID: {t.mpPaymentId}
+                                </p>
+                            </div>
+                            <div className="flex space-x-2">
+                                <button
+                                    onClick={() => handleApprove(t._id)}
+                                    className="flex items-center px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 text-sm font-medium transition-colors"
+                                >
+                                    <Check className="w-4 h-4 mr-1" /> Aprovar
+                                </button>
+                                <button
+                                    onClick={() => handleReject(t._id)}
+                                    className="flex items-center px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 text-sm font-medium transition-colors"
+                                >
+                                    <Ban className="w-4 h-4 mr-1" /> Rejeitar
+                                </button>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </div>
+    );
+};
 
 const AdminDashboard = () => {
     const { user } = useAuth();
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
+    const [showBankModal, setShowBankModal] = useState(false);
+    const [withdrawing, setWithdrawing] = useState(false);
 
     // Redirect if not admin
     React.useEffect(() => {
@@ -34,14 +182,20 @@ const AdminDashboard = () => {
         enabled: user?.role === 'admin'
     });
 
+    const { data: financials, isLoading: loadingFinancials, error: financialError } = useQuery({
+        queryKey: ['financials'],
+        queryFn: api.getFinancials,
+        enabled: user?.role === 'admin'
+    });
+
 
     // ACTIONS
     const handleDelete = async (id) => {
-        if (!window.confirm('Tem certeza que deseja excluir este usuário?')) return;
+        if (!window.confirm(t('admin.dashboard.confirmDelete'))) return;
         try {
             await api.adminDeleteUser(id);
             // Invalidate cache to refetch automatically
-            queryClient.invalidateQueries(['users']);
+            queryClient.invalidateQueries({ queryKey: ['users'] });
         } catch (err) {
             alert('Erro ao excluir usuário.');
         }
@@ -53,24 +207,47 @@ const AdminDashboard = () => {
         else if (currentRole === 'professor') newRole = 'admin';
         else if (currentRole === 'admin') newRole = 'student';
 
-        if (!window.confirm(`Deseja alterar o nível de acesso para: ${newRole}?`)) return;
+        if (!window.confirm(t('admin.dashboard.confirmRole', { role: newRole }))) return;
 
         try {
             await api.updateUserRole(id, newRole);
-            queryClient.invalidateQueries(['users']);
+            queryClient.invalidateQueries({ queryKey: ['users'] });
         } catch (err) {
-            alert('Erro ao atualizar função.');
+            console.error(err);
+            alert(err.message || 'Erro ao atualizar função.');
         }
     };
 
     const handleCourseStatus = async (courseId, status) => {
-        if (!window.confirm(`Deseja mudar o status para: ${status}?`)) return;
+        if (!window.confirm(t('admin.dashboard.confirmStatus', { status }))) return;
         try {
             await api.updateCourseStatus(courseId, status);
-            queryClient.invalidateQueries(['courses', 'all']);
-            queryClient.invalidateQueries(['courses']); // Update public list too
+            queryClient.invalidateQueries({ queryKey: ['courses', 'all'] });
+            queryClient.invalidateQueries({ queryKey: ['courses'] }); // Update public list too
         } catch (e) {
             alert("Erro ao moderar curso");
+        }
+    };
+
+    const handleWithdraw = async () => {
+        if (!financials || financials.summary.availableBalance <= 0) return;
+
+        const pixKey = user.bankAccount?.pixKey;
+        const message = pixKey
+            ? `Confirma a transferência de R$ ${financials.summary.availableBalance.toFixed(2)} para a chave Pix: ${pixKey}?`
+            : `Confirma o saque de R$ ${financials.summary.availableBalance.toFixed(2)} para a conta configurada?`;
+
+        if (!window.confirm(message)) return;
+
+        setWithdrawing(true);
+        try {
+            await api.requestPayout();
+            alert(pixKey ? "Pix enviado com sucesso! Verifique sua conta." : "Saque solicitado! O valor cairá na sua conta em breve.");
+            queryClient.invalidateQueries({ queryKey: ['financials'] });
+        } catch (e) {
+            alert(e.message);
+        } finally {
+            setWithdrawing(false);
         }
     };
 
@@ -87,176 +264,290 @@ const AdminDashboard = () => {
                 <div className="flex items-center justify-between mb-8">
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center">
                         <ShieldAlert className="w-8 h-8 mr-3 text-red-600" />
-                        Painel Administrativo
+                        {t('admin.dashboard.title')}
                     </h1>
                 </div>
 
-                {/* COURSE APPROVALS */}
-                {loadingCourses ? (
-                    <div className="mb-8"><TableSkeleton rows={2} /></div>
-                ) : pendingCourses.length > 0 && (
-                    <div className="bg-white dark:bg-gray-800 shadow-xl rounded-lg overflow-hidden border border-amber-200 dark:border-amber-700 mb-8">
-                        <div className="p-6 border-b border-gray-200 dark:border-gray-700 bg-amber-50 dark:bg-amber-900/20">
-                            <h2 className="text-xl font-semibold text-amber-800 dark:text-amber-100 flex items-center">
-                                <ShieldAlert className="w-5 h-5 mr-2" />
-                                Aprovação de Cursos Pendentes ({pendingCourses.length})
-                            </h2>
-                        </div>
-                        <div className="p-6">
-                            <ul className="divide-y divide-gray-200 dark:divide-gray-700">
-                                {pendingCourses.map(course => (
-                                    <li key={course.id} className="py-4 flex items-center justify-between">
-                                        <div>
-                                            <h3 className="text-lg font-medium text-gray-900 dark:text-white">
-                                                {getTitle(course)}
-                                            </h3>
-                                            <p className="text-sm text-gray-500 dark:text-gray-400">
-                                                Autor ID: {course.authorId} | Categoria: {course.category}
-                                            </p>
-                                        </div>
-                                        <div className="flex space-x-2">
-                                            <button
-                                                onClick={() => handleCourseStatus(course._id || course.id, 'published')}
-                                                className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-sm font-medium transition-colors"
-                                            >
-                                                Aprovar
-                                            </button>
-                                            <button
-                                                onClick={() => handleCourseStatus(course._id || course.id, 'rejected')}
-                                                className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-sm font-medium transition-colors"
-                                            >
-                                                Rejeitar
-                                            </button>
-                                        </div>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
+                {/* FINANCIAL OVERVIEW */}
+                <div className="mb-8">
+                    <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 flex items-center">
+                            <DollarSign className="w-5 h-5 mr-2" />
+                            Visão Geral Financeira
+                        </h2>
+                        {financials && (
+                            <button
+                                onClick={() => setShowBankModal(true)}
+                                className="inline-flex items-center px-3 py-1.5 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            >
+                                <Wallet className="w-4 h-4 mr-2 text-green-500" />
+                                Configurar Conta Itaú (Admin)
+                            </button>
+                        )}
                     </div>
-                )}
+
+                    {loadingFinancials && (
+                        <div className="p-12 text-center bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto mb-2"></div>
+                            <p className="text-gray-500">Carregando financeiro...</p>
+                        </div>
+                    )}
+
+                    {financialError && (
+                        <div className="p-6 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 rounded-lg border border-red-200 dark:border-red-800">
+                            <p className="font-bold">Erro ao carregar dados financeiros:</p>
+                            <p>{financialError.message}</p>
+                            {financialError.message.includes('403') && (
+                                <p className="mt-2 text-sm">
+                                    Sua sessão pode estar expirada. Tente fazer <button onClick={() => navigate('/login')} className="underline font-bold">login novamente</button>.
+                                </p>
+                            )}
+                        </div>
+                    )}
+
+                    {financials && (
+                        <>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {/* TOTAL SALES */}
+                                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border-l-4 border-indigo-500">
+                                    <div className="flex justify-between items-center">
+                                        <div>
+                                            <p className="text-gray-500 text-sm font-medium uppercase">Vendas Totais</p>
+                                            <h3 className="text-2xl font-bold text-gray-900 dark:text-white">R$ {financials.summary.totalSales.toFixed(2)}</h3>
+                                        </div>
+                                        <div className="p-3 bg-indigo-100 dark:bg-indigo-900/30 rounded-full">
+                                            <DollarSign className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* YOUR COMMISSION / BALANCE */}
+                                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border-l-4 border-green-500">
+                                    <div className="flex flex-col h-full justify-between">
+                                        <div className="flex justify-between items-center mb-2">
+                                            <div>
+                                                <p className="text-gray-500 text-sm font-medium uppercase">Sua Comissão (Saldo)</p>
+                                                <h3 className="text-2xl font-bold text-green-600 dark:text-green-400">R$ {financials.summary.availableBalance.toFixed(2)}</h3>
+                                                <p className="text-xs text-gray-400">Total Acumulado: R$ {financials.summary.totalFees.toFixed(2)}</p>
+                                            </div>
+                                            <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-full">
+                                                <TrendingUp className="w-6 h-6 text-green-600 dark:text-green-400" />
+                                            </div>
+                                        </div>
+                                        <button
+                                            onClick={handleWithdraw}
+                                            disabled={withdrawing || financials.summary.availableBalance <= 0}
+                                            className="w-full mt-2 inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md active:shadow-none"
+                                        >
+                                            <ArrowUpRight className="w-4 h-4 mr-1" />
+                                            {withdrawing ? 'Enviando Pix...' : 'Receber via Pix Agora'}
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* PAYOUTS TO PROS */}
+                                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border-l-4 border-gray-400">
+                                    <div className="flex justify-between items-center">
+                                        <div>
+                                            <p className="text-gray-500 text-sm font-medium uppercase">A Pagar Aos Pro.</p>
+                                            <h3 className="text-2xl font-bold text-gray-900 dark:text-white">R$ {financials.summary.totalPayouts.toFixed(2)}</h3>
+                                        </div>
+                                        <div className="p-3 bg-gray-100 dark:bg-gray-700 rounded-full">
+                                            <Users className="w-6 h-6 text-gray-600 dark:text-gray-400" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </>
+                    )}
+                </div>
+
+                {/* PROFESSOR DEBTS (ACCOUNTS PAYABLE) */}
+                <div className="mb-8">
+                    <ProfessorDebtsSection />
+                </div>
+
+                {/* PAYMENT APPROVALS */}
+                {
+                    <div className="mb-8">
+                        <PendingPaymentsSection />
+                    </div>
+                }
+
+                {/* COURSE APPROVALS */}
+                {
+                    loadingCourses ? (
+                        <div className="mb-8"><TableSkeleton rows={2} /></div>
+                    ) : pendingCourses.length > 0 && (
+                        <div className="bg-white dark:bg-gray-800 shadow-xl rounded-lg overflow-hidden border border-amber-200 dark:border-amber-700 mb-8">
+                            <div className="p-6 border-b border-gray-200 dark:border-gray-700 bg-amber-50 dark:bg-amber-900/20">
+                                <h2 className="text-xl font-semibold text-amber-800 dark:text-amber-100 flex items-center">
+                                    <ShieldAlert className="w-5 h-5 mr-2" />
+                                    {t('admin.dashboard.pendingApproval')} ({pendingCourses.length})
+                                </h2>
+                            </div>
+                            <div className="p-6">
+                                <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+                                    {pendingCourses.map(course => (
+                                        <li key={course.id} className="py-4 flex items-center justify-between">
+                                            <div>
+                                                <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+                                                    {getTitle(course)}
+                                                </h3>
+                                                <p className="text-sm text-gray-500 dark:text-gray-400">
+                                                    Autor ID: {course.authorId} | Categoria: {course.category}
+                                                </p>
+                                            </div>
+                                            <div className="flex space-x-2">
+                                                <button
+                                                    onClick={() => handleCourseStatus(course._id || course.id, 'published')}
+                                                    className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-sm font-medium transition-colors"
+                                                >
+                                                    {t('admin.dashboard.approve')}
+                                                </button>
+                                                <button
+                                                    onClick={() => handleCourseStatus(course._id || course.id, 'rejected')}
+                                                    className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-sm font-medium transition-colors"
+                                                >
+                                                    {t('admin.dashboard.reject')}
+                                                </button>
+                                            </div>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </div>
+                    )
+                }
 
 
                 {/* ALL COURSES MANAGEMENT */}
-                {loadingCourses ? (
-                    <div className="mb-8"><TableSkeleton rows={3} /></div>
-                ) : (
-                    <div className="bg-white dark:bg-gray-800 shadow-xl rounded-lg overflow-hidden border border-indigo-200 dark:border-indigo-900 mb-8">
-                        <div className="p-6 border-b border-gray-200 dark:border-gray-700 bg-indigo-50 dark:bg-indigo-900/20">
-                            <h2 className="text-xl font-semibold text-indigo-800 dark:text-indigo-200 flex items-center">
-                                <BookOpen className="w-5 h-5 mr-2" />
-                                Gerenciar Cursos ({courses.length})
-                            </h2>
-                        </div>
-                        <div className="p-6">
-                            <ul className="divide-y divide-gray-200 dark:divide-gray-700 max-h-96 overflow-y-auto">
-                                {courses.map(course => (
-                                    <li key={course.id} className="py-3 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700/30 px-2 rounded -mx-2">
-                                        <div className="flex items-center">
-                                            {course.status === 'published' ? (
-                                                <span className="w-2.5 h-2.5 rounded-full bg-green-500 mr-3" title="Publicado"></span>
-                                            ) : course.status === 'pending' ? (
-                                                <span className="w-2.5 h-2.5 rounded-full bg-yellow-500 mr-3 animate-pulse" title="Pendente"></span>
-                                            ) : (
-                                                <span className="w-2.5 h-2.5 rounded-full bg-gray-400 mr-3" title="Rascunho/Outro"></span>
-                                            )}
-                                            <div>
-                                                <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
-                                                    {getTitle(course)}
-                                                </h3>
-                                                <p className="text-xs text-gray-500 dark:text-gray-400">
-                                                    {course.status.toUpperCase()} | Aulas: {course.aulas?.length || 0}
-                                                </p>
+                {
+                    loadingCourses ? (
+                        <div className="mb-8"><TableSkeleton rows={3} /></div>
+                    ) : (
+                        <div className="bg-white dark:bg-gray-800 shadow-xl rounded-lg overflow-hidden border border-indigo-200 dark:border-indigo-900 mb-8">
+                            <div className="p-6 border-b border-gray-200 dark:border-gray-700 bg-indigo-50 dark:bg-indigo-900/20">
+                                <h2 className="text-xl font-semibold text-indigo-800 dark:text-indigo-200 flex items-center">
+                                    <BookOpen className="w-5 h-5 mr-2" />
+                                    {t('admin.dashboard.manageCourses')} ({courses.length})
+                                </h2>
+                            </div>
+                            <div className="p-6">
+                                <ul className="divide-y divide-gray-200 dark:divide-gray-700 max-h-96 overflow-y-auto">
+                                    {courses.map(course => (
+                                        <li key={course.id} className="py-3 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700/30 px-2 rounded -mx-2">
+                                            <div className="flex items-center">
+                                                {course.status === 'published' ? (
+                                                    <span className="w-2.5 h-2.5 rounded-full bg-green-500 mr-3" title="Publicado"></span>
+                                                ) : course.status === 'pending' ? (
+                                                    <span className="w-2.5 h-2.5 rounded-full bg-yellow-500 mr-3 animate-pulse" title="Pendente"></span>
+                                                ) : (
+                                                    <span className="w-2.5 h-2.5 rounded-full bg-gray-400 mr-3" title="Rascunho/Outro"></span>
+                                                )}
+                                                <div>
+                                                    <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+                                                        {getTitle(course)}
+                                                    </h3>
+                                                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                        {course.status.toUpperCase()} | {t('admin.dashboard.lessons')}: {course.totalLessons}
+                                                    </p>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div className="flex space-x-2">
-                                            <button
-                                                onClick={() => navigate(`/professor/editor/${course._id || course.id}`)}
-                                                className="p-2 text-indigo-600 hover:text-indigo-900 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-full transition-colors"
-                                                title="Editar Curso"
-                                            >
-                                                <Edit className="w-4 h-4" />
-                                            </button>
-                                            {/* We can add delete here later */}
-                                        </div>
-                                    </li>
-                                ))}
-                            </ul>
+                                            <div className="flex space-x-2">
+                                                <button
+                                                    onClick={() => navigate(`/ professor / editor / ${course._id || course.id} `)}
+                                                    className="p-2 text-indigo-600 hover:text-indigo-900 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-full transition-colors"
+                                                    title="Editar Curso"
+                                                >
+                                                    <Edit className="w-4 h-4" />
+                                                </button>
+                                                {/* We can add delete here later */}
+                                            </div>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
                         </div>
-                    </div>
-                )}
+                    )
+                }
 
                 {/* USERS TABLE */}
 
-                {loadingUsers ? (
-                    <TableSkeleton rows={8} />
-                ) : (
-                    <div className="bg-white dark:bg-gray-800 shadow-xl rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
-                        <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-                            <h2 className="text-xl font-semibold text-gray-800 dark:text-white flex items-center">
-                                <Users className="w-5 h-5 mr-2" />
-                                Usuários Cadastrados ({users.length})
-                            </h2>
-                        </div>
+                {
+                    loadingUsers ? (
+                        <TableSkeleton rows={8} />
+                    ) : (
+                        <div className="bg-white dark:bg-gray-800 shadow-xl rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+                            <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                                <h2 className="text-xl font-semibold text-gray-800 dark:text-white flex items-center">
+                                    <Users className="w-5 h-5 mr-2" />
+                                    {t('admin.dashboard.registeredUsers')} ({users.length})
+                                </h2>
+                            </div>
 
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-left text-gray-600 dark:text-gray-300">
-                                <thead className="bg-gray-100 dark:bg-gray-700 uppercase text-xs font-semibold">
-                                    <tr>
-                                        <th className="px-6 py-4">Nome</th>
-                                        <th className="px-6 py-4">Email</th>
-                                        <th className="px-6 py-4">Função</th>
-                                        <th className="px-6 py-4 text-right">Ações</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                                    {users.map((u) => (
-                                        <tr key={u.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                            <td className="px-6 py-4 font-medium flex items-center">
-                                                {u.avatar && <img src={u.avatar} alt="" className="w-6 h-6 rounded-full mr-2 object-cover" />}
-                                                {u.name}
-                                            </td>
-                                            <td className="px-6 py-4">{u.email}</td>
-                                            <td className="px-6 py-4">
-                                                <button
-                                                    onClick={() => u.id !== user.id && handleRoleChange(u.id, u.role)}
-                                                    className={`px-3 py-1 rounded-full text-xs font-bold transition-all transform active:scale-95
-                                                        ${u.role === 'admin' ? 'bg-red-100 text-red-800 border border-red-200 hover:bg-red-200' :
-                                                            u.role === 'professor' ? 'bg-yellow-100 text-yellow-800 border border-yellow-200 hover:bg-yellow-200' :
-                                                                'bg-green-100 text-green-800 border border-green-200 hover:bg-green-200'}`}
-                                                    title={u.id !== user.id ? "Alterar: Estudante -> Professor -> Admin" : "Atual"}
-                                                    disabled={u.id === user.id}
-                                                    style={{ minWidth: '80px' }}
-                                                >
-                                                    {(u.role || 'student').toUpperCase()}
-                                                </button>
-                                            </td>
-                                            <td className="px-6 py-4 text-right">
-                                                {u.id !== user.id && (
-                                                    <button
-                                                        onClick={() => handleDelete(u.id)}
-                                                        className="text-red-500 hover:text-red-700 transition-colors p-2 rounded-full hover:bg-red-100 dark:hover:bg-red-900/30"
-                                                        title="Excluir Usuário"
-                                                    >
-                                                        <Trash2 className="w-5 h-5" />
-                                                    </button>
-                                                )}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                    {users.length === 0 && (
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-left text-gray-600 dark:text-gray-300">
+                                    <thead className="bg-gray-100 dark:bg-gray-700 uppercase text-xs font-semibold">
                                         <tr>
-                                            <td colSpan="4" className="px-6 py-10 text-center text-gray-400">
-                                                Nenhum usuário encontrado.
-                                            </td>
+                                            <th className="px-6 py-4">{t('admin.dashboard.table.name')}</th>
+                                            <th className="px-6 py-4">{t('admin.dashboard.table.email')}</th>
+                                            <th className="px-6 py-4">{t('admin.dashboard.table.role')}</th>
+                                            <th className="px-6 py-4 text-right">{t('admin.dashboard.table.actions')}</th>
                                         </tr>
-                                    )}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                                        {users.map((u) => (
+                                            <tr key={u._id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                                                <td className="px-6 py-4 font-medium flex items-center">
+                                                    {u.avatar && <img src={u.avatar} alt="" className="w-6 h-6 rounded-full mr-2 object-cover" />}
+                                                    {u.name}
+                                                </td>
+                                                <td className="px-6 py-4">{u.email}</td>
+                                                <td className="px-6 py-4">
+                                                    <button
+                                                        onClick={() => u._id !== user.id && handleRoleChange(u._id, u.role)}
+                                                        className={`px - 3 py - 1 rounded - full text - xs font - bold transition - all transform active: scale - 95
+                                                        ${u.role === 'admin' ? 'bg-red-100 text-red-800 border border-red-200 hover:bg-red-200' :
+                                                                u.role === 'professor' ? 'bg-yellow-100 text-yellow-800 border border-yellow-200 hover:bg-yellow-200' :
+                                                                    'bg-green-100 text-green-800 border border-green-200 hover:bg-green-200'
+                                                            } `}
+                                                        title={u._id !== user.id ? "Alterar: Estudante -> Professor -> Admin" : "Atual"}
+                                                        disabled={u._id === user.id}
+                                                        style={{ minWidth: '80px' }}
+                                                    >
+                                                        {(u.role || 'student').toUpperCase()}
+                                                    </button>
+                                                </td>
+                                                <td className="px-6 py-4 text-right">
+                                                    {u._id !== user.id && (
+                                                        <button
+                                                            onClick={() => handleDelete(u._id)}
+                                                            className="text-red-500 hover:text-red-700 transition-colors p-2 rounded-full hover:bg-red-100 dark:hover:bg-red-900/30"
+                                                            title="Excluir Usuário"
+                                                        >
+                                                            <Trash2 className="w-5 h-5" />
+                                                        </button>
+                                                    )}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                        {users.length === 0 && (
+                                            <tr>
+                                                <td colSpan="4" className="px-6 py-10 text-center text-gray-400">
+                                                    {t('admin.dashboard.noUsers')}
+                                                </td>
+                                            </tr>
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                    </div>
-                )}
-            </div>
-        </main>
+                    )
+                }
+            </div >
+            <BankDetailsModal isOpen={showBankModal} onClose={() => setShowBankModal(false)} />
+        </main >
     );
 };
 

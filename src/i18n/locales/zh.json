@@ -81,6 +81,8 @@
             "submit": "登录",
             "email": "电子邮件地址",
             "password": "密码",
+            "forgotPassword": "忘记密码",
+            "rememberMe": "记住我",
             "error": "登录失败"
         },
         "signup": {
@@ -89,7 +91,40 @@
             "loginLink": "登录",
             "name": "全名",
             "submit": "注册",
-            "error": "注册失败"
+            "error": "注册失败",
+            "agreeTerms": "我已阅读并同意使用条款和隐私政策",
+            "verifyEmailTitle": "验证您的电子邮件",
+            "verifyEmailSent": "我们已发送确认链接至",
+            "verifyEmailInstruction": "请点击发送的链接以激活您的帐户并访问该平台。",
+            "goToLogin": "前往登录",
+            "spamWarning": "没有收到？请检查您的垃圾邮件文件夹。"
+        },
+        "forgotPassword": {
+            "title": "找回密码",
+            "step1": "输入您的电子邮件以接收验证码。",
+            "step2": "代码已发送至 {{email}}",
+            "step3": "创建您的新访问密码。",
+            "sendCode": "发送代码",
+            "verifyCode": "验证代码",
+            "reset": "更改密码",
+            "backToLogin": "返回登录",
+            "codePlaceholder": "6位代码",
+            "newPasswordPlaceholder": "新密码",
+            "passwordLengthError": "密码长度必须至少为 8 个字符。",
+            "passwordNumberError": "密码必须包含至少一个数字。",
+            "passwordSpecialError": "密码必须包含至少一个特殊字符 (!@#...)。"
+        },
+        "changePassword": {
+            "title": "更改密码",
+            "currentPassword": "当前密码",
+            "newPassword": "新密码",
+            "confirmPassword": "确认新密码",
+            "submit": "更改密码",
+            "saving": "保存中...",
+            "cancel": "取消",
+            "success": "密码修改成功！",
+            "errorMatch": "新密码和确认密码不匹配。",
+            "errorGeneric": "修改密码时出错。"
         },
         "dashboard": {
             "welcome": "你好，{{name}}！",
@@ -97,10 +132,65 @@
             "progress": "进度",
             "continue": "继续课程",
             "deleteAccount": "删除账户",
-            "deleteConfirm": "你确定要删除你的账户吗？此操作不可逆。"
+            "deleteConfirm": "你确定要删除你的账户吗？此操作不可逆。",
+            "myCertificates": "我的证书",
+            "noCourses": "没有可用的课程。",
+            "completed": "已完成",
+            "viewCertificate": "查看证书",
+            "noCertificates": "您还没有证书。",
+            "account": "账户",
+            "changePassword": "更改密码",
+            "completeToEarn": "完成课程的 100% 即可获得证书！"
+        },
+        "completeProfile": {
+            "title": "完成注册",
+            "description": "要访问平台，我们需要一些额外信息。",
+            "name": "全名",
+            "cpf": "身份证号 (CPF)",
+            "rg": "身份证号 (RG)",
+            "birthDate": "出生日期",
+            "submit": "保存并继续",
+            "saving": "保存中..."
         }
     },
-    "lgpd": {
+    "professor": {
+        "dashboard": {
+            "title": "讲师仪表板",
+            "subtitle": "管理您的课程并创建新内容。",
+            "createCourse": "创建新课程",
+            "createCourseBtn": "创建课程",
+            "noCourses": "未创建课程",
+            "startCreating": "开始创建您的第一门课程以分享知识。"
+        },
+        "status": {
+            "published": "已发布",
+            "rejected": "已拒绝",
+            "pending": "审核中",
+            "draft": "草稿"
+        }
+    },
+    "admin": {
+        "dashboard": {
+            "title": "管理面板",
+            "pendingApproval": "待审批课程",
+            "approve": "批准",
+            "reject": "拒绝",
+            "manageCourses": "管理课程",
+            "lessons": "课时",
+            "registeredUsers": "注册用户",
+            "noUsers": "未找到用户。",
+            "table": {
+                "name": "姓名",
+                "email": "邮箱",
+                "role": "角色",
+                "actions": "操作"
+            },
+            "confirmDelete": "您确定要删除此用户吗？",
+            "confirmRole": "您想将访问级别更改为：{{role}} 吗？",
+            "confirmStatus": "您想将状态更改为：{{status}} 吗？"
+        }
+    },
+    "legal": {
         "cookieBanner": {
             "text": "我们使用 cookie 来改善您的体验。继续即表示您同意我们的",
             "link": "隐私政策",

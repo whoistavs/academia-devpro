@@ -20,7 +20,7 @@ const CommentsSection = ({ slug, lessonIndex }) => {
     const mutation = useMutation({
         mutationFn: (newComment) => api.postComment(newComment),
         onSuccess: () => {
-            queryClient.invalidateQueries(['comments', slug, lessonIndex]);
+            queryClient.invalidateQueries({ queryKey: ['comments', slug, lessonIndex] });
             setContent('');
         }
     });

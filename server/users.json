@@ -1,38 +1,108 @@
 [
   {
+    "bankAccount": {
+      "pixKey": "13eede2d-188c-456e-a39c-17fa855e496b",
+      "bank": "",
+      "agency": "",
+      "account": "",
+      "accountType": "corrente"
+    },
+    "_id": "695ff1bd7869dedee38e7df7",
     "name": "Octavio Rodrigues Schwab",
     "email": "octavio.marvel2018@gmail.com",
-    "password": "$2a$08$SMtG//xVSiykq2gE98sThO5..Kg94C38gi82uUQHCDs3c2jO0fNUy",
-    "createdAt": "2025-12-16T18:10:44.258Z",
+    "password": "$2a$08$RN3ZmYEbOUmx4SVEjuxDKuWb2yML6EZERNe8IT3SLyl3ojgF5uly2",
     "role": "admin",
-    "_id": "1765981908197",
-    "avatar": "http://localhost:3000/uploads/1765981908160.jpg"
+    "avatar": "http://localhost:3000/uploads/1767895577685.jpg",
+    "cpf": "11111111111",
+    "rg": "111111111",
+    "birthDate": "1990-01-01T00:00:00.000Z",
+    "profileCompleted": true,
+    "purchasedCourses": [
+      "695fd5bdc939b2df5f0e98a1",
+      "695ff1bd7869dedee38e7dff",
+      "695ff7fd9ba61842e8f7194c",
+      "6960e37071b83e0136d97942"
+    ],
+    "isVerified": true,
+    "authProvider": "local",
+    "createdAt": "2026-01-08T13:40:44.911Z",
+    "__v": 1
   },
   {
-    "name": "Test User",
-    "email": "test@example.com",
-    "password": "$2a$08$XYZvvkinyJWwXSxVcPjW2uU6C.zd8ZAO/zkG9wsaqOTGx2qRA3UeO",
-    "createdAt": "2025-12-17T16:43:44.888Z",
-    "_id": "1765989824889"
+    "bankAccount": {
+      "pixKey": "56598457890",
+      "bank": "",
+      "agency": "",
+      "account": "",
+      "accountType": "corrente"
+    },
+    "_id": "695ffcbc659ac22d1698eff6",
+    "name": "Adonai",
+    "email": "suporte@adonairh.com",
+    "password": "$2a$08$dD/36Is2I9HTMcXSwyC7Je.8VLuZugIYG/3NsMPpdgDwS5URELv0C",
+    "role": "professor",
+    "username": "adonairh",
+    "cpf": "11111111111",
+    "rg": "11.111.111-1",
+    "birthDate": "1111-11-11T00:00:00.000Z",
+    "profileCompleted": true,
+    "purchasedCourses": [
+      "695ff5ae7384ac33ce953c83"
+    ],
+    "isVerified": true,
+    "verificationToken": "px94blfngb",
+    "authProvider": "local",
+    "createdAt": "2026-01-08T18:51:40.937Z",
+    "__v": 1
   },
   {
-    "name": "Octavio Rodrigues Schwab",
-    "email": "octavio.rs2006@outlook.com",
-    "password": "$2a$08$4G5z.9Yg3LqglRsivzHDAeD2qhdW3B42qygkvzi9GPt3RD9yKMycG",
+    "_id": "6960e57571b83e0136d979fc",
+    "name": "Test Buyer",
+    "email": "testbuyer777@gmail.com",
+    "password": "$2a$08$igZa5iZXTfJC.xTQt1uwSe45/x8IVzRLykYtWNZBbAtYM5tLgp1cG",
     "role": "student",
+    "username": "testbuyer777",
+    "profileCompleted": false,
+    "purchasedCourses": [],
     "isVerified": false,
-    "verificationToken": "pmhs3n49dzpmjhdec5r",
-    "createdAt": "2025-12-22T16:28:23.440Z",
-    "_id": "1766420903440da3r9"
+    "verificationToken": "n168tqe525",
+    "authProvider": "local",
+    "createdAt": "2026-01-09T11:24:37.850Z",
+    "__v": 0
+  },
+  {
+    "_id": "6960e8f871b83e0136d97a01",
+    "name": "Test Payment User",
+    "email": "test66@test.com",
+    "password": "$2a$08$jgUNgDkGEUHh3NhRUXi42uxkvWOPXZp9mJwqTfdM87Y12wiySb.k.",
+    "role": "student",
+    "username": "testpayment596",
+    "profileCompleted": false,
+    "purchasedCourses": [],
+    "isVerified": false,
+    "verificationToken": "xk5kxyuqw9l",
+    "authProvider": "local",
+    "createdAt": "2026-01-09T11:39:36.520Z",
+    "__v": 0
   },
   {
     "name": "Teste",
-    "email": "suporte@adonairh.com",
-    "password": "$2a$08$zpdNp4aHQ25y7XNkm4hqQOLnGd1q.PZ5it9d5utSKdHNv8riy5yym",
+    "email": "octavio.rs2006@outlook.com",
+    "password": "$2a$08$ixlRzgbRdWJGzFJrqkaeiuG8ncL7nKNhgIpL6V0OTc3I42RWNldqG",
     "role": "student",
-    "isVerified": false,
-    "verificationToken": "9hvdpv06lscmjint1q2",
-    "createdAt": "2025-12-23T14:07:32.090Z",
-    "_id": "1766498852090v7zys"
+    "username": "teste",
+    "profileCompleted": true,
+    "purchasedCourses": [
+      "6961022414577433551321aa"
+    ],
+    "isVerified": true,
+    "verificationToken": "4w6x6xg1x5",
+    "authProvider": "local",
+    "_id": "6961047bb85a4100ac497a46",
+    "createdAt": "2026-01-09T13:36:59.595Z",
+    "__v": 1,
+    "cpf": "565.984.578-90",
+    "rg": "1221221212",
+    "birthDate": "0001-01-01T00:00:00.000Z"
   }
 ]

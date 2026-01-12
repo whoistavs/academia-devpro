@@ -2,16 +2,15 @@
 import { useNavigate } from "react-router-dom";
 
 // Centralized API Configuration
-// FORCING PRODUCTION BACKEND to bypass local DB issues
-// const ENV_API_URL = import.meta.env.VITE_API_URL;
-const PROD_API_URL = "https://devpro-backend.onrender.com/api";
-const API_URL = PROD_API_URL;
+// Centralized API Configuration
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
 
 console.log("API Service Configured with URL:", API_URL);
 
 const getHeaders = (params = {}) => {
     const user = JSON.parse(localStorage.getItem("user"));
-    const token = user?.accessToken;
+    // AuthContext stores token separately in 'token' key
+    const token = localStorage.getItem("token") || user?.accessToken;
 
     const headers = {
         Authorization: token ? `Bearer ${token}` : "",
@@ -39,17 +38,70 @@ export const api = {
         if (!res.ok) throw new Error("Failed to fetch course");
         return res.json();
     },
+    getCourseById: async (id) => {
+        const res = await fetch(`${API_URL}/courses/id/${id}`, { headers: getHeaders() });
+        if (!res.ok) throw new Error("Failed to fetch course by ID");
+        return res.json();
+    },
 
     // --- Authentication ---
-    login: async (email, password) => {
+    login: async (email, password, rememberMe = false) => {
         const res = await fetch(`${API_URL}/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password }),
+            body: JSON.stringify({ email, password, rememberMe }),
         });
         if (!res.ok) {
             const err = await res.json();
             throw new Error(err.error || "Login fail");
+        }
+        return res.json();
+    },
+    resendVerification: async (email) => {
+        const res = await fetch(`${API_URL}/resend-verification`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email }),
+        });
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.error || "Erro ao reenviar");
+        }
+        return res.json();
+    },
+    forgotPassword: async (email, language = 'pt') => {
+        const res = await fetch(`${API_URL}/forgot-password`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, language }),
+        });
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.error || "Erro ao solicitar reset");
+        }
+        return res.json();
+    },
+    validateCode: async (email, code, language = 'pt') => {
+        const res = await fetch(`${API_URL}/validate-code`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, code, language }),
+        });
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.error || "Código inválido");
+        }
+        return res.json();
+    },
+    resetPassword: async (email, code, newPassword, language = 'pt') => {
+        const res = await fetch(`${API_URL}/reset-password`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, code, newPassword, language }),
+        });
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.error || "Erro ao redefinir senha");
         }
         return res.json();
     },
@@ -66,6 +118,18 @@ export const api = {
         }
         return res.json();
     },
+    verifyPassword: async (password) => {
+        const res = await fetch(`${API_URL}/auth/verify-password`, {
+            method: "POST",
+            headers: getHeaders(),
+            body: JSON.stringify({ password }),
+        });
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.error || "Senha incorreta");
+        }
+        return res.json();
+    },
 
     // --- User Self-Management ---
     getMe: async () => {
@@ -79,7 +143,22 @@ export const api = {
             headers: getHeaders(),
             body: JSON.stringify(data)
         });
-        if (!res.ok) throw new Error("Failed to update profile");
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.error || "Failed to update profile");
+        }
+        return res.json();
+    },
+    completeProfile: async (data) => {
+        const res = await fetch(`${API_URL}/user/complete-profile`, {
+            method: "POST",
+            headers: getHeaders(),
+            body: JSON.stringify(data)
+        });
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.error || "Failed to complete profile");
+        }
         return res.json();
     },
     deleteMe: async () => {
@@ -96,6 +175,18 @@ export const api = {
 
         if (!res.ok) throw new Error("Failed to delete account");
         return res.json(); // or text
+    },
+    changePassword: async (oldPassword, newPassword, language = 'pt') => {
+        const res = await fetch(`${API_URL}/users/change-password`, {
+            method: "PATCH",
+            headers: getHeaders(),
+            body: JSON.stringify({ oldPassword, newPassword, language }),
+        });
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.error || "Failed match password");
+        }
+        return res.json();
     },
     uploadImage: async (file) => {
         const formData = new FormData();
@@ -134,7 +225,10 @@ export const api = {
             headers: getHeaders(),
             body: JSON.stringify(courseData),
         });
-        if (!res.ok) throw new Error("Failed create course");
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.error || "Failed create course");
+        }
         return res.json();
     },
     updateCourse: async (id, courseData) => {
@@ -143,7 +237,10 @@ export const api = {
             headers: getHeaders(),
             body: JSON.stringify(courseData),
         });
-        if (!res.ok) throw new Error("Failed update course");
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.error || "Failed update course");
+        }
         return res.json();
     },
     getProfessorCourses: async () => {
@@ -165,7 +262,10 @@ export const api = {
             method: "DELETE",
             headers: getHeaders()
         });
-        if (!res.ok) throw new Error("Failed delete course");
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.error || "Failed delete course");
+        }
         return res.json();
     },
 
@@ -182,7 +282,10 @@ export const api = {
             headers: getHeaders(),
             body: JSON.stringify({ role }),
         });
-        if (!res.ok) throw new Error("Failed role update");
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.error || "Failed role update");
+        }
         return res.json();
     },
     adminDeleteUser: async (userId) => {
@@ -191,6 +294,99 @@ export const api = {
             headers: getHeaders()
         });
         if (!res.ok) throw new Error("Failed admin delete user");
+        return res.json();
+    },
+    getFinancials: async () => {
+        const res = await fetch(`${API_URL}/admin/financials`, { headers: getHeaders() });
+        if (!res.ok) throw new Error("Failed fetch financials");
+        return res.json();
+    },
+    requestPayout: async () => {
+        const res = await fetch(`${API_URL}/admin/payout`, {
+            method: "POST",
+            headers: getHeaders()
+        });
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.error || "Failed request payout");
+        }
+        return res.json();
+    },
+
+    // --- Approvals ---
+    getPendingApprovals: async () => {
+        const res = await fetch(`${API_URL}/admin/approvals`, { headers: getHeaders() });
+        if (!res.ok) throw new Error("Failed fetch approvals");
+        return res.json();
+    },
+    approveTransaction: async (id) => {
+        const res = await fetch(`${API_URL}/admin/approve/${id}`, {
+            method: 'POST',
+            headers: getHeaders()
+        });
+        if (!res.ok) throw new Error("Failed approve");
+        return res.json();
+    },
+    rejectTransaction: async (id) => {
+        const res = await fetch(`${API_URL}/admin/reject/${id}`, {
+            method: 'POST',
+            headers: getHeaders()
+        });
+        if (!res.ok) throw new Error("Failed reject");
+        return res.json();
+    },
+
+    // --- Professor Payouts ---
+    getProfessorDebts: async () => {
+        const res = await fetch(`${API_URL}/admin/debts`, { headers: getHeaders() });
+        if (!res.ok) throw new Error("Failed fetch debts");
+        return res.json();
+    },
+    registerManualPayout: async (data) => {
+        // data: { professorId, amount, notes }
+        const res = await fetch(`${API_URL}/admin/payouts/manual`, {
+            method: 'POST',
+            headers: getHeaders(),
+            body: JSON.stringify(data)
+        });
+        if (!res.ok) throw new Error("Failed payout");
+        return res.json();
+    },
+
+    // --- Professor Students & Chat ---
+    getProfessorStudents: async () => {
+        const res = await fetch(`${API_URL}/professor/students`, { headers: getHeaders() });
+        if (!res.ok) throw new Error("Failed fetch students");
+        return res.json();
+    },
+    getStudentProfessors: async () => {
+        const res = await fetch(`${API_URL}/student/professors`, { headers: getHeaders() });
+        if (!res.ok) throw new Error("Failed fetch professors");
+        return res.json();
+    },
+    getChatMessages: async (userId) => {
+        const res = await fetch(`${API_URL}/chat/${userId}`, { headers: getHeaders() });
+        if (!res.ok) throw new Error("Failed fetch chat");
+        return res.json();
+    },
+    sendChatMessage: async (data) => {
+        // data: { receiverId, content, file? } or FormData
+        const headers = getHeaders();
+        let body;
+
+        if (data instanceof FormData) {
+            delete headers['Content-Type']; // Let browser set boundary
+            body = data;
+        } else {
+            body = JSON.stringify(data);
+        }
+
+        const res = await fetch(`${API_URL}/chat/send`, {
+            method: 'POST',
+            headers,
+            body
+        });
+        if (!res.ok) throw new Error("Failed send message");
         return res.json();
     },
 
@@ -207,6 +403,45 @@ export const api = {
             body: JSON.stringify(data)
         });
         if (!res.ok) throw new Error("Failed post comment");
+        return res.json();
+    },
+
+    // --- Payment ---
+    createPreference: async (courseId) => {
+        const res = await fetch(`${API_URL}/checkout`, {
+            method: "POST",
+            headers: getHeaders(),
+            body: JSON.stringify({ courseId }),
+        });
+        if (!res.ok) throw new Error("Failed init checkout");
+        return res.json();
+    },
+    verifyPayment: async (payment_id, courseId) => {
+        const res = await fetch(`${API_URL}/payment/verify`, {
+            method: "POST",
+            headers: getHeaders(),
+            body: JSON.stringify({ payment_id, courseId }),
+        });
+        if (!res.ok) throw new Error("Failed verify payment");
+        return res.json();
+    },
+    confirmManualPayment: async (courseId, txId) => {
+        const res = await fetch(`${API_URL}/payment/confirm-manual`, {
+            method: "POST",
+            headers: getHeaders(),
+            body: JSON.stringify({ courseId, txId }),
+        });
+        if (!res.ok) throw new Error("Failed confirm payment");
+        return res.json();
+    },
+    // purchaseCourse: DEPRECATED IN FAVOR OF CHECKOUT
+    updateBankDetails: async (data) => {
+        const res = await fetch(`${API_URL}/users/bank-account`, {
+            method: "PUT",
+            headers: getHeaders(),
+            body: JSON.stringify(data),
+        });
+        if (!res.ok) throw new Error("Failed update bank details");
         return res.json();
     }
 };

@@ -11,16 +11,33 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Check for saved token on load
-        const storedToken = localStorage.getItem('token');
-        const storedUser = localStorage.getItem('user');
+        const initAuth = async () => {
+            const storedToken = localStorage.getItem('token');
+            // Optimistically set from storage first
+            const storedUser = localStorage.getItem('user');
+            if (storedToken) {
+                setToken(storedToken);
+                if (storedUser) {
+                    setUser(JSON.parse(storedUser));
+                    setIsAuthenticated(true);
+                }
 
-        if (storedToken && storedUser) {
-            setToken(storedToken);
-            setUser(JSON.parse(storedUser));
-            setIsAuthenticated(true);
-        }
-        setLoading(false);
+                // Verify/Refresh from server to get latest fields (authProvider, role, etc)
+                try {
+                    // Temporarily set token for api to work if not globally set yet?
+                    // actually api.js reads from localStorage too, so it's fine.
+                    const profile = await api.getMe();
+                    setUser(profile);
+                    setIsAuthenticated(true);
+                    localStorage.setItem('user', JSON.stringify(profile));
+                } catch (e) {
+                    console.error("Session invalid or expired", e);
+                    // Optional: logout() if 401? For now let's just keep local data or fail gently
+                }
+            }
+            setLoading(false);
+        };
+        initAuth();
     }, []);
 
     const login = (userData, accessToken) => {
@@ -79,17 +96,21 @@ export const AuthProvider = ({ children }) => {
 
         if (isAuthenticated) {
             try {
-                // lessonId in this simple app is just the index
-                await api.updateProgress(courseId, lessonIndex);
+                // Hack: Convert 0 to string "0" to bypass stale server 'truthy' check bug
+                // The stale server has `if (lessonId ...)` which fails for number 0. string "0" is truthy.
+                const finalId = lessonIndex === 0 ? "0" : lessonIndex;
+                await api.updateProgress({ courseId, lessonId: finalId });
             } catch (error) {
                 console.error("Failed to save progress:", error);
-                // Rollback if needed, but for now we keep optimistic state
             }
         }
     };
 
     const isLessonCompleted = (courseId, lessonIndex) => {
-        return completedLessons[courseId]?.includes(lessonIndex);
+        const arr = completedLessons[courseId];
+        if (!arr) return false;
+        // Check for number or string presentation
+        return arr.includes(lessonIndex) || arr.includes(String(lessonIndex));
     };
 
     return (

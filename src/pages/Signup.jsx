@@ -8,6 +8,7 @@ import { api } from '../services/api';
 
 const Signup = () => {
     const [name, setName] = useState('');
+    const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [role, setRole] = useState('student');
@@ -15,9 +16,8 @@ const Signup = () => {
     const [agreedToTerms, setAgreedToTerms] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
-    const { t } = useTranslation();
+    const { t, language } = useTranslation();
     const { login } = useAuth();
-
     const googleLogin = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
             try {
@@ -57,8 +57,26 @@ const Signup = () => {
             return;
         }
 
+        // Password Validation
+        const minLength = 8;
+        const hasNumber = /\d/;
+        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>_]/;
+
+        if (password.length < minLength) {
+            setError("A senha deve ter pelo menos 8 caracteres.");
+            return;
+        }
+        if (!hasNumber.test(password)) {
+            setError("A senha deve conter pelo menos um número.");
+            return;
+        }
+        if (!hasSpecialChar.test(password)) {
+            setError("A senha deve conter pelo menos um caractere especial (!@#$...).");
+            return;
+        }
+
         try {
-            await api.register(name, email, password, role);
+            await api.register({ name, username, email, password, role, language });
             setError('SUCCESS_VERIFICATION');
         } catch (err) {
             setError(err.message);
@@ -89,22 +107,22 @@ const Signup = () => {
                             <Mail className="h-12 w-12 text-green-600 dark:text-green-400" />
                         </div>
                         <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-4">
-                            Verifique seu E-mail
+                            {t('auth.signup.verifyEmailTitle')}
                         </h2>
                         <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
-                            Enviamos um link de confirmação para <strong>{email}</strong>.
+                            {t('auth.signup.verifyEmailSent')} <strong>{email}</strong>.
                             <br /><br />
-                            Por favor, clique no link enviado para ativar sua conta e acessar a plataforma.
+                            {t('auth.signup.verifyEmailInstruction')}
                         </p>
                         <div className="space-y-4">
                             <button
                                 onClick={() => navigate('/login')}
                                 className="w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
                             >
-                                Ir para Login
+                                {t('auth.signup.goToLogin')}
                             </button>
                             <p className="text-xs text-gray-500 dark:text-gray-400">
-                                Não recebeu? Verifique sua caixa de spam ou lixo eletrônico.
+                                {t('auth.signup.spamWarning')}
                             </p>
                         </div>
                     </div>
@@ -142,6 +160,22 @@ const Signup = () => {
                                         onChange={(e) => setName(e.target.value)}
                                         className="appearance-none rounded-none relative block w-full px-3 py-2 pl-10 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm bg-white dark:bg-gray-700"
                                         placeholder={t('auth.signup.name')}
+                                    />
+                                </div>
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <span className="text-gray-400 font-bold">@</span>
+                                    </div>
+                                    <input
+                                        id="username"
+                                        name="username"
+                                        type="text"
+                                        autoComplete="username"
+                                        required
+                                        value={username}
+                                        onChange={(e) => setUsername(e.target.value)}
+                                        className="appearance-none rounded-none relative block w-full px-3 py-2 pl-10 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm bg-white dark:bg-gray-700"
+                                        placeholder="Nome de Usuário (ex: whoistavs)"
                                     />
                                 </div>
                                 <div className="relative">

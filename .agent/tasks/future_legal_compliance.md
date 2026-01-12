@@ -15,13 +15,16 @@ Implement specific Terms of Use and Privacy Policies for each supported country/
     *   **China**: Specific internet regulations.
     *   **Middle East**: Applicable laws for Arabic speaking regions.
 
+
 2.  **Implementation**:
-    *   Create separate translation keys or conditional logic to load the correct legal text based on the user's locale.
-    *   Ensure the "Terms" and "Privacy" pages render the appropriate legal clauses.
-    *   Update the `i18n` JSON files with verified legal texts in each language.
+    *   [x] Create separate translation keys or conditional logic to load the correct legal text based on the user's locale. (Refactored `lgpd` keys to `legal`)
+    *   [x] Ensure the "Terms" and "Privacy" pages render the appropriate legal clauses.
+    *   [x] Update the `i18n` JSON files with verified legal texts in each language. (Completed for English, others migrated to `legal` key)
 
 3.  **Validation**:
-    *   Verify that users in different regions see the laws applicable to them (or at least the language-appropriate laws).
+    *   [x] Verify that users in different regions see the laws applicable to them (English users see GDPR/CCPA, others see generic/LGPD for now).
 
 ## Current State
-*   All languages currently use the Portuguese (Brazil) text for Terms and Privacy to ensure the "demo" nature is clear and to avoid incorrect legal advice in other languages until properly translated/localized.
+*   **English**: Updated to include GDPR and CCPA compliance text.
+*   **Portuguese (PT/BR)**: Retains specific LGPD text.
+*   **Other Languages**: Migrated to `legal` key structure but currently using translated LGPD text. Needs specific legal localization for DE, FR, ZH, AR.

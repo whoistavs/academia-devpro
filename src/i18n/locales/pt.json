@@ -75,6 +75,7 @@
             "new": "Enviar nova mensagem"
         }
     },
+    "role": "admin",
     "auth": {
         "login": {
             "title": "Entre na sua conta",
@@ -82,6 +83,8 @@
             "submit": "Entrar",
             "email": "Endereço de e-mail",
             "password": "Senha",
+            "forgotPassword": "Esqueci minha senha",
+            "rememberMe": "Manter conectado",
             "error": "Falha no login"
         },
         "signup": {
@@ -91,7 +94,39 @@
             "name": "Nome Completo",
             "submit": "Cadastrar",
             "error": "Falha no cadastro",
-            "agreeTerms": "Li e concordo com os Termos de Uso e Política de Privacidade"
+            "agreeTerms": "Li e concordo com os Termos de Uso e Política de Privacidade",
+            "verifyEmailTitle": "Verifique seu E-mail",
+            "verifyEmailSent": "Enviamos um link de confirmação para",
+            "verifyEmailInstruction": "Por favor, clique no link enviado para ativar sua conta e acessar a plataforma.",
+            "goToLogin": "Ir para Login",
+            "spamWarning": "Não recebeu? Verifique sua caixa de spam ou lixo eletrônico."
+        },
+        "forgotPassword": {
+            "title": "Recuperar Senha",
+            "step1": "Digite seu email para receber um código de verificação.",
+            "step2": "Código enviado para {{email}}",
+            "step3": "Crie sua nova senha de acesso.",
+            "sendCode": "Enviar Código",
+            "verifyCode": "Verificar Código",
+            "reset": "Alterar Senha",
+            "backToLogin": "Voltar para Login",
+            "codePlaceholder": "Código de 6 dígitos",
+            "newPasswordPlaceholder": "Nova Senha",
+            "passwordLengthError": "A senha deve ter pelo menos 8 caracteres.",
+            "passwordNumberError": "A senha deve conter pelo menos um número.",
+            "passwordSpecialError": "A senha deve conter pelo menos um caractere especial (!@#$...)."
+        },
+        "changePassword": {
+            "title": "Alterar Senha",
+            "currentPassword": "Senha Atual",
+            "newPassword": "Nova Senha",
+            "confirmPassword": "Confirmar Nova Senha",
+            "submit": "Alterar Senha",
+            "saving": "Salvando...",
+            "cancel": "Cancelar",
+            "success": "Senha alterada com sucesso!",
+            "errorMatch": "A nova senha e a confirmação não coincidem.",
+            "errorGeneric": "Erro ao alterar senha."
         },
         "dashboard": {
             "welcome": "Olá, {{name}}!",
@@ -99,10 +134,65 @@
             "progress": "Progresso",
             "continue": "Continuar Curso",
             "deleteAccount": "Excluir Conta",
-            "deleteConfirm": "Tem certeza que deseja excluir sua conta? Esta ação é irreversível."
+            "deleteConfirm": "Tem certeza que deseja excluir sua conta? Esta ação é irreversível.",
+            "myCertificates": "Meus Certificados",
+            "noCourses": "Nenhum curso disponível.",
+            "completed": "Concluído",
+            "viewCertificate": "Ver Certificado",
+            "noCertificates": "Você ainda não possui certificados.",
+            "account": "Conta",
+            "changePassword": "Alterar Senha",
+            "completeToEarn": "Complete 100% de um curso para ganhar seu diploma!"
+        },
+        "completeProfile": {
+            "title": "Complete seu Cadastro",
+            "description": "Para acessar a plataforma, precisamos de algumas informações adicionais.",
+            "name": "Nome Completo",
+            "cpf": "CPF",
+            "rg": "RG",
+            "birthDate": "Data de Nascimento",
+            "submit": "Salvar e Continuar",
+            "saving": "Salvando..."
         }
     },
-    "lgpd": {
+    "professor": {
+        "dashboard": {
+            "title": "Painel do Professor",
+            "subtitle": "Gerencie seus cursos e crie novos conteúdos.",
+            "createCourse": "Criar Novo Curso",
+            "createCourseBtn": "Criar Curso",
+            "noCourses": "Nenhum curso criado",
+            "startCreating": "Comece criando seu primeiro curso para compartilhar conhecimento."
+        },
+        "status": {
+            "published": "Publicado",
+            "rejected": "Rejeitado",
+            "pending": "Em Análise",
+            "draft": "Rascunho"
+        }
+    },
+    "admin": {
+        "dashboard": {
+            "title": "Painel Administrativo",
+            "pendingApproval": "Aprovação de Cursos Pendentes",
+            "approve": "Aprovar",
+            "reject": "Rejeitar",
+            "manageCourses": "Gerenciar Cursos",
+            "lessons": "Aulas",
+            "registeredUsers": "Usuários Cadastrados",
+            "noUsers": "Nenhum usuário encontrado.",
+            "table": {
+                "name": "Nome",
+                "email": "Email",
+                "role": "Função",
+                "actions": "Ações"
+            },
+            "confirmDelete": "Tem certeza que deseja excluir este usuário?",
+            "confirmRole": "Deseja alterar o nível de acesso para: {{role}}?",
+            "confirmStatus": "Deseja mudar o status para: {{status}}?"
+        }
+    },
+    "legal": {
         "cookieBanner": {
             "text": "Nós utilizamos cookies para melhorar sua experiência. Ao continuar, você concorda com nossa",
             "link": "Política de Privacidade",

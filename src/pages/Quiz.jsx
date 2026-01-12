@@ -11,6 +11,10 @@ const Quiz = () => {
     const { language, t } = useTranslation();
     const { isAuthenticated } = useAuth();
 
+    // Import dynamically or assume it's available via module system if simpler, 
+    // but better to copy the helper here if import fails, or use standard import at top.
+    // I will use the standard import in the updated file content.
+
     if (!isAuthenticated) {
         return <Navigate to="/login" replace />;
     }
@@ -35,6 +39,68 @@ const Quiz = () => {
     const [answers, setAnswers] = useState({});
     const [result, setResult] = useState(null); // { score: number, passed: boolean }
 
+    // State for shuffled questions
+    const [quizQuestions, setQuizQuestions] = useState([]);
+
+    // Helper for data content
+    const getContent = (data) => {
+        if (!data) return "";
+        if (typeof data === 'string') return data;
+        return data[langCode] || data['pt'] || data['en'] || Object.values(data)[0];
+    };
+
+    // Shuffle and Prepare Questions on Mount (or language change)
+    useEffect(() => {
+        if (!course || !course.quiz) return;
+
+        // Shuffle Helper
+        const shuffle = (array) => {
+            const newArr = [...array];
+            for (let i = newArr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+            }
+            return newArr;
+        };
+
+        const processQuiz = () => {
+            const processed = course.quiz.map(q => {
+                // 1. Resolve content for current language first
+                const qText = getContent(q.question);
+                const optsRaw = getContent(q.options);
+                const optsArray = Array.isArray(optsRaw) ? optsRaw : [];
+
+                // 2. Map options with original index to track answer
+                const optionsWithIndex = optsArray.map((opt, idx) => ({
+                    text: opt,
+                    originalIndex: idx
+                }));
+
+                // 3. Shuffle options
+                const shuffledOptionsWithIndex = shuffle(optionsWithIndex);
+
+                // 4. Find new index of the correct answer
+                // q.answer is the index in the original array
+                const newAnswerIndex = shuffledOptionsWithIndex.findIndex(item => item.originalIndex === q.answer);
+
+                return {
+                    id: q.id,
+                    question: qText,
+                    options: shuffledOptionsWithIndex.map(o => o.text), // Back to string array
+                    answer: newAnswerIndex
+                };
+            });
+
+            // 5. Shuffle the questions themselves
+            setQuizQuestions(shuffle(processed));
+            setAnswers({}); // Reset answers on reshuffle
+            setResult(null);
+        };
+
+        processQuiz();
+
+    }, [course, langCode]); // Re-shuffle if language changes to ensure options match text
+
     if (!course || !course.quiz) {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen">
@@ -43,13 +109,6 @@ const Quiz = () => {
             </div>
         );
     }
-
-    // Helper for data content
-    const getContent = (data) => {
-        if (!data) return "";
-        if (typeof data === 'string') return data;
-        return data[langCode] || data['pt'] || data['en'] || Object.values(data)[0];
-    };
 
     const handleOptionSelect = (questionId, optionIndex) => {
         setAnswers(prev => ({
@@ -60,36 +119,27 @@ const Quiz = () => {
 
     const calculateScore = async () => {
         let correctCount = 0;
-        course.quiz.forEach(q => {
+        // Iterate over shuffled questions to match user's view
+        quizQuestions.forEach(q => {
             if (answers[q.id] === q.answer) {
                 correctCount++;
             }
         });
 
-        const percentage = Math.round((correctCount / course.quiz.length) * 100);
+        const percentage = Math.round((correctCount / quizQuestions.length) * 100);
         const passed = percentage >= 70; // Standard passing score
 
         setResult({
             score: percentage,
             passed,
             correctCount,
-            total: course.quiz.length
+            total: quizQuestions.length
         });
 
         if (passed && isAuthenticated) {
             try {
-                // Save progress to backend
-                // lessonId is null for final exam, or we could use 'final'
-                // The backend expects lessonId to optionally add to completedLessons. 
-                // We can pass 'final' as lessonId if we want to track it as a lesson, 
-                // but for now just saving the score is enough. 
-                // Actually passing 'exam' as lessonId might be useful.
-
-                // Importing api here to avoid top-level dependency cycle if any
                 const { api } = await import('../services/api');
                 await api.updateProgress(course.id, 'final_exam', percentage);
-                // Also refresh context/progress
-                // fetchProgress(course.id);
             } catch (error) {
                 console.error("Failed to save quiz score:", error);
             }
@@ -157,13 +207,13 @@ const Quiz = () => {
                         </div>
                     ) : (
                         <div className="space-y-8">
-                            {course.quiz.map((q, index) => (
+                            {quizQuestions.map((q, index) => (
                                 <div key={q.id} className="p-6 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-200 dark:border-gray-700">
                                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                                        {index + 1}. {getContent(q.question)}
+                                        {index + 1}. {q.question}
                                     </h3>
                                     <div className="space-y-3">
-                                        {getContent(q.options).map((opt, optIndex) => (
+                                        {q.options.map((opt, optIndex) => (
                                             <label
                                                 key={optIndex}
                                                 className={`flex items-center p-3 rounded-lg border cursor-pointer transition-all ${answers[q.id] === optIndex
@@ -187,8 +237,8 @@ const Quiz = () => {
 
                             <button
                                 onClick={calculateScore}
-                                disabled={Object.keys(answers).length < course.quiz.length}
-                                className={`w-full py-4 rounded-xl font-bold text-lg transition-all ${Object.keys(answers).length < course.quiz.length
+                                disabled={Object.keys(answers).length < quizQuestions.length}
+                                className={`w-full py-4 rounded-xl font-bold text-lg transition-all ${Object.keys(answers).length < quizQuestions.length
                                     ? 'bg-gray-300 dark:bg-gray-700 text-gray-500 cursor-not-allowed'
                                     : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg hover:shadow-indigo-500/30'
                                     }`}

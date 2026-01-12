@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { Mail, Phone, MapPin, Send, Instagram, Twitter, Linkedin } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, Instagram, Twitter, Linkedin, Youtube, Facebook } from 'lucide-react';
 import { useTranslation } from '../context/LanguageContext';
 
 const Contact = () => {
@@ -97,13 +97,16 @@ const Contact = () => {
                         <div className="mt-12">
                             <div className="flex space-x-4">
                                 {/* Social Icons */}
-                                <a href="#" className="w-10 h-10 bg-indigo-700 rounded-full flex items-center justify-center hover:bg-white hover:text-indigo-900 transition-colors shadow-lg" aria-label="Instagram">
+                                <a href="https://instagram.com/devproacademy" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-indigo-700 rounded-full flex items-center justify-center hover:bg-pink-600 text-white transition-colors shadow-lg" aria-label="Instagram">
                                     <Instagram className="h-5 w-5" />
                                 </a>
-                                <a href="#" className="w-10 h-10 bg-indigo-700 rounded-full flex items-center justify-center hover:bg-white hover:text-indigo-900 transition-colors shadow-lg" aria-label="Twitter">
+                                <a href="https://youtube.com/@devproacademy" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-indigo-700 rounded-full flex items-center justify-center hover:bg-red-600 text-white transition-colors shadow-lg" aria-label="YouTube">
+                                    <Youtube className="h-5 w-5" />
+                                </a>
+                                <a href="https://twitter.com/devproacademy" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-indigo-700 rounded-full flex items-center justify-center hover:bg-black text-white transition-colors shadow-lg" aria-label="Twitter">
                                     <Twitter className="h-5 w-5" />
                                 </a>
-                                <a href="#" className="w-10 h-10 bg-indigo-700 rounded-full flex items-center justify-center hover:bg-white hover:text-indigo-900 transition-colors shadow-lg" aria-label="LinkedIn">
+                                <a href="https://linkedin.com/company/devproacademy" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-indigo-700 rounded-full flex items-center justify-center hover:bg-blue-600 text-white transition-colors shadow-lg" aria-label="LinkedIn">
                                     <Linkedin className="h-5 w-5" />
                                 </a>
                             </div>

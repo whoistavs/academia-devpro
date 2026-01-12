@@ -1,6 +1,8 @@
 
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
 import Home from './pages/Home';
 import Courses from './pages/Courses';
 import CourseDetails from './pages/CourseDetails';
@@ -8,17 +10,13 @@ import Contact from './pages/Contact';
 import Login from './pages/Login';
 import AdminBackdoor from './pages/AdminBackdoor';
 import Signup from './pages/Signup';
+import VerifyEmail from './pages/VerifyEmail';
+import ForgotPassword from './pages/ForgotPassword';
 import Dashboard from './pages/Dashboard';
-
+import CompleteProfile from './pages/CompleteProfile';
+import PaymentStatus from './pages/PaymentStatus';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-
-import { ThemeProvider } from './context/ThemeContext';
-import { LanguageProvider } from './context/LanguageContext';
-import { AuthProvider } from './context/AuthContext';
-import { useTheme } from './context/ThemeContext';
-import React from 'react';
-
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Terms from './pages/Terms';
 import AdminDashboard from './pages/AdminDashboard';
@@ -26,21 +24,50 @@ import ProfessorDashboard from './pages/ProfessorDashboard';
 import CourseEditor from './pages/CourseEditor';
 import LessonView from './pages/LessonView';
 import Quiz from './pages/Quiz';
-import CookieBanner from './components/CookieBanner';
 import Certificate from './pages/Certificate';
+
+import CookieBanner from './components/CookieBanner';
 import ScrollToTop from './components/ScrollToTop';
+
+import { ThemeProvider, useTheme } from './context/ThemeContext';
+import { LanguageProvider } from './context/LanguageContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 
 // Setup Query Client
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60 * 5, // 5 minutes fresh
-      // staleTime means "how long until I act like data is old?"
+      staleTime: 1000 * 60 * 5,
       retry: 1,
       refetchOnWindowFocus: false,
     },
   },
 });
+
+// Protected Route Component
+const ProtectedRoute = ({ children, requireProfile = true }) => {
+  const { isAuthenticated, loading, user } = useAuth();
+  const location = useLocation();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center text-white">
+        <div className="animate-pulse">Carregando...</div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  // If user needs to complete profile and is not already on that page
+  if (requireProfile && user && !user.profileCompleted) {
+    return <Navigate to="/complete-profile" replace />;
+  }
+
+  return children;
+};
 
 const Layout = () => {
   const { theme } = useTheme();
@@ -51,31 +78,46 @@ const Layout = () => {
     >
       <Navbar />
       <Routes>
+        {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/admin-force" element={<AdminBackdoor />} />
         <Route path="/cadastro" element={<Signup />} />
-        <Route path="/cursos" element={<Courses />} />
-        <Route path="/curso/:slug" element={<CourseDetails />} />
-        <Route path="/curso/:slug/aula/:id" element={<LessonView />} />
-        <Route path="/curso/:slug/prova" element={<Quiz />} />
-        <Route path="/contato" element={<Contact />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/professor" element={<ProfessorDashboard />} />
-        <Route path="/professor/editor" element={<CourseEditor />} />
-        <Route path="/professor/editor/:id" element={<CourseEditor />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route path="/recover-password" element={<ForgotPassword />} />
         <Route path="/privacidade" element={<PrivacyPolicy />} />
         <Route path="/termos" element={<Terms />} />
-        <Route path="/certificado/:slug" element={<Certificate />} />
+        <Route path="/contato" element={<Contact />} />
+
+        {/* Profile Completion - Protected by login but not by profile completion itself */}
+        <Route path="/complete-profile" element={
+          <ProtectedRoute requireProfile={false}>
+            <CompleteProfile />
+          </ProtectedRoute>
+        } />
+
+        {/* Protected Routes */}
+        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/payment/:status" element={<ProtectedRoute><PaymentStatus /></ProtectedRoute>} />
+
+        <Route path="/cursos" element={<ProtectedRoute><Courses /></ProtectedRoute>} />
+        <Route path="/curso/:slug" element={<ProtectedRoute><CourseDetails /></ProtectedRoute>} />
+        <Route path="/curso/:slug/aula/:id" element={<ProtectedRoute><LessonView /></ProtectedRoute>} />
+        <Route path="/curso/:slug/prova" element={<ProtectedRoute><Quiz /></ProtectedRoute>} />
+
+        <Route path="/certificado/:slug" element={<ProtectedRoute><Certificate /></ProtectedRoute>} />
+
+        <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+
+        <Route path="/professor" element={<ProtectedRoute><ProfessorDashboard /></ProtectedRoute>} />
+        <Route path="/professor/editor" element={<ProtectedRoute><CourseEditor /></ProtectedRoute>} />
+        <Route path="/professor/editor/:id" element={<ProtectedRoute><CourseEditor /></ProtectedRoute>} />
       </Routes>
       <Footer />
       <CookieBanner />
     </div>
   );
 };
-
-
 
 function App() {
   return (

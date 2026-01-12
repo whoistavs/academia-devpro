@@ -24,9 +24,9 @@ const CookieBanner = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="text-sm text-gray-300">
                     <p>
-                        {t('lgpd.cookieBanner.text')}
+                        {t('legal.cookieBanner.text')}
                         <a href="/privacidade" className="text-indigo-400 hover:text-indigo-300 ml-1 underline transition-colors">
-                            {t('lgpd.cookieBanner.link')}
+                            {t('legal.cookieBanner.link')}
                         </a>.
                     </p>
                 </div>
@@ -34,7 +34,7 @@ const CookieBanner = () => {
                     onClick={handleAccept}
                     className="whitespace-nowrap bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-md font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
-                    {t('lgpd.cookieBanner.accept')}
+                    {t('legal.cookieBanner.accept')}
                 </button>
             </div>
         </div>

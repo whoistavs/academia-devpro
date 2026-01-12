@@ -81,6 +81,8 @@
             "submit": "Connexion",
             "email": "Adresse e-mail",
             "password": "Mot de passe",
+            "forgotPassword": "Mot de passe oublié",
+            "rememberMe": "Se souvenir de moi",
             "error": "Échec de la connexion"
         },
         "signup": {
@@ -89,7 +91,40 @@
             "loginLink": "Connexion",
             "name": "Nom Complet",
             "submit": "S'inscrire",
-            "error": "Échec de l'inscription"
+            "error": "Échec de l'inscription",
+            "agreeTerms": "J'ai lu et j'accepte les conditions d'utilisation et la politique de confidentialité",
+            "verifyEmailTitle": "Vérifiez votre e-mail",
+            "verifyEmailSent": "Nous avons envoyé un lien de confirmation à",
+            "verifyEmailInstruction": "Veuillez cliquer sur le lien envoyé pour activer votre compte et accéder à la plateforme.",
+            "goToLogin": "Aller à la connexion",
+            "spamWarning": "Pas reçu ? Vérifiez votre dossier spam ou courrier indésirable."
+        },
+        "forgotPassword": {
+            "title": "Récupérer Mot de Passe",
+            "step1": "Entrez votre email pour recevoir un code de vérification.",
+            "step2": "Code envoyé à {{email}}",
+            "step3": "Créez votre nouveau mot de passe d'accès.",
+            "sendCode": "Envoyer le Code",
+            "verifyCode": "Vérifier le Code",
+            "reset": "Changer le Mot de Passe",
+            "backToLogin": "Retour à la Connexion",
+            "codePlaceholder": "Code à 6 chiffres",
+            "newPasswordPlaceholder": "Nouveau Mot de Passe",
+            "passwordLengthError": "Le mot de passe doit contenir au moins 8 caractères.",
+            "passwordNumberError": "Le mot de passe doit contenir au moins un chiffre.",
+            "passwordSpecialError": "Le mot de passe doit contenir au moins un caractère spécial (!@#...)."
+        },
+        "changePassword": {
+            "title": "Changer le Mot de Passe",
+            "currentPassword": "Mot de Passe Actuel",
+            "newPassword": "Nouveau Mot de Passe",
+            "confirmPassword": "Confirmer le Nouveau Mot de Passe",
+            "submit": "Changer le Mot de Passe",
+            "saving": "Sauvegarde...",
+            "cancel": "Annuler",
+            "success": "Mot de passe modifié avec succès !",
+            "errorMatch": "Le nouveau mot de passe et la confirmation ne correspondent pas.",
+            "errorGeneric": "Erreur lors du changement de mot de passe."
         },
         "dashboard": {
             "welcome": "Bonjour, {{name}} !",
@@ -97,10 +132,65 @@
             "progress": "Progrès",
             "continue": "Continuer le cours",
             "deleteAccount": "Supprimer le compte",
-            "deleteConfirm": "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible."
+            "deleteConfirm": "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.",
+            "myCertificates": "Mes Certificats",
+            "noCourses": "Aucun cours disponible.",
+            "completed": "Terminé",
+            "viewCertificate": "Voir le Certificat",
+            "noCertificates": "Vous n'avez pas encore de certificats.",
+            "account": "Compte",
+            "changePassword": "Changer le Mot de Passe",
+            "completeToEarn": "Complétez 100% d'un cours pour obtenir votre certificat !"
+        },
+        "completeProfile": {
+            "title": "Compléter l'inscription",
+            "description": "Pour accéder à la plateforme, nous avons besoin de quelques informations supplémentaires.",
+            "name": "Nom Complet",
+            "cpf": "Numéro d'identification (CPF)",
+            "rg": "Numéro d'identification (RG)",
+            "birthDate": "Date de Naissance",
+            "submit": "Enregistrer et Continuer",
+            "saving": "Sauvegarde..."
         }
     },
-    "lgpd": {
+    "professor": {
+        "dashboard": {
+            "title": "Tableau de Bord Professeur",
+            "subtitle": "Gérez vos cours et créez du nouveau contenu.",
+            "createCourse": "Créer un Nouveau Cours",
+            "createCourseBtn": "Créer un Cours",
+            "noCourses": "Aucun cours créé",
+            "startCreating": "Commencez à créer votre premier cours pour partager vos connaissances."
+        },
+        "status": {
+            "published": "Publié",
+            "rejected": "Rejeté",
+            "pending": "En Examen",
+            "draft": "Brouillon"
+        }
+    },
+    "admin": {
+        "dashboard": {
+            "title": "Panneau d'Administration",
+            "pendingApproval": "Approbations de Cours en Attente",
+            "approve": "Approuver",
+            "reject": "Rejeter",
+            "manageCourses": "Gérer les Cours",
+            "lessons": "Leçons",
+            "registeredUsers": "Utilisateurs Inscrits",
+            "noUsers": "Aucun utilisateur trouvé.",
+            "table": {
+                "name": "Nom",
+                "email": "E-mail",
+                "role": "Rôle",
+                "actions": "Actions"
+            },
+            "confirmDelete": "Êtes-vous sûr de vouloir supprimer cet utilisateur ?",
+            "confirmRole": "Voulez-vous changer le niveau d'accès à : {{role}} ?",
+            "confirmStatus": "Voulez-vous changer le statut à : {{status}} ?"
+        }
+    },
+    "legal": {
         "cookieBanner": {
             "text": "Nous utilisons des cookies pour améliorer votre expérience. En continuant, vous acceptez notre",
             "link": "Politique de Confidentialité",

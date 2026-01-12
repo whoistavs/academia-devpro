@@ -10,6 +10,7 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false);
     const [error, setError] = useState('');
     const { login } = useAuth();
     const { t } = useTranslation();
@@ -34,7 +35,8 @@ const Login = () => {
                     name: data.name,
                     email: data.email,
                     role: data.role,
-                    avatar: data.avatar
+                    avatar: data.avatar,
+                    profileCompleted: data.profileCompleted
                 }, data.accessToken);
                 navigate('/dashboard');
             } catch (err) {
@@ -50,14 +52,15 @@ const Login = () => {
         setError('');
 
         try {
-            const data = await api.login(email, password);
+            const data = await api.login(email, password, rememberMe);
 
             login({
                 id: data.id,
                 name: data.name,
                 email: data.email,
                 role: data.role,
-                avatar: data.avatar
+                avatar: data.avatar,
+                profileCompleted: data.profileCompleted
             }, data.accessToken);
             navigate('/dashboard');
         } catch (err) {
@@ -83,9 +86,30 @@ const Login = () => {
                     {error && (
                         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
                             <span className="block sm:inline">{error}</span>
+                            {error.toLowerCase().includes('verificado') && (
+                                <button
+                                    type="button"
+                                    onClick={async () => {
+                                        if (!email) {
+                                            alert("Digite seu email no campo abaixo primeiro.");
+                                            return;
+                                        }
+                                        try {
+                                            const res = await api.resendVerification(email);
+                                            alert(res.message);
+                                        } catch (e) {
+                                            alert(e.message);
+                                        }
+                                    }}
+                                    className="block mt-2 text-sm font-bold underline hover:text-red-900"
+                                >
+                                    Reenviar e-mail de verificação
+                                </button>
+                            )}
                         </div>
                     )}
                     <div className="rounded-md shadow-sm -space-y-px">
+                        {/* Email Input */}
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <Mail className="h-5 w-5 text-gray-400" />
@@ -102,6 +126,7 @@ const Login = () => {
                                 placeholder={t('auth.login.email')}
                             />
                         </div>
+                        {/* Password Input */}
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <Lock className="h-5 w-5 text-gray-400" />
@@ -128,6 +153,27 @@ const Login = () => {
                                     <Eye className="h-5 w-5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors" />
                                 )}
                             </button>
+                        </div>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                            <input
+                                id="remember-me"
+                                name="remember-me"
+                                type="checkbox"
+                                checked={rememberMe}
+                                onChange={(e) => setRememberMe(e.target.checked)}
+                                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600"
+                            />
+                            <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900 dark:text-gray-300">
+                                Manter conectado
+                            </label>
+                        </div>
+                        <div className="text-sm">
+                            <Link to="/recover-password" className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
+                                Esqueci minha senha
+                            </Link>
                         </div>
                     </div>
 

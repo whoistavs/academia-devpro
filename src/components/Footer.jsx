@@ -1,4 +1,4 @@
-import { Code2, Github, Twitter, Linkedin, Mail, Phone } from 'lucide-react';
+import { Code2, Github, Twitter, Linkedin, Mail, Phone, Instagram, Youtube, Facebook } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
@@ -49,20 +49,30 @@ const Footer = () => {
                     {/* Column 3: Social Media */}
                     <div>
                         <h3 className="text-white font-semibold uppercase tracking-wider mb-4">{t('footer.socials')}</h3>
-                        <ul className="flex space-x-6">
+                        <ul className="flex space-x-4">
                             <li>
-                                <a href="#" className="hover:text-white transition-colors" aria-label="Github">
+                                <a href="https://instagram.com/devproacademy" target="_blank" rel="noopener noreferrer" className="hover:text-pink-500 transition-colors" aria-label="Instagram">
+                                    <Instagram className="h-6 w-6" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://youtube.com/@devproacademy" target="_blank" rel="noopener noreferrer" className="hover:text-red-500 transition-colors" aria-label="YouTube">
+                                    <Youtube className="h-6 w-6" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://linkedin.com/company/devproacademy" target="_blank" rel="noopener noreferrer" className="hover:text-blue-500 transition-colors" aria-label="LinkedIn">
+                                    <Linkedin className="h-6 w-6" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/devproacademy" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors" aria-label="Github">
                                     <Github className="h-6 w-6" />
                                 </a>
                             </li>
                             <li>
-                                <a href="#" className="hover:text-white transition-colors" aria-label="Twitter">
+                                <a href="https://twitter.com/devproacademy" target="_blank" rel="noopener noreferrer" className="hover:text-blue-400 transition-colors" aria-label="Twitter">
                                     <Twitter className="h-6 w-6" />
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" className="hover:text-white transition-colors" aria-label="LinkedIn">
-                                    <Linkedin className="h-6 w-6" />
                                 </a>
                             </li>
                         </ul>

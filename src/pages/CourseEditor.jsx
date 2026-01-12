@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
-import { Save, ArrowLeft, Plus, Trash, Image as ImageIcon, Video } from 'lucide-react';
+import { Save, ArrowLeft, Trash, Plus } from 'lucide-react';
+import PasswordConfirmationModal from '../components/PasswordConfirmationModal';
+import { ModuleCard } from '../components/editor/ModuleCard';
 
 const CourseEditor = () => {
     const { id } = useParams();
@@ -10,8 +12,9 @@ const CourseEditor = () => {
     const { user } = useAuth();
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-    // Form State
+    // Initial Course State
     const [course, setCourse] = useState({
         title: '',
         description: '',
@@ -19,52 +22,77 @@ const CourseEditor = () => {
         level: 'Iniciante',
         duration: '',
         image: '',
-        modulos: [], // Array of strings (module names)
-        aulas: []    // Array of lesson objects
+        language: 'pt',
+        modulos: [], // Will contain objects { title: "...", items: [...] }
+        aulas: []    // Kept flat for legacy binding, but generated from modulos on save
     });
-
-    // We need a better structure for editing, but let's stick to the mismatched backend structure for compatibility.
-    // Backend uses: modulos: string[], aulas: { titulo: {pt}, content: {pt}, ... }[]
-    // This is hard to edit visually as "Modules containing Lessons".
-    // For this editor, we will try to group them virtually or just edit lessons linearly? 
-    // The user requirement says "criar módulos e aulas".
-    // Let's implement a UI that MAPS lessons to modules if possible, but the backend structure is weird.
-    // Let's assume a simplified structure for NEW courses where lessons have a 'module' field?
-    // Or we stick to the flat list of lessons and a list of module names. 
-    // Let's implement: Module List (manage strings) + Lesson List (with a dropdown to select Module).
 
     useEffect(() => {
         if (id) {
             fetchCourse();
+        } else {
+            // Initialize with one empty module for new courses
+            setCourse(prev => ({
+                ...prev,
+                modulos: [{ title: 'Módulo 1', items: [] }]
+            }));
         }
     }, [id]);
+
+    // Helper for UI Keys
+    const generateId = () => Math.random().toString(36).substr(2, 9);
 
     const fetchCourse = async () => {
         setLoading(true);
         try {
-            let courses = [];
-
-            // Logic: If Admin, fetch ALL courses. If Professor, fetch only mine.
-            if (user?.role === 'admin') {
-                courses = await api.getCourses("all=true");
-            } else {
-                courses = await api.getProfessorCourses();
-            }
-
-            const found = courses.find(c => c._id === id || c.id == id);
+            // Using direct ID fetch is more reliable
+            const found = await api.getCourseById(id);
 
             if (found) {
-                // Flatten localized fields for editing simplicity
+                // Adapt legacy data to hierarchical editor data
+                // 1. Convert modules to objects robustly
+                let editorModules = (found.modulos || []).map(m => {
+                    if (!m) return null;
+                    let mod = typeof m === 'string' ? { title: m, items: [] } : m;
+                    // Ensure object structure
+                    return {
+                        ...mod,
+                        title: typeof mod.title === 'string' ? mod.title : (mod.title?.pt || mod.title?.en || 'Módulo'),
+                        items: mod.items || mod.lessons || [],
+                        _uiId: generateId() // Add UI ID for React Keys
+                    };
+                }).filter(Boolean);
+
+                // 2. Distribute flat lessons if modules are empty (Legacy or Failed Save Recovery)
+                // If we have lessons but no modules (or empty modules), try to recover.
+                const hasItems = editorModules.some(m => m.items && m.items.length > 0);
+
+                if (!hasItems && found.aulas && found.aulas.length > 0) {
+                    if (editorModules.length === 0) {
+                        editorModules.push({ title: "Módulo Recuperado", items: [], _uiId: generateId() });
+                    }
+                    // Put all lessons in first module (Recovered)
+                    // We map them back to lesson items
+                    editorModules[0].items = found.aulas.map(a => ({
+                        type: a.questions ? 'quiz' : 'lesson',
+                        ...a,
+                        // Ensure title is accessible
+                        titulo: typeof a.titulo === 'string' ? { pt: a.titulo } : a.titulo,
+                        duracao: typeof a.duracao === 'string' ? { pt: a.duracao } : a.duracao,
+                        content: typeof a.content === 'string' ? { pt: a.content } : a.content
+                    }));
+                }
+
                 setCourse({
                     ...found,
                     title: typeof found.title === 'string' ? found.title : (found.title?.pt || found.title?.en || ''),
                     description: typeof found.description === 'string' ? found.description : (found.description?.pt || found.description?.en || ''),
                     level: typeof found.level === 'string' ? found.level : (found.level?.pt || found.level?.en || 'Iniciante'),
                     image: found.image || '',
+                    language: found.language || 'pt',
                     category: found.category || 'Front-end',
                     duration: found.duration || '',
-                    modulos: found.modulos || [],
-                    aulas: found.aulas || []
+                    modulos: editorModules
                 });
             }
         } catch (e) {
@@ -75,67 +103,98 @@ const CourseEditor = () => {
         }
     };
 
-
     const handleChange = (e) => {
         const { name, value } = e.target;
         setCourse(prev => ({ ...prev, [name]: value }));
     };
 
-    // Module Management
+    // --- Module Management ---
+
     const addModule = () => {
-        const name = prompt("Nome do Módulo:");
-        if (name) {
-            setCourse(prev => ({ ...prev, modulos: [...prev.modulos, name] }));
-        }
+        setCourse(prev => ({
+            ...prev,
+            modulos: [...prev.modulos, { title: `Novo Módulo`, items: [], _uiId: generateId() }]
+        }));
+    };
+
+    const addFinalExam = () => {
+        setCourse(prev => ({
+            ...prev,
+            modulos: [...prev.modulos, {
+                title: "Prova Final",
+                items: [{ type: 'quiz', questions: [], title: "Prova Final Obrigatória" }],
+                _uiId: generateId()
+            }]
+        }));
+    };
+
+    const updateModule = (index, field, value) => {
+        setCourse(prev => {
+            const newModules = [...prev.modulos];
+            newModules[index] = { ...newModules[index], [field]: value };
+            return { ...prev, modulos: newModules };
+        });
     };
 
     const removeModule = (index) => {
-        setCourse(prev => ({
-            ...prev,
-            modulos: prev.modulos.filter((_, i) => i !== index)
-        }));
+        // Confirmation is now handled in ModuleCard UI
+        setCourse(prev => {
+            const newModulos = prev.modulos.filter((_, i) => i !== index);
+            return {
+                ...prev,
+                modulos: newModulos
+            };
+        });
     };
 
-    // Lesson Management
-    const addLesson = () => {
-        const newLesson = {
-            titulo: { pt: "Nova Aula" },
-            duracao: { pt: "10 min" },
-            status: "livre",
-            content: { pt: "" },
-            video: "", // Validating "colocar vídeos"
-            link: "" // or generic link
-        };
-        setCourse(prev => ({ ...prev, aulas: [...prev.aulas, newLesson] }));
-    };
+    // --- Save & Actions ---
 
-    const updateLesson = (index, field, value) => {
-        const newAulas = [...course.aulas];
-        // Handle nested localized fields
-        if (field === 'titulo' || field === 'content' || field === 'duracao') {
-            newAulas[index][field] = { pt: value, en: value };
-        } else {
-            newAulas[index][field] = value;
+    const handleDeleteCourse = async () => {
+        try {
+            await api.deleteCourse(id);
+            navigate('/professor');
+        } catch (error) {
+            alert('Erro ao excluir curso: ' + error.message);
         }
-        setCourse(prev => ({ ...prev, aulas: newAulas }));
-    };
-
-    const removeLesson = (index) => {
-        setCourse(prev => ({
-            ...prev,
-            aulas: prev.aulas.filter((_, i) => i !== index)
-        }));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setSaving(true);
         try {
+            // Prepare Data for Backend
+            // 1. Generate flat 'aulas' array from hierarchical modules
+            const flatLessons = [];
+
+            course.modulos.forEach(mod => {
+                if (mod.items && mod.items.length > 0) {
+                    mod.items.forEach(item => {
+                        // Ensure basic fields are safe
+                        const safeItem = { ...item };
+                        if (safeItem.type === 'lesson' && !safeItem.titulo) safeItem.titulo = { pt: "Sem Título" };
+                        // Tag with module info just in case
+                        safeItem.moduleTitle = mod.title;
+                        flatLessons.push(safeItem);
+                    });
+                }
+            });
+
+            // Strip _uiId before sending to backend to keep clean
+            const cleanModules = course.modulos.map(({ _uiId, ...rest }) => rest);
+
+            const payload = {
+                ...course,
+                aulas: flatLessons,
+                modulos: cleanModules
+            };
+
             if (id) {
-                await api.updateCourse(id, course);
+                await api.updateCourse(id, payload);
             } else {
-                await api.createCourse(course);
+                await api.createCourse(payload);
             }
+            // Explicitly reload or navigate to force refresh of data
+            alert("Curso salvo com sucesso!");
             navigate('/professor');
         } catch (error) {
             alert("Erro ao salvar curso: " + error.message);
@@ -144,184 +203,184 @@ const CourseEditor = () => {
         }
     };
 
-    if (loading) return <div>Carregando...</div>;
+    if (loading) return <div className="p-10 flex justify-center"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600"></div></div>;
 
     return (
         <main className="flex-grow pt-24 pb-20 bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+
+                {/* Header */}
                 <div className="mb-8 flex items-center justify-between">
                     <div className="flex items-center">
                         <button onClick={() => navigate('/professor')} className="mr-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
                             <ArrowLeft className="w-6 h-6" />
                         </button>
                         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                            {id ? 'Editar Curso' : 'Criar Novo Curso'}
+                            {id ? 'Editar Conteúdo do Curso' : 'Criar Novo Curso'}
                         </h1>
+                    </div>
+                    <div className="flex gap-3">
+                        {id && (
+                            <button
+                                type="button"
+                                onClick={() => setShowDeleteModal(true)}
+                                className="bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 px-4 py-2 rounded-md hover:bg-red-200 dark:hover:bg-red-900/50 flex items-center transition-colors font-medium"
+                            >
+                                <Trash className="w-5 h-5 mr-2" />
+                                Excluir
+                            </button>
+                        )}
+                        <button
+                            onClick={handleSubmit}
+                            disabled={saving}
+                            className="inline-flex items-center px-6 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                        >
+                            <Save className="w-5 h-5 mr-2" />
+                            {saving ? 'Salvando...' : 'Salvar Alterações'}
+                        </button>
                     </div>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-8">
+                <form className="space-y-8" onSubmit={(e) => e.preventDefault()}>
                     {/* Basic Info */}
-                    <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6 space-y-6">
-                        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Informações Básicas</h2>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Título</label>
-                            <input
-                                type="text" name="title" value={course.title} onChange={handleChange} required
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white sm:text-sm p-2 border"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Descrição</label>
-                            <textarea
-                                name="description" value={course.description} onChange={handleChange} required rows={3}
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white sm:text-sm p-2 border"
-                            />
-                        </div>
-
+                    <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6 space-y-6 border border-gray-200 dark:border-gray-700">
+                        <h2 className="text-xl font-semibold text-gray-900 dark:text-white border-b pb-2 dark:border-gray-700">Informações Básicas</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="col-span-2">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Título do Curso</label>
+                                <input
+                                    type="text" name="title" value={course.title} onChange={handleChange} required
+                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white sm:text-sm p-3 border"
+                                    placeholder="Ex: Formação Fullstack Developer Empreendedor"
+                                />
+                            </div>
+                            <div className="col-span-2">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Descrição</label>
+                                <textarea
+                                    name="description" value={course.description} onChange={handleChange} required rows={3}
+                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white sm:text-sm p-3 border"
+                                    placeholder="Descreva o que o aluno vai aprender..."
+                                />
+                            </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Categoria</label>
                                 <select
                                     name="category" value={course.category} onChange={handleChange}
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white sm:text-sm p-2 border"
+                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white sm:text-sm p-3 border"
                                 >
                                     <option value="Front-end">Front-end</option>
                                     <option value="Back-end">Back-end</option>
                                     <option value="Mobile">Mobile</option>
                                     <option value="DevOps">DevOps</option>
                                     <option value="Fundamentos">Fundamentos</option>
+                                    <option value="Design">Design</option>
+                                    <option value="Carreira">Carreira</option>
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Duração</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Nível</label>
+                                <select
+                                    name="level" value={course.level} onChange={handleChange}
+                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white sm:text-sm p-3 border"
+                                >
+                                    <option value="Iniciante">Iniciante</option>
+                                    <option value="Intermediário">Intermediário</option>
+                                    <option value="Avançado">Avançado</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Duração Estimada</label>
                                 <input
                                     type="text" name="duration" value={course.duration} onChange={handleChange} placeholder="Ex: 20h"
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white sm:text-sm p-2 border"
+                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white sm:text-sm p-3 border"
                                 />
                             </div>
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">URL da Imagem de Capa</label>
-                            <div className="mt-1 flex rounded-md shadow-sm">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">URL da Imagem de Capa</label>
                                 <input
                                     type="text" name="image" value={course.image} onChange={handleChange} placeholder="https://..."
-                                    className="flex-1 block w-full rounded-none rounded-l-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white sm:text-sm p-2 border"
+                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white sm:text-sm p-3 border"
                                 />
-                                <span className="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-50 dark:bg-gray-600 dark:border-gray-600 text-gray-500 dark:text-gray-300 text-sm">
-                                    <ImageIcon className="h-4 w-4" />
-                                </span>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Idioma do Curso</label>
+                                <select
+                                    name="language" value={course.language} onChange={handleChange}
+                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white sm:text-sm p-3 border"
+                                >
+                                    <option value="pt">Português</option>
+                                    <option value="en">English</option>
+                                    <option value="es">Español</option>
+                                    <option value="fr">Français</option>
+                                    <option value="de">Deutsch</option>
+                                    <option value="zh">中文 (Chinese)</option>
+                                    <option value="ar">العربية (Arabic)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Preço (R$)</label>
+                                <input
+                                    type="number"
+                                    name="price"
+                                    value={course.price}
+                                    onChange={handleChange}
+                                    placeholder="0.00"
+                                    min="0"
+                                    step="0.01"
+                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white sm:text-sm p-3 border"
+                                />
+                                <p className="text-xs text-gray-500 mt-1">Deixe 0 para cursos gratuitos. 10% de taxa da plataforma será aplicada.</p>
                             </div>
                         </div>
                     </div>
 
-                    {/* Modules */}
-                    <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6 space-y-4">
-                        <div className="flex justify-between items-center">
-                            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Módulos</h2>
-                            <button type="button" onClick={addModule} className="text-indigo-600 hover:text-indigo-500 text-sm font-medium flex items-center">
-                                <Plus className="w-4 h-4 mr-1" /> Adicionar Módulo
-                            </button>
+                    {/* Modules Editor */}
+                    <div className="space-y-6">
+                        <div className="flex justify-between items-end border-b pb-4 dark:border-gray-700">
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Grade Curricular</h2>
+                            <div className="flex gap-3">
+                                <button type="button" onClick={addModule} className="bg-indigo-50 text-indigo-700 hover:bg-indigo-100 dark:bg-indigo-900/30 dark:text-indigo-300 px-4 py-2 rounded-lg font-medium flex items-center transition-colors">
+                                    <Plus className="w-5 h-5 mr-1" /> Novo Módulo
+                                </button>
+                                <button type="button" onClick={addFinalExam} className="bg-purple-50 text-purple-700 hover:bg-purple-100 dark:bg-purple-900/30 dark:text-purple-300 px-4 py-2 rounded-lg font-medium flex items-center transition-colors">
+                                    <Plus className="w-5 h-5 mr-1" /> Prova Final
+                                </button>
+                            </div>
                         </div>
+
                         {course.modulos.length === 0 ? (
-                            <p className="text-gray-500 text-sm italic">Nenhum módulo definido.</p>
-                        ) : (
-                            <ul className="space-y-2">
-                                {course.modulos.map((mod, idx) => (
-                                    <li key={idx} className="flex items-center justify-between bg-gray-50 dark:bg-gray-700/50 p-3 rounded">
-                                        <span className="text-gray-800 dark:text-gray-200">{mod}</span>
-                                        <button type="button" onClick={() => removeModule(idx)} className="text-red-500 hover:text-red-700">
-                                            <Trash className="w-4 h-4" />
-                                        </button>
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
-                    </div>
-
-                    {/* Lessons */}
-                    <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6 space-y-6">
-                        <div className="flex justify-between items-center">
-                            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Aulas</h2>
-                            <button type="button" onClick={addLesson} className="text-indigo-600 hover:text-indigo-500 text-sm font-medium flex items-center">
-                                <Plus className="w-4 h-4 mr-1" /> Adicionar Aula
-                            </button>
-                        </div>
-
-                        {course.aulas.map((aula, idx) => (
-                            <div key={idx} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 space-y-4 bg-gray-50 dark:bg-gray-700/30">
-                                <div className="flex justify-between items-start">
-                                    <h3 className="font-medium text-gray-900 dark:text-gray-100">Aula {idx + 1}</h3>
-                                    <button type="button" onClick={() => removeLesson(idx)} className="text-red-500 hover:text-red-700 text-sm">
-                                        <Trash className="w-4 h-4" />
-                                    </button>
-                                </div>
-
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="block text-xs font-medium text-gray-500 dark:text-gray-400">Título</label>
-                                        <input
-                                            type="text"
-                                            value={aula.titulo.pt || aula.titulo}
-                                            onChange={(e) => updateLesson(idx, 'titulo', e.target.value)}
-                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm p-1.5 border"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-xs font-medium text-gray-500 dark:text-gray-400">Duração</label>
-                                        <input
-                                            type="text"
-                                            value={aula.duracao.pt || aula.duracao}
-                                            onChange={(e) => updateLesson(idx, 'duracao', e.target.value)}
-                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm p-1.5 border"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label className="block text-xs font-medium text-gray-500 dark:text-gray-400">URL do Vídeo</label>
-                                    <div className="mt-1 flex rounded-md shadow-sm">
-                                        <input
-                                            type="text"
-                                            value={aula.video || ''}
-                                            onChange={(e) => updateLesson(idx, 'video', e.target.value)}
-                                            placeholder="https://youtube.com/..."
-                                            className="flex-1 block w-full rounded-none rounded-l-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm p-1.5 border"
-                                        />
-                                        <span className="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-50 dark:bg-gray-600 dark:border-gray-600 text-gray-500 dark:text-gray-300 text-sm">
-                                            <Video className="h-4 w-4" />
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label className="block text-xs font-medium text-gray-500 dark:text-gray-400">Conteúdo (Markdown)</label>
-                                    <textarea
-                                        rows={3}
-                                        value={aula.content.pt || aula.content}
-                                        onChange={(e) => updateLesson(idx, 'content', e.target.value)}
-                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm p-1.5 border"
-                                    />
-                                </div>
+                            <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-700">
+                                <p className="text-gray-500 text-lg mb-4">Comece adicionando o primeiro módulo do curso.</p>
+                                <button type="button" onClick={addModule} className="bg-indigo-600 text-white px-6 py-2 rounded-full font-bold shadow hover:bg-indigo-700 transition">
+                                    Adicionar Módulo
+                                </button>
                             </div>
-                        ))}
-                    </div>
-
-                    <div className="flex justify-end pt-4">
-                        <button
-                            type="submit"
-                            disabled={saving}
-                            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
-                        >
-                            <Save className="w-5 h-5 mr-2" />
-                            {saving ? 'Salvando...' : 'Salvar e Enviar para Análise'}
-                        </button>
+                        ) : (
+                            <div className="space-y-6">
+                                {course.modulos.map((modulo, idx) => (
+                                    <ModuleCard
+                                        key={modulo._uiId || idx} // Use UI ID preferentially
+                                        module={modulo}
+                                        index={idx}
+                                        updateModule={updateModule}
+                                        removeModule={removeModule}
+                                    />
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </form>
             </div>
+
+            <PasswordConfirmationModal
+                isOpen={showDeleteModal}
+                onClose={() => setShowDeleteModal(false)}
+                onConfirm={handleDeleteCourse}
+                title="Excluir Curso"
+                message="Tem certeza que deseja excluir este curso permanentemente? Todos os dados serão perdidos."
+            />
+
+
         </main>
     );
 };

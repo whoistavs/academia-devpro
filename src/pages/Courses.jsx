@@ -16,6 +16,8 @@ const Courses = () => {
     const [selectedCategory, setSelectedCategory] = useState('Todas');
     const currentLang = language || 'pt';
 
+    const [selectedLang, setSelectedLang] = useState(currentLang.split('-')[0] || 'pt');
+
     // React Query usage
     const { data: courses = [], isLoading, error } = useQuery({
         queryKey: ['courses'],
@@ -48,8 +50,9 @@ const Courses = () => {
         const matchesSearch = getContent(course.title).toLowerCase().includes(searchTerm.toLowerCase()) ||
             getContent(course.description).toLowerCase().includes(searchTerm.toLowerCase());
         const matchesCategory = selectedCategory === 'Todas' || course.category === selectedCategory;
+        const matchesLang = (course.language || 'pt') === selectedLang;
 
-        return matchesSearch && matchesCategory;
+        return matchesSearch && matchesCategory && matchesLang;
     });
 
     return (
@@ -74,19 +77,40 @@ const Courses = () => {
                     </div>
 
                     {/* Filter UI */}
-                    <div className="flex flex-wrap gap-4">
-                        {categories.map(category => (
-                            <button
-                                key={category}
-                                onClick={() => setSelectedCategory(category)}
-                                className={`px-4 py-2 rounded-full font-medium transition-colors duration-200 ${selectedCategory === category
-                                    ? 'bg-indigo-600 text-white shadow-md'
-                                    : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700'
-                                    }`}
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+                        <div className="flex flex-wrap gap-2">
+                            {categories.map(category => (
+                                <button
+                                    key={category}
+                                    onClick={() => setSelectedCategory(category)}
+                                    className={`px-4 py-2 rounded-full font-medium transition-colors duration-200 text-sm ${selectedCategory === category
+                                        ? 'bg-indigo-600 text-white shadow-md'
+                                        : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700'
+                                        }`}
+                                >
+                                    {getCategoryLabel(category)}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Language Filter */}
+                        <div className="flex items-center">
+                            <span className="text-sm text-gray-500 dark:text-gray-400 mr-2 flex items-center">
+                                <Filter className="w-4 h-4 mr-1" />
+                                Idioma:
+                            </span>
+                            <select
+                                value={selectedLang}
+                                onChange={(e) => setSelectedLang(e.target.value)}
+                                className="block w-32 pl-3 pr-8 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                             >
-                                {getCategoryLabel(category)}
-                            </button>
-                        ))}
+                                <option value="pt">Português 🇧🇷</option>
+                                <option value="en">English 🇺🇸</option>
+                                <option value="es">Español 🇪🇸</option>
+                                <option value="fr">Français 🇫🇷</option>
+                                <option value="de">Deutsch 🇩🇪</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 

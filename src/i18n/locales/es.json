@@ -81,6 +81,8 @@
             "submit": "Entrar",
             "email": "Dirección de correo",
             "password": "Contraseña",
+            "forgotPassword": "Olvidé mi contraseña",
+            "rememberMe": "Recuérdame",
             "error": "Error al iniciar sesión"
         },
         "signup": {
@@ -89,7 +91,40 @@
             "loginLink": "Inicia sesión",
             "name": "Nombre Completo",
             "submit": "Registrarse",
-            "error": "Error al registrarse"
+            "error": "Error al registrarse",
+            "agreeTerms": "He leído y acepto los Términos de Uso y Política de Privacidad",
+            "verifyEmailTitle": "Verifica tu correo electrónico",
+            "verifyEmailSent": "Hemos enviado un enlace de confirmación a",
+            "verifyEmailInstruction": "Por favor, haz clic en el enlace enviado para activar tu cuenta y acceder a la plataforma.",
+            "goToLogin": "Ir al inicio de sesión",
+            "spamWarning": "¿No lo recibiste? Revisa tu carpeta de spam o correo no deseado."
+        },
+        "forgotPassword": {
+            "title": "Recuperar Contraseña",
+            "step1": "Ingresa tu correo para recibir un código de verificación.",
+            "step2": "Código enviado a {{email}}",
+            "step3": "Crea tu nueva contraseña de acceso.",
+            "sendCode": "Enviar Código",
+            "verifyCode": "Verificar Código",
+            "reset": "Cambiar Contraseña",
+            "backToLogin": "Volver a Inicio de Sesión",
+            "codePlaceholder": "Código de 6 dígitos",
+            "newPasswordPlaceholder": "Nueva Contraseña",
+            "passwordLengthError": "La contraseña debe tener al menos 8 caracteres.",
+            "passwordNumberError": "La contraseña debe contener al menos un número.",
+            "passwordSpecialError": "La contraseña debe contener al menos un carácter especial (!@#...)."
+        },
+        "changePassword": {
+            "title": "Cambiar Contraseña",
+            "currentPassword": "Contraseña Actual",
+            "newPassword": "Nueva Contraseña",
+            "confirmPassword": "Confirmar Nueva Contraseña",
+            "submit": "Cambiar Contraseña",
+            "saving": "Guardando...",
+            "cancel": "Cancelar",
+            "success": "¡Contraseña cambiada con éxito!",
+            "errorMatch": "La nueva contraseña y la confirmación no coinciden.",
+            "errorGeneric": "Error al cambiar contraseña."
         },
         "dashboard": {
             "welcome": "¡Hola, {{name}}!",
@@ -97,10 +132,65 @@
             "progress": "Progreso",
             "continue": "Continuar Curso",
             "deleteAccount": "Eliminar Cuenta",
-            "deleteConfirm": "¿Estás seguro de que quieres eliminar tu cuenta? Esta acción es irreversible."
+            "deleteConfirm": "¿Estás seguro de que quieres eliminar tu cuenta? Esta acción es irreversible.",
+            "myCertificates": "Mis Certificados",
+            "noCourses": "No hay cursos disponibles.",
+            "completed": "Completado",
+            "viewCertificate": "Ver Certificado",
+            "noCertificates": "Aún no tienes certificados.",
+            "account": "Cuenta",
+            "changePassword": "Cambiar Contraseña",
+            "completeToEarn": "¡Completa el 100% de un curso para obtener tu certificado!"
+        },
+        "completeProfile": {
+            "title": "Completa tu Registro",
+            "description": "Para acceder a la plataforma, necesitamos información adicional.",
+            "name": "Nombre Completo",
+            "cpf": "Documento de Identidad (CPF)",
+            "rg": "Documento de Identidad (RG)",
+            "birthDate": "Fecha de Nacimiento",
+            "submit": "Guardar y Continuar",
+            "saving": "Guardando..."
         }
     },
-    "lgpd": {
+    "professor": {
+        "dashboard": {
+            "title": "Panel del Profesor",
+            "subtitle": "Gestiona tus cursos y crea nuevo contenido.",
+            "createCourse": "Crear Nuevo Curso",
+            "createCourseBtn": "Crear Curso",
+            "noCourses": "Ningún curso creado",
+            "startCreating": "Comienza creando tu primer curso para compartir conocimientos."
+        },
+        "status": {
+            "published": "Publicado",
+            "rejected": "Rechazado",
+            "pending": "En Revisión",
+            "draft": "Borrador"
+        }
+    },
+    "admin": {
+        "dashboard": {
+            "title": "Panel Administrativo",
+            "pendingApproval": "Aprobación de Cursos Pendientes",
+            "approve": "Aprobar",
+            "reject": "Rechazar",
+            "manageCourses": "Gestionar Cursos",
+            "lessons": "Lecciones",
+            "registeredUsers": "Usuarios Registrados",
+            "noUsers": "Ningún usuario encontrado.",
+            "table": {
+                "name": "Nombre",
+                "email": "Correo electrónico",
+                "role": "Rol",
+                "actions": "Acciones"
+            },
+            "confirmDelete": "¿Estás seguro de que quieres eliminar a este usuario?",
+            "confirmRole": "¿Deseas cambiar el nivel de acceso a: {{role}}?",
+            "confirmStatus": "¿Deseas cambiar el estado a: {{status}}?"
+        }
+    },
+    "legal": {
         "cookieBanner": {
             "text": "Utilizamos cookies para mejorar su experiencia. Al continuar, acepta nuestra",
             "link": "Política de Privacidad",

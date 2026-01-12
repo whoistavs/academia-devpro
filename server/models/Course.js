@@ -8,6 +8,7 @@ const courseSchema = new mongoose.Schema({
     level: { type: mongoose.Schema.Types.Mixed, required: true }, // 'Iniciante' or { pt: '...', en: '...' }
     image: { type: String },
     duration: { type: String },
+    price: { type: Number, default: 0 },
     slug: { type: String, required: true, unique: true },
 
     // Flexible modules to prevent seeding crashes
@@ -21,7 +22,8 @@ const courseSchema = new mongoose.Schema({
     authorId: { type: String }, // Can be ObjectId if we link strictly, but String covers "legacy" IDs too
     status: { type: String, enum: ['draft', 'pending', 'published', 'rejected'], default: 'pending' },
 
-    createdAt: { type: Date, default: Date.now }
+    createdAt: { type: Date, default: Date.now },
+    language: { type: String, default: 'pt', index: true }
 });
 
 export default mongoose.model('Course', courseSchema);

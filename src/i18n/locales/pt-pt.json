@@ -89,7 +89,12 @@
             "loginLink": "Faça login",
             "name": "Nome Completo",
             "submit": "Registar",
-            "error": "Falha no registo"
+            "error": "Falha no registo",
+            "verifyEmailTitle": "Verifique o seu e-mail",
+            "verifyEmailSent": "Enviámos uma ligação de confirmação para",
+            "verifyEmailInstruction": "Por favor, clique na ligação enviada para ativar a sua conta e aceder à plataforma.",
+            "goToLogin": "Ir para Iniciar Sessão",
+            "spamWarning": "Não recebeu? Verifique a sua caixa de spam ou lixo eletrónico."
         },
         "dashboard": {
             "welcome": "Olá, {{name}}!",
@@ -97,10 +102,65 @@
             "progress": "Progresso",
             "continue": "Continuar Curso",
             "deleteAccount": "Apagar Conta",
-            "deleteConfirm": "Tem a certeza que deseja apagar a sua conta? Esta ação é irreversível."
+            "deleteConfirm": "Tem a certeza que deseja apagar a sua conta? Esta ação é irreversível.",
+            "myCertificates": "Os Meus Certificados",
+            "noCourses": "Nenhum curso disponível.",
+            "completed": "Concluído",
+            "viewCertificate": "Ver Certificado",
+            "noCertificates": "Ainda não tem certificados.",
+            "account": "Conta",
+            "changePassword": "Alterar Palavra-passe",
+            "completeToEarn": "Complete 100% de um curso para obter o seu certificado!"
+        },
+        "completeProfile": {
+            "title": "Complete o seu Registo",
+            "description": "Para aceder à plataforma, precisamos de algumas informações adicionais.",
+            "name": "Nome Completo",
+            "cpf": "NIF (CPF)",
+            "rg": "BI/CC (RG)",
+            "birthDate": "Data de Nascimento",
+            "submit": "Guardar e Continuar",
+            "saving": "A guardar..."
         }
     },
-    "lgpd": {
+    "professor": {
+        "dashboard": {
+            "title": "Painel do Professor",
+            "subtitle": "Gira os seus cursos e crie novos conteúdos.",
+            "createCourse": "Criar Novo Curso",
+            "createCourseBtn": "Criar Curso",
+            "noCourses": "Nenhum curso criado",
+            "startCreating": "Comece por criar o seu primeiro curso para partilhar conhecimento."
+        },
+        "status": {
+            "published": "Publicado",
+            "rejected": "Rejeitado",
+            "pending": "Sob Revisão",
+            "draft": "Rascunho"
+        }
+    },
+    "admin": {
+        "dashboard": {
+            "title": "Painel Administrativo",
+            "pendingApproval": "Aprovação de Cursos Pendentes",
+            "approve": "Aprovar",
+            "reject": "Rejeitar",
+            "manageCourses": "Gerir Cursos",
+            "lessons": "Aulas",
+            "registeredUsers": "Utilizadores Registados",
+            "noUsers": "Nenhum utilizador encontrado.",
+            "table": {
+                "name": "Nome",
+                "email": "E-mail",
+                "role": "Função",
+                "actions": "Ações"
+            },
+            "confirmDelete": "Tem a certeza que deseja eliminar este utilizador?",
+            "confirmRole": "Deseja alterar o nível de acesso para: {{role}}?",
+            "confirmStatus": "Deseja alterar o estado para: {{status}}?"
+        }
+    },
+    "legal": {
         "cookieBanner": {
             "text": "Nós utilizamos cookies para melhorar a sua experiência. Ao continuar, concorda com a nossa",
             "link": "Política de Privacidade",

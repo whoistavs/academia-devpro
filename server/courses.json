@@ -1,5 +1,6 @@
 [
   {
+    "_id": "1766510293117g9bf7",
     "id": 1,
     "slug": "logica-de-programacao",
     "title": {
@@ -449,7 +450,6 @@
         "answer": 1
       }
     ],
-    "_id": "1766510293117g9bf7",
     "createdAt": "2025-12-23T17:18:13.118Z"
   },
   {
@@ -1115,34 +1115,203 @@
   {
     "id": 22,
     "slug": "carreira-soft-skills",
-    "title": {
-      "pt": "Carreira & Soft Skills",
-      "en": "Career & Soft Skills"
-    },
+    "title": "Carreira & Soft Skills",
     "category": "Carreira",
-    "description": {
-      "pt": "Cresça na profissão.",
-      "en": "Grow in career."
-    },
+    "description": "Cresça na profissão.",
     "descricaoCompleta": {
       "pt": "LinkedIn, Agile.",
       "en": "LinkedIn, Agile."
     },
     "modulos": [
-      "Módulo 1",
-      "Módulo 2",
-      "Módulo 3",
-      "Módulo 4"
+      {
+        "title": "O Mindset do Desenvolvedor Pro ",
+        "items": [
+          {
+            "type": "lesson",
+            "titulo": "Além do Código",
+            "content": "Introdução\nVocê já se perguntou por que alguns desenvolvedores que sabem \"menos\" tecnicamente conseguem as melhores vagas? A resposta está nas Soft Skills. No mercado moderno, o código é apenas o meio, não o fim.\n1. O Triângulo do Sucesso\nPara ser um profissional de elite, você precisa equilibrar três pilares:\n1.\tHard Skills: Sua capacidade de escrever código limpo e funcional.\n2.\tSoft Skills: Como você interage com o time e resolve conflitos.\n3.\tBusiness Intelligence: O quanto você entende do problema que o seu código está resolvendo para o cliente.\n2. Autonomia vs. Dependência\nUm dev \"Iniciante\" precisa que digam exatamente o que fazer. Um dev \"Pro\" recebe um problema e propõe uma solução.\n•\tDica: Antes de perguntar algo ao seu líder, gaste 15 minutos tentando resolver sozinho e documente o que você já tentou.\n📝 Exercício Prático (20 min)\nEscreva um parágrafo sobre qual tecnologia você domina hoje e, em seguida, escreva como essa tecnologia ajuda uma empresa a ganhar dinheiro ou economizar tempo. Se você não souber responder a segunda parte, sua lição de casa é pesquisar o modelo de negócio por trás das ferramentas que você usa.\n",
+            "duracao": "45 minutos",
+            "video": ""
+          },
+          {
+            "type": "lesson",
+            "titulo": "Comunicação Assertiva e Documentação",
+            "content": "Por que aprender a falar se eu fui contratado para programar?\nNo desenvolvimento de software, a maior causa de atrasos e bugs não é a falta de lógica, mas a falha na comunicação. Se você não consegue explicar sua ideia, ela perde o valor.\n1. O Protocolo de Erro (Estrutura S.E.R.)\nAo pedir ajuda a um colega ou reportar um bug, nunca diga apenas \"não funciona\". Use este padrão:\n•\tSituação: O que você estava tentando fazer e em qual ambiente (ex: local, staging).\n•\tErro: Qual foi a mensagem exata ou comportamento inesperado.\n•\tResolução Tentada: Liste o que você já fez para tentar resolver. Isso mostra que você respeita o tempo do outro.\n2. Documentação no Código e Fora Dele\nDocumentar não é escrever um livro, é deixar rastros para o seu \"eu do futuro\".\n•\tComentários \"Por quê\": Não comente o que o código faz (isso deve estar claro no nome das variáveis). Comente o motivo de ter escolhido aquela solução específica.\n•\tREADME Profissional: O README do seu projeto no GitHub é o seu cartão de visitas. Ele deve dizer o que o projeto é, como instalar e como contribuir.\n3. Comunicação no Slack/Discord/Teams\nEvite o \"Oi, tudo bem?\" e esperar a resposta. Pratique a Comunicação Assíncrona:\n\"Oi [Nome], tudo bem? Estou com uma dúvida no componente de Login da Sprint atual. Notei que a API está retornando 401 mesmo com o token válido. Você teria 5 min à tarde para revisarmos ou prefere que eu abra uma issue detalhando?\"\n\n📝 Exercício Prático: O Pull Request Perfeito (30 min)\nSimule que você acabou de criar uma funcionalidade de \"Esqueci minha senha\". Escreva abaixo (em um editor de texto ou no seu caderno de estudos) como seria a descrição desse Pull Request para o seu time:\n1.\tTítulo: [Nome da Funcionalidade]\n2.\tO que foi feito: (2 frases)\n3.\tPrints ou Passos para testar: (Como o revisor garante que funciona?)\n4.\tObservações técnicas: (Houve alguma mudança no banco de dados ou biblioteca nova?)\n",
+            "duracao": "45 minutos",
+            "video": ""
+          },
+          {
+            "type": "lesson",
+            "titulo": "Resolução de Problemas e Lógica de Negócio",
+            "content": "O Código é apenas uma Ferramenta\nUm erro comum de devs iniciantes é querer \"codar\" antes de entender o problema. O seu valor para uma empresa não é o número de linhas de código que você escreve, mas o valor financeiro ou operacional que esse código gera.\n1. O Framework de Resolução de Problemas\nAntes de tocar no teclado, siga estes três passos:\n1.\tEntenda o \"O Quê\": Qual é o problema real? Às vezes, o cliente pede um botão, mas ele só quer um relatório automático por e-mail.\n2.\tDecomposição (Baby Steps): Quebre o problemão em mini-problemas. Se você precisa criar um sistema de checkout, comece validando se o produto está no carrinho, depois o cálculo do frete, e por último o pagamento.\n3.\tAlgoritmo no Papel: Escreva a lógica em português (pseudocódigo) antes de traduzir para JavaScript, Python ou PHP.\n2. O que é Lógica de Negócio?\nLógica de negócio são as regras do mundo real aplicadas ao software.\n•\tExemplo: Em um app de delivery, a regra \"O pedido só pode ser feito se o restaurante estiver a menos de 10km\" é lógica de negócio. O código que calcula essa distância é apenas a implementação técnica.\n3. Evite a \"Solução em busca de um Problema\"\nNão use uma tecnologia super complexa (como Microserviços ou IA) só porque é tendência, se um simples banco de dados resolveria o caso. O desenvolvedor sênior escolhe a ferramenta mais simples que resolve o problema de forma sustentável.\n\n📝 Exercício Prático: O Desafio da Pizzaria (40 min)\nImagine que você foi contratado por uma pizzaria local para automatizar os pedidos via texto. Eles têm uma regra de negócio específica:\n\"Pizzas de sabor 'Especial' custam R$ 10,00 a mais. Se o cliente pedir mais de 3 pizzas, ele ganha 10% de desconto no valor total, mas o desconto não se aplica à taxa de entrega.\"\nSua tarefa:\n1.\tEscreva em pseudocódigo (português estruturado) a lógica para calcular o valor final que o cliente deve pagar.\n2.\tIdentifique: O que é entrada de dados? O que é regra de negócio? O que é saída?\n3.\tReflexão: Como você explicaria para o dono da pizzaria se um bug fizesse o desconto ser aplicado também na taxa de entrega? (Use a comunicação assertiva da aula anterior).\n",
+            "duracao": "1 hora",
+            "video": ""
+          },
+          {
+            "type": "lesson",
+            "titulo": "Ética e Postura Profissional",
+            "content": "Ser um profissional confiável\nA ética no desenvolvimento de software vai além de não \"roubar dados\". Ela trata de como você lida com a propriedade intelectual da empresa, com a privacidade dos usuários e com seus colegas de equipe.\n1. Honestidade Intelectual\nNo mundo de IAs e Stack Overflow, é fácil copiar e colar.\n•\tO limite: Não há problema em usar ferramentas para acelerar o trabalho, mas você deve ser capaz de explicar cada linha do código que entregou.\n•\tAssumir erros: Se você causou um bug que derrubou o sistema, avise imediatamente. No mercado sênior, a velocidade de reparo é mais valorizada do que a busca por culpados.\n2. Responsabilidade com Dados (LGPD)\nComo desenvolvedor, você terá acesso a bancos de dados.\n•\tPrivacidade: Nunca use dados reais de clientes em ambientes de teste.\n•\tSegurança: Trate a segurança como parte do seu trabalho, não como algo \"que o pessoal de segurança resolve depois\".\n3. Profissionalismo no Código\nSeu código é uma conversa com outros humanos.\n•\tCódigo Ofensivo: Nunca deixe comentários sarcásticos, piadas internas ou termos ofensivos no código ou nos nomes de branches. Lembre-se: o código pertence à empresa e pode ser auditado.\n•\tRespeito em Code Reviews: Ao revisar o código de um colega, critique o código, nunca a pessoa. Em vez de \"Você fez errado\", use \"O que você acha de tentarmos desta forma para melhorar a performance?\".\n4. Gestão de Expectativas\nÉtica também é não prometer o que você sabe que não consegue entregar apenas para agradar o gestor. Ser honesto sobre prazos protege a saúde do projeto e a sua saúde mental (evitando o burnout).\n\n📝 Atividade de Reflexão (15 min)\nPense em duas situações e escreva como você agiria:\n1.\tVocê descobriu uma vulnerabilidade de segurança no código de um colega que já está em produção. Você avisa ele no privado ou fala na reunião geral?\n2.\tUm gestor pede para você implementar uma funcionalidade que dificulta o cancelamento da assinatura do usuário (prática conhecida como Dark Pattern). Como você argumentaria contra isso usando lógica de negócio e ética?\n",
+            "duracao": "30 minutos",
+            "video": ""
+          },
+          {
+            "type": "quiz",
+            "questions": [
+              {
+                "question": "Um desenvolvedor de sucesso equilibra três pilares fundamentais (Hard Skills, Soft Skills e Business Intelligence). Qual dessas habilidades é responsável por entender como o código gera valor para o cliente?",
+                "options": [
+                  "Hard Skills",
+                  "Soft Skills",
+                  "Networking",
+                  "Business Intelligence"
+                ],
+                "answer": 3
+              },
+              {
+                "question": "Ao utilizar a estrutura S.E.R. para reportar um problema técnico, o que o componente 'Resolução Tentada' demonstra para seus colegas?",
+                "options": [
+                  "Proatividade e respeito ao tempo alheio",
+                  "Que você não sabe resolver o problema sozinho",
+                  "Que você está seguindo as regras do RH",
+                  "Que o erro é impossível de ser resolvido"
+                ],
+                "answer": 0
+              },
+              {
+                "question": "Sobre a ética e os 'comentários de código', qual é a prática recomendada para um ambiente profissional?",
+                "options": [
+                  "Não comentar nada, pois o código deve ser óbvio",
+                  "Focar em explicar o 'porquê' (motivação) de decisões técnicas não óbvias",
+                  "Escrever piadas para tornar a leitura do código mais leve",
+                  "Usar comentários para criticar o código mal feito de um colega anterior"
+                ],
+                "answer": 1
+              },
+              {
+                "question": "Um gestor pede para você implementar uma funcionalidade que oculta o botão de cancelamento para o usuário. Segundo a Aula 1.4 sobre Ética, como você deve agir?",
+                "options": [
+                  "Argumentar contra a prática (Dark Pattern) usando lógica de negócio e confiança do cliente",
+                  "Fazer de forma que o botão seja quase impossível de achar, mas tecnicamente exista",
+                  "Implementar sem questionar, afinal ele é o seu superior",
+                  "Recusar e pedir demissão imediatamente"
+                ],
+                "answer": 0
+              },
+              {
+                "question": "Qual é a principal vantagem da comunicação assíncrona (enviar a dúvida completa de uma vez) em times remotos?",
+                "options": [
+                  "Evitar ter que falar com as pessoas do time ",
+                  "Permitir que a outra pessoa responda quando tiver foco disponível, sem interrupções constantes",
+                  "Fazer com que as pessoas demorem mais para responder",
+                  "Garantir que ninguém veja seus erros em tempo real"
+                ],
+                "answer": 1
+              }
+            ]
+          }
+        ]
+      }
     ],
     "duration": "15h",
-    "level": {
-      "pt": "Iniciante",
-      "en": "Beginner"
-    },
+    "level": "Iniciante",
     "image": "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=800&q=80",
-    "aulas": [],
+    "aulas": [
+      {
+        "type": "lesson",
+        "titulo": "Além do Código",
+        "content": "Introdução\nVocê já se perguntou por que alguns desenvolvedores que sabem \"menos\" tecnicamente conseguem as melhores vagas? A resposta está nas Soft Skills. No mercado moderno, o código é apenas o meio, não o fim.\n1. O Triângulo do Sucesso\nPara ser um profissional de elite, você precisa equilibrar três pilares:\n1.\tHard Skills: Sua capacidade de escrever código limpo e funcional.\n2.\tSoft Skills: Como você interage com o time e resolve conflitos.\n3.\tBusiness Intelligence: O quanto você entende do problema que o seu código está resolvendo para o cliente.\n2. Autonomia vs. Dependência\nUm dev \"Iniciante\" precisa que digam exatamente o que fazer. Um dev \"Pro\" recebe um problema e propõe uma solução.\n•\tDica: Antes de perguntar algo ao seu líder, gaste 15 minutos tentando resolver sozinho e documente o que você já tentou.\n📝 Exercício Prático (20 min)\nEscreva um parágrafo sobre qual tecnologia você domina hoje e, em seguida, escreva como essa tecnologia ajuda uma empresa a ganhar dinheiro ou economizar tempo. Se você não souber responder a segunda parte, sua lição de casa é pesquisar o modelo de negócio por trás das ferramentas que você usa.\n",
+        "duracao": "45 minutos",
+        "video": "",
+        "moduleTitle": "O Mindset do Desenvolvedor Pro "
+      },
+      {
+        "type": "lesson",
+        "titulo": "Comunicação Assertiva e Documentação",
+        "content": "Por que aprender a falar se eu fui contratado para programar?\nNo desenvolvimento de software, a maior causa de atrasos e bugs não é a falta de lógica, mas a falha na comunicação. Se você não consegue explicar sua ideia, ela perde o valor.\n1. O Protocolo de Erro (Estrutura S.E.R.)\nAo pedir ajuda a um colega ou reportar um bug, nunca diga apenas \"não funciona\". Use este padrão:\n•\tSituação: O que você estava tentando fazer e em qual ambiente (ex: local, staging).\n•\tErro: Qual foi a mensagem exata ou comportamento inesperado.\n•\tResolução Tentada: Liste o que você já fez para tentar resolver. Isso mostra que você respeita o tempo do outro.\n2. Documentação no Código e Fora Dele\nDocumentar não é escrever um livro, é deixar rastros para o seu \"eu do futuro\".\n•\tComentários \"Por quê\": Não comente o que o código faz (isso deve estar claro no nome das variáveis). Comente o motivo de ter escolhido aquela solução específica.\n•\tREADME Profissional: O README do seu projeto no GitHub é o seu cartão de visitas. Ele deve dizer o que o projeto é, como instalar e como contribuir.\n3. Comunicação no Slack/Discord/Teams\nEvite o \"Oi, tudo bem?\" e esperar a resposta. Pratique a Comunicação Assíncrona:\n\"Oi [Nome], tudo bem? Estou com uma dúvida no componente de Login da Sprint atual. Notei que a API está retornando 401 mesmo com o token válido. Você teria 5 min à tarde para revisarmos ou prefere que eu abra uma issue detalhando?\"\n\n📝 Exercício Prático: O Pull Request Perfeito (30 min)\nSimule que você acabou de criar uma funcionalidade de \"Esqueci minha senha\". Escreva abaixo (em um editor de texto ou no seu caderno de estudos) como seria a descrição desse Pull Request para o seu time:\n1.\tTítulo: [Nome da Funcionalidade]\n2.\tO que foi feito: (2 frases)\n3.\tPrints ou Passos para testar: (Como o revisor garante que funciona?)\n4.\tObservações técnicas: (Houve alguma mudança no banco de dados ou biblioteca nova?)\n",
+        "duracao": "45 minutos",
+        "video": "",
+        "moduleTitle": "O Mindset do Desenvolvedor Pro "
+      },
+      {
+        "type": "lesson",
+        "titulo": "Resolução de Problemas e Lógica de Negócio",
+        "content": "O Código é apenas uma Ferramenta\nUm erro comum de devs iniciantes é querer \"codar\" antes de entender o problema. O seu valor para uma empresa não é o número de linhas de código que você escreve, mas o valor financeiro ou operacional que esse código gera.\n1. O Framework de Resolução de Problemas\nAntes de tocar no teclado, siga estes três passos:\n1.\tEntenda o \"O Quê\": Qual é o problema real? Às vezes, o cliente pede um botão, mas ele só quer um relatório automático por e-mail.\n2.\tDecomposição (Baby Steps): Quebre o problemão em mini-problemas. Se você precisa criar um sistema de checkout, comece validando se o produto está no carrinho, depois o cálculo do frete, e por último o pagamento.\n3.\tAlgoritmo no Papel: Escreva a lógica em português (pseudocódigo) antes de traduzir para JavaScript, Python ou PHP.\n2. O que é Lógica de Negócio?\nLógica de negócio são as regras do mundo real aplicadas ao software.\n•\tExemplo: Em um app de delivery, a regra \"O pedido só pode ser feito se o restaurante estiver a menos de 10km\" é lógica de negócio. O código que calcula essa distância é apenas a implementação técnica.\n3. Evite a \"Solução em busca de um Problema\"\nNão use uma tecnologia super complexa (como Microserviços ou IA) só porque é tendência, se um simples banco de dados resolveria o caso. O desenvolvedor sênior escolhe a ferramenta mais simples que resolve o problema de forma sustentável.\n\n📝 Exercício Prático: O Desafio da Pizzaria (40 min)\nImagine que você foi contratado por uma pizzaria local para automatizar os pedidos via texto. Eles têm uma regra de negócio específica:\n\"Pizzas de sabor 'Especial' custam R$ 10,00 a mais. Se o cliente pedir mais de 3 pizzas, ele ganha 10% de desconto no valor total, mas o desconto não se aplica à taxa de entrega.\"\nSua tarefa:\n1.\tEscreva em pseudocódigo (português estruturado) a lógica para calcular o valor final que o cliente deve pagar.\n2.\tIdentifique: O que é entrada de dados? O que é regra de negócio? O que é saída?\n3.\tReflexão: Como você explicaria para o dono da pizzaria se um bug fizesse o desconto ser aplicado também na taxa de entrega? (Use a comunicação assertiva da aula anterior).\n",
+        "duracao": "1 hora",
+        "video": "",
+        "moduleTitle": "O Mindset do Desenvolvedor Pro "
+      },
+      {
+        "type": "lesson",
+        "titulo": "Ética e Postura Profissional",
+        "content": "Ser um profissional confiável\nA ética no desenvolvimento de software vai além de não \"roubar dados\". Ela trata de como você lida com a propriedade intelectual da empresa, com a privacidade dos usuários e com seus colegas de equipe.\n1. Honestidade Intelectual\nNo mundo de IAs e Stack Overflow, é fácil copiar e colar.\n•\tO limite: Não há problema em usar ferramentas para acelerar o trabalho, mas você deve ser capaz de explicar cada linha do código que entregou.\n•\tAssumir erros: Se você causou um bug que derrubou o sistema, avise imediatamente. No mercado sênior, a velocidade de reparo é mais valorizada do que a busca por culpados.\n2. Responsabilidade com Dados (LGPD)\nComo desenvolvedor, você terá acesso a bancos de dados.\n•\tPrivacidade: Nunca use dados reais de clientes em ambientes de teste.\n•\tSegurança: Trate a segurança como parte do seu trabalho, não como algo \"que o pessoal de segurança resolve depois\".\n3. Profissionalismo no Código\nSeu código é uma conversa com outros humanos.\n•\tCódigo Ofensivo: Nunca deixe comentários sarcásticos, piadas internas ou termos ofensivos no código ou nos nomes de branches. Lembre-se: o código pertence à empresa e pode ser auditado.\n•\tRespeito em Code Reviews: Ao revisar o código de um colega, critique o código, nunca a pessoa. Em vez de \"Você fez errado\", use \"O que você acha de tentarmos desta forma para melhorar a performance?\".\n4. Gestão de Expectativas\nÉtica também é não prometer o que você sabe que não consegue entregar apenas para agradar o gestor. Ser honesto sobre prazos protege a saúde do projeto e a sua saúde mental (evitando o burnout).\n\n📝 Atividade de Reflexão (15 min)\nPense em duas situações e escreva como você agiria:\n1.\tVocê descobriu uma vulnerabilidade de segurança no código de um colega que já está em produção. Você avisa ele no privado ou fala na reunião geral?\n2.\tUm gestor pede para você implementar uma funcionalidade que dificulta o cancelamento da assinatura do usuário (prática conhecida como Dark Pattern). Como você argumentaria contra isso usando lógica de negócio e ética?\n",
+        "duracao": "30 minutos",
+        "video": "",
+        "moduleTitle": "O Mindset do Desenvolvedor Pro "
+      },
+      {
+        "type": "quiz",
+        "questions": [
+          {
+            "question": "Um desenvolvedor de sucesso equilibra três pilares fundamentais (Hard Skills, Soft Skills e Business Intelligence). Qual dessas habilidades é responsável por entender como o código gera valor para o cliente?",
+            "options": [
+              "Hard Skills",
+              "Soft Skills",
+              "Networking",
+              "Business Intelligence"
+            ],
+            "answer": 3
+          },
+          {
+            "question": "Ao utilizar a estrutura S.E.R. para reportar um problema técnico, o que o componente 'Resolução Tentada' demonstra para seus colegas?",
+            "options": [
+              "Proatividade e respeito ao tempo alheio",
+              "Que você não sabe resolver o problema sozinho",
+              "Que você está seguindo as regras do RH",
+              "Que o erro é impossível de ser resolvido"
+            ],
+            "answer": 0
+          },
+          {
+            "question": "Sobre a ética e os 'comentários de código', qual é a prática recomendada para um ambiente profissional?",
+            "options": [
+              "Não comentar nada, pois o código deve ser óbvio",
+              "Focar em explicar o 'porquê' (motivação) de decisões técnicas não óbvias",
+              "Escrever piadas para tornar a leitura do código mais leve",
+              "Usar comentários para criticar o código mal feito de um colega anterior"
+            ],
+            "answer": 1
+          },
+          {
+            "question": "Um gestor pede para você implementar uma funcionalidade que oculta o botão de cancelamento para o usuário. Segundo a Aula 1.4 sobre Ética, como você deve agir?",
+            "options": [
+              "Argumentar contra a prática (Dark Pattern) usando lógica de negócio e confiança do cliente",
+              "Fazer de forma que o botão seja quase impossível de achar, mas tecnicamente exista",
+              "Implementar sem questionar, afinal ele é o seu superior",
+              "Recusar e pedir demissão imediatamente"
+            ],
+            "answer": 0
+          },
+          {
+            "question": "Qual é a principal vantagem da comunicação assíncrona (enviar a dúvida completa de uma vez) em times remotos?",
+            "options": [
+              "Evitar ter que falar com as pessoas do time ",
+              "Permitir que a outra pessoa responda quando tiver foco disponível, sem interrupções constantes",
+              "Fazer com que as pessoas demorem mais para responder",
+              "Garantir que ninguém veja seus erros em tempo real"
+            ],
+            "answer": 1
+          }
+        ],
+        "moduleTitle": "O Mindset do Desenvolvedor Pro "
+      }
+    ],
     "quiz": [],
-    "_id": "17665102931645mqc2",
-    "createdAt": "2025-12-23T17:18:13.164Z"
+    "_id": "695ff5ae7384ac33ce953c83",
+    "createdAt": "2025-12-23T17:18:13.164Z",
+    "price": 5,
+    "authorId": "695ff1bd7869dedee38e7df7",
+    "status": "published",
+    "language": "pt",
+    "__v": 1
   }
 ]
