@@ -13,13 +13,13 @@ const PaymentModal = ({ isOpen, onClose, course, onSuccess }) => {
 
     const handlePayment = async () => {
         setLoading(true);
-        // Simulate API delay
+        
         setTimeout(async () => {
             try {
-                // Call backend to register purchase
+                
                 const response = await api.purchaseCourse(course.id || course._id);
 
-                // Update local user context
+                
                 const token = localStorage.getItem('token');
                 login({ ...user, purchasedCourses: response.purchasedCourses }, token);
 
@@ -76,7 +76,7 @@ const PaymentModal = ({ isOpen, onClose, course, onSuccess }) => {
                                     </div>
                                 </div>
 
-                                {/* Tabs */}
+                                {}
                                 <div className="flex space-x-4 mb-6">
                                     <button
                                         onClick={() => setMethod('card')}

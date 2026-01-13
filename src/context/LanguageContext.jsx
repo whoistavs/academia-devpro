@@ -33,11 +33,11 @@ export const availableLanguages = [
 ];
 
 export const LanguageProvider = ({ children }) => {
-    // Load language from localStorage or default to 'pt'
+    
     const [language, setLanguage] = useState(() => {
         if (typeof window !== 'undefined' && window.localStorage) {
             const storedLang = window.localStorage.getItem('language');
-            return storedLang || 'pt'; // Default to PT-BR
+            return storedLang || 'pt'; 
         }
         return 'pt';
     });
@@ -45,7 +45,7 @@ export const LanguageProvider = ({ children }) => {
     useEffect(() => {
         localStorage.setItem('language', language);
 
-        // Handle Direction (RTL for Arabic)
+        
         const dir = language === 'ar' ? 'rtl' : 'ltr';
         document.documentElement.dir = dir;
         document.documentElement.lang = language;
@@ -57,12 +57,12 @@ export const LanguageProvider = ({ children }) => {
     };
 
     const t = (key) => {
-        // 1. Try direct flat lookup 
+        
         if (translations[language][key]) {
             return translations[language][key];
         }
 
-        // 2. Try nested lookup 
+        
         const keys = key.split('.');
         let value = translations[language];
 
@@ -70,7 +70,7 @@ export const LanguageProvider = ({ children }) => {
             if (value && typeof value === 'object' && k in value) {
                 value = value[k];
             } else {
-                return key; // Not found
+                return key; 
             }
         }
 

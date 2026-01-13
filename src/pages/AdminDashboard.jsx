@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
-import { Trash2, Users, ShieldAlert, Edit, BookOpen, DollarSign, TrendingUp, Wallet, ArrowUpRight, Check, Ban, Clock } from 'lucide-react';
+import { Trash2, Users, ShieldAlert, Edit, BookOpen, DollarSign, TrendingUp, Wallet, ArrowUpRight, Check, Ban, Clock, X, Tag } from 'lucide-react';
 
 import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
@@ -10,6 +10,9 @@ import TableSkeleton from '../components/TableSkeleton';
 import CourseSkeleton from '../components/CourseSkeleton';
 import BankDetailsModal from '../components/BankDetailsModal';
 
+import QRCode from 'react-qr-code';
+import { generatePixPayload } from '../utils/pix';
+
 const ProfessorDebtsSection = () => {
     const queryClient = useQueryClient();
     const { data: debts = [], isLoading } = useQuery({
@@ -17,23 +20,49 @@ const ProfessorDebtsSection = () => {
         queryFn: api.getProfessorDebts
     });
 
-    const handlePay = async (professorId, balance, name) => {
-        const amountStr = prompt(`Quanto você pagou para ${name}? (Saldo Total: R$ ${balance.toFixed(2)})`, balance.toString());
-        if (!amountStr) return;
-        const amount = parseFloat(amountStr.replace(',', '.'));
+    
+    const [payModal, setPayModal] = useState(null);
+    const [amountToPay, setAmountToPay] = useState('');
+    const [notes, setNotes] = useState('Pagamento Comissão DevPro');
+
+    const openPayModal = (debt) => {
+        if (!debt.pixKey || debt.pixKey === 'Não configurada') {
+            return alert("O professor não configurou a chave Pix.");
+        }
+        setPayModal(debt);
+        setAmountToPay(debt.balance.toFixed(2));
+    };
+
+    const handleConfirmPay = async () => {
+        if (!payModal) return;
+        const amount = parseFloat(amountToPay);
         if (isNaN(amount) || amount <= 0) return alert("Valor inválido");
 
-        const notes = prompt("Observação / Comprovante (Opcional):", "Transferência Pix");
-
         try {
-            await api.registerManualPayout({ professorId, amount, notes });
-            alert("Pagamento registrado!");
+            await api.registerManualPayout({ professorId: payModal.professorId, amount, notes });
+            alert("Pagamento registrado com sucesso!");
             queryClient.invalidateQueries({ queryKey: ['professorDebts'] });
             queryClient.invalidateQueries({ queryKey: ['financials'] });
+            setPayModal(null);
         } catch (e) {
-            alert("Erro ao registrar pagamento");
+            alert("Erro ao registrar pagamento: " + (e.message || "Erro desconhecido"));
         }
     };
+
+    
+    let pixPayload = '';
+    if (payModal && amountToPay) {
+        const amt = parseFloat(amountToPay);
+        if (!isNaN(amt) && amt > 0) {
+            pixPayload = generatePixPayload({
+                key: payModal.pixKey,
+                name: payModal.name,
+                city: 'SAO PAULO',
+                amount: amt,
+                txid: 'DEVPROPAY'
+            });
+        }
+    }
 
     if (isLoading) return <TableSkeleton rows={2} />;
     if (debts.length === 0) return null;
@@ -67,7 +96,7 @@ const ProfessorDebtsSection = () => {
                                     <span className="block text-xl font-bold text-green-600 dark:text-green-400">R$ {d.balance.toFixed(2)}</span>
                                 </div>
                                 <button
-                                    onClick={() => handlePay(d.professorId, d.balance, d.name)}
+                                    onClick={() => openPayModal(d)}
                                     className="flex items-center px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 text-sm font-medium transition-colors"
                                 >
                                     <Check className="w-4 h-4 mr-1" /> Pagar Manualmente
@@ -77,6 +106,84 @@ const ProfessorDebtsSection = () => {
                     ))}
                 </ul>
             </div>
+
+            {}
+            {payModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6 animate-fade-in relative">
+                        <button
+                            onClick={() => setPayModal(null)}
+                            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+                        >
+                            <X className="w-6 h-6" />
+                        </button>
+
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
+                            <Wallet className="w-6 h-6 mr-2 text-green-600" />
+                            Pagamento via Pix
+                        </h3>
+
+                        <div className="mb-4 text-center">
+                            <p className="text-sm text-gray-500 dark:text-gray-400">Pagando para:</p>
+                            <p className="text-lg font-semibold dark:text-white">{payModal.name}</p>
+                            <p className="text-sm font-mono bg-gray-100 dark:bg-gray-700 inline-block px-2 py-1 rounded mt-1">
+                                {payModal.pixKey}
+                            </p>
+                        </div>
+
+                        <div className="mb-6 flex justify-center">
+                            {pixPayload && (
+                                <div className="p-4 bg-white rounded-lg shadow-inner border border-gray-200">
+                                    <QRCode value={pixPayload} size={180} />
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Valor a Pagar (R$)</label>
+                                <input
+                                    type="number"
+                                    value={amountToPay}
+                                    onChange={(e) => setAmountToPay(e.target.value)}
+                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Copia e Cola</label>
+                                <div className="mt-1 flex rounded-md shadow-sm">
+                                    <input
+                                        type="text"
+                                        readOnly
+                                        value={pixPayload}
+                                        className="block w-full rounded-l-md border-gray-300 bg-gray-50 dark:bg-gray-600 dark:text-gray-300 dark:border-gray-500 sm:text-xs"
+                                    />
+                                    <button
+                                        onClick={() => {
+                                            navigator.clipboard.writeText(pixPayload);
+                                            alert("Copiado!");
+                                        }}
+                                        className="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:border-gray-500 dark:text-gray-200 sm:text-sm"
+                                    >
+                                        Copiar
+                                    </button>
+                                </div>
+                            </div>
+
+                            <hr className="dark:border-gray-700" />
+
+                            <button
+                                onClick={handleConfirmPay}
+                                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                            >
+                                <Check className="w-4 h-4 mr-2" />
+                                Confirmar Pagamento Realizado
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
@@ -89,21 +196,32 @@ const PendingPaymentsSection = () => {
     });
 
     const handleApprove = async (id) => {
-        if (!window.confirm("Confirmar recebimento e liberar curso?")) return;
+        console.log("Botão Aprovar clicado para ID:", id);
+        
+        console.log("Enviando requisição de aprovação...");
         try {
-            await api.approveTransaction(id);
-            alert("Pagamento aprovado!");
+            const res = await api.approveTransaction(id);
+            console.log("Resposta da aprovação:", res);
+            alert("Pagamento aprovado com sucesso!");
             queryClient.invalidateQueries({ queryKey: ['approvals'] });
             queryClient.invalidateQueries({ queryKey: ['financials'] });
-        } catch (e) { alert("Erro ao aprovar"); }
+        } catch (e) {
+            console.error("Erro na aprovação:", e);
+            alert("Erro ao aprovar: " + e.message);
+        }
     };
 
     const handleReject = async (id) => {
-        if (!window.confirm("Rejeitar este pagamento?")) return;
+        console.log("Botão Rejeitar clicado para ID:", id);
+        
         try {
             await api.rejectTransaction(id);
+            alert("Pagamento rejeitado!");
             queryClient.invalidateQueries({ queryKey: ['approvals'] });
-        } catch (e) { alert("Erro ao rejeitar"); }
+        } catch (e) {
+            console.error("Erro na rejeição:", e);
+            alert("Erro ao rejeitar: " + e.message);
+        }
     };
 
     if (isLoading) return <TableSkeleton rows={2} />;
@@ -162,14 +280,14 @@ const AdminDashboard = () => {
     const [showBankModal, setShowBankModal] = useState(false);
     const [withdrawing, setWithdrawing] = useState(false);
 
-    // Redirect if not admin
+    
     React.useEffect(() => {
         if (user && user.role !== 'admin') {
             navigate('/dashboard');
         }
     }, [user, navigate]);
 
-    // FETCH DATA WITH REACT QUERY
+    
     const { data: users = [], isLoading: loadingUsers } = useQuery({
         queryKey: ['users'],
         queryFn: api.getUsers,
@@ -177,7 +295,7 @@ const AdminDashboard = () => {
     });
 
     const { data: courses = [], isLoading: loadingCourses } = useQuery({
-        queryKey: ['courses', 'all'], // distinct key from public courses
+        queryKey: ['courses', 'all'], 
         queryFn: () => api.getCourses("all=true"),
         enabled: user?.role === 'admin'
     });
@@ -189,12 +307,12 @@ const AdminDashboard = () => {
     });
 
 
-    // ACTIONS
+    
     const handleDelete = async (id) => {
         if (!window.confirm(t('admin.dashboard.confirmDelete'))) return;
         try {
             await api.adminDeleteUser(id);
-            // Invalidate cache to refetch automatically
+            
             queryClient.invalidateQueries({ queryKey: ['users'] });
         } catch (err) {
             alert('Erro ao excluir usuário.');
@@ -223,7 +341,7 @@ const AdminDashboard = () => {
         try {
             await api.updateCourseStatus(courseId, status);
             queryClient.invalidateQueries({ queryKey: ['courses', 'all'] });
-            queryClient.invalidateQueries({ queryKey: ['courses'] }); // Update public list too
+            queryClient.invalidateQueries({ queryKey: ['courses'] }); 
         } catch (e) {
             alert("Erro ao moderar curso");
         }
@@ -255,7 +373,7 @@ const AdminDashboard = () => {
 
     const pendingCourses = courses.filter(c => c.status === 'pending');
 
-    // Helper to safe display titles
+    
     const getTitle = (c) => typeof c.title === 'string' ? c.title : (c.title?.pt || c.title?.en || "Curso");
 
     return (
@@ -266,9 +384,15 @@ const AdminDashboard = () => {
                         <ShieldAlert className="w-8 h-8 mr-3 text-red-600" />
                         {t('admin.dashboard.title')}
                     </h1>
+                    <button
+                        onClick={() => navigate('/admin/coupons')}
+                        className="bg-indigo-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-indigo-700 flex items-center shadow-md"
+                    >
+                        <Tag className="w-4 h-4 mr-2" /> Gerenciar Cupons
+                    </button>
                 </div>
 
-                {/* FINANCIAL OVERVIEW */}
+                {}
                 <div className="mb-8">
                     <div className="flex justify-between items-center mb-4">
                         <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 flex items-center">
@@ -308,7 +432,7 @@ const AdminDashboard = () => {
                     {financials && (
                         <>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {/* TOTAL SALES */}
+                                {}
                                 <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border-l-4 border-indigo-500">
                                     <div className="flex justify-between items-center">
                                         <div>
@@ -321,7 +445,7 @@ const AdminDashboard = () => {
                                     </div>
                                 </div>
 
-                                {/* YOUR COMMISSION / BALANCE */}
+                                {}
                                 <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border-l-4 border-green-500">
                                     <div className="flex flex-col h-full justify-between">
                                         <div className="flex justify-between items-center mb-2">
@@ -334,18 +458,11 @@ const AdminDashboard = () => {
                                                 <TrendingUp className="w-6 h-6 text-green-600 dark:text-green-400" />
                                             </div>
                                         </div>
-                                        <button
-                                            onClick={handleWithdraw}
-                                            disabled={withdrawing || financials.summary.availableBalance <= 0}
-                                            className="w-full mt-2 inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md active:shadow-none"
-                                        >
-                                            <ArrowUpRight className="w-4 h-4 mr-1" />
-                                            {withdrawing ? 'Enviando Pix...' : 'Receber via Pix Agora'}
-                                        </button>
+
                                     </div>
                                 </div>
 
-                                {/* PAYOUTS TO PROS */}
+                                {}
                                 <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border-l-4 border-gray-400">
                                     <div className="flex justify-between items-center">
                                         <div>
@@ -362,19 +479,19 @@ const AdminDashboard = () => {
                     )}
                 </div>
 
-                {/* PROFESSOR DEBTS (ACCOUNTS PAYABLE) */}
+                {}
                 <div className="mb-8">
                     <ProfessorDebtsSection />
                 </div>
 
-                {/* PAYMENT APPROVALS */}
+                {}
                 {
                     <div className="mb-8">
                         <PendingPaymentsSection />
                     </div>
                 }
 
-                {/* COURSE APPROVALS */}
+                {}
                 {
                     loadingCourses ? (
                         <div className="mb-8"><TableSkeleton rows={2} /></div>
@@ -421,7 +538,7 @@ const AdminDashboard = () => {
                 }
 
 
-                {/* ALL COURSES MANAGEMENT */}
+                {}
                 {
                     loadingCourses ? (
                         <div className="mb-8"><TableSkeleton rows={3} /></div>
@@ -456,13 +573,13 @@ const AdminDashboard = () => {
                                             </div>
                                             <div className="flex space-x-2">
                                                 <button
-                                                    onClick={() => navigate(`/ professor / editor / ${course._id || course.id} `)}
+                                                    onClick={() => navigate(`/professor/editor/${(course._id || course.id).toString().trim()}`)}
                                                     className="p-2 text-indigo-600 hover:text-indigo-900 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-full transition-colors"
                                                     title="Editar Curso"
                                                 >
                                                     <Edit className="w-4 h-4" />
                                                 </button>
-                                                {/* We can add delete here later */}
+                                                {}
                                             </div>
                                         </li>
                                     ))}
@@ -472,7 +589,7 @@ const AdminDashboard = () => {
                     )
                 }
 
-                {/* USERS TABLE */}
+                {}
 
                 {
                     loadingUsers ? (

@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Clock, BarChart } from 'lucide-react';
+import { Clock, BarChart, Star } from 'lucide-react';
 import { useTranslation } from '../context/LanguageContext';
 
 const CourseCard = ({ course }) => {
     const { t, language } = useTranslation();
     const currentLang = language || 'pt';
 
-    // Helper to get content based on language
+    
     const getContent = (data) => {
         if (!data) return "";
         if (typeof data === 'string') return data;
@@ -34,15 +34,23 @@ const CourseCard = ({ course }) => {
                     {getContent(course.description)}
                 </p>
 
-                <div className="flex items-center text-gray-500 dark:text-gray-400 text-sm mb-6 space-x-4">
-                    <div className="flex items-center">
-                        <Clock className="h-4 w-4 mr-1" />
-                        <span>{course.duration}</span>
+                <div className="flex items-center justify-between text-gray-500 dark:text-gray-400 text-sm mb-6">
+                    <div className="flex items-center space-x-4">
+                        <div className="flex items-center">
+                            <Clock className="h-4 w-4 mr-1" />
+                            <span>{course.duration}</span>
+                        </div>
+                        <div className="flex items-center">
+                            <BarChart className="h-4 w-4 mr-1" />
+                            <span>{getContent(course.level)}</span>
+                        </div>
                     </div>
-                    <div className="flex items-center">
-                        <BarChart className="h-4 w-4 mr-1" />
-                        <span>{t('courseCard.level')} {getContent(course.level)}</span>
-                    </div>
+                    {course.rating > 0 && (
+                        <div className="flex items-center text-yellow-500 font-semibold">
+                            <Star className="h-4 w-4 mr-1 fill-current" />
+                            <span>{course.rating}</span>
+                        </div>
+                    )}
                 </div>
 
                 <Link

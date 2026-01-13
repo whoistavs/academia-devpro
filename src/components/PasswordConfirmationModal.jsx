@@ -23,7 +23,7 @@ const PasswordConfirmationModal = ({ isOpen, onClose, onConfirm, title, message 
 
         try {
             if (isGoogle) {
-                // For Google users, we just check if they typed confirmation text
+                
                 if (password !== 'EXCLUIR') {
                     throw new Error("Digite EXCLUIR para confirmar.");
                 }
@@ -31,15 +31,15 @@ const PasswordConfirmationModal = ({ isOpen, onClose, onConfirm, title, message 
                 await api.verifyPassword(password);
             }
 
-            // If verify succeeds, proceed with action
+            
             await onConfirm();
-            onClose(); // Close modal after success
+            onClose(); 
         } catch (err) {
             console.error(err);
             setError(err.message || 'Senha incorreta.');
         } finally {
             setLoading(false);
-            setPassword(''); // clear pass for security
+            setPassword(''); 
         }
     };
 

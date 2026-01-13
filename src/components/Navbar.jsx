@@ -40,7 +40,7 @@ const Navbar = () => {
                         <Link to="/contato" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors">{t('nav.contact')}</Link>
 
                         <div className="flex items-center space-x-4 border-l border-r px-4 border-gray-200 dark:border-gray-700">
-                            {/* Theme Toggle */}
+                            {}
                             <button
                                 onClick={toggleTheme}
                                 className="p-2 rounded-full text-gray-500 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors focus:outline-none"
@@ -49,7 +49,7 @@ const Navbar = () => {
                                 {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
                             </button>
 
-                            {/* Language Dropdown (Google Translate) */}
+                            {}
                             <LanguageSelector />
                         </div>
 
@@ -97,7 +97,7 @@ const Navbar = () => {
                     </div>
 
                     <div className="md:hidden flex items-center space-x-4">
-                        {/* Mobile Language Toggle (Simplified) */}
+                        {}
                         <button
                             onClick={() => {
                                 setIsOpen(true);
@@ -122,7 +122,7 @@ const Navbar = () => {
                 </div>
             </div>
 
-            {/* Mobile Menu */}
+            {}
             {isOpen && (
                 <div className="md:hidden bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800">
                     <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
@@ -130,8 +130,8 @@ const Navbar = () => {
                         <Link to="/cursos" onClick={() => setIsOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-gray-50 dark:hover:bg-gray-800">{t('nav.courses')}</Link>
                         <Link to="/contato" onClick={() => setIsOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-gray-50 dark:hover:bg-gray-800">{t('nav.contact')}</Link>
 
-                        {/* Mobile Language Selection (Google Translate is global, but we can show a hint or just hide it as it might break layout if duplicated) */}
-                        {/* Ideally we move the #google_translate_element to a shared location or handle it better, but for now we hide manual selection */}
+                        {}
+                        {}
 
                         {isAuthenticated ? (
                             <>

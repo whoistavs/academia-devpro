@@ -10,7 +10,7 @@ mongoose.connect(process.env.MONGODB_URI)
         let count = 0;
         while (await cursor.hasNext()) {
             const tx = await cursor.next();
-            // If fees are 0 but amount > 0, fix it
+            
             if (tx.amount > 0 && (tx.platformFee === 0 || tx.sellerNet === 0)) {
                 const fee = tx.amount * 0.10;
                 const net = tx.amount * 0.90;

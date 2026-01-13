@@ -12,7 +12,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { v2 as cloudinary } from 'cloudinary';
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
 
-// MongoDB Imports
+
 import connectDB from './connectDb.js';
 import User from './models/User.js';
 import Course from './models/Course.js';
@@ -22,12 +22,14 @@ import Comment from './models/Comment.js';
 import Transaction from './models/Transaction.js';
 import Payout from './models/Payout.js';
 import ChatMessage from './models/ChatMessage.js';
+import Review from './models/Review.js';
+import Coupon from './models/Coupon.js';
 import { MercadoPagoConfig, Preference, Payment } from 'mercadopago';
 
 
 dotenv.config();
 
-// MP Configuration
+
 const client = new MercadoPagoConfig({ accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN });
 
 const __filename = fileURLToPath(import.meta.url);
@@ -38,13 +40,13 @@ const PORT = process.env.PORT || 3000;
 const SECRET_KEY = process.env.JWT_SECRET || "chave_secreta_super_segura";
 
 
-// Connect to MongoDB
+
 connectDB().then(async () => {
-    // Auto-Seed Check
+
     try {
-        // 1. Auto-Seed Users from JSON (First, so authors exist)
-        // 1. Auto-Seed Users from JSON (First, so authors exist)
-        // Always Try to Sync Users if JSON exists (Update passwords/roles)
+
+
+
         console.log("Syncing Users from users.json...");
         const usersPath = path.join(__dirname, 'users.json');
         if (fs.existsSync(usersPath)) {
@@ -56,10 +58,10 @@ connectDB().then(async () => {
                     if (userData._id && userData._id.length !== 24) delete userData._id;
                     await User.create(userData);
                 } else {
-                    // Update existing user (important for manual edits in JSON)
-                    // We merge, but careful not to overwrite purchases if JSON is outdated in that regard
-                    // actually for dev, let's assume JSON is master for core data, DB is master for dynamic data
-                    // For now, just ensure role/password match
+
+
+
+
                     if (u.password && u.password !== existing.password) existing.password = u.password;
                     if (u.role && u.role !== existing.role) existing.role = u.role;
                     if (u.name && u.name !== existing.name) existing.name = u.name;
@@ -69,7 +71,7 @@ connectDB().then(async () => {
             console.log(`Synced ${users.length} users from users.json`);
         }
 
-        // 2. Ensure Admin User Exists (Critical fallback)
+
         const adminEmail = 'octavio.marvel2018@gmail.com';
         const adminExists = await User.findOne({ email: adminEmail });
         if (!adminExists) {
@@ -89,7 +91,7 @@ connectDB().then(async () => {
             console.log("Admin seeded. Login with: 123456");
         }
 
-        // 3. Auto-Seed Courses (After users)
+
         const courseCount = await Course.countDocuments();
         if (courseCount === 0) {
             console.log("Database empty. Seeding initial courses...");
@@ -97,7 +99,7 @@ connectDB().then(async () => {
             if (fs.existsSync(dataPath)) {
                 const courses = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
 
-                // Find Admin for authorship
+
                 let authorId = 'admin';
                 const adminUser = await User.findOne({ email: adminEmail });
                 if (adminUser) authorId = adminUser._id;
@@ -117,7 +119,7 @@ connectDB().then(async () => {
 
                     await Course.create({
                         ...courseData,
-                        _id: _id && _id.length === 24 ? _id : undefined, // Restore ID if valid ObjectId
+                        _id: _id && _id.length === 24 ? _id : undefined,
                         modulos,
                         slug,
                         authorId,
@@ -126,7 +128,7 @@ connectDB().then(async () => {
                 }
                 console.log("Course Seeding complete.");
 
-                // Enroll admin in Logica course if needed
+
                 if (adminUser) {
                     const logica = await Course.findOne({ slug: 'logica-de-programacao' });
                     if (logica && !adminUser.purchasedCourses.includes(logica._id)) {
@@ -142,7 +144,7 @@ connectDB().then(async () => {
 });
 
 
-// Email Configuration
+
 const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
     port: process.env.EMAIL_PORT,
@@ -205,30 +207,30 @@ const sendVerificationEmail = async (email, token, language = 'pt') => {
     }
 };
 
-// Imports moved to top
 
-// Configure Cloudinary
+
+
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-// Configure Storage
+
 let storage;
 if (process.env.CLOUDINARY_CLOUD_NAME) {
-    // Usage Cloudinary
+
     storage = new CloudinaryStorage({
         cloudinary: cloudinary,
         params: {
-            folder: 'devpro_academy', // Folder name in Cloudinary
+            folder: 'devpro_academy',
             allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
-            transformation: [{ width: 800, height: 800, crop: 'limit' }] // Optimisation
+            transformation: [{ width: 800, height: 800, crop: 'limit' }]
         },
     });
     console.log("Using Cloudinary Storage");
 } else {
-    // Fallback Local
+
     storage = multer.diskStorage({
         destination: (req, file, cb) => {
             const uploadDir = 'server/uploads';
@@ -246,7 +248,7 @@ if (process.env.CLOUDINARY_CLOUD_NAME) {
 
 const upload = multer({ storage: storage });
 
-// Enable CORS for ALL origins (Wildcard) to guarantee connection
+
 app.use(cors({
     origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
@@ -256,7 +258,7 @@ app.use(cors({
 app.use(express.json());
 app.use('/uploads', express.static('server/uploads'));
 
-// Middleware
+
 const verifyToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
@@ -272,21 +274,24 @@ const verifyToken = (req, res, next) => {
 
 const verifyAdmin = (req, res, next) => {
     verifyToken(req, res, () => {
+        console.log(`[VerifyAdmin] Check user: ${req.user?.email || 'No User'} Role: ${req.user?.role}`);
         if (req.user.role === 'admin') {
             next();
         } else {
+            console.log(`[VerifyAdmin] Access Denied for ${req.user?.email}`);
             res.status(403).json({ error: 'Requer privilégios de administrador.' });
         }
     });
 };
 
-// --- ROUTES ---
 
-app.get('/', (req, res) => {
-    res.json({ message: 'AcademiaDevPro API is running with MongoDB!' });
+
+// Basic health check
+app.get('/api/health', (req, res) => {
+    res.json({ status: 'ok', message: 'API Running' });
 });
 
-// GET Courses
+
 app.get('/api/courses', async (req, res) => {
     try {
         const authHeader = req.headers['authorization'];
@@ -303,29 +308,39 @@ app.get('/api/courses', async (req, res) => {
         const query = isAdmin ? {} : { status: 'published' };
         const courses = await Course.find(query).sort({ createdAt: -1 });
 
-        // Get all authors
+
         const authorIds = [...new Set(courses.map(c => c.authorId).filter(id => id && id !== 'admin'))];
         const authors = await User.find({ _id: { $in: authorIds } });
         const authorMap = {};
         authors.forEach(a => authorMap[a._id.toString()] = a.name);
 
-        const summary = courses.map(c => ({
-            id: c._id,
-            slug: c.slug,
-            title: c.title,
-            description: c.description,
-            image: c.image,
-            level: c.level,
-            duration: c.duration,
-            price: c.price || 0,
-            category: c.category,
-            totalLessons: c.modulos && c.modulos.length > 0
-                ? c.modulos.reduce((acc, m) => acc + (m.items ? m.items.length : 0), 0)
-                : (c.aulas ? c.aulas.length : 0),
-            status: c.status,
-            language: c.language || 'pt',
-            authorId: c.authorId,
-            authorName: c.authorId === 'admin' ? 'DevPro Oficial' : (authorMap[c.authorId] || 'Professor')
+        const summary = await Promise.all(courses.map(async c => {
+            const reviews = await Review.find({ courseId: c._id });
+            const reviewCount = reviews.length;
+            const avgRating = reviewCount > 0
+                ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviewCount).toFixed(1)
+                : 0;
+
+            return {
+                id: c._id,
+                slug: c.slug,
+                title: c.title,
+                description: c.description,
+                image: c.image,
+                level: c.level,
+                duration: c.duration,
+                price: c.price || 0,
+                category: c.category,
+                totalLessons: c.modulos && c.modulos.length > 0
+                    ? c.modulos.reduce((acc, m) => acc + (m.items ? m.items.length : 0), 0)
+                    : (c.aulas ? c.aulas.length : 0),
+                status: c.status,
+                language: c.language || 'pt',
+                authorId: c.authorId,
+                authorName: c.authorId === 'admin' ? 'DevPro Oficial' : (authorMap[c.authorId] || 'Professor'),
+                rating: avgRating,
+                totalReviews: reviewCount
+            };
         }));
 
         res.json(summary);
@@ -334,7 +349,7 @@ app.get('/api/courses', async (req, res) => {
     }
 });
 
-// GET Professor Courses
+
 app.get('/api/professor/courses', verifyToken, async (req, res) => {
     if (req.user.role !== 'professor' && req.user.role !== 'admin') {
         return res.status(403).json({ error: 'Acesso negado.' });
@@ -347,7 +362,7 @@ app.get('/api/professor/courses', verifyToken, async (req, res) => {
     }
 });
 
-// POST Create Course
+
 app.post('/api/courses', verifyToken, async (req, res) => {
     if (req.user.role !== 'professor' && req.user.role !== 'admin') {
         return res.status(403).json({ error: 'Permissão negada.' });
@@ -359,7 +374,7 @@ app.post('/api/courses', verifyToken, async (req, res) => {
         return res.status(400).json({ error: 'Campos obrigatórios faltando.' });
     }
 
-    // Slug generation
+
     const titleText = typeof title === 'string' ? title : (title.pt || title.en || 'curso');
     const slug = titleText.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-') + '-' + Date.now().toString(36);
 
@@ -381,27 +396,28 @@ app.post('/api/courses', verifyToken, async (req, res) => {
     }
 });
 
-// GET Financial Overview (Admin Only)
+
 app.get('/api/admin/financials', verifyAdmin, async (req, res) => {
+    console.log("[API] GET /api/admin/financials called");
     try {
         const transactions = await Transaction.find().sort({ createdAt: -1 });
-        const payouts = await Payout.find({ userId: req.user.id, status: { $ne: 'failed' } }); // Admin's payouts
+        const payouts = await Payout.find({ userId: req.user.id, status: { $ne: 'failed' } });
 
         const totalSales = transactions.reduce((acc, t) => acc + t.amount, 0);
-        const totalFees = transactions.reduce((acc, t) => acc + t.platformFee, 0); // Gross Commission
+        const totalFees = transactions.reduce((acc, t) => acc + t.platformFee, 0);
         const totalPayoutsToPro = transactions.reduce((acc, t) => acc + t.sellerNet, 0);
 
         const withdrawn = payouts.reduce((acc, p) => acc + p.amount, 0);
         const availableBalance = totalFees - withdrawn;
 
         res.json({
-            transactions: transactions.slice(0, 50), // Limit list size
+            transactions: transactions.slice(0, 50),
             payouts,
             summary: {
                 totalSales,
                 totalFees,
                 totalPayouts: totalPayoutsToPro,
-                availableBalance, // Net Commission Available
+                availableBalance,
                 withdrawn
             }
         });
@@ -414,12 +430,12 @@ app.get('/api/admin/financials', verifyAdmin, async (req, res) => {
 
 
 
-// --- PROFESSOR PAYOUTS MANAGEMENT ---
 
-// GET Professor Debts (Who to Pay)
+
+
 app.get('/api/admin/debts', verifyAdmin, async (req, res) => {
     try {
-        // Include 'admin' so the user can see themselves in the Payout list for testing
+
         const professors = await User.find({ role: { $in: ['professor', 'admin'] } });
         const debts = [];
 
@@ -431,7 +447,7 @@ app.get('/api/admin/debts', verifyAdmin, async (req, res) => {
             const totalPaid = payouts.reduce((acc, p) => acc + (p.amount || 0), 0);
             const balance = totalEarned - totalPaid;
 
-            if (balance > 0.01) { // Show only if debt exists
+            if (balance > 0.01) {
                 debts.push({
                     professorId: prof._id,
                     name: prof.name,
@@ -451,7 +467,7 @@ app.get('/api/admin/debts', verifyAdmin, async (req, res) => {
     }
 });
 
-// POST Manual Payout to Professor (Mark as Paid)
+
 app.post('/api/admin/payouts/manual', verifyAdmin, async (req, res) => {
     try {
         const { professorId, amount, notes } = req.body;
@@ -461,7 +477,7 @@ app.post('/api/admin/payouts/manual', verifyAdmin, async (req, res) => {
         const professor = await User.findById(professorId);
         if (!professor) return res.status(404).json({ error: 'Professor não encontrado.' });
 
-        // Create Payout Record (Completed)
+
         const payout = await Payout.create({
             userId: professorId,
             amount: Number(amount),
@@ -479,16 +495,16 @@ app.post('/api/admin/payouts/manual', verifyAdmin, async (req, res) => {
 });
 
 
-// --- ADMIN APPROVALS ---
 
-// GET Pending Approvals
+
+
 app.get('/api/admin/approvals', verifyAdmin, async (req, res) => {
     try {
-        // Populate buyer info and course info
-        // Note: 'buyerId' in Transaction model, 'authorId' is seller.
+
+
         const pendings = await Transaction.find({ status: 'pending_approval' });
 
-        // Manual populate simulation if .populate is tricky with mixed schemas or lightweight approach
+
         const richPendings = await Promise.all(pendings.map(async (t) => {
             const buyer = await User.findById(t.buyerId).select('name email');
             const course = await Course.findById(t.courseId).select('title');
@@ -506,7 +522,7 @@ app.get('/api/admin/approvals', verifyAdmin, async (req, res) => {
     }
 });
 
-// POST Approve Transaction
+
 app.post('/api/admin/approve/:id', verifyAdmin, async (req, res) => {
     try {
         const transaction = await Transaction.findById(req.params.id);
@@ -516,22 +532,22 @@ app.post('/api/admin/approve/:id', verifyAdmin, async (req, res) => {
             return res.status(400).json({ error: 'Este pedido não está pendente.' });
         }
 
-        // 1. Grant Access
+
         const user = await User.findById(transaction.buyerId);
         if (user && !user.purchasedCourses.includes(transaction.courseId)) {
             user.purchasedCourses.push(transaction.courseId);
             await user.save();
         }
 
-        // 2. Update Transaction & Calc Fees
-        // Manual payments start with 0 fees. Calculate them now.
+
+
         const amount = transaction.amount || 0;
         transaction.platformFee = amount * 0.10;
         transaction.sellerNet = amount * 0.90;
         transaction.status = 'approved';
         await transaction.save();
 
-        // 3. PERSISTENCE (Critical)
+
         try {
             const usersPath = path.join(__dirname, 'users.json');
             if (user && fs.existsSync(usersPath)) {
@@ -554,7 +570,7 @@ app.post('/api/admin/approve/:id', verifyAdmin, async (req, res) => {
     }
 });
 
-// POST Reject Transaction
+
 app.post('/api/admin/reject/:id', verifyAdmin, async (req, res) => {
     try {
         const transaction = await Transaction.findById(req.params.id);
@@ -569,22 +585,132 @@ app.post('/api/admin/reject/:id', verifyAdmin, async (req, res) => {
     }
 });
 
-// --- PROFESSOR STUDENTS & CHAT ---
 
-// GET Students for Professor
+
+
+app.get('/api/admin/coupons', verifyAdmin, async (req, res) => {
+    try {
+        const coupons = await Coupon.find().sort({ createdAt: -1 });
+        res.json(coupons);
+    } catch (e) {
+        res.status(500).json({ error: 'Erro ao buscar cupons.' });
+    }
+});
+
+
+app.post('/api/admin/coupons', verifyAdmin, async (req, res) => {
+    try {
+        const { code, discountPercentage, validUntil, maxUses, maxUsesPerUser } = req.body;
+
+        if (!code || !discountPercentage) {
+            return res.status(400).json({ error: 'Código e Desconto são obrigatórios.' });
+        }
+
+        const coupon = new Coupon({
+            code: code.toUpperCase(),
+            discountPercentage,
+            validUntil,
+            maxUses,
+            maxUsesPerUser: maxUsesPerUser || 1,
+            createdBy: req.user.id
+        });
+
+        await coupon.save();
+        res.json(coupon);
+    } catch (e) {
+        if (e.code === 11000) return res.status(400).json({ error: 'Código já existe.' });
+        res.status(500).json({ error: 'Erro ao criar cupom.' });
+    }
+});
+
+
+app.delete('/api/admin/coupons/:id', verifyAdmin, async (req, res) => {
+    try {
+        await Coupon.findByIdAndDelete(req.params.id);
+        res.json({ message: 'Cupom removido.' });
+    } catch (e) {
+        res.status(500).json({ error: 'Erro ao remover cupom.' });
+    }
+});
+
+
+app.put('/api/admin/coupons/:id', verifyAdmin, async (req, res) => {
+    try {
+        const { code, discountPercentage, validUntil, maxUses, maxUsesPerUser } = req.body;
+
+        const coupon = await Coupon.findById(req.params.id);
+        if (!coupon) return res.status(404).json({ error: 'Cupom não encontrado.' });
+
+        if (code) coupon.code = code.toUpperCase();
+        if (discountPercentage) coupon.discountPercentage = discountPercentage;
+        if (validUntil !== undefined) coupon.validUntil = validUntil;
+        if (maxUses !== undefined) coupon.maxUses = maxUses;
+        if (maxUsesPerUser !== undefined) coupon.maxUsesPerUser = maxUsesPerUser;
+
+        await coupon.save();
+        res.json(coupon);
+    } catch (e) {
+        if (e.code === 11000) return res.status(400).json({ error: 'Código já existe.' });
+        res.status(500).json({ error: 'Erro ao atualizar cupom.' });
+    }
+});
+
+
+app.post('/api/coupons/validate', async (req, res) => {
+    try {
+        const { code, userId } = req.body;
+        if (!code) return res.status(400).json({ error: 'Código obrigatório.' });
+
+        const coupon = await Coupon.findOne({ code: code.toUpperCase() });
+
+        if (!coupon) {
+            return res.status(404).json({ error: 'Cupom inválido.' });
+        }
+
+
+        if (coupon.validUntil && new Date() > new Date(coupon.validUntil)) {
+            return res.status(400).json({ error: 'Cupom expirado.' });
+        }
+
+
+        if (coupon.maxUses && coupon.usedCount >= coupon.maxUses) {
+            return res.status(400).json({ error: 'Cupom esgotado.' });
+        }
+
+
+        if (userId && coupon.maxUsesPerUser) {
+            const userUses = coupon.usedBy.filter(id => id === userId).length;
+            if (userUses >= coupon.maxUsesPerUser) {
+                return res.status(400).json({ error: `Cupom já utilizado o máximo de vezes (${coupon.maxUsesPerUser}) por você.` });
+            }
+        }
+
+        res.json({
+            valid: true,
+            discountPercentage: coupon.discountPercentage,
+            code: coupon.code
+        });
+    } catch (e) {
+        res.status(500).json({ error: 'Erro ao validar cupom.' });
+    }
+});
+
+
+
+
 app.get('/api/professor/students', verifyToken, async (req, res) => {
     try {
-        // 1. Get my courses
+
         const myCourses = await Course.find({ authorId: req.user.id });
         const myCourseIds = myCourses.map(c => c._id.toString());
 
-        // 2. Find students who bought ANY of my courses
-        // Note: purchasedCourses stores strings or ObjectIds
+
+
         const students = await User.find({
             purchasedCourses: { $in: myCourseIds }
         }).select('name email avatar purchasedCourses');
 
-        // 3. Format response (maybe show which course they bought?)
+
         const richStudents = students.map(s => {
             const boughtMyCourses = myCourses.filter(c =>
                 s.purchasedCourses.includes(c._id.toString()) ||
@@ -606,7 +732,7 @@ app.get('/api/professor/students', verifyToken, async (req, res) => {
     }
 });
 
-// GET Professors for Student
+
 app.get('/api/student/professors', verifyToken, async (req, res) => {
     try {
         const studentId = req.user.id;
@@ -616,20 +742,20 @@ app.get('/api/student/professors', verifyToken, async (req, res) => {
             return res.json([]);
         }
 
-        // 1. Get courses bought by student
+
         const purchasedCourses = await Course.find({
             _id: { $in: student.purchasedCourses }
         });
 
-        // 2. Get unique author IDs
+
         const authorIds = [...new Set(purchasedCourses.map(c => c.authorId))];
 
-        // 3. Find Author details
+
         const professors = await User.find({
             _id: { $in: authorIds }
         }).select('name email avatar role');
 
-        // 4. Map to return rich data
+
         const richProfessors = professors.map(p => {
             const coursesTaught = purchasedCourses
                 .filter(c => c.authorId === p._id.toString() || c.authorId === p.id)
@@ -652,7 +778,7 @@ app.get('/api/student/professors', verifyToken, async (req, res) => {
     }
 });
 
-// GET Chat History
+
 app.get('/api/chat/:userId', verifyToken, async (req, res) => {
     try {
         const otherId = req.params.userId;
@@ -671,19 +797,19 @@ app.get('/api/chat/:userId', verifyToken, async (req, res) => {
     }
 });
 
-// Configure Chat Storage (Broader permissions)
+
 let chatStorage;
 if (process.env.CLOUDINARY_CLOUD_NAME) {
     chatStorage = new CloudinaryStorage({
         cloudinary: cloudinary,
         params: {
             folder: 'devpro_chat',
-            resource_type: 'auto', // Allow pdf, audio, video
+            resource_type: 'auto',
             allowed_formats: ['jpg', 'png', 'jpeg', 'webp', 'pdf', 'mp3', 'wav', 'ogg', 'mp4'],
         },
     });
 } else {
-    // Fallback Local (Reusing logic but ensuring dir)
+
     chatStorage = multer.diskStorage({
         destination: (req, file, cb) => {
             const uploadDir = 'server/uploads/chat';
@@ -699,7 +825,7 @@ if (process.env.CLOUDINARY_CLOUD_NAME) {
 }
 const uploadChat = multer({ storage: chatStorage });
 
-// POST Send Message (With File Support)
+
 app.post('/api/chat/send', verifyToken, uploadChat.single('file'), async (req, res) => {
     try {
         const { receiverId, content } = req.body;
@@ -710,10 +836,10 @@ app.post('/api/chat/send', verifyToken, uploadChat.single('file'), async (req, r
         let fileName = null;
 
         if (req.file) {
-            fileUrl = req.file.path; // Cloudinary or Local path
+            fileUrl = req.file.path;
             fileName = req.file.originalname;
 
-            // Determine type
+
             if (fileName === 'voice-message.webm') {
                 fileType = 'audio';
             } else {
@@ -729,7 +855,7 @@ app.post('/api/chat/send', verifyToken, uploadChat.single('file'), async (req, r
         const msg = await ChatMessage.create({
             senderId: myId,
             receiverId,
-            content: content || '', // Content might be empty if just file
+            content: content || '',
             fileUrl,
             fileType,
             fileName
@@ -742,49 +868,49 @@ app.post('/api/chat/send', verifyToken, uploadChat.single('file'), async (req, r
     }
 });
 
-// PUT Update Course
+
 app.put('/api/courses/:id', verifyToken, async (req, res) => {
     try {
         const course = await Course.findById(req.params.id);
         if (!course) return res.status(404).json({ error: 'Curso não encontrado.' });
 
-        // Permission Logic:
-        // 1. Admin can edit their own courses.
-        // 2. Admin can edit "System" courses (where authorId is 'admin' or missing).
-        // 3. Admin CANNOT edit courses owned by other professors (privacy).
-        // 4. Professors can ONLY edit their own courses.
+
+
+
+
+
 
         const isOwner = course.authorId === req.user.id;
         const isSystemCourse = !course.authorId || course.authorId === 'admin';
         const isAdmin = req.user.role === 'admin';
 
-        // Allowed if: It's my course OR (I'm admin AND it's a system course)
+
         if (!isOwner && !(isAdmin && isSystemCourse)) {
             return res.status(403).json({ error: 'Permissão negada. Admin só edita cursos do Sistema ou Próprios.' });
         }
 
         Object.assign(course, req.body);
-        // Force Mongoose to mark Mixed fields as modified to ensure saving
+
         course.markModified('modulos');
         course.markModified('aulas');
 
         await course.save();
 
-        // PERSISTENCE (DEV ONLY): Update courses.json
+
         try {
-            // fs and path imported globally
+
             const coursesPath = path.join(__dirname, 'courses.json');
 
             if (fs.existsSync(coursesPath)) {
                 let courses = JSON.parse(fs.readFileSync(coursesPath, 'utf-8'));
-                // Find by ID or Slug
+
                 const idx = courses.findIndex(c => String(c._id) === String(course._id) || c.slug === course.slug);
 
                 if (idx >= 0) {
                     const courseObj = course.toObject();
                     if (courseObj._id) courseObj._id = courseObj._id.toString();
 
-                    // Merge to keep possible extra fields in JSON that aren't in schema
+
                     courses[idx] = { ...courses[idx], ...courseObj };
 
                     fs.writeFileSync(coursesPath, JSON.stringify(courses, null, 2));
@@ -795,7 +921,7 @@ app.put('/api/courses/:id', verifyToken, async (req, res) => {
             }
         } catch (err) {
             console.error("Failed to persist course update:", err);
-            // Don't block response
+
         }
 
         res.json(course);
@@ -804,8 +930,8 @@ app.put('/api/courses/:id', verifyToken, async (req, res) => {
     }
 });
 
-// PATCH Update Status
-// PATCH Update Status
+
+
 app.patch('/api/courses/:id/status', verifyToken, async (req, res) => {
     if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin only.' });
 
@@ -819,13 +945,13 @@ app.patch('/api/courses/:id/status', verifyToken, async (req, res) => {
     }
 });
 
-// DELETE Course
+
 app.delete('/api/courses/:id', verifyToken, async (req, res) => {
     try {
         const course = await Course.findById(req.params.id);
         if (!course) return res.status(404).json({ error: 'Curso não encontrado.' });
 
-        // Logic check: Only Owner or Admin can delete
+
         const isOwner = course.authorId === req.user.id;
         const isAdmin = req.user.role === 'admin';
 
@@ -840,7 +966,7 @@ app.delete('/api/courses/:id', verifyToken, async (req, res) => {
     }
 });
 
-// GET Course by ID (for Editor)
+
 app.get('/api/courses/id/:id', async (req, res) => {
     try {
         const course = await Course.findById(req.params.id);
@@ -851,7 +977,7 @@ app.get('/api/courses/id/:id', async (req, res) => {
     }
 });
 
-// GET Course Details (Public by Slug)
+
 app.get('/api/courses/:slug', async (req, res) => {
     try {
         const course = await Course.findOne({ slug: req.params.slug });
@@ -877,14 +1003,14 @@ app.get('/api/courses/:slug', async (req, res) => {
 
 import { Pix } from './utils/pix.js';
 
-// POST Create Direct Pix Checkout
+
 app.post('/api/checkout', verifyToken, async (req, res) => {
-    const { courseId } = req.body;
+    const { courseId, couponCode } = req.body;
     try {
         const course = await Course.findById(courseId);
         if (!course) return res.status(404).json({ error: 'Course not found' });
 
-        // Fetch Admin to get the Master Pix Key
+
         const adminEmail = 'octavio.marvel2018@gmail.com';
         const admin = await User.findOne({ email: adminEmail });
 
@@ -894,11 +1020,31 @@ app.post('/api/checkout', verifyToken, async (req, res) => {
         }
 
         const pixKey = admin.bankAccount.pixKey;
-        const name = admin.name.substring(0, 20); // Max 25 chars usually
+        const name = admin.name.substring(0, 20);
         const city = 'SaoPaulo';
-        const amount = Number(course.price);
 
-        // Generate Transaction Ref
+        let amount = Number(course.price);
+        let discount = 0;
+
+
+        if (couponCode) {
+            const coupon = await Coupon.findOne({ code: couponCode.toUpperCase() });
+            if (coupon) {
+
+                const now = new Date();
+                if (coupon.validUntil && now > new Date(coupon.validUntil)) {
+
+                } else if (coupon.maxUses && coupon.usedCount >= coupon.maxUses) {
+
+                } else {
+                    discount = (amount * coupon.discountPercentage) / 100;
+                    amount = amount - discount;
+                    if (amount < 0) amount = 0;
+                }
+            }
+        }
+
+
         const txId = `CRS${Date.now().toString().slice(-10)}`;
         const pix = new Pix(pixKey, name, city, amount, txId);
         const payload = pix.getPayload();
@@ -906,7 +1052,9 @@ app.post('/api/checkout', verifyToken, async (req, res) => {
         res.json({
             mode: 'pix_direct',
             payload,
-            amount,
+            amount: amount.toFixed(2),
+            originalPrice: course.price,
+            discount: discount.toFixed(2),
             key: pixKey,
             txId,
             courseTitle: typeof course.title === 'string' ? course.title : (course.title.pt || 'Curso')
@@ -918,25 +1066,56 @@ app.post('/api/checkout', verifyToken, async (req, res) => {
     }
 });
 
-// POST Manual Payment Confirmation
+
 app.post('/api/payment/confirm-manual', verifyToken, async (req, res) => {
-    const { courseId, txId } = req.body;
+    const { courseId, txId, couponCode } = req.body;
 
-    // In a real P2P system without API, we blindly trust the user "I paid" OR mark as pending.
-    // User requested "Functional", but without API verification is impossible.
-    // Compromise: Mark as pending approval, or approve instantly if trusted.
-    // Given the context of "Functional" usually implying "I want flow", we will Auto-Approve 
-    // but log it heavily, effectively acting as "Trust System".
 
-    // Secure Workflow: Mark as PENDING APPROVAL
-    // The Admin must approve this transaction in the dashboard to release the course.
+
+
+
+
+
+
+
 
     try {
         const user = await User.findById(req.user.id);
         const course = await Course.findById(courseId);
 
-        // 1. Create a "Pending" Transaction
-        const price = course.price || 0;
+        let price = course.price || 0;
+        let discount = 0;
+        let finalCode = null;
+
+
+        if (couponCode) {
+            const coupon = await Coupon.findOne({ code: couponCode.toUpperCase() });
+            if (coupon) {
+                const now = new Date();
+                const isExpired = coupon.validUntil && now > new Date(coupon.validUntil);
+                const isExhausted = coupon.maxUses && coupon.usedCount >= coupon.maxUses;
+
+                let isUserExhausted = false;
+                if (coupon.maxUsesPerUser) {
+                    const userUses = coupon.usedBy.filter(id => id === req.user.id).length;
+                    if (userUses >= coupon.maxUsesPerUser) isUserExhausted = true;
+                }
+
+                if (!isExpired && !isExhausted && !isUserExhausted) {
+                    discount = (price * coupon.discountPercentage) / 100;
+                    price = price - discount;
+                    if (price < 0) price = 0;
+                    finalCode = coupon.code;
+
+
+                    coupon.usedCount += 1;
+                    coupon.usedBy.push(req.user.id);
+                    await coupon.save();
+                }
+            }
+        }
+
+
         await Transaction.create({
             courseId: courseId,
             buyerId: req.user.id,
@@ -945,11 +1124,13 @@ app.post('/api/payment/confirm-manual', verifyToken, async (req, res) => {
             platformFee: 0,
             sellerNet: 0,
             mpPaymentId: `PIX-MANUAL-${txId}`,
-            status: 'pending_approval' // New status
+            status: 'pending_approval',
+            couponCode: finalCode,
+            discountAmount: discount
         });
 
-        // 2. Do NOT add to purchasedCourses yet.
-        // The user waits.
+
+
 
         return res.json({ status: 'pending', message: 'Pagamento enviado para análise. Liberação em breve.' });
     } catch (e) {
@@ -980,14 +1161,14 @@ app.post('/api/progress/update', verifyToken, async (req, res) => {
             progress = new Progress({ userId, courseId, completedLessons: [], quizScores: {} });
         }
 
-        // Type sanitization
-        // lessonId comes as number usually (index), but safeguard:
+
+
         const hasLesson = lessonId !== undefined && lessonId !== null && lessonId !== '';
 
         console.log(`[Progress Update] User: ${userId} Course: ${courseId} Lesson: ${lessonId} (HasLesson: ${hasLesson})`);
 
         if (hasLesson) {
-            const lid = Number(lessonId); // Normalize to number if it's an index
+            const lid = Number(lessonId);
             if (!progress.completedLessons.includes(lid) && !progress.completedLessons.includes(String(lid))) {
                 progress.completedLessons.push(lid);
                 console.log(`Added lesson ${lid} to progress.`);
@@ -998,6 +1179,37 @@ app.post('/api/progress/update', verifyToken, async (req, res) => {
             progress.quizScores = { ...progress.quizScores, lastScore: quizScore, date: new Date() };
         }
 
+
+
+        if (completed && !progress.moduleProgress[moduleIndex]?.lessons[lessonIndex]?.completed) {
+            const user = await User.findById(userId);
+            if (user) {
+
+                const XP_PER_LESSON = 50;
+                const XP_PER_QUIZ_PASS = 100;
+
+                let xpGained = XP_PER_LESSON;
+
+
+                if (quizScore !== undefined && quizScore >= 70) {
+                    xpGained += XP_PER_QUIZ_PASS;
+                }
+
+                user.xp = (user.xp || 0) + xpGained;
+
+
+
+                const newLevel = Math.floor(user.xp / 500) + 1;
+                if (newLevel > (user.level || 1)) {
+                    user.level = newLevel;
+
+                }
+
+                await user.save();
+            }
+        }
+
+
         progress.lastAccessed = new Date();
         await progress.save();
 
@@ -1007,7 +1219,21 @@ app.post('/api/progress/update', verifyToken, async (req, res) => {
     }
 });
 
-// --- AUTH ---
+
+app.get('/api/leaderboard', async (req, res) => {
+    try {
+
+        const users = await User.find({ role: 'student' })
+            .sort({ xp: -1 })
+            .limit(10)
+            .select('name avatar xp level');
+        res.json(users);
+    } catch (e) {
+        res.status(500).json({ error: 'Erro ao buscar ranking.' });
+    }
+});
+
+
 
 app.post('/api/cadastro', async (req, res) => {
     const { name, email, password, role, username, language = 'pt' } = req.body;
@@ -1022,7 +1248,7 @@ app.post('/api/cadastro', async (req, res) => {
             if (existingUser.username === username) return res.status(400).json({ error: 'Nome de usuário já existe.' });
         }
 
-        // Password Validation
+
         const minLength = 8;
         const hasNumber = /\d/;
         const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>_]/;
@@ -1331,6 +1557,7 @@ app.post('/api/auth/google', async (req, res) => {
 // --- ADMIN ---
 
 app.get('/api/users', verifyAdmin, async (req, res) => {
+    console.log("[API] GET /api/users called");
     try {
         const users = await User.find({}, '-password'); // Exclude password
         res.json(users);
@@ -1359,6 +1586,62 @@ app.patch('/api/users/:id/role', verifyAdmin, async (req, res) => {
     } catch (e) {
         console.error("Error updating role:", e);
         res.status(500).json({ error: e.message || 'Erro ao atualizar função.' });
+    }
+});
+
+app.post('/api/admin/approve/:id', verifyAdmin, async (req, res) => {
+    console.log(`[API] Approve requested for TX: ${req.params.id}`);
+    try {
+        const tx = await Transaction.findById(req.params.id);
+        if (!tx) return res.status(404).json({ error: 'Transação não encontrada.' });
+
+        if (tx.status === 'approved') return res.json({ message: 'Já aprovada.' });
+
+        tx.status = 'approved';
+        await tx.save();
+
+        // Grant access to buyer
+        const buyer = await User.findById(tx.buyerId);
+        if (buyer) {
+            if (!buyer.purchasedCourses.includes(tx.courseId)) {
+                buyer.purchasedCourses.push(tx.courseId);
+                await buyer.save();
+
+                // Persistence (users.json) - keeping it in sync for dev
+                try {
+                    const usersPath = path.join(__dirname, 'users.json');
+                    if (fs.existsSync(usersPath)) {
+                        let users = JSON.parse(fs.readFileSync(usersPath, 'utf-8'));
+                        const idx = users.findIndex(u => u.email === buyer.email);
+                        if (idx >= 0) {
+                            const userObj = buyer.toObject();
+                            if (userObj._id) userObj._id = userObj._id.toString();
+                            users[idx] = { ...users[idx], ...userObj };
+                            fs.writeFileSync(usersPath, JSON.stringify(users, null, 2));
+                        }
+                    }
+                } catch (e) { console.error("Persistence error:", e); }
+            }
+        }
+
+        res.json({ message: 'Transação aprovada e acesso liberado.' });
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: 'Erro ao aprovar.' });
+    }
+});
+
+app.post('/api/admin/reject/:id', verifyAdmin, async (req, res) => {
+    try {
+        const tx = await Transaction.findById(req.params.id);
+        if (!tx) return res.status(404).json({ error: 'Transação não encontrada.' });
+
+        tx.status = 'rejected';
+        await tx.save();
+
+        res.json({ message: 'Transação rejeitada.' });
+    } catch (e) {
+        res.status(500).json({ error: 'Erro ao rejeitar.' });
     }
 });
 
@@ -1409,7 +1692,7 @@ app.patch('/api/users/change-password', verifyToken, async (req, res) => {
     }
 });
 
-// --- PASSWORD RESET ---
+
 app.post('/api/forgot-password', async (req, res) => {
     const { email, language = 'pt' } = req.body;
     try {
@@ -1417,11 +1700,11 @@ app.post('/api/forgot-password', async (req, res) => {
         if (!user) return res.status(404).json({ error: 'Email não encontrado.' });
         if (user.authProvider === 'google') return res.status(400).json({ error: 'Use o login do Google.' });
 
-        // Generate 6-digit code
+
         const code = Math.floor(100000 + Math.random() * 900000).toString();
 
         user.resetPasswordToken = code;
-        user.resetPasswordExpires = Date.now() + 15 * 60 * 1000; // 15 mins
+        user.resetPasswordExpires = Date.now() + 15 * 60 * 1000;
         await user.save();
 
         const subjects = {
@@ -1506,7 +1789,7 @@ app.post('/api/validate-code', async (req, res) => {
             zh: { error: '验证代码时出错。' },
             ar: { error: 'خطأ في التحقق من الرمز.' }
         };
-        const msgs = messages[req.body.language] || messages.pt; // handle catch block scope
+        const msgs = messages[req.body.language] || messages.pt;
         res.status(500).json({ error: msgs.error });
     }
 });
@@ -1534,7 +1817,7 @@ app.post('/api/reset-password', async (req, res) => {
 
         if (!user) return res.status(400).json({ error: msgs.invalid });
 
-        // Password Validation
+
         const minLength = 8;
         const hasNumber = /\d/;
         const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>_]/;
@@ -1721,7 +2004,7 @@ app.post('/api/admin-fix-force', async (req, res) => {
 
         await user.save();
 
-        // Also persist to JSON just in case
+
         try {
             const usersPath = path.join(__dirname, 'users.json');
             const allUsers = await User.find({});
@@ -1731,6 +2014,65 @@ app.post('/api/admin-fix-force', async (req, res) => {
         res.json({ message: 'Admin fixed', user });
     } catch (e) {
         res.status(500).json({ error: e.message });
+    }
+});
+
+
+
+
+app.get('/api/courses/:id/reviews', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const reviews = await Review.find({ courseId: id }).sort({ createdAt: -1 });
+
+
+        const total = reviews.length;
+        const average = total > 0
+            ? (reviews.reduce((acc, r) => acc + r.rating, 0) / total).toFixed(1)
+            : 0;
+
+        res.json({ reviews, average, total });
+    } catch (e) {
+        res.status(500).json({ error: 'Erro ao buscar avaliações.' });
+    }
+});
+
+
+app.post('/api/courses/:id/reviews', verifyToken, async (req, res) => {
+    const { id } = req.params;
+    const { rating, comment } = req.body;
+
+    if (!rating) return res.status(400).json({ error: 'Nota é obrigatória.' });
+
+    try {
+        const user = await User.findById(req.user.id);
+
+
+
+
+
+
+        const reviewData = {
+            courseId: id,
+            userId: user._id,
+            userName: user.name,
+            userAvatar: user.avatar,
+            rating,
+            comment,
+            createdAt: new Date()
+        };
+
+
+        const review = await Review.findOneAndUpdate(
+            { courseId: id, userId: user._id },
+            reviewData,
+            { new: true, upsert: true }
+        );
+
+        res.json(review);
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: 'Erro ao salvar avaliação.' });
     }
 });
 
@@ -1764,6 +2106,19 @@ app.post('/api/comments', verifyToken, async (req, res) => {
         res.status(500).json({ error: 'Erro ao postar comentário' });
     }
 });
+
+// Serve Static Files in Production
+const distPath = path.join(__dirname, '../dist');
+if (fs.existsSync(distPath)) {
+    console.log("Serving static files from dist...");
+    app.use(express.static(distPath));
+
+    // Handle React Routing, return all requests to React app
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(distPath, 'index.html'));
+    });
+}
+
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

@@ -5,6 +5,7 @@ import { useTranslation } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import { useGoogleLogin } from '@react-oauth/google';
 import { api } from '../services/api';
+import SecurityCaptcha from '../components/SecurityCaptcha';
 
 const Signup = () => {
     const [name, setName] = useState('');
@@ -15,6 +16,7 @@ const Signup = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [agreedToTerms, setAgreedToTerms] = useState(false);
     const [error, setError] = useState('');
+    const [captchaValid, setCaptchaValid] = useState(false);
     const navigate = useNavigate();
     const { t, language } = useTranslation();
     const { login } = useAuth();
@@ -57,7 +59,7 @@ const Signup = () => {
             return;
         }
 
-        // Password Validation
+
         const minLength = 8;
         const hasNumber = /\d/;
         const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>_]/;
@@ -251,10 +253,16 @@ const Signup = () => {
                                 </label>
                             </div>
 
+                            <SecurityCaptcha onValidate={setCaptchaValid} />
+
                             <div>
                                 <button
                                     type="submit"
-                                    className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+                                    disabled={!captchaValid}
+                                    className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white transition-colors ${captchaValid
+                                        ? 'bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+                                        : 'bg-gray-400 cursor-not-allowed'
+                                        }`}
                                 >
                                     {t('auth.signup.submit')}
                                 </button>
@@ -290,7 +298,7 @@ const Signup = () => {
                     </>
                 )}
             </div>
-        </div>
+        </div >
     );
 };
 

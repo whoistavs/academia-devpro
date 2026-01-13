@@ -25,7 +25,7 @@ const Certificate = () => {
         loadData();
     }, [slug]);
 
-    // Initial Loading State or Not Authenticated
+    
     if (isAuthenticated === undefined || loading) {
         return (
             <div className="min-h-screen bg-gray-900 flex items-center justify-center text-white">
@@ -49,7 +49,7 @@ const Certificate = () => {
         );
     }
 
-    // Course not found
+    
     if (!course) {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white">
@@ -60,7 +60,7 @@ const Certificate = () => {
         );
     }
 
-    // Verify Completion
+    
     const totalLessons = course.modulos
         ? course.modulos.reduce((acc, m) => acc + (m.items ? m.items.length : 0), 0)
         : (course.aulas?.length || 0);
@@ -68,20 +68,8 @@ const Certificate = () => {
     const userProgress = completedLessons[course._id || course.id] || [];
     const isComplete = userProgress.length >= totalLessons && totalLessons > 0;
 
-    // Uncomment to enforce STRICT completion checking
-    /*
-    if (!isComplete && user.role !== 'admin') {
-         return (
-             <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white">
-                 <h2 className="text-2xl font-bold mb-4">Curso não concluído</h2>
-                 <p className="mb-4">Complete todas as aulas para gerar seu certificado.</p>
-                 <Link to={`/curso/${slug}`} className="px-6 py-2 bg-indigo-600 rounded text-white hover:bg-indigo-700 transition">
-                     Continuar Curso
-                 </Link>
-             </div>
-         );
-    }
-    */
+    
+    
 
     const handlePrint = () => {
         window.print();
@@ -93,14 +81,14 @@ const Certificate = () => {
         year: 'numeric'
     })}`;
 
-    // Generate safe verification code
+    
     const safeUserId = (user.id || user._id || 'USER').toString().substring(0, 8).toUpperCase();
     const courseCode = (course._id || course.id).toString().substring(0, 4).toUpperCase();
     const code = `DVP-${courseCode}-${safeUserId}-${Date.now().toString(36).substring(4).toUpperCase()}`;
 
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col items-center pt-24 pb-10 print:bg-white print:p-0">
-            {/* Valid for screen only */}
+            {}
             <div className="w-full max-w-4xl px-4 mb-6 flex justify-between items-center print:hidden">
                 <Link to="/dashboard" className="flex items-center text-gray-600 hover:text-gray-900">
                     <ArrowLeft className="w-5 h-5 mr-2" />
@@ -120,19 +108,19 @@ const Certificate = () => {
                 </div>
             </div>
 
-            {/* Certificate Container */}
+            {}
             <div
                 ref={certificateRef}
                 className="certificate-container w-full max-w-5xl bg-white p-10 shadow-2xl relative border-8 border-double border-gray-200 text-center print:shadow-none print:border-4 print:w-[297mm] print:h-[210mm] print:max-w-none print:p-6 print:m-0 print:absolute print:top-0 print:left-0 print:flex print:flex-col print:justify-between print:overflow-hidden"
-                style={{ aspectRatio: '1.414/1' }} // Landscape A4ish ratio
+                style={{ aspectRatio: '1.414/1' }} 
             >
-                {/* Decorative Corners - Adjusted for print */}
+                {}
                 <div className="absolute top-4 left-4 w-16 h-16 border-t-4 border-l-4 border-indigo-900 print:top-4 print:left-4"></div>
                 <div className="absolute top-4 right-4 w-16 h-16 border-t-4 border-r-4 border-indigo-900 print:top-4 print:right-4"></div>
                 <div className="absolute bottom-4 left-4 w-16 h-16 border-b-4 border-l-4 border-indigo-900 print:bottom-4 print:left-4"></div>
                 <div className="absolute bottom-4 right-4 w-16 h-16 border-b-4 border-r-4 border-indigo-900 print:bottom-4 print:right-4"></div>
 
-                {/* Header */}
+                {}
                 <div className="mb-12 print:mb-0">
                     <div className="flex justify-center mb-6 print:mb-2">
                         <Award className="w-20 h-20 text-indigo-600 print:w-16 print:h-16" />
@@ -143,7 +131,7 @@ const Certificate = () => {
                     <p className="text-gray-500 text-lg uppercase tracking-widest print:text-base">DevPro Academy</p>
                 </div>
 
-                {/* Body */}
+                {}
                 <div className="mb-0 print:mb-0">
                     <p className="text-xl text-gray-600 mb-6 italic print:text-lg print:mb-2">Certificamos que</p>
                     <h2 className="text-4xl font-bold text-indigo-900 mb-2 border-b-2 border-indigo-100 inline-block pb-2 px-8 print:text-3xl print:mb-2">
@@ -155,17 +143,17 @@ const Certificate = () => {
                         const rg = user.rg || localStorage.getItem(`user_rg_${user.id || user._id}`);
 
                         const formatCPF = (v) => v ? v.replace(/\D/g, '').replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4") : '';
-                        // Basic 9-digit RG formatter, fallbacks to raw if length differs significantly or handles standard SSP
+                        
                         const formatRG = (v) => {
                             if (!v) return '';
                             const clean = v.replace(/\D/g, '');
                             if (clean.length === 9) {
                                 return clean.replace(/(\d{2})(\d{3})(\d{3})(\d{1})/, "$1.$2.$3-$4");
                             }
-                            return v; // Return raw if doesn't match standard 9-digit pattern
+                            return v; 
                         };
 
-                        // Always render the container to maintain spacing, even if empty (though logic handles hiding)
+                        
                         return (
                             <div className="text-sm text-gray-600 mb-6 font-mono print:text-xs print:mb-2 print:text-gray-800">
                                 {cpf && <span>CPF: {formatCPF(cpf)}</span>}
@@ -188,7 +176,7 @@ const Certificate = () => {
                     </p>
                 </div>
 
-                {/* Footer */}
+                {}
                 <div className="flex justify-between items-end mt-8 w-full px-20 print:px-12 print:mt-0 print:mb-8">
                     <div className="text-center">
                         <div className="text-lg font-bold text-gray-800 mb-1 print:text-base">{currentDate}</div>
@@ -197,7 +185,7 @@ const Certificate = () => {
                     </div>
 
                     <div className="text-center">
-                        {/* Signature Mock */}
+                        {}
                         <div className="font-script text-3xl text-indigo-800 mb-1 font-bold italic print:text-2xl" style={{ fontFamily: 'cursive' }}>
                             Octavio R. Schwab
                         </div>
@@ -206,7 +194,7 @@ const Certificate = () => {
                     </div>
                 </div>
 
-                {/* Verification Code - Lateral */}
+                {}
                 <div
                     className="absolute right-4 top-1/2 transform -translate-y-1/2 print:right-4"
                     style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}

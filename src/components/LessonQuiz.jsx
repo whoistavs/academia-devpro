@@ -26,14 +26,14 @@ export function LessonQuiz({ questions, onPass, language = 'pt' }) {
             };
 
             const processed = questions.map((q, qIndex) => {
-                // Defensive checks
+                
                 if (!q) throw new Error(`Questão ${qIndex} é inválida (null/undefined)`);
 
-                // Resolve Text (Handle 'text' OR 'question' property)
+                
                 const rawText = q.text || q.question || "Questão sem título";
                 const qText = typeof rawText === 'object' ? (rawText[language] || rawText['pt'] || Object.values(rawText)[0]) : rawText;
 
-                // Resolve Options
+                
                 let optsArray = q.options;
                 if (optsArray && !Array.isArray(optsArray) && typeof optsArray === 'object') {
                     optsArray = optsArray[language] || optsArray['pt'] || Object.values(optsArray)[0] || [];
@@ -43,22 +43,22 @@ export function LessonQuiz({ questions, onPass, language = 'pt' }) {
                     optsArray = [];
                 }
 
-                // Map indices
+                
                 const optionsWithIndex = optsArray.map((opt, idx) => ({ text: opt, originalIndex: idx }));
 
-                // Shuffle Options
+                
                 const shuffledOptions = shuffle(optionsWithIndex);
 
-                // New Correct Index
+                
                 const correctIndex = q.correct !== undefined ? q.correct : (q.answer !== undefined ? q.answer : -1);
 
-                // Find where the correct answer moved to
+                
                 const newCorrect = shuffledOptions.findIndex(o => o.originalIndex === correctIndex);
 
                 return {
                     ...q,
-                    text: String(qText), // Force string
-                    options: shuffledOptions.map(o => String(o.text)), // Force strings
+                    text: String(qText), 
+                    options: shuffledOptions.map(o => String(o.text)), 
                     correct: newCorrect
                 };
             });
@@ -129,9 +129,9 @@ export function LessonQuiz({ questions, onPass, language = 'pt' }) {
         const total = shuffledQuestions.length;
         const passed = score >= total * 0.7;
 
-        // Call onPass if passed
+        
         if (passed) {
-            // Use timeout to prevent update during render if parent updates state immediately
+            
             setTimeout(() => onPass(), 0);
         }
 

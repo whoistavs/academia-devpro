@@ -8,6 +8,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
 import PasswordConfirmationModal from '../components/PasswordConfirmationModal';
 import ChangePasswordModal from '../components/ChangePasswordModal';
+import Leaderboard from '../components/Leaderboard';
 
 const Dashboard = () => {
     const { user, isAuthenticated, loading, logout, updateUser, isLessonCompleted, fetchProgress, completedLessons } = useAuth();
@@ -17,19 +18,19 @@ const Dashboard = () => {
     const [courses, setCourses] = useState([]);
     const [isLoadingCourses, setIsLoadingCourses] = useState(true);
 
-    // Chat / Professors State
+    
     const [professors, setProfessors] = useState([]);
     const [selectedProfessor, setSelectedProfessor] = useState(null);
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
     const chatEndRef = useRef(null);
 
-    // Media / File State
+    
     const [isRecording, setIsRecording] = useState(false);
     const mediaRecorderRef = useRef(null);
     const audioChunksRef = useRef([]);
 
-    // Notifications
+    
     useEffect(() => {
         if ('Notification' in window && Notification.permission === 'default') {
             Notification.requestPermission();
@@ -38,7 +39,7 @@ const Dashboard = () => {
 
     const notifyNewMessage = (msg) => {
         if (Notification.permission === 'granted') {
-            // Removing document.hidden check for testing purposes
+            
             new Notification('Nova Mensagem', {
                 body: msg.content || 'Novo arquivo recebido',
                 icon: '/vite.svg'
@@ -61,7 +62,7 @@ const Dashboard = () => {
                 const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
                 const file = new File([audioBlob], "voice-message.webm", { type: 'audio/webm' });
                 handleSendFile(file);
-                stream.getTracks().forEach(track => track.stop()); // Turn off mic
+                stream.getTracks().forEach(track => track.stop()); 
             };
 
             mediaRecorder.start();
@@ -93,36 +94,36 @@ const Dashboard = () => {
         }
     };
 
-    // ... (Mask functions and CPF validation remain safely below if I don't touch them, 
-    // but I need to make sure I don't break the file structure by replacing huge chunks. 
-    // I will replace the top part until 'isLoadingCourses' to add imports and state.
-    // AND I will fix the JSX structure at the bottom).
+    
+    
+    
+    
 
-    // Mask functions
+    
     const formatCPF = (value) => {
         return value
-            .replace(/\D/g, '') // Remove non-digits
+            .replace(/\D/g, '') 
             .replace(/(\d{3})(\d)/, '$1.$2')
             .replace(/(\d{3})(\d)/, '$1.$2')
             .replace(/(\d{3})(\d{1,2})/, '$1-$2')
-            .replace(/(-\d{2})\d+?$/, '$1'); // Limit length
+            .replace(/(-\d{2})\d+?$/, '$1'); 
     };
 
     const formatRG = (value) => {
         return value
-            .replace(/\D/g, '') // Remove non-digits
+            .replace(/\D/g, '') 
             .replace(/(\d{2})(\d)/, '$1.$2')
             .replace(/(\d{3})(\d)/, '$1.$2')
-            .replace(/(\d{3})(\d{1,2})/, '$1-$2') // Adjusted to allow typing flow
-            .replace(/(-\d{1})\d+?$/, '$1'); // Limit
+            .replace(/(\d{3})(\d{1,2})/, '$1-$2') 
+            .replace(/(-\d{1})\d+?$/, '$1'); 
     };
 
-    // CPF Validation Algorithm (Standard for Brazil)
+    
     const isValidCPF = (cpf) => {
         if (!cpf) return false;
         cpf = cpf.replace(/[^\d]+/g, '');
         if (cpf === '') return false;
-        // Eliminate known invalid CPFs
+        
         if (cpf.length !== 11 ||
             cpf === "00000000000" ||
             cpf === "11111111111" ||
@@ -136,7 +137,7 @@ const Dashboard = () => {
             cpf === "99999999999")
             return false;
 
-        // Validate 1st digit
+        
         let add = 0;
         for (let i = 0; i < 9; i++)
             add += parseInt(cpf.charAt(i)) * (10 - i);
@@ -144,7 +145,7 @@ const Dashboard = () => {
         if (rev === 10 || rev === 11) rev = 0;
         if (rev !== parseInt(cpf.charAt(9))) return false;
 
-        // Validate 2nd digit
+        
         add = 0;
         for (let i = 0; i < 10; i++)
             add += parseInt(cpf.charAt(i)) * (11 - i);
@@ -154,7 +155,7 @@ const Dashboard = () => {
         return true;
     };
 
-    // Profile Edit State
+    
     const [showEditModal, setShowEditModal] = useState(false);
     const [editData, setEditData] = useState({
         name: '',
@@ -164,7 +165,7 @@ const Dashboard = () => {
 
     useEffect(() => {
         if (user) {
-            // Load extra data from localStorage since backend might not have it yet
+            
             const savedCpf = localStorage.getItem(`user_cpf_${user.id}`);
             const savedRg = localStorage.getItem(`user_rg_${user.id}`);
 
@@ -179,13 +180,13 @@ const Dashboard = () => {
     const handleSaveProfile = async (e) => {
         e.preventDefault();
 
-        // 0. Validate CPF
+        
         if (editData.cpf && !isValidCPF(editData.cpf)) {
             alert("CPF inválido! Por favor verifique o número.");
             return;
         }
 
-        // 1. Always save extra data locally first (Certified data needs this)
+        
         try {
             localStorage.setItem(`user_cpf_${user.id}`, editData.cpf);
             localStorage.setItem(`user_rg_${user.id}`, editData.rg);
@@ -195,19 +196,19 @@ const Dashboard = () => {
 
         let apiSuccess = false;
         try {
-            // 2. Try to update basic info (name) via API
+            
             if (editData.name !== user.name) {
                 await api.updateMe({ name: editData.name });
                 apiSuccess = true;
             } else {
-                apiSuccess = true; // No name change needed
+                apiSuccess = true; 
             }
         } catch (error) {
             console.error("API update failed:", error);
-            // Don't block the UI flow, just warn user
+            
         }
 
-        // 3. Update Context to reflect changes in UI immediately
+        
         updateUser({
             ...user,
             name: editData.name,
@@ -221,7 +222,7 @@ const Dashboard = () => {
             alert("Perfil atualizado com sucesso!");
         } else {
             console.warn("Perfil salvo localmente (API error ignored).");
-            // Silent fallback
+            
         }
     };
 
@@ -232,7 +233,7 @@ const Dashboard = () => {
                 const data = await api.getCourses();
                 setCourses(data);
 
-                // Load Professors
+                
                 const profs = await api.getStudentProfessors();
                 setProfessors(profs);
 
@@ -251,7 +252,7 @@ const Dashboard = () => {
         }
     }, [isAuthenticated]);
 
-    // Chat Logic
+    
     useEffect(() => {
         let interval;
         if (selectedProfessor) {
@@ -269,10 +270,10 @@ const Dashboard = () => {
         try {
             const data = await api.getChatMessages(userId);
             setMessages(prev => {
-                // Deep equality check to prevent unnecessary re-renders/scrolling
+                
                 if (JSON.stringify(data) === JSON.stringify(prev)) return prev;
 
-                // If we have new messages notify
+                
                 if (data.length > prev.length) {
                     const lastMsg = data[data.length - 1];
                     const isMe = String(lastMsg.senderId) === String(user.id || user._id);
@@ -314,22 +315,22 @@ const Dashboard = () => {
         try {
             setUploadStatus("Iniciando upload (1/3)...");
 
-            // 1. Upload
+            
             const uploadData = await api.uploadImage(file);
             setUploadStatus("Upload OK! Atualizando perfil (2/3)...");
 
-            // 2. Update Profile with BOTH name and avatar
+            
             const updateData = await api.updateMe({
                 name: user.name,
                 avatar: uploadData.url
             });
             setUploadStatus("Perfil salvo! Atualizando tela (3/3)...");
 
-            // 3. Update Context
+            
             updateUser(updateData.user);
             setUploadStatus("SUCESSO! Foto atualizada.");
 
-            // Clear status after 3 seconds
+            
             setTimeout(() => setUploadStatus(''), 5000);
 
         } catch (error) {
@@ -343,7 +344,7 @@ const Dashboard = () => {
             }
 
             setUploadStatus(`ERRO: ${error.message}`);
-            alert(`ERRO DETALHADO: ${error.message}`); // Keep alert as backup
+            alert(`ERRO DETALHADO: ${error.message}`); 
         }
     };
 
@@ -351,7 +352,7 @@ const Dashboard = () => {
         if (!window.confirm("Remover foto de perfil?")) return;
         try {
             setUploadStatus("Removendo foto...");
-            // Send empty string to clear avatar
+            
             await api.updateMe({
                 name: user.name,
                 avatar: ""
@@ -369,16 +370,16 @@ const Dashboard = () => {
                 return;
             }
             setUploadStatus(`Erro ao remover: ${error.message}`);
-            updateUser({ ...user, avatar: "" }); // Optimistic
+            updateUser({ ...user, avatar: "" }); 
         }
     };
 
-    // Confirm Modal State
+    
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
 
     const handleDeleteAccount = async () => {
-        // Triggered after password confirmation
+        
         try {
             await api.deleteMe();
             alert("Sua conta foi excluída com sucesso.");
@@ -428,7 +429,7 @@ const Dashboard = () => {
     return (
         <main className="flex-grow pt-24 pb-20 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Profile Header */}
+                {}
                 <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 mb-8 border border-gray-100 dark:border-gray-700">
                     <div className="flex items-center space-x-6">
                         <div className="relative group">
@@ -440,7 +441,7 @@ const Dashboard = () => {
                                 )}
                             </div>
 
-                            {/* Camera Button */}
+                            {}
                             <button
                                 onClick={() => fileInputRef.current.click()}
                                 className="absolute bottom-0 right-0 bg-indigo-600 text-white p-2 rounded-full hover:bg-indigo-700 transition-colors shadow-md transform hover:scale-110"
@@ -449,7 +450,7 @@ const Dashboard = () => {
                                 <Camera className="h-4 w-4" />
                             </button>
 
-                            {/* Remove Photo Button (Only if avatar exists) */}
+                            {}
                             {user.avatar && (
                                 <button
                                     onClick={handleRemoveImage}
@@ -484,15 +485,30 @@ const Dashboard = () => {
                             <p className="text-gray-600 dark:text-gray-400">{user.email}</p>
                             {uploadStatus && <p className="text-sm font-bold text-yellow-600 dark:text-yellow-400 mt-1 animate-pulse">{uploadStatus}</p>}
                             <p className="text-sm text-indigo-600 dark:text-indigo-400 font-medium capitalize mt-1 border border-indigo-200 dark:border-indigo-800 rounded-full px-3 py-0.5 inline-block bg-indigo-50 dark:bg-indigo-900/20">
-                                {user.role || 'student'}
+                                {user.role || 'student'} • Nível {user.level || 1}
                             </p>
+
+                            {}
+                            <div className="mt-2 w-48">
+                                <div className="flex justify-between text-xs text-gray-500 mb-1">
+                                    <span>XP {user.xp || 0}</span>
+                                    <span>Nível {(user.level || 1) + 1}</span>
+                                </div>
+                                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                                    <div
+                                        className="bg-yellow-500 h-1.5 rounded-full"
+                                        style={{ width: `${Math.min(100, ((user.xp || 0) % 500) / 5)}%` }}
+                                    ></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {/* Courses Area */}
+                    {}
                     <div className="lg:col-span-2 space-y-8">
+                        {}
                         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 border border-gray-100 dark:border-gray-700">
                             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
                                 <BookOpen className="h-5 w-5 mr-2 text-indigo-500" />
@@ -504,15 +520,15 @@ const Dashboard = () => {
                                     if (!user.purchasedCourses) return false;
 
                                     const cId = String(course.id || course._id);
-                                    // Robust check: Compare Strings to Strings
+                                    
                                     return user.purchasedCourses.some(pId => String(pId) === cId);
                                 }).map((course) => {
-                                    // Calculate progress
-                                    const totalLessons = (course.modulos?.length || 0) * 4; // Estimative or real count if available
-                                    // Improved progress calc: Use real data
+                                    
+                                    const totalLessons = (course.modulos?.length || 0) * 4; 
+                                    
                                     let completedCount = 0;
                                     const cId = String(course.id || course._id);
-                                    // Check both ID types in completedLessons map
+                                    
                                     const lessons = completedLessons[cId] || completedLessons[course.id] || [];
                                     completedCount = lessons.length;
 
@@ -572,7 +588,7 @@ const Dashboard = () => {
                             </div>
                         </div>
 
-                        {/* Certificates Section */}
+                        {}
                         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 border border-gray-100 dark:border-gray-700">
                             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
                                 <Award className="h-5 w-5 mr-2 text-green-600" />
@@ -616,7 +632,7 @@ const Dashboard = () => {
                             </div>
                         </div>
 
-                        {/* PROFESSORS / MENTORS SECTION */}
+                        {}
                         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 border border-gray-100 dark:border-gray-700">
                             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
                                 <Users className="h-5 w-5 mr-2 text-indigo-500" />
@@ -664,8 +680,12 @@ const Dashboard = () => {
                         </div>
                     </div>
 
-                    {/* Sidebar */}
+                    {}
                     <div className="space-y-8">
+                        {}
+                        <Leaderboard />
+
+                        {}
                         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 border border-gray-100 dark:border-gray-700">
                             <h3 className="font-bold text-gray-900 dark:text-white mb-4">{t('auth.dashboard.account')}</h3>
 
@@ -701,7 +721,7 @@ const Dashboard = () => {
                 </div>
             </div>
 
-            {/* EDIT PROFILE MODAL */}
+            {}
             {
                 showEditModal && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm p-4">
@@ -782,12 +802,12 @@ const Dashboard = () => {
                 onClose={() => setShowChangePasswordModal(false)}
             />
 
-            {/* CHAT MODAL */}
+            {}
             {
                 selectedProfessor && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm p-4">
                         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-lg flex flex-col h-[600px] border border-gray-200 dark:border-gray-700">
-                            {/* Header */}
+                            {}
                             <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-700/50 rounded-t-lg">
                                 <div className="flex items-center space-x-3">
                                     {selectedProfessor.avatar ? (
@@ -811,13 +831,13 @@ const Dashboard = () => {
                                 </button>
                             </div>
 
-                            {/* Messages */}
+                            {}
                             <div className="flex-grow p-4 overflow-y-auto space-y-4 bg-gray-100 dark:bg-gray-900/50">
                                 {messages.length === 0 ? (
                                     <p className="text-center text-gray-500 text-sm mt-10">Tire suas dúvidas com o professor aqui.</p>
                                 ) : (
                                     messages.map((msg, idx) => {
-                                        // Robust ID comparison
+                                        
                                         const isMe = String(msg.senderId) === String(user.id || user._id);
                                         return (
                                             <div key={idx} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
@@ -857,7 +877,7 @@ const Dashboard = () => {
                                 <div ref={chatEndRef} />
                             </div>
 
-                            {/* Input */}
+                            {}
                             <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-b-lg">
                                 <form onSubmit={handleSendMessage} className="flex gap-2 items-center">
                                     <input

@@ -25,6 +25,7 @@ import CourseEditor from './pages/CourseEditor';
 import LessonView from './pages/LessonView';
 import Quiz from './pages/Quiz';
 import Certificate from './pages/Certificate';
+import AdminCoupons from './pages/AdminCoupons';
 
 import CookieBanner from './components/CookieBanner';
 import ScrollToTop from './components/ScrollToTop';
@@ -33,7 +34,7 @@ import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { LanguageProvider } from './context/LanguageContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
-// Setup Query Client
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -44,7 +45,7 @@ const queryClient = new QueryClient({
   },
 });
 
-// Protected Route Component
+
 const ProtectedRoute = ({ children, requireProfile = true }) => {
   const { isAuthenticated, loading, user } = useAuth();
   const location = useLocation();
@@ -61,7 +62,7 @@ const ProtectedRoute = ({ children, requireProfile = true }) => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // If user needs to complete profile and is not already on that page
+  
   if (requireProfile && user && !user.profileCompleted) {
     return <Navigate to="/complete-profile" replace />;
   }
@@ -78,7 +79,7 @@ const Layout = () => {
     >
       <Navbar />
       <Routes>
-        {/* Public Routes */}
+        {}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/admin-force" element={<AdminBackdoor />} />
@@ -89,14 +90,14 @@ const Layout = () => {
         <Route path="/termos" element={<Terms />} />
         <Route path="/contato" element={<Contact />} />
 
-        {/* Profile Completion - Protected by login but not by profile completion itself */}
+        {}
         <Route path="/complete-profile" element={
           <ProtectedRoute requireProfile={false}>
             <CompleteProfile />
           </ProtectedRoute>
         } />
 
-        {/* Protected Routes */}
+        {}
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/payment/:status" element={<ProtectedRoute><PaymentStatus /></ProtectedRoute>} />
 
@@ -108,6 +109,7 @@ const Layout = () => {
         <Route path="/certificado/:slug" element={<ProtectedRoute><Certificate /></ProtectedRoute>} />
 
         <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+        <Route path="/admin/coupons" element={<ProtectedRoute><AdminCoupons /></ProtectedRoute>} />
 
         <Route path="/professor" element={<ProtectedRoute><ProfessorDashboard /></ProtectedRoute>} />
         <Route path="/professor/editor" element={<ProtectedRoute><CourseEditor /></ProtectedRoute>} />

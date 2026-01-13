@@ -7,24 +7,53 @@ import { useAuth } from '../context/AuthContext';
 const PixModal = ({ isOpen, onClose, data, onConfirm }) => {
     const { login, user } = useAuth();
     const [confirming, setConfirming] = useState(false);
+    const [couponCode, setCouponCode] = useState('');
+    const [couponMessage, setCouponMessage] = useState('');
+    const [couponLoading, setCouponLoading] = useState(false);
 
-    if (!isOpen || !data) return null;
+    
+    const [currentData, setCurrentData] = React.useState(data);
+
+    React.useEffect(() => {
+        setCurrentData(data);
+        setCouponCode('');
+        setCouponMessage('');
+    }, [data]);
+
+    if (!isOpen || !currentData) return null;
 
     const handleCopy = () => {
-        navigator.clipboard.writeText(data.payload);
+        navigator.clipboard.writeText(currentData.payload);
         alert('Código Pix copiado!');
     };
 
-    const handleConfirm = async () => {
-        // Direct confirmation for better UX
+    const handleApplyCoupon = async () => {
+        if (!couponCode.trim()) return;
+        setCouponLoading(true);
+        setCouponMessage('');
+        try {
+            
+            const res = await api.createPreference(currentData.courseId || data.courseId, couponCode);
+            setCurrentData({ ...res, courseId: currentData.courseId || data.courseId }); 
+            setCouponMessage({ type: 'success', text: `Desconto de R$ ${res.discount} aplicado!` });
+        } catch (e) {
+            setCouponMessage({ type: 'error', text: 'Cupom inválido ou expirado.' });
+            console.error(e);
+        } finally {
+            setCouponLoading(false);
+        }
+    };
 
+    const handleConfirm = async () => {
         setConfirming(true);
         try {
-            const res = await api.confirmManualPayment(data.courseId, data.txId);
+            
+            
+            
+            const res = await api.confirmManualPayment(currentData.courseId, currentData.txId, couponCode);
             const token = localStorage.getItem('token');
             login({ ...user, purchasedCourses: res.purchasedCourses }, token);
             onConfirm();
-            // Force reload to guarantee UI update
             window.location.reload();
         } catch (e) {
             alert("Erro ao confirmar pagamento.");
@@ -35,7 +64,7 @@ const PixModal = ({ isOpen, onClose, data, onConfirm }) => {
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-70 backdrop-blur-sm">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full overflow-hidden transform transition-all scale-100">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full overflow-hidden transform transition-all scale-100 max-h-[90vh] overflow-y-auto">
                 <div className="p-6 text-center">
                     <div className="flex justify-between items-center mb-6">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Logo_Pix.svg" alt="Pix" className="h-8" />
@@ -45,16 +74,51 @@ const PixModal = ({ isOpen, onClose, data, onConfirm }) => {
                     </div>
 
                     <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Pague com Pix</h2>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
-                        Use o app do seu banco para escanear o QR Code ou cole o código.
-                    </p>
+
+                    {}
+                    {(!currentData.discount || parseFloat(currentData.discount) === 0) && (
+                        <div className="mb-4 flex gap-2">
+                            <input
+                                type="text"
+                                placeholder="Cupom de desconto"
+                                value={couponCode}
+                                onChange={(e) => setCouponCode(e.target.value)}
+                                className="flex-1 border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 text-sm dark:bg-gray-700 dark:text-white"
+                            />
+                            <button
+                                onClick={handleApplyCoupon}
+                                disabled={couponLoading || !couponCode}
+                                className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-bold hover:bg-indigo-700 disabled:opacity-50"
+                            >
+                                {couponLoading ? '...' : 'Aplicar'}
+                            </button>
+                        </div>
+                    )}
+
+                    {couponMessage && (
+                        <p className={`text-sm mb-4 ${couponMessage.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>
+                            {couponMessage.text}
+                        </p>
+                    )}
+
+                    {currentData.discount > 0 && (
+                        <div className="mb-4 bg-green-50 dark:bg-green-900/20 p-2 rounded text-green-700 dark:text-green-300 text-sm">
+                            Cupom <strong>{couponCode}</strong> aplicado! Desconto: R$ {currentData.discount}
+                        </div>
+                    )}
+
 
                     <div className="bg-white p-4 rounded-xl shadow-inner inline-block mb-6 border border-gray-200">
-                        <QRCode value={data.payload} size={180} />
+                        <QRCode value={currentData.payload} size={180} />
                     </div>
 
                     <div className="mb-6">
-                        <p className="text-2xl font-bold text-gray-900 dark:text-white">R$ {data.amount?.toFixed(2)}</p>
+                        {currentData.originalPrice && currentData.originalPrice > currentData.amount && (
+                            <p className="text-sm text-gray-400 line-through">R$ {parseFloat(currentData.originalPrice).toFixed(2)}</p>
+                        )}
+                        <p className="text-3xl font-bold text-gray-900 dark:text-white text-green-600">
+                            R$ {parseFloat(currentData.amount).toFixed(2)}
+                        </p>
                         <p className="text-xs text-gray-400">Pagamento direto para admin do sistema</p>
                     </div>
 
@@ -62,7 +126,7 @@ const PixModal = ({ isOpen, onClose, data, onConfirm }) => {
                         <input
                             type="text"
                             readOnly
-                            value={data.payload}
+                            value={currentData.payload}
                             className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg py-3 px-4 pr-12 text-xs text-gray-600 dark:text-gray-300 font-mono"
                         />
                         <button

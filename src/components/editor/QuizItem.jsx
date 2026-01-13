@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { FileQuestion, Trash, Plus, CheckCircle, ArrowDown, ArrowUp } from 'lucide-react';
 
 export const QuizItem = ({ quiz, updateQuiz, removeQuiz, moveQuiz, isFirst, isLast, title = "Prova do Módulo" }) => {
-    // quiz is essentially an object that behaves like a lesson but has 'questions' array.
-    // We treat it as a "Lesson" of type 'quiz' or separate 'quiz' object. 
-    // Here we assume it receives the quiz object from the module.
+    
+    
+    
 
     const addQuestion = () => {
         const newQuestions = [...(quiz.questions || []), {
@@ -40,7 +40,7 @@ export const QuizItem = ({ quiz, updateQuiz, removeQuiz, moveQuiz, isFirst, isLa
                     <h4 className="font-bold text-indigo-900 dark:text-indigo-300">{title}</h4>
                 </div>
                 <div className="flex items-center gap-1">
-                    {/* Move/Delete controls similar to lesson */}
+                    {}
                     <button
                         type="button"
                         onClick={() => moveQuiz(-1)}

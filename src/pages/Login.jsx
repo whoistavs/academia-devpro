@@ -5,6 +5,7 @@ import { useTranslation } from '../context/LanguageContext';
 import { useGoogleLogin } from '@react-oauth/google';
 import { Lock, Mail, Eye, EyeOff } from 'lucide-react';
 import { api } from '../services/api';
+import SecurityCaptcha from '../components/SecurityCaptcha';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -12,6 +13,7 @@ const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [rememberMe, setRememberMe] = useState(false);
     const [error, setError] = useState('');
+    const [captchaValid, setCaptchaValid] = useState(false);
     const { login } = useAuth();
     const { t } = useTranslation();
     const navigate = useNavigate();
@@ -109,7 +111,7 @@ const Login = () => {
                         </div>
                     )}
                     <div className="rounded-md shadow-sm -space-y-px">
-                        {/* Email Input */}
+                        { }
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <Mail className="h-5 w-5 text-gray-400" />
@@ -126,7 +128,7 @@ const Login = () => {
                                 placeholder={t('auth.login.email')}
                             />
                         </div>
-                        {/* Password Input */}
+                        { }
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <Lock className="h-5 w-5 text-gray-400" />
@@ -177,10 +179,16 @@ const Login = () => {
                         </div>
                     </div>
 
+                    <SecurityCaptcha onValidate={setCaptchaValid} />
+
                     <div>
                         <button
                             type="submit"
-                            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+                            disabled={!captchaValid}
+                            className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white transition-colors ${captchaValid
+                                ? 'bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+                                : 'bg-gray-400 cursor-not-allowed'
+                                }`}
                         >
                             {t('auth.login.submit')}
                         </button>

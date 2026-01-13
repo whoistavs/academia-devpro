@@ -5,7 +5,7 @@ import { useTranslation } from '../context/LanguageContext';
 import { api } from '../services/api';
 
 const CompleteProfile = () => {
-    const { user, login } = useAuth(); // We might use login to update the user object
+    const { user, login } = useAuth(); 
     const navigate = useNavigate();
     const { t } = useTranslation();
 
@@ -37,9 +37,9 @@ const CompleteProfile = () => {
         try {
             const data = await api.completeProfile(formData);
 
-            // Update user in context
-            // We reuse the existing login function to update the user state without changing the token
-            // Assuming login(userData, token) merges or replaces
+            
+            
+            
             const token = localStorage.getItem('token');
             login({ ...user, ...data.user, profileCompleted: true }, token);
 

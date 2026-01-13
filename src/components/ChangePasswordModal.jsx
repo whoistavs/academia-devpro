@@ -40,7 +40,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
             return;
         }
 
-        // Strong Password Validation
+        
         const minLength = 8;
         const hasNumber = /\d/;
         const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>_]/;

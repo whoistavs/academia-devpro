@@ -6,7 +6,7 @@ const db = new Datastore({
     autoload: true
 });
 
-// Compact the database automatically every 15 minutes
+
 db.persistence.setAutocompactionInterval(15 * 60 * 1000);
 
 module.exports = db;

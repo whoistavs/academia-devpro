@@ -3,7 +3,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { AuthProvider, useAuth } from './AuthContext';
 import React from 'react';
 
-// Mock Component to test hook
+
 const TestComponent = () => {
     const { user, login, logout } = useAuth();
     return (
@@ -28,20 +28,20 @@ describe('AuthContext', () => {
             </AuthProvider>
         );
 
-        // Check initial state (logged out)
+        
         expect(screen.queryByTestId('user-email')).toBeNull();
 
-        // Perform login
+        
         fireEvent.click(screen.getByText('Login'));
 
-        // Check logged in state
+        
         expect(screen.getByTestId('user-email')).toHaveTextContent('test@example.com');
         expect(localStorage.getItem('token')).toBe('fake-token');
 
-        // Perform logout
+        
         fireEvent.click(screen.getByText('Logout'));
 
-        // Check logged out state
+        
         expect(screen.queryByTestId('user-email')).toBeNull();
         expect(localStorage.getItem('token')).toBeNull();
     });

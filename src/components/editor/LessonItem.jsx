@@ -3,16 +3,16 @@ import { Video, Clock, FileText, Trash, ArrowUp, ArrowDown } from 'lucide-react'
 
 export const LessonItem = ({ lesson, index, updateLesson, removeLesson, moveLesson, isFirst, isLast }) => {
     const handleChange = (field, value) => {
-        // Suporta i18n structure: { pt: value }
+        
         updateLesson(index, field, value);
     };
 
-    // Helper to safely get string value and avoid "Object" in input crashes
+    
     const getString = (val) => {
         if (!val) return '';
         if (typeof val === 'string') return val;
-        // Se val for objeto { pt: '' }, retorna a string dentro.
-        // Se o objeto estiver vazio ou for inesperado, retorna string vazia.
+        
+        
         return val.pt || val.en || '';
     };
 

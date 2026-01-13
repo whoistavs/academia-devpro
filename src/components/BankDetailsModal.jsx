@@ -4,7 +4,7 @@ import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
 const BankDetailsModal = ({ isOpen, onClose }) => {
-    const { user, login } = useAuth(); // login to update user context
+    const { user, login } = useAuth(); 
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
     const [formData, setFormData] = useState({
@@ -39,10 +39,10 @@ const BankDetailsModal = ({ isOpen, onClose }) => {
 
         try {
             const data = await api.updateBankDetails(formData);
-            // Update local user context
-            // Assuming login can handle partial updates or we just mutate user object (which is antipattern but common in simple contexts)
-            // Ideally we re-fetch user profile or update context.
-            // Let's assume login updates the user state.
+            
+            
+            
+            
             const token = localStorage.getItem('token');
             login({ ...user, bankAccount: data.bankAccount }, token);
 

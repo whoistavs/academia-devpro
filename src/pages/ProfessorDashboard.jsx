@@ -17,13 +17,13 @@ const ProfessorDashboard = () => {
     const [activeTab, setActiveTab] = useState('courses');
     const [showBankModal, setShowBankModal] = useState(false);
 
-    // Chat State
+    
     const [selectedStudent, setSelectedStudent] = useState(null);
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
     const chatEndRef = useRef(null);
 
-    // Media / File State
+    
     const [isRecording, setIsRecording] = useState(false);
     const mediaRecorderRef = useRef(null);
     const audioChunksRef = useRef([]);
@@ -35,7 +35,7 @@ const ProfessorDashboard = () => {
         }
         fetchData();
 
-        // Request notification permission
+        
         if ('Notification' in window && Notification.permission === 'default') {
             Notification.requestPermission();
         }
@@ -43,7 +43,7 @@ const ProfessorDashboard = () => {
 
     const notifyNewMessage = (msg) => {
         if (Notification.permission === 'granted') {
-            // Notification for professor
+            
             new Notification(`Nova mensagem de ${selectedStudent?.name || 'Aluno'}`, {
                 body: msg.content || 'Novo arquivo recebido',
                 icon: '/vite.svg'
@@ -51,9 +51,9 @@ const ProfessorDashboard = () => {
         }
     };
 
-    // ... fetchChat needs update ...
+    
 
-    // ... Recording methods ...
+    
     const startRecording = async () => {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -101,7 +101,7 @@ const ProfessorDashboard = () => {
         }
     };
 
-    // ... Input rendering ...
+    
 
 
     useEffect(() => {
@@ -110,7 +110,7 @@ const ProfessorDashboard = () => {
         }
     }, [activeTab]);
 
-    // Poll for messages if chat is open
+    
     useEffect(() => {
         let interval;
         if (selectedStudent) {
@@ -180,7 +180,7 @@ const ProfessorDashboard = () => {
     return (
         <main className="flex-grow pt-24 pb-20 bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Header */}
+                {}
                 <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
                     <div>
                         <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center">
@@ -209,7 +209,7 @@ const ProfessorDashboard = () => {
                     </div>
                 </div>
 
-                {/* Tabs */}
+                {}
                 <div className="border-b border-gray-200 dark:border-gray-700 mb-6">
                     <nav className="-mb-px flex space-x-8">
                         <button
@@ -233,7 +233,7 @@ const ProfessorDashboard = () => {
                     </nav>
                 </div>
 
-                {/* CONTENT */}
+                {}
                 {activeTab === 'courses' ? (
                     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         {courses.map((course) => (
@@ -259,12 +259,15 @@ const ProfessorDashboard = () => {
                                     </div>
                                 </div>
                                 <div className="bg-gray-50 dark:bg-gray-700/50 px-5 py-3 border-t border-gray-200 dark:border-gray-700 flex justify-end">
-                                    <Link
-                                        to={`/professor/editor/${course._id || course.id}`}
-                                        className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 font-medium text-sm"
+                                    <button
+                                        onClick={() => {
+                                            const cid = (course._id || course.id).toString().trim();
+                                            navigate(`/professor/editor/${cid}`);
+                                        }}
+                                        className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 font-medium text-sm bg-transparent border-none cursor-pointer"
                                     >
                                         Editar Conteúdo
-                                    </Link>
+                                    </button>
                                 </div>
                             </div>
                         ))}
@@ -275,9 +278,9 @@ const ProfessorDashboard = () => {
                         )}
                     </div>
                 ) : (
-                    // STUDENTS VIEW
+                    
                     <div className="flex gap-6 h-[600px]">
-                        {/* Student List */}
+                        {}
                         <div className={`w-full ${selectedStudent ? 'hidden md:block md:w-1/3' : 'w-full'} bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 overflow-y-auto`}>
                             {students.length === 0 ? (
                                 <div className="p-8 text-center text-gray-500">Nenhum aluno matriculado ainda.</div>
@@ -322,10 +325,10 @@ const ProfessorDashboard = () => {
                             )}
                         </div>
 
-                        {/* Chat Area */}
+                        {}
                         {selectedStudent && (
                             <div className="w-full md:w-2/3 bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 flex flex-col">
-                                {/* Chat Header */}
+                                {}
                                 <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-700/50 rounded-t-lg">
                                     <div className="flex items-center">
                                         <h3 className="text-lg font-medium text-gray-900 dark:text-white">
@@ -337,7 +340,7 @@ const ProfessorDashboard = () => {
                                     </button>
                                 </div>
 
-                                {/* Chat Messages */}
+                                {}
                                 <div className="flex-grow p-4 overflow-y-auto space-y-4 bg-gray-100 dark:bg-gray-900/50">
                                     {messages.length === 0 ? (
                                         <p className="text-center text-gray-500 text-sm mt-10">Nenhuma mensagem ainda. Diga oi!</p>
@@ -381,7 +384,7 @@ const ProfessorDashboard = () => {
                                     <div ref={chatEndRef} />
                                 </div>
 
-                                {/* Input */}
+                                {}
                                 <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-b-lg">
                                     <form onSubmit={handleSendMessage} className="flex gap-2 items-center">
                                         <input

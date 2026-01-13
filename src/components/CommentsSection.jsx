@@ -14,7 +14,7 @@ const CommentsSection = ({ slug, lessonIndex }) => {
     const { data: comments = [], isLoading } = useQuery({
         queryKey: ['comments', slug, lessonIndex],
         queryFn: () => api.getComments(slug, lessonIndex),
-        staleTime: 1000 * 30 // 30 seconds fresh
+        staleTime: 1000 * 30 
     });
 
     const mutation = useMutation({
@@ -37,7 +37,7 @@ const CommentsSection = ({ slug, lessonIndex }) => {
                 Dúvidas e Comentários ({comments.length})
             </h3>
 
-            {/* Input */}
+            {}
             <form onSubmit={handleSubmit} className="mb-8 flex gap-4">
                 <div className="flex-shrink-0">
                     {user?.avatar ? (
@@ -65,7 +65,7 @@ const CommentsSection = ({ slug, lessonIndex }) => {
                 </div>
             </form>
 
-            {/* List */}
+            {}
             <div className="space-y-6">
                 {isLoading ? (
                     <div className="space-y-4">

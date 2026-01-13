@@ -6,8 +6,8 @@ import { LanguageProvider } from './context/LanguageContext';
 import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
 
-// Mock AuthContext to simulate logged out state
-// We need to wrap components with necessary providers
+
+
 const AllProviders = ({ children }) => (
     <MemoryRouter>
         <AuthProvider>
@@ -27,8 +27,8 @@ describe('App Smoke Tests', () => {
                 <Navbar />
             </AllProviders>
         );
-        // Check for common navbar elements
+        
         expect(screen.getByAltText('DevPro Academy')).toBeInTheDocument();
-        expect(screen.getByText('Entrar')).toBeInTheDocument(); // Default logged out state
+        expect(screen.getByText('Entrar')).toBeInTheDocument(); 
     });
 });

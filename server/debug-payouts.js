@@ -1,23 +1,38 @@
-const mongoose = require('mongoose');
-require('dotenv').config();
+
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.join(__dirname, '../.env') });
+
+const payoutSchema = new mongoose.Schema({
+    userId: String,
+    amount: Number,
+    status: String,
+    requestedAt: Date
+});
+const Payout = mongoose.model('Payout', payoutSchema);
+
 
 mongoose.connect(process.env.MONGODB_URI)
     .then(async () => {
-        console.log("Connected. Diagnosing Payouts...");
+        console.log('Connected to MongoDB');
 
-        const txs = await mongoose.connection.collection('transactions').find({}).toArray();
-        const users = await mongoose.connection.collection('users').find({}).toArray();
+        const payouts = await Payout.find({});
+        console.log(`\n=== TOTAL PAYOUTS (SAQUES): ${payouts.length} ===\n`);
 
-        console.log("\n--- Users (Professors?) ---");
-        users.forEach(u => {
-            console.log(`User: ${u.name} | ID: ${u._id} | Role: ${u.role}`);
+        payouts.forEach(p => {
+            console.log(`[${p.status}] ID: ${p._id} | User: ${p.userId} | Amount: ${p.amount}`);
         });
 
-        console.log("\n--- Transactions ---");
-        txs.forEach(t => {
-            console.log(`TX: ${t._id} | Amount: ${t.amount} | Seller: ${t.sellerId} | Status: ${t.status}`);
-        });
-
-        mongoose.disconnect();
+        console.log('\n=================================\n');
+        process.exit(0);
     })
-    .catch(err => console.error(err));
+    .catch(err => {
+        console.error('Error:', err);
+        process.exit(1);
+    });

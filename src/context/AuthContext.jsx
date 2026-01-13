@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const initAuth = async () => {
             const storedToken = localStorage.getItem('token');
-            // Optimistically set from storage first
+            
             const storedUser = localStorage.getItem('user');
             if (storedToken) {
                 setToken(storedToken);
@@ -22,17 +22,17 @@ export const AuthProvider = ({ children }) => {
                     setIsAuthenticated(true);
                 }
 
-                // Verify/Refresh from server to get latest fields (authProvider, role, etc)
+                
                 try {
-                    // Temporarily set token for api to work if not globally set yet?
-                    // actually api.js reads from localStorage too, so it's fine.
+                    
+                    
                     const profile = await api.getMe();
                     setUser(profile);
                     setIsAuthenticated(true);
                     localStorage.setItem('user', JSON.stringify(profile));
                 } catch (e) {
                     console.error("Session invalid or expired", e);
-                    // Optional: logout() if 401? For now let's just keep local data or fail gently
+                    
                 }
             }
             setLoading(false);
@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const login = (userData, accessToken) => {
-        // Ensure name is never undefined
+        
         const safeUser = {
             ...userData,
             name: userData && userData.name && userData.name !== 'undefined' ? userData.name : 'Usuário'
@@ -67,8 +67,8 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem('user', JSON.stringify(userData));
     };
 
-    // Progress Tracking
-    const [completedLessons, setCompletedLessons] = useState({}); // { 'courseId': [0, 1, 2] }
+    
+    const [completedLessons, setCompletedLessons] = useState({}); 
 
     const fetchProgress = async (courseId) => {
         if (!isAuthenticated) return;
@@ -84,7 +84,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     const markLessonComplete = async (courseId, lessonIndex) => {
-        // Optimistic update
+        
         setCompletedLessons(prev => {
             const courseProgress = prev[courseId] || [];
             if (courseProgress.includes(lessonIndex)) return prev;
@@ -96,8 +96,8 @@ export const AuthProvider = ({ children }) => {
 
         if (isAuthenticated) {
             try {
-                // Hack: Convert 0 to string "0" to bypass stale server 'truthy' check bug
-                // The stale server has `if (lessonId ...)` which fails for number 0. string "0" is truthy.
+                
+                
                 const finalId = lessonIndex === 0 ? "0" : lessonIndex;
                 await api.updateProgress({ courseId, lessonId: finalId });
             } catch (error) {
@@ -109,7 +109,7 @@ export const AuthProvider = ({ children }) => {
     const isLessonCompleted = (courseId, lessonIndex) => {
         const arr = completedLessons[courseId];
         if (!arr) return false;
-        // Check for number or string presentation
+        
         return arr.includes(lessonIndex) || arr.includes(String(lessonIndex));
     };
 

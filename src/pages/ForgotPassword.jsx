@@ -6,7 +6,7 @@ import { Lock, Mail, ArrowLeft, Key, CheckCircle } from 'lucide-react';
 import { useTranslation } from '../context/LanguageContext';
 
 const ForgotPassword = () => {
-    const [step, setStep] = useState(1); // 1: Email, 2: Code + New Pass
+    const [step, setStep] = useState(1); 
     const [email, setEmail] = useState('');
     const [code, setCode] = useState('');
     const [newPassword, setNewPassword] = useState('');
@@ -34,7 +34,7 @@ const ForgotPassword = () => {
         setLoading(true);
         setError('');
 
-        // Password Validation
+        
         const minLength = 8;
         const hasNumber = /\d/;
         const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>_]/;

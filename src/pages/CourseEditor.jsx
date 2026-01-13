@@ -14,7 +14,7 @@ const CourseEditor = () => {
     const [saving, setSaving] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-    // Initial Course State
+    
     const [course, setCourse] = useState({
         title: '',
         description: '',
@@ -23,15 +23,15 @@ const CourseEditor = () => {
         duration: '',
         image: '',
         language: 'pt',
-        modulos: [], // Will contain objects { title: "...", items: [...] }
-        aulas: []    // Kept flat for legacy binding, but generated from modulos on save
+        modulos: [], 
+        aulas: []    
     });
 
     useEffect(() => {
         if (id) {
             fetchCourse();
         } else {
-            // Initialize with one empty module for new courses
+            
             setCourse(prev => ({
                 ...prev,
                 modulos: [{ title: 'Módulo 1', items: [] }]
@@ -39,44 +39,44 @@ const CourseEditor = () => {
         }
     }, [id]);
 
-    // Helper for UI Keys
+    
     const generateId = () => Math.random().toString(36).substr(2, 9);
 
     const fetchCourse = async () => {
         setLoading(true);
         try {
-            // Using direct ID fetch is more reliable
+            
             const found = await api.getCourseById(id);
 
             if (found) {
-                // Adapt legacy data to hierarchical editor data
-                // 1. Convert modules to objects robustly
+                
+                
                 let editorModules = (found.modulos || []).map(m => {
                     if (!m) return null;
                     let mod = typeof m === 'string' ? { title: m, items: [] } : m;
-                    // Ensure object structure
+                    
                     return {
                         ...mod,
                         title: typeof mod.title === 'string' ? mod.title : (mod.title?.pt || mod.title?.en || 'Módulo'),
                         items: mod.items || mod.lessons || [],
-                        _uiId: generateId() // Add UI ID for React Keys
+                        _uiId: generateId() 
                     };
                 }).filter(Boolean);
 
-                // 2. Distribute flat lessons if modules are empty (Legacy or Failed Save Recovery)
-                // If we have lessons but no modules (or empty modules), try to recover.
+                
+                
                 const hasItems = editorModules.some(m => m.items && m.items.length > 0);
 
                 if (!hasItems && found.aulas && found.aulas.length > 0) {
                     if (editorModules.length === 0) {
                         editorModules.push({ title: "Módulo Recuperado", items: [], _uiId: generateId() });
                     }
-                    // Put all lessons in first module (Recovered)
-                    // We map them back to lesson items
+                    
+                    
                     editorModules[0].items = found.aulas.map(a => ({
                         type: a.questions ? 'quiz' : 'lesson',
                         ...a,
-                        // Ensure title is accessible
+                        
                         titulo: typeof a.titulo === 'string' ? { pt: a.titulo } : a.titulo,
                         duracao: typeof a.duracao === 'string' ? { pt: a.duracao } : a.duracao,
                         content: typeof a.content === 'string' ? { pt: a.content } : a.content
@@ -108,7 +108,7 @@ const CourseEditor = () => {
         setCourse(prev => ({ ...prev, [name]: value }));
     };
 
-    // --- Module Management ---
+    
 
     const addModule = () => {
         setCourse(prev => ({
@@ -137,7 +137,7 @@ const CourseEditor = () => {
     };
 
     const removeModule = (index) => {
-        // Confirmation is now handled in ModuleCard UI
+        
         setCourse(prev => {
             const newModulos = prev.modulos.filter((_, i) => i !== index);
             return {
@@ -147,7 +147,7 @@ const CourseEditor = () => {
         });
     };
 
-    // --- Save & Actions ---
+    
 
     const handleDeleteCourse = async () => {
         try {
@@ -162,24 +162,24 @@ const CourseEditor = () => {
         e.preventDefault();
         setSaving(true);
         try {
-            // Prepare Data for Backend
-            // 1. Generate flat 'aulas' array from hierarchical modules
+            
+            
             const flatLessons = [];
 
             course.modulos.forEach(mod => {
                 if (mod.items && mod.items.length > 0) {
                     mod.items.forEach(item => {
-                        // Ensure basic fields are safe
+                        
                         const safeItem = { ...item };
                         if (safeItem.type === 'lesson' && !safeItem.titulo) safeItem.titulo = { pt: "Sem Título" };
-                        // Tag with module info just in case
+                        
                         safeItem.moduleTitle = mod.title;
                         flatLessons.push(safeItem);
                     });
                 }
             });
 
-            // Strip _uiId before sending to backend to keep clean
+            
             const cleanModules = course.modulos.map(({ _uiId, ...rest }) => rest);
 
             const payload = {
@@ -193,7 +193,7 @@ const CourseEditor = () => {
             } else {
                 await api.createCourse(payload);
             }
-            // Explicitly reload or navigate to force refresh of data
+            
             alert("Curso salvo com sucesso!");
             navigate('/professor');
         } catch (error) {
@@ -209,7 +209,7 @@ const CourseEditor = () => {
         <main className="flex-grow pt-24 pb-20 bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
             <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 
-                {/* Header */}
+                {}
                 <div className="mb-8 flex items-center justify-between">
                     <div className="flex items-center">
                         <button onClick={() => navigate('/professor')} className="mr-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
@@ -242,7 +242,7 @@ const CourseEditor = () => {
                 </div>
 
                 <form className="space-y-8" onSubmit={(e) => e.preventDefault()}>
-                    {/* Basic Info */}
+                    {}
                     <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6 space-y-6 border border-gray-200 dark:border-gray-700">
                         <h2 className="text-xl font-semibold text-gray-900 dark:text-white border-b pb-2 dark:border-gray-700">Informações Básicas</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -334,7 +334,7 @@ const CourseEditor = () => {
                         </div>
                     </div>
 
-                    {/* Modules Editor */}
+                    {}
                     <div className="space-y-6">
                         <div className="flex justify-between items-end border-b pb-4 dark:border-gray-700">
                             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Grade Curricular</h2>
@@ -359,7 +359,7 @@ const CourseEditor = () => {
                             <div className="space-y-6">
                                 {course.modulos.map((modulo, idx) => (
                                     <ModuleCard
-                                        key={modulo._uiId || idx} // Use UI ID preferentially
+                                        key={modulo._uiId || idx} 
                                         module={modulo}
                                         index={idx}
                                         updateModule={updateModule}

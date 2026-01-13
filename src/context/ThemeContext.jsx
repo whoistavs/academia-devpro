@@ -3,7 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-    // Check localStorage or system preference
+    
     const [theme, setTheme] = useState(() => {
         if (typeof window !== 'undefined' && window.localStorage) {
             const storedPrefs = window.localStorage.getItem('theme');
@@ -14,7 +14,7 @@ export const ThemeProvider = ({ children }) => {
                 return 'dark';
             }
         }
-        return 'light'; // Default
+        return 'light'; 
     });
 
     const toggleTheme = () => {
@@ -27,7 +27,7 @@ export const ThemeProvider = ({ children }) => {
 
         if (theme === 'dark') {
             root.classList.add('dark');
-            body.classList.add('dark'); // Add to body just in case
+            body.classList.add('dark'); 
         } else {
             root.classList.remove('dark');
             body.classList.remove('dark');

@@ -18,14 +18,14 @@ const Courses = () => {
 
     const [selectedLang, setSelectedLang] = useState(currentLang.split('-')[0] || 'pt');
 
-    // React Query usage
+    
     const { data: courses = [], isLoading, error } = useQuery({
         queryKey: ['courses'],
         queryFn: () => api.getCourses(),
-        staleTime: 1000 * 60 * 5, // 5 min
+        staleTime: 1000 * 60 * 5, 
     });
 
-    // Helper to get content based on language
+    
     const getContent = (data) => {
         if (!data) return "";
         if (typeof data === 'string') return data;
@@ -35,7 +35,7 @@ const Courses = () => {
 
     const categories = ['Todas', 'Front-end', 'Back-end', 'Mobile', 'Data Science'];
 
-    // Helper to translate category names for UI display
+    
     const getCategoryLabel = (cat) => {
         const map = {
             'Todas': t('courses.filters.all'),
@@ -62,7 +62,7 @@ const Courses = () => {
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">{t('nav.courses')}</h1>
                     <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">{t('courses.description')}</p>
 
-                    {/* Search Bar */}
+                    {}
                     <div className="relative max-w-md w-full mb-8">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <Search className="h-5 w-5 text-gray-400" />
@@ -76,7 +76,7 @@ const Courses = () => {
                         />
                     </div>
 
-                    {/* Filter UI */}
+                    {}
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
                         <div className="flex flex-wrap gap-2">
                             {categories.map(category => (
@@ -93,7 +93,7 @@ const Courses = () => {
                             ))}
                         </div>
 
-                        {/* Language Filter */}
+                        {}
                         <div className="flex items-center">
                             <span className="text-sm text-gray-500 dark:text-gray-400 mr-2 flex items-center">
                                 <Filter className="w-4 h-4 mr-1" />
@@ -116,7 +116,7 @@ const Courses = () => {
 
                 {isLoading ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {/* Show 6 skeletons while loading */}
+                        {}
                         {[...Array(6)].map((_, i) => <CourseSkeleton key={i} />)}
                     </div>
                 ) : error ? (

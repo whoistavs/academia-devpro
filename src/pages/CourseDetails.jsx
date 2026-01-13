@@ -5,6 +5,7 @@ import { api } from '../services/api';
 import { useTranslation } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import PixModal from '../components/PixModal';
+import ReviewList from '../components/ReviewList';
 
 const CourseDetails = () => {
     const { slug } = useParams();
@@ -14,7 +15,7 @@ const CourseDetails = () => {
     const [course, setCourse] = useState(null);
     const [loading, setLoading] = useState(true);
     const [purchasing, setPurchasing] = useState(false);
-    const [pixData, setPixData] = useState(null); // { payload, amount, key, txId }
+    const [pixData, setPixData] = useState(null); 
 
     useEffect(() => {
         const fetchCourse = async () => {
@@ -30,7 +31,7 @@ const CourseDetails = () => {
         fetchCourse();
     }, [slug]);
 
-    // Fetch progress when course is loaded
+    
     useEffect(() => {
         if (course && isAuthenticated) {
             const id = course.id || course._id;
@@ -41,15 +42,15 @@ const CourseDetails = () => {
         }
     }, [course, isAuthenticated]);
 
-    // Debugging Render State
+    
     if (course) {
         const id = course.id || course._id;
         console.log(`[CourseDetails Render] Course ID: ${id} `);
-        // Can't easily access completedLessons map directly here unless I destructure it from useAuth
-        // But I can check via isLessonCompleted inside the loop
+        
+        
     }
 
-    // Helper to get content based on language
+    
     const getContent = (data) => {
         if (!data) return "";
         if (typeof data === 'string') return data;
@@ -78,7 +79,7 @@ const CourseDetails = () => {
 
     return (
         <main className="flex-grow pt-16 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-            {/* Course Header */}
+            {}
             <div className="bg-indigo-900 text-white py-12">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <Link to="/cursos" className="inline-flex items-center text-indigo-300 hover:text-white mb-6 transition-colors">
@@ -116,13 +117,13 @@ const CourseDetails = () => {
                 </div>
             </div>
 
-            {/* Course Content Info */}
+            {}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
 
-                    {/* Main Content Column */}
+                    {}
                     <div className="lg:col-span-2">
-                        {/* Full Description */}
+                        {}
                         <div className="mb-12">
                             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 border-b dark:border-gray-700 pb-2 relative">
                                 {t('courseDetails.about')}
@@ -133,7 +134,7 @@ const CourseDetails = () => {
                             </div>
                         </div>
 
-                        {/* Modules List */}
+                        {}
                         <div className="mb-12">
                             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 border-b dark:border-gray-700 pb-2 relative">
                                 {t('courseDetails.learn')}
@@ -155,7 +156,7 @@ const CourseDetails = () => {
                             </div>
                         </div>
 
-                        {/* Lessons List (Conteúdo do Curso) */}
+                        {}
                         {course.aulas && (
                             <div>
                                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 border-b dark:border-gray-700 pb-2 relative">
@@ -163,7 +164,7 @@ const CourseDetails = () => {
                                     <span className="absolute bottom-0 left-0 w-20 h-1 bg-indigo-600 rounded"></span>
                                 </h2>
 
-                                {/* Structured View (Modules -> Lessons) */}
+                                {}
                                 {course.modulos && course.modulos.length > 0 && typeof course.modulos[0] === 'object' ? (
                                     <div className="space-y-6">
                                         {(() => {
@@ -181,11 +182,11 @@ const CourseDetails = () => {
                                                         {modulo.items && modulo.items.map((item, itemIndex) => {
                                                             const currentIndex = globalLessonIndex++;
                                                             const title = getContent(item.titulo);
-                                                            if (!title && !item.titulo) return null; // Skip completely empty ghosts
+                                                            if (!title && !item.titulo) return null; 
 
                                                             return (
                                                                 <Link
-                                                                    to={`/ curso / ${slug} /aula/${currentIndex} `}
+                                                                    to={`/curso/${slug}/aula/${currentIndex}`}
                                                                     key={itemIndex}
                                                                     className="flex justify-between items-center p-4 border-b dark:border-gray-700 last:border-b-0 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                                                                 >
@@ -213,13 +214,13 @@ const CourseDetails = () => {
                                         })()}
                                     </div>
                                 ) : (
-                                    /* Flat View (Legacy) */
+                                    
                                     <div className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden shadow-sm">
                                         {course.aulas.map((aula, index) => (
                                             <Link
-                                                to={`/ curso / ${slug} /aula/${index} `}
+                                                to={`/curso/${slug}/aula/${index}`}
                                                 key={index}
-                                                className={`flex justify - between items - center p - 4 border - b dark: border - gray - 700 last: border - b - 0 hover: bg - gray - 50 dark: hover: bg - gray - 700 transition - colors bg - white dark: bg - gray - 800`}
+                                                className={`flex justify-between items-center p-4 border-b dark:border-gray-700 last:border-b-0 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors bg-white dark:bg-gray-800`}
                                             >
                                                 <div className="flex items-center">
                                                     <div className="mr-4 text-green-500">
@@ -238,9 +239,12 @@ const CourseDetails = () => {
                                 )}
                             </div>
                         )}
+
+                        {}
+                        <ReviewList courseId={course.id || course._id} />
                     </div>
 
-                    {/* Sidebar Column */}
+                    {}
                     <div className="lg:col-span-1">
                         <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 sticky top-24">
                             <div className="mb-6 rounded-lg overflow-hidden border border-gray-100 dark:border-gray-700">
@@ -263,7 +267,7 @@ const CourseDetails = () => {
                             </div>
 
                             {(() => {
-                                // Calculate next lesson index
+                                
                                 let nextIndex = 0;
                                 let extractedLessons = [];
                                 if (course.aulas && course.aulas.length > 0) {
@@ -273,16 +277,16 @@ const CourseDetails = () => {
                                 }
 
                                 const total = extractedLessons.length;
-                                // Find first not completed
+                                
                                 const firstUncompleted = extractedLessons.findIndex((_, idx) => !isLessonCompleted(course._id || course.id, idx));
                                 nextIndex = firstUncompleted === -1 ? 0 : firstUncompleted;
-                                const isStarted = firstUncompleted !== 0; // If index 0 is done, we started. (Or if 0 is not done but others are? Assume linear for now)
-                                // Better check: if any is completed.
+                                const isStarted = firstUncompleted !== 0; 
+                                
                                 const hasProgress = extractedLessons.some((_, idx) => isLessonCompleted(course._id || course.id, idx));
 
                                 const isFinished = firstUncompleted === -1 && total > 0;
 
-                                // Access Logic
+                                
                                 const courseId = course._id || course.id;
                                 const isOwner = user && (user.role === 'admin' || user.id === course.authorId);
                                 const isPurchased = user && user.purchasedCourses && user.purchasedCourses.includes(courseId);
@@ -292,12 +296,12 @@ const CourseDetails = () => {
                                 const handleBuy = async () => {
                                     setPurchasing(true);
                                     try {
-                                        // Use 'createPreference' but actually it hits the new endpoint
+                                        
                                         const response = await api.createPreference(courseId);
                                         if (response.mode === 'pix_direct') {
                                             setPixData({ ...response, courseId });
                                         } else if (response.init_point) {
-                                            // Fallback if MP used
+                                            
                                             window.location.href = response.init_point;
                                         }
                                     } catch (e) {
@@ -325,14 +329,14 @@ const CourseDetails = () => {
                                         {isFinished ? (
                                             <div className="space-y-3">
                                                 <Link
-                                                    to={`/ certificado / ${slug} `}
+                                                    to={`/certificado/${slug}`}
                                                     className="w-full bg-green-600 text-white py-4 rounded-lg font-bold text-lg hover:bg-green-700 transition-all transform hover:-translate-y-1 shadow-lg block text-center flex items-center justify-center gap-2"
                                                 >
                                                     <Award className="w-6 h-6" />
                                                     {language === 'en' ? 'View Certificate' : 'Ver Certificado'}
                                                 </Link>
                                                 <Link
-                                                    to={`/ curso / ${slug} /aula/0`}
+                                                    to={`/curso/${slug}/aula/0`}
                                                     className="w-full bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-300 border-2 border-indigo-600 dark:border-indigo-500 py-3 rounded-lg font-bold hover:bg-indigo-50 dark:hover:bg-gray-600 transition-colors block text-center"
                                                 >
                                                     {language === 'en' ? 'Review Course' : 'Revisar Curso'}
@@ -340,7 +344,7 @@ const CourseDetails = () => {
                                             </div>
                                         ) : (
                                             <Link
-                                                to={`/ curso / ${slug} /aula/${nextIndex} `}
+                                                to={`/curso/${slug}/aula/${nextIndex}`}
                                                 className="w-full bg-indigo-600 dark:bg-indigo-500 text-white py-4 rounded-lg font-bold text-lg hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-all transform hover:-translate-y-1 shadow-lg shadow-indigo-200 dark:shadow-none block text-center"
                                             >
                                                 {hasProgress
@@ -363,18 +367,18 @@ const CourseDetails = () => {
                 </div>
             </div>
 
-            {/* Direct Pix Modal */}
+            {}
             <PixModal
                 isOpen={!!pixData}
                 data={pixData}
                 onClose={() => setPixData(null)}
                 onConfirm={() => {
                     setPixData(null);
-                    // Refresh course status
+                    
                     window.location.reload();
                 }}
             />
-        </main>
+        </main >
     );
 };
 

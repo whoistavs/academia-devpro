@@ -122,7 +122,7 @@ export const ModuleCard = ({ module, index, updateModule, removeModule }) => {
                                     <LessonItem
                                         key={idx}
                                         lesson={item}
-                                        index={idx} // We might want global index? For now local index is fine for UI.
+                                        index={idx} 
                                         updateLesson={(i, f, v) => updateItem(idx, f, v)}
                                         removeLesson={() => removeItem(idx)}
                                         moveLesson={(i, dir) => moveItem(idx, dir)}

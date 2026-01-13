@@ -9,13 +9,13 @@ const PaymentStatus = () => {
     const navigate = useNavigate();
     const { user, login } = useAuth();
 
-    // Check parameters from MercadoPago return (or just status params)
+    
     const status = searchParams.get('status') || searchParams.get('collection_status');
     const paymentId = searchParams.get('payment_id') || searchParams.get('collection_id');
     const courseId = searchParams.get('courseId');
 
     const [verifying, setVerifying] = useState(true);
-    const [result, setResult] = useState(null); // 'approved', 'rejected', 'error'
+    const [result, setResult] = useState(null); 
 
     useEffect(() => {
         const verify = async () => {
@@ -24,7 +24,7 @@ const PaymentStatus = () => {
                     const data = await api.verifyPayment(paymentId, courseId);
                     if (data.status === 'approved') {
                         setResult('approved');
-                        // Update user context with new purchased course
+                        
                         const token = localStorage.getItem('token');
                         login({ ...user, purchasedCourses: data.purchasedCourses }, token);
                     } else {
@@ -45,7 +45,7 @@ const PaymentStatus = () => {
         if (courseId) verify();
         else {
             setVerifying(false);
-            setResult('error'); // Missing info
+            setResult('error'); 
         }
 
     }, [searchParams]);
@@ -72,7 +72,7 @@ const PaymentStatus = () => {
                             Seu acesso ao curso foi liberado. Bons estudos!
                         </p>
                         <button
-                            onClick={() => navigate(`/curso/${api.getCourse(courseId).slug || ''}`)} // Try to go back, but we might not have slug easily. Can redirect to dashboard
+                            onClick={() => navigate(`/curso/${api.getCourse(courseId).slug || ''}`)} 
                             className="w-full bg-indigo-600 text-white py-3 rounded-lg font-bold hover:bg-indigo-700 transition"
                         >
                             Ir para Meus Cursos

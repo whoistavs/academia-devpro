@@ -11,15 +11,15 @@ const Quiz = () => {
     const { language, t } = useTranslation();
     const { isAuthenticated } = useAuth();
 
-    // Import dynamically or assume it's available via module system if simpler, 
-    // but better to copy the helper here if import fails, or use standard import at top.
-    // I will use the standard import in the updated file content.
+    
+    
+    
 
     if (!isAuthenticated) {
         return <Navigate to="/login" replace />;
     }
 
-    // Quick helper for localizing static strings since t() might not have them yet
+    
     const localStrings = {
         title: { pt: 'Prova Final', en: 'Final Exam', es: 'Examen Final' },
         submit: { pt: 'Enviar Respostas', en: 'Submit Answers', es: 'Enviar Respuestas' },
@@ -37,23 +37,23 @@ const Quiz = () => {
 
     const course = coursesData.find(c => c.slug === slug);
     const [answers, setAnswers] = useState({});
-    const [result, setResult] = useState(null); // { score: number, passed: boolean }
+    const [result, setResult] = useState(null); 
 
-    // State for shuffled questions
+    
     const [quizQuestions, setQuizQuestions] = useState([]);
 
-    // Helper for data content
+    
     const getContent = (data) => {
         if (!data) return "";
         if (typeof data === 'string') return data;
         return data[langCode] || data['pt'] || data['en'] || Object.values(data)[0];
     };
 
-    // Shuffle and Prepare Questions on Mount (or language change)
+    
     useEffect(() => {
         if (!course || !course.quiz) return;
 
-        // Shuffle Helper
+        
         const shuffle = (array) => {
             const newArr = [...array];
             for (let i = newArr.length - 1; i > 0; i--) {
@@ -65,41 +65,41 @@ const Quiz = () => {
 
         const processQuiz = () => {
             const processed = course.quiz.map(q => {
-                // 1. Resolve content for current language first
+                
                 const qText = getContent(q.question);
                 const optsRaw = getContent(q.options);
                 const optsArray = Array.isArray(optsRaw) ? optsRaw : [];
 
-                // 2. Map options with original index to track answer
+                
                 const optionsWithIndex = optsArray.map((opt, idx) => ({
                     text: opt,
                     originalIndex: idx
                 }));
 
-                // 3. Shuffle options
+                
                 const shuffledOptionsWithIndex = shuffle(optionsWithIndex);
 
-                // 4. Find new index of the correct answer
-                // q.answer is the index in the original array
+                
+                
                 const newAnswerIndex = shuffledOptionsWithIndex.findIndex(item => item.originalIndex === q.answer);
 
                 return {
                     id: q.id,
                     question: qText,
-                    options: shuffledOptionsWithIndex.map(o => o.text), // Back to string array
+                    options: shuffledOptionsWithIndex.map(o => o.text), 
                     answer: newAnswerIndex
                 };
             });
 
-            // 5. Shuffle the questions themselves
+            
             setQuizQuestions(shuffle(processed));
-            setAnswers({}); // Reset answers on reshuffle
+            setAnswers({}); 
             setResult(null);
         };
 
         processQuiz();
 
-    }, [course, langCode]); // Re-shuffle if language changes to ensure options match text
+    }, [course, langCode]); 
 
     if (!course || !course.quiz) {
         return (
@@ -119,7 +119,7 @@ const Quiz = () => {
 
     const calculateScore = async () => {
         let correctCount = 0;
-        // Iterate over shuffled questions to match user's view
+        
         quizQuestions.forEach(q => {
             if (answers[q.id] === q.answer) {
                 correctCount++;
@@ -127,7 +127,7 @@ const Quiz = () => {
         });
 
         const percentage = Math.round((correctCount / quizQuestions.length) * 100);
-        const passed = percentage >= 70; // Standard passing score
+        const passed = percentage >= 70; 
 
         setResult({
             score: percentage,

@@ -1,23 +1,23 @@
 
 import { useNavigate } from "react-router-dom";
 
-// Centralized API Configuration
-// Centralized API Configuration
+
+
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
 
 console.log("API Service Configured with URL:", API_URL);
 
 const getHeaders = (params = {}) => {
     const user = JSON.parse(localStorage.getItem("user"));
-    // AuthContext stores token separately in 'token' key
+    
     const token = localStorage.getItem("token") || user?.accessToken;
 
     const headers = {
         Authorization: token ? `Bearer ${token}` : "",
     };
 
-    // If 'json' is true (default), add Content-Type: application/json
-    // If uploading files (FormData), we must NOT set Content-Type manually
+    
+    
     if (params.json !== false) {
         headers["Content-Type"] = "application/json";
     }
@@ -26,7 +26,7 @@ const getHeaders = (params = {}) => {
 };
 
 export const api = {
-    // --- Public / General ---
+    
     getCourses: async (params = "") => {
         const query = params ? `?${params}` : "";
         const res = await fetch(`${API_URL}/courses${query}`, { headers: getHeaders() });
@@ -44,7 +44,7 @@ export const api = {
         return res.json();
     },
 
-    // --- Authentication ---
+    
     login: async (email, password, rememberMe = false) => {
         const res = await fetch(`${API_URL}/login`, {
             method: "POST",
@@ -106,7 +106,7 @@ export const api = {
         return res.json();
     },
     register: async (userData) => {
-        // userData can contain { name, email, password, role, ... }
+        
         const res = await fetch(`${API_URL}/cadastro`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -131,7 +131,7 @@ export const api = {
         return res.json();
     },
 
-    // --- User Self-Management ---
+    
     getMe: async () => {
         const res = await fetch(`${API_URL}/users/me`, { headers: getHeaders() });
         if (!res.ok) throw new Error("Failed to get profile");
@@ -162,19 +162,19 @@ export const api = {
         return res.json();
     },
     deleteMe: async () => {
-        // Preferencialmente via POST tunnel para evitar bloqueios de método DELETE
+        
         const res = await fetch(`${API_URL}/users/delete-me`, {
-            method: "POST", // Using POST as fail-safe
+            method: "POST", 
             headers: getHeaders()
         });
 
-        // Handle specific auth errors that suggest account is already gone
+        
         if (res.status === 401 || res.status === 403 || res.status === 404) {
             throw new Error("ACCOUNT_GONE");
         }
 
         if (!res.ok) throw new Error("Failed to delete account");
-        return res.json(); // or text
+        return res.json(); 
     },
     changePassword: async (oldPassword, newPassword, language = 'pt') => {
         const res = await fetch(`${API_URL}/users/change-password`, {
@@ -193,7 +193,7 @@ export const api = {
         formData.append('image', file);
         const res = await fetch(`${API_URL}/upload`, {
             method: "POST",
-            headers: getHeaders({ json: false }), // Let browser set boundary
+            headers: getHeaders({ json: false }), 
             body: formData,
         });
         if (!res.ok) throw new Error("Failed to upload image");
@@ -201,14 +201,14 @@ export const api = {
     },
 
 
-    // --- Student Progress ---
+    
     getProgress: async (courseId) => {
         const res = await fetch(`${API_URL}/progress/${courseId}`, { headers: getHeaders() });
         if (!res.ok) throw new Error("Failed fetch progress");
         return res.json();
     },
     updateProgress: async (data) => {
-        // data: { courseId, lessonId, quizScore }
+        
         const res = await fetch(`${API_URL}/progress/update`, {
             method: "POST",
             headers: getHeaders(),
@@ -218,7 +218,7 @@ export const api = {
         return res.json();
     },
 
-    // --- Professor / Admin Content ---
+    
     createCourse: async (courseData) => {
         const res = await fetch(`${API_URL}/courses`, {
             method: "POST",
@@ -270,7 +270,7 @@ export const api = {
     },
 
 
-    // --- Admin User Management ---
+    
     getUsers: async () => {
         const res = await fetch(`${API_URL}/users`, { headers: getHeaders() });
         if (!res.ok) throw new Error("Failed users fetch");
@@ -313,7 +313,7 @@ export const api = {
         return res.json();
     },
 
-    // --- Approvals ---
+    
     getPendingApprovals: async () => {
         const res = await fetch(`${API_URL}/admin/approvals`, { headers: getHeaders() });
         if (!res.ok) throw new Error("Failed fetch approvals");
@@ -324,7 +324,10 @@ export const api = {
             method: 'POST',
             headers: getHeaders()
         });
-        if (!res.ok) throw new Error("Failed approve");
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({ error: 'Failed approve' }));
+            throw new Error(err.error || err.message || 'Erro ao aprovar');
+        }
         return res.json();
     },
     rejectTransaction: async (id) => {
@@ -332,18 +335,21 @@ export const api = {
             method: 'POST',
             headers: getHeaders()
         });
-        if (!res.ok) throw new Error("Failed reject");
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({ error: 'Failed reject' }));
+            throw new Error(err.error || err.message || 'Erro ao rejeitar');
+        }
         return res.json();
     },
 
-    // --- Professor Payouts ---
+    
     getProfessorDebts: async () => {
         const res = await fetch(`${API_URL}/admin/debts`, { headers: getHeaders() });
         if (!res.ok) throw new Error("Failed fetch debts");
         return res.json();
     },
     registerManualPayout: async (data) => {
-        // data: { professorId, amount, notes }
+        
         const res = await fetch(`${API_URL}/admin/payouts/manual`, {
             method: 'POST',
             headers: getHeaders(),
@@ -353,7 +359,7 @@ export const api = {
         return res.json();
     },
 
-    // --- Professor Students & Chat ---
+    
     getProfessorStudents: async () => {
         const res = await fetch(`${API_URL}/professor/students`, { headers: getHeaders() });
         if (!res.ok) throw new Error("Failed fetch students");
@@ -370,12 +376,12 @@ export const api = {
         return res.json();
     },
     sendChatMessage: async (data) => {
-        // data: { receiverId, content, file? } or FormData
+        
         const headers = getHeaders();
         let body;
 
         if (data instanceof FormData) {
-            delete headers['Content-Type']; // Let browser set boundary
+            delete headers['Content-Type']; 
             body = data;
         } else {
             body = JSON.stringify(data);
@@ -390,7 +396,7 @@ export const api = {
         return res.json();
     },
 
-    // --- Comments ---
+    
     getComments: async (slug, lessonIndex) => {
         const res = await fetch(`${API_URL}/comments/${slug}/${lessonIndex}`, { headers: getHeaders() });
         if (!res.ok) throw new Error("Failed fetch comments");
@@ -406,12 +412,25 @@ export const api = {
         return res.json();
     },
 
-    // --- Payment ---
-    createPreference: async (courseId) => {
+    validateCoupon: async (code) => {
+        const res = await fetch(`${API_URL}/coupons/validate`, {
+            method: "POST",
+            headers: getHeaders(),
+            body: JSON.stringify({ code }),
+        });
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.error || "Cupom inválido");
+        }
+        return res.json();
+    },
+
+    
+    createPreference: async (courseId, couponCode = null) => {
         const res = await fetch(`${API_URL}/checkout`, {
             method: "POST",
             headers: getHeaders(),
-            body: JSON.stringify({ courseId }),
+            body: JSON.stringify({ courseId, couponCode }),
         });
         if (!res.ok) throw new Error("Failed init checkout");
         return res.json();
@@ -425,16 +444,16 @@ export const api = {
         if (!res.ok) throw new Error("Failed verify payment");
         return res.json();
     },
-    confirmManualPayment: async (courseId, txId) => {
+    confirmManualPayment: async (courseId, txId, couponCode = null) => {
         const res = await fetch(`${API_URL}/payment/confirm-manual`, {
             method: "POST",
             headers: getHeaders(),
-            body: JSON.stringify({ courseId, txId }),
+            body: JSON.stringify({ courseId, txId, couponCode }),
         });
         if (!res.ok) throw new Error("Failed confirm payment");
         return res.json();
     },
-    // purchaseCourse: DEPRECATED IN FAVOR OF CHECKOUT
+    
     updateBankDetails: async (data) => {
         const res = await fetch(`${API_URL}/users/bank-account`, {
             method: "PUT",
@@ -442,6 +461,28 @@ export const api = {
             body: JSON.stringify(data),
         });
         if (!res.ok) throw new Error("Failed update bank details");
+        return res.json();
+    },
+
+    getLeaderboard: async () => {
+        const res = await fetch(`${API_URL}/leaderboard`, { headers: getHeaders() });
+        if (!res.ok) throw new Error("Failed fetch ranking");
+        return res.json();
+    },
+
+    
+    getReviews: async (courseId) => {
+        const res = await fetch(`${API_URL}/courses/${courseId}/reviews`, { headers: getHeaders() });
+        if (!res.ok) throw new Error("Failed fetch reviews");
+        return res.json();
+    },
+    postReview: async (courseId, data) => {
+        const res = await fetch(`${API_URL}/courses/${courseId}/reviews`, {
+            method: 'POST',
+            headers: getHeaders(),
+            body: JSON.stringify(data)
+        });
+        if (!res.ok) throw new Error("Failed post review");
         return res.json();
     }
 };

@@ -8,10 +8,10 @@ import { fileURLToPath } from 'url';
 import Course from '../models/Course.js';
 import User from '../models/User.js';
 
-// Load .env from root
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const rootDir = path.join(__dirname, '../../'); // Go up to root
+const rootDir = path.join(__dirname, '../../'); 
 
 dotenv.config({ path: path.join(rootDir, '.env') });
 
@@ -34,8 +34,8 @@ const migrate = async () => {
     console.log("Starting migration...");
 
     try {
-        const coursesPath = path.join(rootDir, 'src/data/cursos.json'); // Main course data is usually here or server/courses.json?
-        // Checking both locations
+        const coursesPath = path.join(rootDir, 'src/data/cursos.json'); 
+        
         let coursesData = [];
         const serverCoursesPath = path.join(rootDir, 'server/courses.json');
 
@@ -49,9 +49,9 @@ const migrate = async () => {
 
         if (coursesData.length > 0) {
             for (const course of coursesData) {
-                // Ensure unique slug or use existing
-                // Legacy courses might not have 'slug' in older versions, but current app seems to use it.
-                // If no slug, generate one from title.
+                
+                
+                
 
                 let slug = course.slug;
                 if (!slug) {

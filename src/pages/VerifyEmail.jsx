@@ -6,7 +6,7 @@ const VerifyEmail = () => {
     const [searchParams] = useSearchParams();
     const token = searchParams.get('token');
     const navigate = useNavigate();
-    const [status, setStatus] = useState('loading'); // loading, success, error
+    const [status, setStatus] = useState('loading'); 
 
     const effectRan = React.useRef(false);
 
@@ -19,7 +19,7 @@ const VerifyEmail = () => {
                 return;
             }
 
-            // Mark as ran immediately to prevent race conditions
+            
             effectRan.current = true;
 
             try {
@@ -34,13 +34,13 @@ const VerifyEmail = () => {
                     setStatus('success');
                     setTimeout(() => navigate('/login'), 3000);
                 } else {
-                    // Start: Handle specific case of double-click or strict mode race condition
-                    // If server says "Token invalid", it might be because it was JUST verified.
-                    // Ideally server handles this, but client-side "consumed" is hard to distinguish from "bad token" without user context.
-                    // For now, assume error.
+                    
+                    
+                    
+                    
                     setStatus('error');
 
-                    // Optional: You could fetch the user status if you had their ID, but you don't here.
+                    
                 }
             } catch (e) {
                 setStatus('error');

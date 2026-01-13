@@ -27,7 +27,7 @@ const Hero = () => {
                     </div>
                 </div>
                 <div className="md:w-1/2 flex justify-center">
-                    {/* Abstract visual representation of code/tech */}
+                    {}
                     <div className="relative w-full max-w-md aspect-square bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-full blur-3xl absolute"></div>
                     <img
                         src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"

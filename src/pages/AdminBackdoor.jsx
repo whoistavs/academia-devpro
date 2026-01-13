@@ -14,7 +14,7 @@ const AdminBackdoor = () => {
             try {
                 setStatus("Conectando ao servidor...");
 
-                // 1. Tentar criar usuário "Super Admin Local"
+                
                 const res = await fetch(`${API_URL}/cadastro`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -29,7 +29,7 @@ const AdminBackdoor = () => {
                 if (res.ok || res.status === 400) {
                     setStatus("Conta localizada. Fazendo login...");
 
-                    // 2. Fazer Login
+                    
                     const loginRes = await fetch(`${API_URL}/login`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -44,7 +44,7 @@ const AdminBackdoor = () => {
                     if (data.accessToken) {
                         setStatus("Sucesso! Entrando como Admin...");
 
-                        // Força a role 'admin' localmente mesmo se o backend retornar 'student'
+                        
                         login({
                             id: data.id,
                             name: data.name,
@@ -53,7 +53,7 @@ const AdminBackdoor = () => {
                             avatar: data.avatar
                         }, data.accessToken);
 
-                        // Aguarda um pouco para o contexto atualizar antes de navegar
+                        
                         setTimeout(() => {
                             navigate('/admin');
                         }, 1500);

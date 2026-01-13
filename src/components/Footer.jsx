@@ -12,7 +12,7 @@ const Footer = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
-                    {/* Column 1: Logo & Mission */}
+                    {}
                     <div className="flex flex-col">
                         <div className="flex items-center mb-4">
                             <img
@@ -36,7 +36,7 @@ const Footer = () => {
                         </div>
                     </div>
 
-                    {/* Column 2: Quick Links */}
+                    {}
                     <div>
                         <h3 className="text-white font-semibold uppercase tracking-wider mb-4">{t('footer.quickLinks')}</h3>
                         <ul className="space-y-2">
@@ -46,7 +46,7 @@ const Footer = () => {
                         </ul>
                     </div>
 
-                    {/* Column 3: Social Media */}
+                    {}
                     <div>
                         <h3 className="text-white font-semibold uppercase tracking-wider mb-4">{t('footer.socials')}</h3>
                         <ul className="flex space-x-4">
@@ -80,7 +80,7 @@ const Footer = () => {
 
                 </div>
 
-                {/* Copyright Section */}
+                {}
                 <div className="border-t border-gray-800 mt-12 pt-8 text-center text-sm text-gray-500 flex flex-col md:flex-row justify-between items-center">
                     <p>&copy; {new Date().getFullYear()} DevPro Academy. {t('footer.rights')}</p>
                     <div className="flex space-x-4 mt-4 md:mt-0">

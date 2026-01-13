@@ -1,10 +1,10 @@
 import jwt from 'jsonwebtoken';
-// import fetch from 'node-fetch'; // Not needed in Node 18+
+
 
 const SECRET_KEY = "chave_secreta_super_segura";
 const API_URL = "http://localhost:3000";
 
-// Generate a test token
+
 const token = jwt.sign({ id: 'test-user', role: 'student' }, SECRET_KEY, { expiresIn: '1h' });
 
 async function testScenario(name, payload) {
@@ -37,7 +37,7 @@ async function testScenario(name, payload) {
 async function runTests() {
     console.log("🚀 Starting System Verification...");
 
-    // Scenario 1: Correct Answer (Logic: Traffic Light)
+    
     await testScenario("Valid Answer (Traffic Light)", {
         lessonId: 0,
         challengeId: "c1m1",
@@ -45,7 +45,7 @@ async function runTests() {
         userResponse: "Se sensor_ambulancia detectado ENTÃO Fechar sinais pedestres; Abrir sinal verde ambulancia; FIM SE"
     });
 
-    // Scenario 2: Irrelevant Answer (Potato)
+    
     console.log("⏳ Waiting 10s to respect rate limit...");
     await new Promise(r => setTimeout(r, 10000));
 

@@ -4,16 +4,16 @@ import CourseCard from '../components/CourseCard';
 import { BrowserRouter } from 'react-router-dom';
 import { LanguageProvider } from '../context/LanguageContext';
 
-// Mock translations
+
 vi.mock('../context/LanguageContext', async () => {
     const actual = await vi.importActual('../context/LanguageContext');
     return {
         ...actual,
         useTranslation: () => ({
             t: (key) => key,
-            language: 'pt' // Mock default language
+            language: 'pt' 
         }),
-        LanguageProvider: ({ 孩子们 }) => <div>{孩子们}</div> // Simple passthrough
+        LanguageProvider: ({ 孩子们 }) => <div>{孩子们}</div> 
     };
 });
 
@@ -30,7 +30,7 @@ describe('CourseCard', () => {
     it('renders course information correctly', () => {
         render(
             <BrowserRouter>
-                {/* Manually mocking Provider if needed, but mock above handles hook */}
+                {}
                 <CourseCard course={mockCourse} />
             </BrowserRouter>
         );

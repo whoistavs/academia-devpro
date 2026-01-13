@@ -9,7 +9,7 @@ import User from './models/User.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Load .env from root
+
 dotenv.config({ path: path.join(__dirname, '../.env') });
 
 const resetAdmin = async () => {
@@ -32,10 +32,10 @@ const resetAdmin = async () => {
 
         console.log(`User found: ${user.name}`);
 
-        // Set Password to 123456
+        
         const hashedPassword = bcrypt.hashSync('123456', 8);
         user.password = hashedPassword;
-        user.role = 'admin'; // Ensure admin role
+        user.role = 'admin'; 
 
         await user.save();
         console.log('SUCCESS: Password reset to "123456" and role set to "admin".');

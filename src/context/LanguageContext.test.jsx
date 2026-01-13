@@ -2,7 +2,7 @@ import { render, screen, fireEvent, act } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { LanguageProvider, useTranslation } from './LanguageContext';
 
-// Test Component to consume context
+
 const TestComponent = () => {
     const { language, changeLanguage, t } = useTranslation();
     return (
@@ -42,8 +42,8 @@ describe('LanguageContext', () => {
     });
 
     it('persists language selection (mocked)', () => {
-        // Just verifying the function call doesn't crash, 
-        // real persistence is localStorage which is harder to test in simple unit without setup
+        
+        
         render(
             <LanguageProvider>
                 <TestComponent />

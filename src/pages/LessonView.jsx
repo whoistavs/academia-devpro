@@ -7,7 +7,7 @@ import { useTranslation } from '../context/LanguageContext';
 import ReactMarkdown from 'react-markdown';
 import { LessonQuiz } from '../components/LessonQuiz';
 
-// --- Utility Functions (Defined OUTSIDE component to prevent re-creation crashes) ---
+
 const slugify = (text) => {
     try {
         if (!text) return '';
@@ -32,13 +32,13 @@ const MarkdownComponents = {
 };
 
 const LessonView = () => {
-    // Hooks
+    
     const { slug, id } = useParams();
     const { user, isAuthenticated, markLessonComplete, isLessonCompleted, fetchProgress } = useAuth();
     const { language } = useTranslation();
     const currentLang = language || 'pt';
 
-    // State
+    
     const [course, setCourse] = useState(null);
     const [loading, setLoading] = useState(true);
     const [challengeAnswer, setChallengeAnswer] = useState('');
@@ -46,7 +46,7 @@ const LessonView = () => {
     const [isAnalysing, setIsAnalysing] = useState(false);
     const [toc, setTocState] = useState([]);
 
-    // 1. Fetch Course Data
+    
     useEffect(() => {
         const loadCourse = async () => {
             try {
@@ -62,14 +62,14 @@ const LessonView = () => {
         loadCourse();
     }, [slug]);
 
-    // 2. Sync Progress
+    
     useEffect(() => {
         if (course && isAuthenticated) {
             fetchProgress(course.id || course._id);
         }
     }, [course, isAuthenticated]);
 
-    // 3. Reset Local State on Lesson Change
+    
     useEffect(() => {
         setChallengeAnswer('');
         setAiFeedback(null);
@@ -77,7 +77,7 @@ const LessonView = () => {
         window.scrollTo({ top: 0, behavior: 'instant' });
     }, [slug, id]);
 
-    // Helper: Determine Content Language
+    
     const getContent = (data) => {
         if (!data) return "";
         if (typeof data === 'string') return data;
@@ -85,7 +85,7 @@ const LessonView = () => {
         return data[langCode] || data['pt'] || data['en'] || Object.values(data)[0] || "";
     };
 
-    // Helper: Extract Lessons (Robust Logic)
+    
     const allLessons = useMemo(() => {
         if (!course) return [];
         let extracted = [];
@@ -111,13 +111,13 @@ const LessonView = () => {
         }));
     }, [course]);
 
-    // Current Lesson logic
+    
     const lessonIndex = parseInt(id) || 0;
     const lesson = allLessons[lessonIndex];
     const totalLessons = allLessons.length;
     const courseId = course ? (course._id || course.id) : null;
 
-    // 4. Generate Table of Contents (TOC)
+    
     useEffect(() => {
         if (!lesson || !lesson.content) {
             setTocState([]);
@@ -142,7 +142,7 @@ const LessonView = () => {
     }, [lesson, currentLang]);
 
 
-    // Loading State
+    
     if (loading) {
         return (
             <div className="min-h-screen pt-20 flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 text-indigo-600">
@@ -152,7 +152,7 @@ const LessonView = () => {
         );
     }
 
-    // Error State
+    
     if (!course || !lesson) {
         return (
             <div className="min-h-screen pt-20 flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 text-gray-500">
@@ -162,7 +162,7 @@ const LessonView = () => {
         );
     }
 
-    // Lock Logic
+    
     const isLocked = lessonIndex > 0 && !isLessonCompleted(courseId, lessonIndex - 1);
 
     if (isLocked) {
@@ -187,24 +187,24 @@ const LessonView = () => {
         );
     }
 
-    // Logic Handlers
+    
     const completed = isLessonCompleted(courseId, lessonIndex);
     const handleQuizPass = () => markLessonComplete(courseId, lessonIndex);
     const handleManualComplete = () => markLessonComplete(courseId, lessonIndex);
 
-    // --- Challenge Handler ---
+    
     const handleChallengeSubmit = async () => {
         if (challengeAnswer.trim().length > 10) {
             setIsAnalysing(true);
             setAiFeedback(null);
             try {
-                // Dynamic import not strictly needed if we are in module, but kept purely for style
+                
                 const token = localStorage.getItem('token');
-                // Mock AI or Real AI
-                // For now, let's simulate success manually if backend is missing
-                // Or try real fetch
+                
+                
+                
                 await new Promise(r => setTimeout(r, 1500));
-                // Simulating Success for UX demo (since AI endpoint might not be ready)
+                
                 setAiFeedback({ isCorrect: true, feedback: "Ótima solução! Sua lógica cobre os casos principais." });
                 markLessonComplete(courseId, lessonIndex);
             } catch (error) {
@@ -215,12 +215,12 @@ const LessonView = () => {
         }
     };
 
-    // Render Main UI
+    
     return (
         <main className="flex-grow pt-16 bg-gray-50 dark:bg-gray-900 transition-colors duration-300 min-h-screen">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-                {/* Header Navigation */}
+                {}
                 <div className="mb-6 flex items-center justify-between">
                     <Link to={`/curso/${slug}`} className="flex items-center text-indigo-600 dark:text-indigo-400 hover:underline font-medium">
                         <ArrowLeft className="w-5 h-5 mr-2" />Voltar ao Curso
@@ -229,7 +229,7 @@ const LessonView = () => {
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {/* LEFT COLUMN: Content */}
+                    {}
                     <div className="lg:col-span-2 space-y-8">
                         <div>
                             <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
@@ -247,8 +247,8 @@ const LessonView = () => {
                             </div>
                         </div>
 
-                        {/* CONTENT AREA (Restored Markdown) */}
-                        {/* CONTENT AREA (Restored Markdown) */}
+                        {}
+                        {}
                         {lesson.content && getContent(lesson.content) ? (
                             <div className="bg-white dark:bg-gray-800 p-8 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm prose dark:prose-invert max-w-none">
                                 <ReactMarkdown components={MarkdownComponents}>
@@ -257,7 +257,7 @@ const LessonView = () => {
                             </div>
                         ) : null}
 
-                        {/* INTERACTIVE AREA: Quiz / Challenge / Manual */}
+                        {}
                         {lesson.questions && lesson.questions.length > 0 ? (
                             !completed && (
                                 <LessonQuiz
@@ -316,7 +316,7 @@ const LessonView = () => {
                             </div>
                         )}
 
-                        {/* Navigation Footer */}
+                        {}
                         <div className="flex justify-between pt-4">
                             <Link to={lessonIndex > 0 ? `/curso/${slug}/aula/${lessonIndex - 1}` : '#'} className={`px-6 py-3 rounded-lg font-medium transition-colors ${lessonIndex > 0 ? 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700' : 'hidden'}`}>&larr; Aula Anterior</Link>
 
@@ -328,7 +328,7 @@ const LessonView = () => {
                         </div>
                     </div>
 
-                    {/* RIGHT COLUMN: Sidebar (TOC + List) */}
+                    {}
                     <div className="lg:col-span-1 space-y-6">
                         {toc.length > 0 && (
                             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden sticky top-24">

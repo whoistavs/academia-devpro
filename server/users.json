@@ -10,7 +10,7 @@
     "_id": "695ff1bd7869dedee38e7df7",
     "name": "Octavio Rodrigues Schwab",
     "email": "octavio.marvel2018@gmail.com",
-    "password": "$2a$08$RN3ZmYEbOUmx4SVEjuxDKuWb2yML6EZERNe8IT3SLyl3ojgF5uly2",
+    "password": "$2a$08$OfIo9DHpdlsFYo0KLBuWAOiyXAhD23p1SvH21T9rKhex22eJLL2kG",
     "role": "admin",
     "avatar": "http://localhost:3000/uploads/1767895577685.jpg",
     "cpf": "11111111111",
@@ -21,12 +21,15 @@
       "695fd5bdc939b2df5f0e98a1",
       "695ff1bd7869dedee38e7dff",
       "695ff7fd9ba61842e8f7194c",
-      "6960e37071b83e0136d97942"
+      "6960e37071b83e0136d97942",
+      "6961022414577433551321aa"
     ],
     "isVerified": true,
     "authProvider": "local",
     "createdAt": "2026-01-08T13:40:44.911Z",
-    "__v": 1
+    "__v": 2,
+    "level": 1,
+    "xp": 0
   },
   {
     "bankAccount": {
