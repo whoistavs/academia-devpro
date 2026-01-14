@@ -9,15 +9,15 @@ console.log("API Service Configured with URL:", API_URL);
 
 const getHeaders = (params = {}) => {
     const user = JSON.parse(localStorage.getItem("user"));
-    
+
     const token = localStorage.getItem("token") || user?.accessToken;
 
     const headers = {
         Authorization: token ? `Bearer ${token}` : "",
     };
 
-    
-    
+
+
     if (params.json !== false) {
         headers["Content-Type"] = "application/json";
     }
@@ -26,7 +26,7 @@ const getHeaders = (params = {}) => {
 };
 
 export const api = {
-    
+
     getCourses: async (params = "") => {
         const query = params ? `?${params}` : "";
         const res = await fetch(`${API_URL}/courses${query}`, { headers: getHeaders() });
@@ -44,7 +44,7 @@ export const api = {
         return res.json();
     },
 
-    
+
     login: async (email, password, rememberMe = false) => {
         const res = await fetch(`${API_URL}/login`, {
             method: "POST",
@@ -106,7 +106,7 @@ export const api = {
         return res.json();
     },
     register: async (userData) => {
-        
+
         const res = await fetch(`${API_URL}/cadastro`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -131,7 +131,7 @@ export const api = {
         return res.json();
     },
 
-    
+
     getMe: async () => {
         const res = await fetch(`${API_URL}/users/me`, { headers: getHeaders() });
         if (!res.ok) throw new Error("Failed to get profile");
@@ -162,19 +162,19 @@ export const api = {
         return res.json();
     },
     deleteMe: async () => {
-        
+
         const res = await fetch(`${API_URL}/users/delete-me`, {
-            method: "POST", 
+            method: "POST",
             headers: getHeaders()
         });
 
-        
+
         if (res.status === 401 || res.status === 403 || res.status === 404) {
             throw new Error("ACCOUNT_GONE");
         }
 
         if (!res.ok) throw new Error("Failed to delete account");
-        return res.json(); 
+        return res.json();
     },
     changePassword: async (oldPassword, newPassword, language = 'pt') => {
         const res = await fetch(`${API_URL}/users/change-password`, {
@@ -193,7 +193,7 @@ export const api = {
         formData.append('image', file);
         const res = await fetch(`${API_URL}/upload`, {
             method: "POST",
-            headers: getHeaders({ json: false }), 
+            headers: getHeaders({ json: false }),
             body: formData,
         });
         if (!res.ok) throw new Error("Failed to upload image");
@@ -201,14 +201,14 @@ export const api = {
     },
 
 
-    
+
     getProgress: async (courseId) => {
         const res = await fetch(`${API_URL}/progress/${courseId}`, { headers: getHeaders() });
         if (!res.ok) throw new Error("Failed fetch progress");
         return res.json();
     },
     updateProgress: async (data) => {
-        
+
         const res = await fetch(`${API_URL}/progress/update`, {
             method: "POST",
             headers: getHeaders(),
@@ -218,7 +218,7 @@ export const api = {
         return res.json();
     },
 
-    
+
     createCourse: async (courseData) => {
         const res = await fetch(`${API_URL}/courses`, {
             method: "POST",
@@ -270,7 +270,7 @@ export const api = {
     },
 
 
-    
+
     getUsers: async () => {
         const res = await fetch(`${API_URL}/users`, { headers: getHeaders() });
         if (!res.ok) throw new Error("Failed users fetch");
@@ -313,7 +313,7 @@ export const api = {
         return res.json();
     },
 
-    
+
     getPendingApprovals: async () => {
         const res = await fetch(`${API_URL}/admin/approvals`, { headers: getHeaders() });
         if (!res.ok) throw new Error("Failed fetch approvals");
@@ -342,14 +342,14 @@ export const api = {
         return res.json();
     },
 
-    
+
     getProfessorDebts: async () => {
         const res = await fetch(`${API_URL}/admin/debts`, { headers: getHeaders() });
         if (!res.ok) throw new Error("Failed fetch debts");
         return res.json();
     },
     registerManualPayout: async (data) => {
-        
+
         const res = await fetch(`${API_URL}/admin/payouts/manual`, {
             method: 'POST',
             headers: getHeaders(),
@@ -359,7 +359,7 @@ export const api = {
         return res.json();
     },
 
-    
+
     getProfessorStudents: async () => {
         const res = await fetch(`${API_URL}/professor/students`, { headers: getHeaders() });
         if (!res.ok) throw new Error("Failed fetch students");
@@ -376,12 +376,12 @@ export const api = {
         return res.json();
     },
     sendChatMessage: async (data) => {
-        
+
         const headers = getHeaders();
         let body;
 
         if (data instanceof FormData) {
-            delete headers['Content-Type']; 
+            delete headers['Content-Type'];
             body = data;
         } else {
             body = JSON.stringify(data);
@@ -396,7 +396,7 @@ export const api = {
         return res.json();
     },
 
-    
+
     getComments: async (slug, lessonIndex) => {
         const res = await fetch(`${API_URL}/comments/${slug}/${lessonIndex}`, { headers: getHeaders() });
         if (!res.ok) throw new Error("Failed fetch comments");
@@ -425,7 +425,7 @@ export const api = {
         return res.json();
     },
 
-    
+
     createPreference: async (courseId, couponCode = null) => {
         const res = await fetch(`${API_URL}/checkout`, {
             method: "POST",
@@ -453,7 +453,7 @@ export const api = {
         if (!res.ok) throw new Error("Failed confirm payment");
         return res.json();
     },
-    
+
     updateBankDetails: async (data) => {
         const res = await fetch(`${API_URL}/users/bank-account`, {
             method: "PUT",
@@ -470,7 +470,7 @@ export const api = {
         return res.json();
     },
 
-    
+
     getReviews: async (courseId) => {
         const res = await fetch(`${API_URL}/courses/${courseId}/reviews`, { headers: getHeaders() });
         if (!res.ok) throw new Error("Failed fetch reviews");
@@ -483,6 +483,16 @@ export const api = {
             body: JSON.stringify(data)
         });
         if (!res.ok) throw new Error("Failed post review");
+        return res.json();
+    },
+
+    sendAIMessage: async (message, history = []) => {
+        const res = await fetch(`${API_URL}/ai/chat`, {
+            method: 'POST',
+            headers: getHeaders(),
+            body: JSON.stringify({ message, history })
+        });
+        if (!res.ok) throw new Error("Failed AI response");
         return res.json();
     }
 };

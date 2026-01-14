@@ -28,6 +28,7 @@ import Certificate from './pages/Certificate';
 import AdminCoupons from './pages/AdminCoupons';
 
 import CookieBanner from './components/CookieBanner';
+import AIChatWidget from './components/AIChatWidget';
 import ScrollToTop from './components/ScrollToTop';
 
 import { ThemeProvider, useTheme } from './context/ThemeContext';
@@ -62,7 +63,7 @@ const ProtectedRoute = ({ children, requireProfile = true }) => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  
+
   if (requireProfile && user && !user.profileCompleted) {
     return <Navigate to="/complete-profile" replace />;
   }
@@ -79,7 +80,7 @@ const Layout = () => {
     >
       <Navbar />
       <Routes>
-        {}
+        { }
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/admin-force" element={<AdminBackdoor />} />
@@ -90,14 +91,14 @@ const Layout = () => {
         <Route path="/termos" element={<Terms />} />
         <Route path="/contato" element={<Contact />} />
 
-        {}
+        { }
         <Route path="/complete-profile" element={
           <ProtectedRoute requireProfile={false}>
             <CompleteProfile />
           </ProtectedRoute>
         } />
 
-        {}
+        { }
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/payment/:status" element={<ProtectedRoute><PaymentStatus /></ProtectedRoute>} />
 
@@ -117,6 +118,7 @@ const Layout = () => {
       </Routes>
       <Footer />
       <CookieBanner />
+      <AIChatWidget />
     </div>
   );
 };

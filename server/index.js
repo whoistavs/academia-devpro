@@ -27,13 +27,24 @@ import Coupon from './models/Coupon.js';
 import { MercadoPagoConfig, Preference, Payment } from 'mercadopago';
 
 
-dotenv.config();
+
+
 
 
 const client = new MercadoPagoConfig({ accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN });
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+const envPath = path.join(__dirname, '../.env');
+const result = dotenv.config({ path: envPath });
+
+if (result.error) {
+    console.error("Error loading .env from:", envPath, result.error);
+} else {
+    // console.log(".env loaded from:", envPath);
+    console.log("Parsed Keys:", Object.keys(result.parsed || {}));
+}
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -2105,6 +2116,125 @@ app.post('/api/comments', verifyToken, async (req, res) => {
     } catch (e) {
         res.status(500).json({ error: 'Erro ao postar comentário' });
     }
+});
+
+// AI Chat Endpoint
+// AI Chat Endpoint with Robust Fallback
+app.post('/api/ai/chat', async (req, res) => {
+    const { message, history } = req.body;
+
+    // Função auxiliar para tentar gerar resposta com um modelo específico
+    const tryGenerate = async (modelName) => {
+        const systemInstructionText = `
+            You are the Official Virtual Assistant of DevPro Academy.
+            The owner and lead instructor of DevPro Academy is Roberto.
+            Your goal is to help students and visitors with questions about programming, the platform, and courses.
+            Guidelines: 
+            - Be polite, professional, and tech-friendly. 
+            - You can use Markdown for formatting (bold, lists, code blocks).
+            IMPORTANT: Detect the language of the user's message (Portuguese, English, Spanish, etc.) and respond IN THE SAME LANGUAGE.
+        `;
+
+        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+        const model = genAI.getGenerativeModel({
+            model: modelName,
+            systemInstruction: systemInstructionText
+        });
+
+        let chatHistory = history || [];
+
+        // 1. Sanitize History (Ensure correct roles and format)
+        chatHistory = chatHistory.map(msg => ({
+            role: (msg.role === 'assistant' || msg.role === 'bot') ? 'model' : 'user', // Force valid roles
+            parts: msg.parts || [{ text: msg.text || "" }]
+        }));
+
+        // 2. Ensure History starts with 'user'
+        if (chatHistory.length > 0 && chatHistory[0].role === 'model') {
+            // Gemini throws error if history starts with model. Prepend a dummy greeting.
+            chatHistory.unshift({ role: 'user', parts: [{ text: "Hello" }] });
+        }
+
+        const chat = model.startChat({
+            history: chatHistory,
+            generationConfig: { maxOutputTokens: 2048 },
+        });
+
+        const result = await chat.sendMessage(message);
+        const response = await result.response;
+        return response.text();
+    };
+
+    // Lista de modelos para tentar em ordem (Atualizado com modelos disponíveis na chave)
+    const modelsToTry = ["gemini-2.0-flash", "gemini-flash-latest", "gemini-pro-latest"];
+    let lastError = null;
+
+    if (process.env.GEMINI_API_KEY) {
+        for (const modelName of modelsToTry) {
+            try {
+                // console.log(`Attempting AI with model: ${modelName}...`);
+                const text = await tryGenerate(modelName);
+                return res.json({ text }); // Sucesso! Retorna e encerra.
+            } catch (e) {
+                console.warn(`Model ${modelName} failed:`, e.message);
+                lastError = e;
+                // Continua para o próximo modelo...
+            }
+        }
+    }
+
+    // SE CHEGOU AQUI: Nenhuma chave configurada OU todos os modelos falharam.
+    // Ativar MODO FALLBACK (Simulação) para não quebrar a UI do usuário.
+
+    console.warn("All AI models failed or no key. Using Fallback mode.");
+
+
+    const lowerMsg = message.toLowerCase();
+    let reply = "";
+
+    // Simple language detection for fallback
+    const isEnglish = /\b(hello|hi|help|price|cost|course|support|contact)\b/.test(lowerMsg);
+
+    if (isEnglish) {
+        if (lowerMsg.includes('price') || lowerMsg.includes('cost') || lowerMsg.includes('value')) {
+            reply = "Our courses have varied and affordable prices. We recommend checking the 'Courses' page to see current offers! We have options starting at $29.90.";
+        } else if (lowerMsg.includes('course') || lowerMsg.includes('python') || lowerMsg.includes('react')) {
+            reply = "We have excellent learning tracks in React, Node.js, Python, and more. All with certificates and practical projects!";
+        } else if (lowerMsg.includes('support') || lowerMsg.includes('help') || lowerMsg.includes('contact')) {
+            reply = "If you need human support, please email devproacademy@outlook.com or call +55 (19) 92003-3741. You can also find our contacts in the footer.";
+        } else if (lowerMsg.includes('hello') || lowerMsg.includes('hi')) {
+            reply = "Hello! How can I help you accelerate your dev career today?";
+        } else {
+            reply = "Sorry, as I am a virtual assistant in training, I don't know how to answer that specific question yet.\n\nPlease contact our admin team directly for help:\n📧 Email: devproacademy@outlook.com\n📱 WhatsApp: +55 (19) 92003-3741";
+        }
+    } else {
+        // Default to Portuguese
+        if (lowerMsg.includes('preço') || lowerMsg.includes('valor') || lowerMsg.includes('custo')) {
+            reply = "Nossos cursos têm preços variados e acessíveis. Recomendamos dar uma olhada na página 'Cursos' para ver as ofertas atuais! Temos opções a partir de R$ 29,90.";
+        } else if (lowerMsg.includes('curso') || lowerMsg.includes('python') || lowerMsg.includes('react')) {
+            reply = "Temos excelentes trilhas de aprendizado em React, Node.js, Python e muito mais. Todos com certificados e projetos práticos!";
+        } else if (lowerMsg.includes('suporte') || lowerMsg.includes('ajuda') || lowerMsg.includes('contato')) {
+            reply = "Se precisa de suporte humano, envie um e-mail para devproacademy@outlook.com ou ligue para +55 (19) 92003-3741. Você também encontra nossos contatos no rodapé da página.";
+        } else if (lowerMsg.includes('oi') || lowerMsg.includes('ola') || lowerMsg.includes('olá')) {
+            reply = "Olá! Como posso ajudar você a acelerar sua carreira de dev hoje?";
+        } else {
+            // Fallback genérico para perguntas desconhecidas
+            reply = "Desculpe, como sou um assistente virtual em treinamento, não sei responder a essa pergunta específica ainda.\n\nPor favor, entre em contato diretamente com nossa equipe de administração para te ajudar:\n📧 Email: devproacademy@outlook.com\n📱 WhatsApp: +55 (19) 92003-3741";
+        }
+    }
+
+    // Log para o admin do sistema (console do servidor)
+    if (!process.env.GEMINI_API_KEY) {
+        console.warn("⚠️ API Key do Gemini não configurada. Respondendo em modo fallback.");
+    } else {
+        console.warn("⚠️ Falha na API do Gemini. Respondendo em modo fallback.");
+        if (lastError) {
+            console.error("Erro Final:", lastError.message);
+            // console.error("Stack:", lastError.stack);
+        }
+    }
+
+    res.json({ text: reply });
 });
 
 // Serve Static Files in Production
