@@ -12,7 +12,7 @@
     "email": "octavio.marvel2018@gmail.com",
     "password": "$2a$08$OfIo9DHpdlsFYo0KLBuWAOiyXAhD23p1SvH21T9rKhex22eJLL2kG",
     "role": "admin",
-    "avatar": "http://localhost:3000/uploads/audit_test_1768929846965.png",
+    "avatar": "http://localhost:3000/uploads/1767895577685.jpg",
     "cpf": "11111111111",
     "rg": "111111111",
     "birthDate": "1990-01-01T00:00:00.000Z",
@@ -24,53 +24,50 @@
       "6960e37071b83e0136d97942",
       "6961022414577433551321aa",
       "6968fd6f410854782f4495ad",
+      null,
       "69691382197956e9ef31569f",
       "696914030e9e17ab1fd81c2e",
-      "696f7421492b2e61fc3ed68a",
-      "696f8adde36e187332bb3484",
-      "696f8b90e6662795c769654f"
+      "696914030e9e17ab1fd81c2e"
     ],
     "isVerified": true,
     "authProvider": "local",
     "createdAt": "2026-01-08T13:40:44.911Z",
-    "__v": 0,
+    "__v": 2,
     "level": 1,
     "xp": 0,
     "certificates": [
       {
-        "courseId": "696f8adde36e187332bb3484",
+        "courseId": "696e76fccf9380a63a51efe8",
         "code": "DVP-696E-695FF1BD-KY65",
-        "date": "2026-01-20T12:22:50.203Z",
-        "_id": "696f8b8fe6662795c7696539"
-      },
-      {
-        "courseId": "696f8adde36e187332bb3484",
-        "code": "DVP-LOGI-100-XP",
-        "date": "2026-01-20T12:36:20.386Z",
-        "_id": "696f8b8fe6662795c769653a"
+        "date": "2026-01-19T18:28:46.102Z"
       }
     ]
   },
   {
-    "name": "Teste",
+    "bankAccount": {
+      "pixKey": "56598457890",
+      "bank": "",
+      "agency": "",
+      "account": "",
+      "accountType": "corrente"
+    },
+    "_id": "695ffcbc659ac22d1698eff6",
+    "name": "Adonai",
     "email": "suporte@adonairh.com",
-    "password": "$2a$08$P6QIKNKkYouUTpzjT4GluOWRqDYG/18pwNmjGJLphd0pIs.CUeoCS",
+    "password": "$2a$08$dD/36Is2I9HTMcXSwyC7Je.8VLuZugIYG/3NsMPpdgDwS5URELv0C",
     "role": "professor",
-    "username": "teste",
+    "username": "adonairh",
+    "cpf": "11111111111",
+    "rg": "11.111.111-1",
+    "birthDate": "1111-11-11T00:00:00.000Z",
     "profileCompleted": true,
-    "purchasedCourses": [],
+    "purchasedCourses": [
+      "695ff5ae7384ac33ce953c83"
+    ],
     "isVerified": true,
-    "verificationToken": "gontd2bye5m",
+    "verificationToken": "px94blfngb",
     "authProvider": "local",
-    "xp": 0,
-    "level": 1,
-    "_id": "696f97d5e6662795c769683e",
-    "certificates": [],
-    "createdAt": "2026-01-20T14:57:25.831Z",
-    "__v": 0,
-    "cpf": "56598457890",
-    "rg": "12.345.678-9",
-    "birthDate": "0001-01-01T00:00:00.000Z",
-    "avatar": "http://localhost:3000/uploads/1768930326832.jpg"
+    "createdAt": "2026-01-08T18:51:40.937Z",
+    "__v": 1
   }
 ]

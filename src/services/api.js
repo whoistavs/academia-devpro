@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
 
-console.log("API Service Configured with URL:", API_URL);
+
 
 const getHeaders = (params = {}) => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -33,6 +33,11 @@ export const api = {
         if (!res.ok) throw new Error("Failed to fetch courses");
         return res.json();
     },
+    validateCertificate: async (code) => {
+        const response = await fetch(`${API_URL}/certificates/validate/${code}`);
+        return response.json();
+    },
+
     getCourse: async (slug) => {
         const res = await fetch(`${API_URL}/courses/${slug}`, { headers: getHeaders() });
         if (!res.ok) throw new Error("Failed to fetch course");
@@ -128,6 +133,15 @@ export const api = {
             const err = await res.json();
             throw new Error(err.error || "Senha incorreta");
         }
+        return res.json();
+    },
+    contact: async (data) => {
+        const res = await fetch(`${API_URL}/contact`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+        });
+        if (!res.ok) throw new Error("Failed to send message");
         return res.json();
     },
 
@@ -426,11 +440,15 @@ export const api = {
     },
 
 
-    createPreference: async (courseId, couponCode = null) => {
+    createPreference: async (courseId, couponCode = null, trackId = null) => {
+        const body = { couponCode };
+        if (trackId) body.trackId = trackId;
+        else body.courseId = courseId;
+
         const res = await fetch(`${API_URL}/checkout`, {
             method: "POST",
             headers: getHeaders(),
-            body: JSON.stringify({ courseId, couponCode }),
+            body: JSON.stringify(body),
         });
         if (!res.ok) throw new Error("Failed init checkout");
         return res.json();
@@ -444,11 +462,15 @@ export const api = {
         if (!res.ok) throw new Error("Failed verify payment");
         return res.json();
     },
-    confirmManualPayment: async (courseId, txId, couponCode = null) => {
+    confirmManualPayment: async (courseId, txId, couponCode = null, trackId = null) => {
+        const body = { txId, couponCode };
+        if (trackId) body.trackId = trackId;
+        else body.courseId = courseId;
+
         const res = await fetch(`${API_URL}/payment/confirm-manual`, {
             method: "POST",
             headers: getHeaders(),
-            body: JSON.stringify({ courseId, txId, couponCode }),
+            body: JSON.stringify(body),
         });
         if (!res.ok) throw new Error("Failed confirm payment");
         return res.json();
@@ -486,11 +508,21 @@ export const api = {
         return res.json();
     },
 
-    sendAIMessage: async (message, history = []) => {
+    correctChallenge: async (data) => {
+        const res = await fetch(`${API_URL}/ai/correct-challenge`, {
+            method: 'POST',
+            headers: getHeaders(),
+            body: JSON.stringify(data)
+        });
+        if (!res.ok) throw new Error("Failed to correct challenge");
+        return res.json();
+    },
+
+    chatAI: async (message, history = [], context = "") => {
         const res = await fetch(`${API_URL}/ai/chat`, {
             method: 'POST',
             headers: getHeaders(),
-            body: JSON.stringify({ message, history })
+            body: JSON.stringify({ message, history, context })
         });
         if (!res.ok) throw new Error("Failed AI response");
         return res.json();

@@ -6,7 +6,6 @@ import zh from '../i18n/locales/zh.json';
 import ar from '../i18n/locales/ar.json';
 import de from '../i18n/locales/de.json';
 import fr from '../i18n/locales/fr.json';
-import ptPt from '../i18n/locales/pt-pt.json';
 
 const LanguageContext = createContext();
 
@@ -17,13 +16,11 @@ const translations = {
     zh,
     ar,
     de,
-    fr,
-    'pt-pt': ptPt
+    fr
 };
 
 export const availableLanguages = [
     { code: 'pt', label: 'Português (BR)' },
-    { code: 'pt-pt', label: 'Português (PT)' },
     { code: 'en', label: 'English' },
     { code: 'es', label: 'Español' },
     { code: 'fr', label: 'Français' },
@@ -33,11 +30,11 @@ export const availableLanguages = [
 ];
 
 export const LanguageProvider = ({ children }) => {
-    
+
     const [language, setLanguage] = useState(() => {
         if (typeof window !== 'undefined' && window.localStorage) {
             const storedLang = window.localStorage.getItem('language');
-            return storedLang || 'pt'; 
+            return storedLang || 'pt';
         }
         return 'pt';
     });
@@ -45,7 +42,7 @@ export const LanguageProvider = ({ children }) => {
     useEffect(() => {
         localStorage.setItem('language', language);
 
-        
+
         const dir = language === 'ar' ? 'rtl' : 'ltr';
         document.documentElement.dir = dir;
         document.documentElement.lang = language;
@@ -57,12 +54,12 @@ export const LanguageProvider = ({ children }) => {
     };
 
     const t = (key) => {
-        
+
         if (translations[language][key]) {
             return translations[language][key];
         }
 
-        
+
         const keys = key.split('.');
         let value = translations[language];
 
@@ -70,7 +67,7 @@ export const LanguageProvider = ({ children }) => {
             if (value && typeof value === 'object' && k in value) {
                 value = value[k];
             } else {
-                return key; 
+                return key;
             }
         }
 

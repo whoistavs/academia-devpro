@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { Mail, Phone, MapPin, Send, Instagram, Twitter, Linkedin, Youtube, Facebook } from 'lucide-react';
+import { api } from '../services/api';
 import { useTranslation } from '../context/LanguageContext';
 
 const Contact = () => {
@@ -27,25 +28,15 @@ const Contact = () => {
         setIsSubmitting(true);
 
         try {
-            const response = await fetch('http://localhost:3000/api/contact', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            });
+            await api.contact(formData);
 
-            if (response.ok) {
-                setIsSubmitted(true);
-                setFormData({ name: '', email: '', subject: '', message: '' });
-                
-                setTimeout(() => setIsSubmitted(false), 5000);
-            } else {
-                alert('Erro ao enviar mensagem. Tente novamente.');
-            }
+            setIsSubmitted(true);
+            setFormData({ name: '', email: '', subject: '', message: '' });
+
+            setTimeout(() => setIsSubmitted(false), 5000);
         } catch (error) {
             console.error('Erro:', error);
-            alert('Erro de conexão. Tente novamente.');
+            alert('Erro ao enviar mensagem. Tente novamente.');
         } finally {
             setIsSubmitting(false);
         }
@@ -64,7 +55,7 @@ const Contact = () => {
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
 
-                    {}
+                    { }
                     <div className="bg-indigo-900 text-white rounded-2xl p-10 shadow-xl h-full flex flex-col justify-between">
                         <div>
                             <h3 className="text-2xl font-bold mb-8">{t('contact.info.title')}</h3>
@@ -96,7 +87,7 @@ const Contact = () => {
 
                         <div className="mt-12">
                             <div className="flex space-x-4">
-                                {}
+                                { }
                                 <a href="https://instagram.com/devproacademy" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-indigo-700 rounded-full flex items-center justify-center hover:bg-pink-600 text-white transition-colors shadow-lg" aria-label="Instagram">
                                     <Instagram className="h-5 w-5" />
                                 </a>
@@ -113,7 +104,7 @@ const Contact = () => {
                         </div>
                     </div>
 
-                    {}
+                    { }
                     <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700">
                         {isSubmitted ? (
                             <div className="h-full flex flex-col items-center justify-center text-center py-10">

@@ -7,7 +7,7 @@ const CourseCard = ({ course }) => {
     const { t, language } = useTranslation();
     const currentLang = language || 'pt';
 
-    
+
     const getContent = (data) => {
         if (!data) return "";
         if (typeof data === 'string') return data;
@@ -16,7 +16,10 @@ const CourseCard = ({ course }) => {
     };
 
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 flex flex-col h-full">
+        <Link
+            to={`/curso/${course.slug}`}
+            className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 flex flex-col h-full block"
+        >
             <div className="relative h-48 overflow-hidden">
                 <img
                     src={course.image}
@@ -53,14 +56,13 @@ const CourseCard = ({ course }) => {
                     )}
                 </div>
 
-                <Link
-                    to={`/curso/${course.slug}`}
+                <span
                     className="block w-full text-center bg-indigo-600 dark:bg-indigo-500 text-white py-2 rounded-md font-semibold hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors"
                 >
                     {t('courseCard.details')}
-                </Link>
+                </span>
             </div>
-        </div>
+        </Link>
     );
 };
 

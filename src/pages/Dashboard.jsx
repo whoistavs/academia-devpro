@@ -18,19 +18,19 @@ const Dashboard = () => {
     const [courses, setCourses] = useState([]);
     const [isLoadingCourses, setIsLoadingCourses] = useState(true);
 
-    
+
     const [professors, setProfessors] = useState([]);
     const [selectedProfessor, setSelectedProfessor] = useState(null);
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
     const chatEndRef = useRef(null);
 
-    
+
     const [isRecording, setIsRecording] = useState(false);
     const mediaRecorderRef = useRef(null);
     const audioChunksRef = useRef([]);
 
-    
+
     useEffect(() => {
         if ('Notification' in window && Notification.permission === 'default') {
             Notification.requestPermission();
@@ -39,7 +39,7 @@ const Dashboard = () => {
 
     const notifyNewMessage = (msg) => {
         if (Notification.permission === 'granted') {
-            
+
             new Notification('Nova Mensagem', {
                 body: msg.content || 'Novo arquivo recebido',
                 icon: '/vite.svg'
@@ -62,7 +62,7 @@ const Dashboard = () => {
                 const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
                 const file = new File([audioBlob], "voice-message.webm", { type: 'audio/webm' });
                 handleSendFile(file);
-                stream.getTracks().forEach(track => track.stop()); 
+                stream.getTracks().forEach(track => track.stop());
             };
 
             mediaRecorder.start();
@@ -94,36 +94,36 @@ const Dashboard = () => {
         }
     };
 
-    
-    
-    
-    
 
-    
+
+
+
+
+
     const formatCPF = (value) => {
         return value
-            .replace(/\D/g, '') 
+            .replace(/\D/g, '')
             .replace(/(\d{3})(\d)/, '$1.$2')
             .replace(/(\d{3})(\d)/, '$1.$2')
             .replace(/(\d{3})(\d{1,2})/, '$1-$2')
-            .replace(/(-\d{2})\d+?$/, '$1'); 
+            .replace(/(-\d{2})\d+?$/, '$1');
     };
 
     const formatRG = (value) => {
         return value
-            .replace(/\D/g, '') 
+            .replace(/\D/g, '')
             .replace(/(\d{2})(\d)/, '$1.$2')
             .replace(/(\d{3})(\d)/, '$1.$2')
-            .replace(/(\d{3})(\d{1,2})/, '$1-$2') 
-            .replace(/(-\d{1})\d+?$/, '$1'); 
+            .replace(/(\d{3})(\d{1,2})/, '$1-$2')
+            .replace(/(-\d{1})\d+?$/, '$1');
     };
 
-    
+
     const isValidCPF = (cpf) => {
         if (!cpf) return false;
         cpf = cpf.replace(/[^\d]+/g, '');
         if (cpf === '') return false;
-        
+
         if (cpf.length !== 11 ||
             cpf === "00000000000" ||
             cpf === "11111111111" ||
@@ -137,7 +137,7 @@ const Dashboard = () => {
             cpf === "99999999999")
             return false;
 
-        
+
         let add = 0;
         for (let i = 0; i < 9; i++)
             add += parseInt(cpf.charAt(i)) * (10 - i);
@@ -145,7 +145,7 @@ const Dashboard = () => {
         if (rev === 10 || rev === 11) rev = 0;
         if (rev !== parseInt(cpf.charAt(9))) return false;
 
-        
+
         add = 0;
         for (let i = 0; i < 10; i++)
             add += parseInt(cpf.charAt(i)) * (11 - i);
@@ -155,7 +155,7 @@ const Dashboard = () => {
         return true;
     };
 
-    
+
     const [showEditModal, setShowEditModal] = useState(false);
     const [editData, setEditData] = useState({
         name: '',
@@ -165,7 +165,7 @@ const Dashboard = () => {
 
     useEffect(() => {
         if (user) {
-            
+
             const savedCpf = localStorage.getItem(`user_cpf_${user.id}`);
             const savedRg = localStorage.getItem(`user_rg_${user.id}`);
 
@@ -180,13 +180,13 @@ const Dashboard = () => {
     const handleSaveProfile = async (e) => {
         e.preventDefault();
 
-        
+
         if (editData.cpf && !isValidCPF(editData.cpf)) {
             alert("CPF inválido! Por favor verifique o número.");
             return;
         }
 
-        
+
         try {
             localStorage.setItem(`user_cpf_${user.id}`, editData.cpf);
             localStorage.setItem(`user_rg_${user.id}`, editData.rg);
@@ -196,19 +196,25 @@ const Dashboard = () => {
 
         let apiSuccess = false;
         try {
-            
-            if (editData.name !== user.name) {
-                await api.updateMe({ name: editData.name });
+            // Check if any field changed or if saving for the first time
+            if (editData.name !== user.name || editData.cpf !== user.cpf || editData.rg !== user.rg) {
+                await api.updateMe({
+                    name: editData.name,
+                    cpf: editData.cpf,
+                    rg: editData.rg,
+                    // If we are saving valid CPF/RG, we can consider the profile completed
+                    profileCompleted: (!!editData.cpf && !!editData.rg && !!editData.name)
+                });
                 apiSuccess = true;
             } else {
-                apiSuccess = true; 
+                apiSuccess = true;
             }
         } catch (error) {
             console.error("API update failed:", error);
-            
+            alert("Erro ao salvar no servidor: " + (error.response?.data?.error || error.message));
         }
 
-        
+
         updateUser({
             ...user,
             name: editData.name,
@@ -222,7 +228,7 @@ const Dashboard = () => {
             alert("Perfil atualizado com sucesso!");
         } else {
             console.warn("Perfil salvo localmente (API error ignored).");
-            
+
         }
     };
 
@@ -233,7 +239,7 @@ const Dashboard = () => {
                 const data = await api.getCourses();
                 setCourses(data);
 
-                
+
                 const profs = await api.getStudentProfessors();
                 setProfessors(profs);
 
@@ -252,7 +258,7 @@ const Dashboard = () => {
         }
     }, [isAuthenticated]);
 
-    
+
     useEffect(() => {
         let interval;
         if (selectedProfessor) {
@@ -270,10 +276,10 @@ const Dashboard = () => {
         try {
             const data = await api.getChatMessages(userId);
             setMessages(prev => {
-                
+
                 if (JSON.stringify(data) === JSON.stringify(prev)) return prev;
 
-                
+
                 if (data.length > prev.length) {
                     const lastMsg = data[data.length - 1];
                     const isMe = String(lastMsg.senderId) === String(user.id || user._id);
@@ -315,22 +321,22 @@ const Dashboard = () => {
         try {
             setUploadStatus("Iniciando upload (1/3)...");
 
-            
+
             const uploadData = await api.uploadImage(file);
             setUploadStatus("Upload OK! Atualizando perfil (2/3)...");
 
-            
+
             const updateData = await api.updateMe({
-                name: user.name,
+                ...user, // Send current user state to preserve fields
                 avatar: uploadData.url
             });
             setUploadStatus("Perfil salvo! Atualizando tela (3/3)...");
 
-            
+
             updateUser(updateData.user);
             setUploadStatus("SUCESSO! Foto atualizada.");
 
-            
+
             setTimeout(() => setUploadStatus(''), 5000);
 
         } catch (error) {
@@ -344,7 +350,7 @@ const Dashboard = () => {
             }
 
             setUploadStatus(`ERRO: ${error.message}`);
-            alert(`ERRO DETALHADO: ${error.message}`); 
+            alert(`ERRO DETALHADO: ${error.message}`);
         }
     };
 
@@ -352,7 +358,7 @@ const Dashboard = () => {
         if (!window.confirm("Remover foto de perfil?")) return;
         try {
             setUploadStatus("Removendo foto...");
-            
+
             await api.updateMe({
                 name: user.name,
                 avatar: ""
@@ -370,16 +376,16 @@ const Dashboard = () => {
                 return;
             }
             setUploadStatus(`Erro ao remover: ${error.message}`);
-            updateUser({ ...user, avatar: "" }); 
+            updateUser({ ...user, avatar: "" });
         }
     };
 
-    
+
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
 
     const handleDeleteAccount = async () => {
-        
+
         try {
             await api.deleteMe();
             alert("Sua conta foi excluída com sucesso.");
@@ -429,7 +435,7 @@ const Dashboard = () => {
     return (
         <main className="flex-grow pt-24 pb-20 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                {}
+                { }
                 <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 mb-8 border border-gray-100 dark:border-gray-700">
                     <div className="flex items-center space-x-6">
                         <div className="relative group">
@@ -441,7 +447,7 @@ const Dashboard = () => {
                                 )}
                             </div>
 
-                            {}
+                            { }
                             <button
                                 onClick={() => fileInputRef.current.click()}
                                 className="absolute bottom-0 right-0 bg-indigo-600 text-white p-2 rounded-full hover:bg-indigo-700 transition-colors shadow-md transform hover:scale-110"
@@ -450,7 +456,7 @@ const Dashboard = () => {
                                 <Camera className="h-4 w-4" />
                             </button>
 
-                            {}
+                            { }
                             {user.avatar && (
                                 <button
                                     onClick={handleRemoveImage}
@@ -469,26 +475,26 @@ const Dashboard = () => {
                                 accept="image/*"
                             />
                         </div>
-                        <div>
+                        <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-3">
-                                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{greeting}</h1>
+                                <h1 className="text-3xl font-bold text-gray-900 dark:text-white truncate">{greeting}</h1>
                                 {!(user.name && user.cpf && user.rg) && (
                                     <button
                                         onClick={() => setShowEditModal(true)}
-                                        className="p-1.5 text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                                        className="p-1.5 text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors flex-shrink-0"
                                         title="Editar Perfil"
                                     >
                                         <Edit className="w-5 h-5" />
                                     </button>
                                 )}
                             </div>
-                            <p className="text-gray-600 dark:text-gray-400">{user.email}</p>
+                            <p className="text-gray-600 dark:text-gray-400 truncate" title={user.email}>{user.email}</p>
                             {uploadStatus && <p className="text-sm font-bold text-yellow-600 dark:text-yellow-400 mt-1 animate-pulse">{uploadStatus}</p>}
                             <p className="text-sm text-indigo-600 dark:text-indigo-400 font-medium capitalize mt-1 border border-indigo-200 dark:border-indigo-800 rounded-full px-3 py-0.5 inline-block bg-indigo-50 dark:bg-indigo-900/20">
                                 {user.role || 'student'} • Nível {user.level || 1}
                             </p>
 
-                            {}
+                            { }
                             <div className="mt-2 w-48">
                                 <div className="flex justify-between text-xs text-gray-500 mb-1">
                                     <span>XP {user.xp || 0}</span>
@@ -506,9 +512,9 @@ const Dashboard = () => {
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {}
+                    { }
                     <div className="lg:col-span-2 space-y-8">
-                        {}
+                        { }
                         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 border border-gray-100 dark:border-gray-700">
                             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
                                 <BookOpen className="h-5 w-5 mr-2 text-indigo-500" />
@@ -520,15 +526,15 @@ const Dashboard = () => {
                                     if (!user.purchasedCourses) return false;
 
                                     const cId = String(course.id || course._id);
-                                    
+
                                     return user.purchasedCourses.some(pId => String(pId) === cId);
                                 }).map((course) => {
-                                    
-                                    const totalLessons = (course.modulos?.length || 0) * 4; 
-                                    
+
+                                    const totalLessons = course.totalLessons || (course.modulos?.length || 0) * 4;
+
                                     let completedCount = 0;
                                     const cId = String(course.id || course._id);
-                                    
+
                                     const lessons = completedLessons[cId] || completedLessons[course.id] || [];
                                     completedCount = lessons.length;
 
@@ -588,7 +594,7 @@ const Dashboard = () => {
                             </div>
                         </div>
 
-                        {}
+                        { }
                         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 border border-gray-100 dark:border-gray-700">
                             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
                                 <Award className="h-5 w-5 mr-2 text-green-600" />
@@ -596,7 +602,11 @@ const Dashboard = () => {
                             </h2>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {courses.filter(c => getProgressStats(c).percentage === 100).map(course => {
+                                {courses.filter(c => {
+                                    const stats = getProgressStats(c);
+                                    const userHasCert = user.certificates?.some(cert => String(cert.courseId) === String(c.id || c._id));
+                                    return stats.percentage === 100 || userHasCert;
+                                }).map(course => {
                                     const getTitle = (c) => typeof c.title === 'string' ? c.title : (c.title?.pt || c.title?.en || 'Curso');
 
                                     return (
@@ -622,17 +632,21 @@ const Dashboard = () => {
                                     );
                                 })}
 
-                                {courses.filter(c => getProgressStats(c).percentage === 100).length === 0 && (
-                                    <div className="col-span-full text-center py-8 text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/30 rounded-lg border border-dashed border-gray-200 dark:border-gray-700">
-                                        <Award className="w-12 h-12 mx-auto text-gray-300 dark:text-gray-600 mb-2" />
-                                        <p>{t('auth.dashboard.noCertificates')}</p>
-                                        <p className="text-sm mt-1">{t('auth.dashboard.completeToEarn')}</p>
-                                    </div>
-                                )}
+                                {courses.filter(c => {
+                                    const stats = getProgressStats(c);
+                                    const userHasCert = user.certificates?.some(cert => String(cert.courseId) === String(c.id || c._id));
+                                    return stats.percentage === 100 || userHasCert;
+                                }).length === 0 && (
+                                        <div className="col-span-full text-center py-8 text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/30 rounded-lg border border-dashed border-gray-200 dark:border-gray-700">
+                                            <Award className="w-12 h-12 mx-auto text-gray-300 dark:text-gray-600 mb-2" />
+                                            <p>{t('auth.dashboard.noCertificates')}</p>
+                                            <p className="text-sm mt-1">{t('auth.dashboard.completeToEarn')}</p>
+                                        </div>
+                                    )}
                             </div>
                         </div>
 
-                        {}
+                        { }
                         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 border border-gray-100 dark:border-gray-700">
                             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
                                 <Users className="h-5 w-5 mr-2 text-indigo-500" />
@@ -680,12 +694,12 @@ const Dashboard = () => {
                         </div>
                     </div>
 
-                    {}
+                    { }
                     <div className="space-y-8">
-                        {}
+                        { }
                         <Leaderboard />
 
-                        {}
+                        { }
                         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 border border-gray-100 dark:border-gray-700">
                             <h3 className="font-bold text-gray-900 dark:text-white mb-4">{t('auth.dashboard.account')}</h3>
 
@@ -721,7 +735,7 @@ const Dashboard = () => {
                 </div>
             </div>
 
-            {}
+            { }
             {
                 showEditModal && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm p-4">
@@ -802,12 +816,12 @@ const Dashboard = () => {
                 onClose={() => setShowChangePasswordModal(false)}
             />
 
-            {}
+            { }
             {
                 selectedProfessor && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm p-4">
                         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-lg flex flex-col h-[600px] border border-gray-200 dark:border-gray-700">
-                            {}
+                            { }
                             <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-700/50 rounded-t-lg">
                                 <div className="flex items-center space-x-3">
                                     {selectedProfessor.avatar ? (
@@ -831,13 +845,13 @@ const Dashboard = () => {
                                 </button>
                             </div>
 
-                            {}
+                            { }
                             <div className="flex-grow p-4 overflow-y-auto space-y-4 bg-gray-100 dark:bg-gray-900/50">
                                 {messages.length === 0 ? (
                                     <p className="text-center text-gray-500 text-sm mt-10">Tire suas dúvidas com o professor aqui.</p>
                                 ) : (
                                     messages.map((msg, idx) => {
-                                        
+
                                         const isMe = String(msg.senderId) === String(user.id || user._id);
                                         return (
                                             <div key={idx} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
@@ -877,7 +891,7 @@ const Dashboard = () => {
                                 <div ref={chatEndRef} />
                             </div>
 
-                            {}
+                            { }
                             <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-b-lg">
                                 <form onSubmit={handleSendMessage} className="flex gap-2 items-center">
                                     <input

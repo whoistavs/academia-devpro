@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import TableSkeleton from '../components/TableSkeleton';
-import CourseSkeleton from '../components/CourseSkeleton';
+// import CourseSkeleton from '../components/CourseSkeleton'; // Not used
 import BankDetailsModal from '../components/BankDetailsModal';
 
 import QRCode from 'react-qr-code';
@@ -20,7 +20,7 @@ const ProfessorDebtsSection = () => {
         queryFn: api.getProfessorDebts
     });
 
-    
+
     const [payModal, setPayModal] = useState(null);
     const [amountToPay, setAmountToPay] = useState('');
     const [notes, setNotes] = useState('Pagamento Comissão DevPro');
@@ -49,7 +49,7 @@ const ProfessorDebtsSection = () => {
         }
     };
 
-    
+
     let pixPayload = '';
     if (payModal && amountToPay) {
         const amt = parseFloat(amountToPay);
@@ -107,7 +107,7 @@ const ProfessorDebtsSection = () => {
                 </ul>
             </div>
 
-            {}
+            { }
             {payModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
                     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6 animate-fade-in relative">
@@ -196,30 +196,23 @@ const PendingPaymentsSection = () => {
     });
 
     const handleApprove = async (id) => {
-        console.log("Botão Aprovar clicado para ID:", id);
-        
-        console.log("Enviando requisição de aprovação...");
         try {
             const res = await api.approveTransaction(id);
-            console.log("Resposta da aprovação:", res);
             alert("Pagamento aprovado com sucesso!");
             queryClient.invalidateQueries({ queryKey: ['approvals'] });
             queryClient.invalidateQueries({ queryKey: ['financials'] });
         } catch (e) {
-            console.error("Erro na aprovação:", e);
+
             alert("Erro ao aprovar: " + e.message);
         }
     };
 
     const handleReject = async (id) => {
-        console.log("Botão Rejeitar clicado para ID:", id);
-        
         try {
             await api.rejectTransaction(id);
             alert("Pagamento rejeitado!");
             queryClient.invalidateQueries({ queryKey: ['approvals'] });
         } catch (e) {
-            console.error("Erro na rejeição:", e);
             alert("Erro ao rejeitar: " + e.message);
         }
     };
@@ -280,14 +273,14 @@ const AdminDashboard = () => {
     const [showBankModal, setShowBankModal] = useState(false);
     const [withdrawing, setWithdrawing] = useState(false);
 
-    
+
     React.useEffect(() => {
         if (user && user.role !== 'admin') {
             navigate('/dashboard');
         }
     }, [user, navigate]);
 
-    
+
     const { data: users = [], isLoading: loadingUsers } = useQuery({
         queryKey: ['users'],
         queryFn: api.getUsers,
@@ -295,7 +288,7 @@ const AdminDashboard = () => {
     });
 
     const { data: courses = [], isLoading: loadingCourses } = useQuery({
-        queryKey: ['courses', 'all'], 
+        queryKey: ['courses', 'all'],
         queryFn: () => api.getCourses("all=true"),
         enabled: user?.role === 'admin'
     });
@@ -307,41 +300,47 @@ const AdminDashboard = () => {
     });
 
 
-    
+
+    const [deletingId, setDeletingId] = useState(null);
+
     const handleDelete = async (id) => {
-        if (!window.confirm(t('admin.dashboard.confirmDelete'))) return;
+        // console.log("Tentando excluir usuário:", id);
+        if (!id) return alert("Erro: ID de usuário inválido.");
+
+        // Direct delete without confirm for debugging
+        setDeletingId(id);
         try {
             await api.adminDeleteUser(id);
-            
-            queryClient.invalidateQueries({ queryKey: ['users'] });
+            // Force refresh of the list
+            await queryClient.invalidateQueries({ queryKey: ['users'] });
+            // console.log("Usuário excluído com sucesso.");
         } catch (err) {
-            alert('Erro ao excluir usuário.');
+            console.error(err);
+            alert('Erro ao excluir: ' + (err.message || "Erro desconhecido"));
+        } finally {
+            setDeletingId(null);
         }
     };
 
-    const handleRoleChange = async (id, currentRole) => {
-        let newRole = 'student';
-        if (currentRole === 'student' || !currentRole) newRole = 'professor';
-        else if (currentRole === 'professor') newRole = 'admin';
-        else if (currentRole === 'admin') newRole = 'student';
-
-        if (!window.confirm(t('admin.dashboard.confirmRole', { role: newRole }))) return;
-
+    const handleRoleChange = async (id, newRole) => {
+        // Direct update based on selection
         try {
             await api.updateUserRole(id, newRole);
-            queryClient.invalidateQueries({ queryKey: ['users'] });
+            await queryClient.invalidateQueries({ queryKey: ['users'] });
         } catch (err) {
             console.error(err);
             alert(err.message || 'Erro ao atualizar função.');
         }
     };
 
+
+
     const handleCourseStatus = async (courseId, status) => {
         if (!window.confirm(t('admin.dashboard.confirmStatus', { status }))) return;
         try {
             await api.updateCourseStatus(courseId, status);
             queryClient.invalidateQueries({ queryKey: ['courses', 'all'] });
-            queryClient.invalidateQueries({ queryKey: ['courses'] }); 
+            queryClient.invalidateQueries({ queryKey: ['courses'] });
         } catch (e) {
             alert("Erro ao moderar curso");
         }
@@ -373,7 +372,7 @@ const AdminDashboard = () => {
 
     const pendingCourses = courses.filter(c => c.status === 'pending');
 
-    
+
     const getTitle = (c) => typeof c.title === 'string' ? c.title : (c.title?.pt || c.title?.en || "Curso");
 
     return (
@@ -392,7 +391,7 @@ const AdminDashboard = () => {
                     </button>
                 </div>
 
-                {}
+                { }
                 <div className="mb-8">
                     <div className="flex justify-between items-center mb-4">
                         <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 flex items-center">
@@ -432,7 +431,7 @@ const AdminDashboard = () => {
                     {financials && (
                         <>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {}
+                                { }
                                 <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border-l-4 border-indigo-500">
                                     <div className="flex justify-between items-center">
                                         <div>
@@ -445,7 +444,7 @@ const AdminDashboard = () => {
                                     </div>
                                 </div>
 
-                                {}
+                                { }
                                 <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border-l-4 border-green-500">
                                     <div className="flex flex-col h-full justify-between">
                                         <div className="flex justify-between items-center mb-2">
@@ -462,7 +461,7 @@ const AdminDashboard = () => {
                                     </div>
                                 </div>
 
-                                {}
+                                { }
                                 <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border-l-4 border-gray-400">
                                     <div className="flex justify-between items-center">
                                         <div>
@@ -479,19 +478,19 @@ const AdminDashboard = () => {
                     )}
                 </div>
 
-                {}
+                { }
                 <div className="mb-8">
                     <ProfessorDebtsSection />
                 </div>
 
-                {}
+                { }
                 {
                     <div className="mb-8">
                         <PendingPaymentsSection />
                     </div>
                 }
 
-                {}
+                { }
                 {
                     loadingCourses ? (
                         <div className="mb-8"><TableSkeleton rows={2} /></div>
@@ -538,7 +537,7 @@ const AdminDashboard = () => {
                 }
 
 
-                {}
+                { }
                 {
                     loadingCourses ? (
                         <div className="mb-8"><TableSkeleton rows={3} /></div>
@@ -579,7 +578,7 @@ const AdminDashboard = () => {
                                                 >
                                                     <Edit className="w-4 h-4" />
                                                 </button>
-                                                {}
+                                                { }
                                             </div>
                                         </li>
                                     ))}
@@ -589,7 +588,7 @@ const AdminDashboard = () => {
                     )
                 }
 
-                {}
+                { }
 
                 {
                     loadingUsers ? (
@@ -620,30 +619,43 @@ const AdminDashboard = () => {
                                                     {u.avatar && <img src={u.avatar} alt="" className="w-6 h-6 rounded-full mr-2 object-cover" />}
                                                     {u.name}
                                                 </td>
-                                                <td className="px-6 py-4">{u.email}</td>
+                                                <td className="px-6 py-4 truncate max-w-[150px]" title={u.email}>{u.email}</td>
                                                 <td className="px-6 py-4">
-                                                    <button
-                                                        onClick={() => u._id !== user.id && handleRoleChange(u._id, u.role)}
-                                                        className={`px - 3 py - 1 rounded - full text - xs font - bold transition - all transform active: scale - 95
-                                                        ${u.role === 'admin' ? 'bg-red-100 text-red-800 border border-red-200 hover:bg-red-200' :
-                                                                u.role === 'professor' ? 'bg-yellow-100 text-yellow-800 border border-yellow-200 hover:bg-yellow-200' :
-                                                                    'bg-green-100 text-green-800 border border-green-200 hover:bg-green-200'
-                                                            } `}
-                                                        title={u._id !== user.id ? "Alterar: Estudante -> Professor -> Admin" : "Atual"}
-                                                        disabled={u._id === user.id}
-                                                        style={{ minWidth: '80px' }}
-                                                    >
-                                                        {(u.role || 'student').toUpperCase()}
-                                                    </button>
+                                                    <div className="relative inline-block w-full max-w-[120px]">
+                                                        <select
+                                                            value={u.role || 'student'}
+                                                            onChange={(e) => handleRoleChange(u._id, e.target.value)}
+                                                            disabled={u._id === user.id || u.email === 'octavio.marvel2018@gmail.com'}
+                                                            className={`appearance-none w-full cursor-pointer px-3 py-1.5 rounded-full text-xs font-bold transition-all focus:outline-none focus:ring-2 focus:ring-offset-1 text-center border
+                                                            ${u.role === 'admin' ? 'bg-red-100 text-red-800 border-red-200 focus:ring-red-500' :
+                                                                    u.role === 'professor' ? 'bg-yellow-100 text-yellow-800 border-yellow-200 focus:ring-yellow-500' :
+                                                                        'bg-green-100 text-green-800 border-green-200 focus:ring-green-500'
+                                                                } ${(u._id === user.id || u.email === 'octavio.marvel2018@gmail.com') ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                                        >
+                                                            <option value="student">ALUNO</option>
+                                                            <option value="professor">PROFESSOR</option>
+                                                            <option value="admin">ADMIN</option>
+                                                        </select>
+                                                        {u._id !== user.id && u.email !== 'octavio.marvel2018@gmail.com' && (
+                                                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-current opacity-60">
+                                                                <svg className="fill-current h-3 w-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
+                                                            </div>
+                                                        )}
+                                                    </div>
                                                 </td>
                                                 <td className="px-6 py-4 text-right">
-                                                    {u._id !== user.id && (
+                                                    {u._id !== user.id && u.email !== 'octavio.marvel2018@gmail.com' && (
                                                         <button
                                                             onClick={() => handleDelete(u._id)}
-                                                            className="text-red-500 hover:text-red-700 transition-colors p-2 rounded-full hover:bg-red-100 dark:hover:bg-red-900/30"
+                                                            disabled={deletingId === u._id}
+                                                            className={`transition-colors p-2 rounded-full ${deletingId === u._id ? 'bg-gray-200 cursor-wait' : 'text-red-500 hover:text-red-700 hover:bg-red-100 dark:hover:bg-red-900/30'}`}
                                                             title="Excluir Usuário"
                                                         >
-                                                            <Trash2 className="w-5 h-5" />
+                                                            {deletingId === u._id ? (
+                                                                <div className="w-5 h-5 border-2 border-red-500 border-t-transparent rounded-full animate-spin"></div>
+                                                            ) : (
+                                                                <Trash2 className="w-5 h-5" />
+                                                            )}
                                                         </button>
                                                     )}
                                                 </td>

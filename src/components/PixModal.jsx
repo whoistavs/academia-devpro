@@ -11,7 +11,7 @@ const PixModal = ({ isOpen, onClose, data, onConfirm }) => {
     const [couponMessage, setCouponMessage] = useState('');
     const [couponLoading, setCouponLoading] = useState(false);
 
-    
+
     const [currentData, setCurrentData] = React.useState(data);
 
     React.useEffect(() => {
@@ -32,9 +32,9 @@ const PixModal = ({ isOpen, onClose, data, onConfirm }) => {
         setCouponLoading(true);
         setCouponMessage('');
         try {
-            
-            const res = await api.createPreference(currentData.courseId || data.courseId, couponCode);
-            setCurrentData({ ...res, courseId: currentData.courseId || data.courseId }); 
+
+            const res = await api.createPreference(currentData.courseId || data.courseId, couponCode, currentData.trackId || data.trackId);
+            setCurrentData({ ...res, courseId: currentData.courseId || data.courseId, trackId: currentData.trackId || data.trackId });
             setCouponMessage({ type: 'success', text: `Desconto de R$ ${res.discount} aplicado!` });
         } catch (e) {
             setCouponMessage({ type: 'error', text: 'Cupom inválido ou expirado.' });
@@ -47,12 +47,15 @@ const PixModal = ({ isOpen, onClose, data, onConfirm }) => {
     const handleConfirm = async () => {
         setConfirming(true);
         try {
-            
-            
-            
-            const res = await api.confirmManualPayment(currentData.courseId, currentData.txId, couponCode);
-            const token = localStorage.getItem('token');
-            login({ ...user, purchasedCourses: res.purchasedCourses }, token);
+
+
+
+            const res = await api.confirmManualPayment(currentData.courseId, currentData.txId, couponCode, currentData.trackId);
+
+            if (res.purchasedCourses) {
+                const token = localStorage.getItem('token');
+                login({ ...user, purchasedCourses: res.purchasedCourses }, token);
+            }
             onConfirm();
             window.location.reload();
         } catch (e) {
@@ -75,7 +78,7 @@ const PixModal = ({ isOpen, onClose, data, onConfirm }) => {
 
                     <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Pague com Pix</h2>
 
-                    {}
+                    { }
                     {(!currentData.discount || parseFloat(currentData.discount) === 0) && (
                         <div className="mb-4 flex gap-2">
                             <input

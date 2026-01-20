@@ -4,7 +4,9 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'r
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import Home from './pages/Home';
+import ValidateCertificate from './pages/ValidateCertificate';
 import Courses from './pages/Courses';
+import Tracks from './pages/Tracks';
 import CourseDetails from './pages/CourseDetails';
 import Contact from './pages/Contact';
 import Login from './pages/Login';
@@ -73,6 +75,7 @@ const ProtectedRoute = ({ children, requireProfile = true }) => {
 
 const Layout = () => {
   const { theme } = useTheme();
+  const location = useLocation();
   return (
     <div
       style={{ colorScheme: theme }}
@@ -89,6 +92,7 @@ const Layout = () => {
         <Route path="/recover-password" element={<ForgotPassword />} />
         <Route path="/privacidade" element={<PrivacyPolicy />} />
         <Route path="/termos" element={<Terms />} />
+        <Route path="/validar-certificado" element={<ValidateCertificate />} />
         <Route path="/contato" element={<Contact />} />
 
         { }
@@ -115,10 +119,11 @@ const Layout = () => {
         <Route path="/professor" element={<ProtectedRoute><ProfessorDashboard /></ProtectedRoute>} />
         <Route path="/professor/editor" element={<ProtectedRoute><CourseEditor /></ProtectedRoute>} />
         <Route path="/professor/editor/:id" element={<ProtectedRoute><CourseEditor /></ProtectedRoute>} />
+        <Route path="/trilhas" element={<Tracks />} />
       </Routes>
       <Footer />
       <CookieBanner />
-      <AIChatWidget />
+      {!location.pathname.includes('/aula/') && <AIChatWidget />}
     </div>
   );
 };

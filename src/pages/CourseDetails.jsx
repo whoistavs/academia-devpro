@@ -15,7 +15,7 @@ const CourseDetails = () => {
     const [course, setCourse] = useState(null);
     const [loading, setLoading] = useState(true);
     const [purchasing, setPurchasing] = useState(false);
-    const [pixData, setPixData] = useState(null); 
+    const [pixData, setPixData] = useState(null);
 
     useEffect(() => {
         const fetchCourse = async () => {
@@ -23,7 +23,7 @@ const CourseDetails = () => {
                 const data = await api.getCourse(slug);
                 setCourse(data);
             } catch (error) {
-                console.error("Error loading course:", error);
+
             } finally {
                 setLoading(false);
             }
@@ -31,26 +31,25 @@ const CourseDetails = () => {
         fetchCourse();
     }, [slug]);
 
-    
+
     useEffect(() => {
         if (course && isAuthenticated) {
             const id = course.id || course._id;
-            console.log("[CourseDetails] Fetching progress for:", id);
             fetchProgress(id);
         } else {
-            console.log("[CourseDetails] Skipping progress fetch. Auth:", isAuthenticated, "Course:", !!course);
+
         }
     }, [course, isAuthenticated]);
 
-    
+
     if (course) {
         const id = course.id || course._id;
-        console.log(`[CourseDetails Render] Course ID: ${id} `);
-        
-        
+
+
+
     }
 
-    
+
     const getContent = (data) => {
         if (!data) return "";
         if (typeof data === 'string') return data;
@@ -79,7 +78,7 @@ const CourseDetails = () => {
 
     return (
         <main className="flex-grow pt-16 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-            {}
+            { }
             <div className="bg-indigo-900 text-white py-12">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <Link to="/cursos" className="inline-flex items-center text-indigo-300 hover:text-white mb-6 transition-colors">
@@ -117,13 +116,13 @@ const CourseDetails = () => {
                 </div>
             </div>
 
-            {}
+            { }
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
 
-                    {}
+                    { }
                     <div className="lg:col-span-2">
-                        {}
+                        { }
                         <div className="mb-12">
                             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 border-b dark:border-gray-700 pb-2 relative">
                                 {t('courseDetails.about')}
@@ -134,7 +133,7 @@ const CourseDetails = () => {
                             </div>
                         </div>
 
-                        {}
+                        { }
                         <div className="mb-12">
                             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 border-b dark:border-gray-700 pb-2 relative">
                                 {t('courseDetails.learn')}
@@ -156,7 +155,7 @@ const CourseDetails = () => {
                             </div>
                         </div>
 
-                        {}
+                        { }
                         {course.aulas && (
                             <div>
                                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 border-b dark:border-gray-700 pb-2 relative">
@@ -164,7 +163,7 @@ const CourseDetails = () => {
                                     <span className="absolute bottom-0 left-0 w-20 h-1 bg-indigo-600 rounded"></span>
                                 </h2>
 
-                                {}
+                                { }
                                 {course.modulos && course.modulos.length > 0 && typeof course.modulos[0] === 'object' ? (
                                     <div className="space-y-6">
                                         {(() => {
@@ -182,7 +181,7 @@ const CourseDetails = () => {
                                                         {modulo.items && modulo.items.map((item, itemIndex) => {
                                                             const currentIndex = globalLessonIndex++;
                                                             const title = getContent(item.titulo);
-                                                            if (!title && !item.titulo) return null; 
+                                                            if (!title && !item.titulo) return null;
 
                                                             return (
                                                                 <Link
@@ -214,7 +213,7 @@ const CourseDetails = () => {
                                         })()}
                                     </div>
                                 ) : (
-                                    
+
                                     <div className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden shadow-sm">
                                         {course.aulas.map((aula, index) => (
                                             <Link
@@ -240,11 +239,11 @@ const CourseDetails = () => {
                             </div>
                         )}
 
-                        {}
+                        { }
                         <ReviewList courseId={course.id || course._id} />
                     </div>
 
-                    {}
+                    { }
                     <div className="lg:col-span-1">
                         <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 sticky top-24">
                             <div className="mb-6 rounded-lg overflow-hidden border border-gray-100 dark:border-gray-700">
@@ -267,7 +266,7 @@ const CourseDetails = () => {
                             </div>
 
                             {(() => {
-                                
+
                                 let nextIndex = 0;
                                 let extractedLessons = [];
                                 if (course.aulas && course.aulas.length > 0) {
@@ -277,16 +276,19 @@ const CourseDetails = () => {
                                 }
 
                                 const total = extractedLessons.length;
-                                
+
                                 const firstUncompleted = extractedLessons.findIndex((_, idx) => !isLessonCompleted(course._id || course.id, idx));
                                 nextIndex = firstUncompleted === -1 ? 0 : firstUncompleted;
-                                const isStarted = firstUncompleted !== 0; 
-                                
+                                const isStarted = firstUncompleted !== 0;
+
                                 const hasProgress = extractedLessons.some((_, idx) => isLessonCompleted(course._id || course.id, idx));
 
-                                const isFinished = firstUncompleted === -1 && total > 0;
+                                const hasLegacyQuiz = course.quiz && course.quiz.length > 0;
+                                const isLegacyQuizDone = isLessonCompleted(course._id || course.id, 'final_exam');
 
-                                
+                                const isFinished = firstUncompleted === -1 && total > 0 && (!hasLegacyQuiz || isLegacyQuizDone);
+
+
                                 const courseId = course._id || course.id;
                                 const isOwner = user && (user.role === 'admin' || user.id === course.authorId);
                                 const isPurchased = user && user.purchasedCourses && user.purchasedCourses.includes(courseId);
@@ -296,12 +298,12 @@ const CourseDetails = () => {
                                 const handleBuy = async () => {
                                     setPurchasing(true);
                                     try {
-                                        
+
                                         const response = await api.createPreference(courseId);
                                         if (response.mode === 'pix_direct') {
                                             setPixData({ ...response, courseId });
                                         } else if (response.init_point) {
-                                            
+
                                             window.location.href = response.init_point;
                                         }
                                     } catch (e) {
@@ -367,14 +369,14 @@ const CourseDetails = () => {
                 </div>
             </div>
 
-            {}
+            { }
             <PixModal
                 isOpen={!!pixData}
                 data={pixData}
                 onClose={() => setPixData(null)}
                 onConfirm={() => {
                     setPixData(null);
-                    
+
                     window.location.reload();
                 }}
             />

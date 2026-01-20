@@ -4,7 +4,7 @@ async function testChat() {
         const res = await fetch('http://localhost:3000/api/ai/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: "Escreva um poema curto sobre React" })
+            body: JSON.stringify({ message: "Quem é Roberto?" })
         });
         const data = await res.json();
         console.log("Status:", res.status);

@@ -12,8 +12,7 @@ const PasswordConfirmationModal = ({ isOpen, onClose, onConfirm, title, message 
 
     if (!isOpen) return null;
 
-    console.log("Modal User:", user);
-    console.log("Is Google:", user?.authProvider === 'google');
+
     const isGoogle = user?.authProvider === 'google';
 
     const handleSubmit = async (e) => {
@@ -23,7 +22,7 @@ const PasswordConfirmationModal = ({ isOpen, onClose, onConfirm, title, message 
 
         try {
             if (isGoogle) {
-                
+
                 if (password !== 'EXCLUIR') {
                     throw new Error("Digite EXCLUIR para confirmar.");
                 }
@@ -31,15 +30,15 @@ const PasswordConfirmationModal = ({ isOpen, onClose, onConfirm, title, message 
                 await api.verifyPassword(password);
             }
 
-            
+
             await onConfirm();
-            onClose(); 
+            onClose();
         } catch (err) {
             console.error(err);
             setError(err.message || 'Senha incorreta.');
         } finally {
             setLoading(false);
-            setPassword(''); 
+            setPassword('');
         }
     };
 

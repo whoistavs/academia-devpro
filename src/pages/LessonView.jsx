@@ -6,6 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import { useTranslation } from '../context/LanguageContext';
 import ReactMarkdown from 'react-markdown';
 import { LessonQuiz } from '../components/LessonQuiz';
+import AITutor from '../components/AITutor';
 
 
 const slugify = (text) => {
@@ -32,13 +33,13 @@ const MarkdownComponents = {
 };
 
 const LessonView = () => {
-    
+
     const { slug, id } = useParams();
     const { user, isAuthenticated, markLessonComplete, isLessonCompleted, fetchProgress } = useAuth();
     const { language } = useTranslation();
     const currentLang = language || 'pt';
 
-    
+
     const [course, setCourse] = useState(null);
     const [loading, setLoading] = useState(true);
     const [challengeAnswer, setChallengeAnswer] = useState('');
@@ -46,7 +47,7 @@ const LessonView = () => {
     const [isAnalysing, setIsAnalysing] = useState(false);
     const [toc, setTocState] = useState([]);
 
-    
+
     useEffect(() => {
         const loadCourse = async () => {
             try {
@@ -62,14 +63,14 @@ const LessonView = () => {
         loadCourse();
     }, [slug]);
 
-    
+
     useEffect(() => {
         if (course && isAuthenticated) {
             fetchProgress(course.id || course._id);
         }
     }, [course, isAuthenticated]);
 
-    
+
     useEffect(() => {
         setChallengeAnswer('');
         setAiFeedback(null);
@@ -77,7 +78,7 @@ const LessonView = () => {
         window.scrollTo({ top: 0, behavior: 'instant' });
     }, [slug, id]);
 
-    
+
     const getContent = (data) => {
         if (!data) return "";
         if (typeof data === 'string') return data;
@@ -85,7 +86,7 @@ const LessonView = () => {
         return data[langCode] || data['pt'] || data['en'] || Object.values(data)[0] || "";
     };
 
-    
+
     const allLessons = useMemo(() => {
         if (!course) return [];
         let extracted = [];
@@ -111,13 +112,13 @@ const LessonView = () => {
         }));
     }, [course]);
 
-    
+
     const lessonIndex = parseInt(id) || 0;
     const lesson = allLessons[lessonIndex];
     const totalLessons = allLessons.length;
     const courseId = course ? (course._id || course.id) : null;
 
-    
+
     useEffect(() => {
         if (!lesson || !lesson.content) {
             setTocState([]);
@@ -142,7 +143,7 @@ const LessonView = () => {
     }, [lesson, currentLang]);
 
 
-    
+
     if (loading) {
         return (
             <div className="min-h-screen pt-20 flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 text-indigo-600">
@@ -152,7 +153,7 @@ const LessonView = () => {
         );
     }
 
-    
+
     if (!course || !lesson) {
         return (
             <div className="min-h-screen pt-20 flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 text-gray-500">
@@ -162,7 +163,7 @@ const LessonView = () => {
         );
     }
 
-    
+
     const isLocked = lessonIndex > 0 && !isLessonCompleted(courseId, lessonIndex - 1);
 
     if (isLocked) {
@@ -187,49 +188,65 @@ const LessonView = () => {
         );
     }
 
-    
+
     const completed = isLessonCompleted(courseId, lessonIndex);
     const handleQuizPass = () => markLessonComplete(courseId, lessonIndex);
     const handleManualComplete = () => markLessonComplete(courseId, lessonIndex);
 
-    
+
     const handleChallengeSubmit = async () => {
         if (challengeAnswer.trim().length > 10) {
             setIsAnalysing(true);
             setAiFeedback(null);
             try {
-                
-                const token = localStorage.getItem('token');
-                
-                
-                
-                await new Promise(r => setTimeout(r, 1500));
-                
-                setAiFeedback({ isCorrect: true, feedback: "Ótima solução! Sua lógica cobre os casos principais." });
-                markLessonComplete(courseId, lessonIndex);
+                const result = await api.correctChallenge({
+                    instruction: getContent(lesson.challenge.instruction),
+                    userAnswer: challengeAnswer,
+                    language: currentLang
+                });
+
+                setAiFeedback({
+                    isCorrect: result.isCorrect,
+                    feedback: result.feedback
+                });
+
+                if (result.isCorrect) {
+                    markLessonComplete(courseId, lessonIndex);
+                }
             } catch (error) {
-                setAiFeedback({ feedback: "Erro ao conectar.", isCorrect: false });
+                console.error(error);
+                setAiFeedback({ feedback: "Erro ao conectar com servidor de correção.", isCorrect: false });
             } finally {
                 setIsAnalysing(false);
             }
         }
     };
 
-    
+
     return (
         <main className="flex-grow pt-16 bg-gray-50 dark:bg-gray-900 transition-colors duration-300 min-h-screen">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-                {}
+                { }
+                {/* Course Progress Bar */}
+                <div className="mb-8 bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 overflow-hidden">
+                    <div
+                        className="bg-indigo-600 h-2.5 rounded-full transition-all duration-500 ease-out"
+                        style={{ width: `${Math.round(((lessonIndex + (completed ? 1 : 0)) / totalLessons) * 100)}%` }}
+                    ></div>
+                </div>
+
                 <div className="mb-6 flex items-center justify-between">
-                    <Link to={`/curso/${slug}`} className="flex items-center text-indigo-600 dark:text-indigo-400 hover:underline font-medium">
+                    <Link to={`/curso/${slug}`} className="flex items-center text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium transition-colors">
                         <ArrowLeft className="w-5 h-5 mr-2" />Voltar ao Curso
                     </Link>
-                    <span className="text-gray-500 dark:text-gray-400 text-sm">Aula {lessonIndex + 1} de {totalLessons}</span>
+                    <span className="text-gray-500 dark:text-gray-400 text-sm font-medium bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full">
+                        Aula {lessonIndex + 1} de {totalLessons}
+                    </span>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {}
+                    { }
                     <div className="lg:col-span-2 space-y-8">
                         <div>
                             <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
@@ -247,8 +264,8 @@ const LessonView = () => {
                             </div>
                         </div>
 
-                        {}
-                        {}
+                        { }
+                        { }
                         {lesson.content && getContent(lesson.content) ? (
                             <div className="bg-white dark:bg-gray-800 p-8 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm prose dark:prose-invert max-w-none">
                                 <ReactMarkdown components={MarkdownComponents}>
@@ -257,7 +274,7 @@ const LessonView = () => {
                             </div>
                         ) : null}
 
-                        {}
+                        { }
                         {lesson.questions && lesson.questions.length > 0 ? (
                             !completed && (
                                 <LessonQuiz
@@ -316,19 +333,25 @@ const LessonView = () => {
                             </div>
                         )}
 
-                        {}
+                        { }
                         <div className="flex justify-between pt-4">
                             <Link to={lessonIndex > 0 ? `/curso/${slug}/aula/${lessonIndex - 1}` : '#'} className={`px-6 py-3 rounded-lg font-medium transition-colors ${lessonIndex > 0 ? 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700' : 'hidden'}`}>&larr; Aula Anterior</Link>
 
                             {completed ? (
-                                <Link to={lessonIndex < totalLessons - 1 ? `/curso/${slug}/aula/${lessonIndex + 1}` : `/curso/${slug}/prova`} className="px-6 py-3 rounded-lg font-medium transition-colors bg-indigo-600 text-white hover:bg-indigo-700 shadow-lg shadow-indigo-200 dark:shadow-none">{lessonIndex < totalLessons - 1 ? 'Próxima Aula \u2192' : 'Fazer Prova Final'}</Link>
+                                lessonIndex < totalLessons - 1 ? (
+                                    <Link to={`/curso/${slug}/aula/${lessonIndex + 1}`} className="px-6 py-3 rounded-lg font-medium transition-colors bg-indigo-600 text-white hover:bg-indigo-700 shadow-lg shadow-indigo-200 dark:shadow-none">{language === 'en' ? 'Next Lesson \u2192' : 'Próxima Aula \u2192'}</Link>
+                                ) : (course.quiz && course.quiz.length > 0) ? (
+                                    <Link to={`/curso/${slug}/prova`} className="px-6 py-3 rounded-lg font-medium transition-colors bg-indigo-600 text-white hover:bg-indigo-700 shadow-lg shadow-indigo-200 dark:shadow-none">{language === 'en' ? 'Final Exam' : 'Fazer Prova Final'}</Link>
+                                ) : (
+                                    <Link to={`/curso/${slug}`} className="px-6 py-3 rounded-lg font-medium transition-colors bg-green-600 text-white hover:bg-green-700 shadow-lg shadow-green-200 dark:shadow-none">{language === 'en' ? 'Finish Course' : 'Concluir Curso'}</Link>
+                                )
                             ) : (
-                                <button disabled className="px-6 py-3 rounded-lg font-medium bg-gray-300 dark:bg-gray-700 text-gray-500 cursor-not-allowed">Conclua para Avançar</button>
+                                <button disabled className="px-6 py-3 rounded-lg font-medium bg-gray-300 dark:bg-gray-700 text-gray-500 cursor-not-allowed">{language === 'en' ? 'Complete to Advance' : 'Conclua para Avançar'}</button>
                             )}
                         </div>
                     </div>
 
-                    {}
+                    { }
                     <div className="lg:col-span-1 space-y-6">
                         {toc.length > 0 && (
                             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden sticky top-24">
@@ -375,10 +398,11 @@ const LessonView = () => {
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
-        </main>
+
+            <AITutor context={`Aula: ${getContent(lesson.titulo)}\n\nConteúdo:\n${getContent(lesson.content)}`} />
+        </main >
     );
 };
 

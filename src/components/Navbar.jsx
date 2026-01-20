@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Menu, X, Code2, Sun, Moon, User, LogOut, Settings, Globe } from 'lucide-react';
+import { Menu, X, Code2, Sun, Moon, User, LogOut, Settings, Globe, Search } from 'lucide-react';
 import LanguageSelector from './LanguageSelector';
 import { useTheme } from '../context/ThemeContext';
 import { useTranslation } from '../context/LanguageContext';
@@ -9,7 +9,6 @@ import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const [isLangOpen, setIsLangOpen] = useState(false);
     const { theme, toggleTheme } = useTheme();
     const { language, changeLanguage, t, availableLanguages } = useTranslation();
     const { user, isAuthenticated, logout } = useAuth();
@@ -37,10 +36,26 @@ const Navbar = () => {
                     <div className="hidden md:flex items-center space-x-8">
                         <Link to="/" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors">{t('nav.home')}</Link>
                         <Link to="/cursos" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors">{t('nav.courses')}</Link>
+                        <Link to="/trilhas" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors">Trilhas</Link>
                         <Link to="/contato" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors">{t('nav.contact')}</Link>
 
+                        {/* Search Bar */}
+                        <div className="relative hidden lg:block">
+                            <input
+                                type="text"
+                                placeholder="Buscar..."
+                                className="pl-8 pr-4 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-32 focus:w-48 transition-all"
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        navigate(`/cursos?search=${e.target.value}`);
+                                    }
+                                }}
+                            />
+                            <Search className="h-4 w-4 absolute left-2.5 top-1.5 text-gray-400" />
+                        </div>
+
                         <div className="flex items-center space-x-4 border-l border-r px-4 border-gray-200 dark:border-gray-700">
-                            {}
+                            { }
                             <button
                                 onClick={toggleTheme}
                                 className="p-2 rounded-full text-gray-500 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors focus:outline-none"
@@ -49,23 +64,33 @@ const Navbar = () => {
                                 {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
                             </button>
 
-                            {}
+                            { }
                             <LanguageSelector />
                         </div>
 
                         {isAuthenticated ? (
                             <div className="flex items-center space-x-4">
-                                {user?.role === 'admin' && (
-                                    <Link to="/admin" className="flex items-center text-red-600 hover:text-red-800 font-bold transition-colors">
-                                        <Settings className="h-5 w-5 mr-1" />
-                                        <span>Admin</span>
-                                    </Link>
-                                )}
-                                {(user?.role === 'professor' || user?.role === 'admin') && (
-                                    <Link to="/professor" className="flex items-center text-amber-600 hover:text-amber-800 dark:text-amber-400 dark:hover:text-amber-300 font-bold transition-colors">
-                                        <Code2 className="h-5 w-5 mr-1" />
-                                        <span>Professor</span>
-                                    </Link>
+                                {(user?.role === 'admin' || user?.role === 'professor') && (
+                                    <div className="relative group">
+                                        <button className="flex items-center text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors">
+                                            <Settings className="h-5 w-5 mr-1" />
+                                            <span>Gestão</span>
+                                        </button>
+                                        <div className="absolute top-full right-0 pt-2 w-48 hidden group-hover:block">
+                                            <div className="bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 border border-gray-100 dark:border-gray-700">
+                                                {user?.role === 'admin' && (
+                                                    <Link to="/admin" className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                                        Admin Dashboard
+                                                    </Link>
+                                                )}
+                                                {(user?.role === 'professor' || user?.role === 'admin') && (
+                                                    <Link to="/professor" className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                                        Área do Professor
+                                                    </Link>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
                                 )}
                                 <Link to="/dashboard" className="flex items-center text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium">
                                     {user.avatar ? (
@@ -97,16 +122,7 @@ const Navbar = () => {
                     </div>
 
                     <div className="md:hidden flex items-center space-x-4">
-                        {}
-                        <button
-                            onClick={() => {
-                                setIsOpen(true);
-                                setIsLangOpen(!isLangOpen);
-                            }}
-                            className="p-2 rounded-full text-gray-500 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors"
-                        >
-                            <Globe className="h-5 w-5" />
-                        </button>
+
 
                         <button
                             onClick={toggleTheme}
@@ -122,16 +138,19 @@ const Navbar = () => {
                 </div>
             </div>
 
-            {}
+            { }
             {isOpen && (
                 <div className="md:hidden bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800">
                     <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                        <div className="px-3 py-2">
+                            <LanguageSelector />
+                        </div>
                         <Link to="/" onClick={() => setIsOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-gray-50 dark:hover:bg-gray-800">{t('nav.home')}</Link>
                         <Link to="/cursos" onClick={() => setIsOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-gray-50 dark:hover:bg-gray-800">{t('nav.courses')}</Link>
                         <Link to="/contato" onClick={() => setIsOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-gray-50 dark:hover:bg-gray-800">{t('nav.contact')}</Link>
 
-                        {}
-                        {}
+                        { }
+                        { }
 
                         {isAuthenticated ? (
                             <>

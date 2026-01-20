@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link, Navigate } from 'react-router-dom';
 import { CheckCircle, XCircle, ArrowLeft, Award } from 'lucide-react';
-import coursesData from '../data/cursos.json';
+import { api } from '../services/api'; // Changed to dynamic API
 import { useTranslation } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 
@@ -9,17 +9,15 @@ const Quiz = () => {
     const { slug } = useParams();
     const navigate = useNavigate();
     const { language, t } = useTranslation();
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, user } = useAuth();
 
-    
-    
-    
+    const [loading, setLoading] = useState(true);
+    const [course, setCourse] = useState(null);
+    const [answers, setAnswers] = useState({});
+    const [result, setResult] = useState(null);
+    const [quizQuestions, setQuizQuestions] = useState([]);
 
-    if (!isAuthenticated) {
-        return <Navigate to="/login" replace />;
-    }
-
-    
+    // --- Localization ---
     const localStrings = {
         title: { pt: 'Prova Final', en: 'Final Exam', es: 'Examen Final' },
         submit: { pt: 'Enviar Respostas', en: 'Submit Answers', es: 'Enviar Respuestas' },
@@ -27,33 +25,64 @@ const Quiz = () => {
         fail: { pt: 'Não foi dessa vez. Tente novamente.', en: 'Not this time. Try again.', es: 'No esta vez. Inténtalo de nuevo.' },
         score: { pt: 'Sua nota:', en: 'Your score:', es: 'Tu puntuación:' },
         back: { pt: 'Voltar ao Curso', en: 'Back to Course', es: 'Volver al Curso' },
-        selectOption: { pt: 'Selecione uma opção', en: 'Select an option', es: 'Selecciona una opción' }
     };
 
     const currentLang = language || 'pt';
     const langCode = currentLang.split('-')[0].toLowerCase();
-
     const getString = (key) => localStrings[key][langCode] || localStrings[key]['pt'];
 
-    const course = coursesData.find(c => c.slug === slug);
-    const [answers, setAnswers] = useState({});
-    const [result, setResult] = useState(null); 
-
-    
-    const [quizQuestions, setQuizQuestions] = useState([]);
-
-    
     const getContent = (data) => {
         if (!data) return "";
         if (typeof data === 'string') return data;
         return data[langCode] || data['pt'] || data['en'] || Object.values(data)[0];
     };
+    // --------------------
 
-    
     useEffect(() => {
-        if (!course || !course.quiz) return;
+        if (!isAuthenticated) return;
 
-        
+        const loadData = async () => {
+            try {
+                const courseData = await api.getCourse(slug);
+                if (!courseData) throw new Error("Course not found");
+                setCourse(courseData);
+
+                // --- Extract Questions Logic ---
+                let foundQuestions = [];
+
+                // 1. Legacy Check
+                if (courseData.quiz && courseData.quiz.length > 0) {
+                    foundQuestions = courseData.quiz;
+                }
+                // 2. Dynamic Modules Check (Editor Created)
+                else if (courseData.modulos && courseData.modulos.length > 0) {
+                    for (const mod of courseData.modulos) {
+                        if (mod.items) {
+                            const quizItem = mod.items.find(i => i.type === 'quiz' && i.questions && i.questions.length > 0);
+                            if (quizItem) {
+                                foundQuestions = quizItem.questions;
+                                break; // Take the first quiz found
+                            }
+                        }
+                    }
+                }
+
+                if (foundQuestions.length > 0) {
+                    processQuiz(foundQuestions);
+                }
+
+            } catch (err) {
+                console.error("Error loading quiz:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadData();
+    }, [slug, isAuthenticated]);
+
+    const processQuiz = (rawQuestions) => {
+        // Shuffle questions and options
         const shuffle = (array) => {
             const newArr = [...array];
             for (let i = newArr.length - 1; i > 0; i--) {
@@ -63,52 +92,37 @@ const Quiz = () => {
             return newArr;
         };
 
-        const processQuiz = () => {
-            const processed = course.quiz.map(q => {
-                
-                const qText = getContent(q.question);
-                const optsRaw = getContent(q.options);
-                const optsArray = Array.isArray(optsRaw) ? optsRaw : [];
+        const processed = rawQuestions.map((q, idx) => {
+            const qText = typeof q.question === 'object' ? getContent(q.question) : q.question;
+            // Fix: Use getContent to get the specific language array, identical to how we get question text
+            const optsRaw = typeof q.options === 'object' && !Array.isArray(q.options) ? getContent(q.options) : q.options;
+            // Ensure options is array
+            const optsArray = Array.isArray(optsRaw) ? optsRaw : [];
 
-                
-                const optionsWithIndex = optsArray.map((opt, idx) => ({
-                    text: opt,
-                    originalIndex: idx
-                }));
+            // Map options to objects to track original index
+            const optionsWithIndex = optsArray.map((opt, optIdx) => ({
+                text: opt,
+                originalIndex: optIdx
+            }));
 
-                
-                const shuffledOptionsWithIndex = shuffle(optionsWithIndex);
+            // Shuffle options
+            const shuffledOptions = shuffle(optionsWithIndex);
 
-                
-                
-                const newAnswerIndex = shuffledOptionsWithIndex.findIndex(item => item.originalIndex === q.answer);
+            // Find where the correct answer ended up
+            // q.answer is the original index (0-3 usually)
+            const newAnswerIndex = shuffledOptions.findIndex(item => item.originalIndex === Number(q.answer));
 
-                return {
-                    id: q.id,
-                    question: qText,
-                    options: shuffledOptionsWithIndex.map(o => o.text), 
-                    answer: newAnswerIndex
-                };
-            });
+            return {
+                id: q.id || `q-${idx}`,
+                question: qText,
+                options: shuffledOptions.map(o => o.text),
+                answer: newAnswerIndex
+            };
+        });
 
-            
-            setQuizQuestions(shuffle(processed));
-            setAnswers({}); 
-            setResult(null);
-        };
+        setQuizQuestions(shuffle(processed));
+    };
 
-        processQuiz();
-
-    }, [course, langCode]); 
-
-    if (!course || !course.quiz) {
-        return (
-            <div className="flex flex-col items-center justify-center min-h-screen">
-                <h2 className="text-2xl font-bold mb-4">Quiz não encontrado / Quiz not found</h2>
-                <Link to="/cursos" className="text-indigo-600 hover:underline">Voltar / Back</Link>
-            </div>
-        );
-    }
 
     const handleOptionSelect = (questionId, optionIndex) => {
         setAnswers(prev => ({
@@ -119,7 +133,6 @@ const Quiz = () => {
 
     const calculateScore = async () => {
         let correctCount = 0;
-        
         quizQuestions.forEach(q => {
             if (answers[q.id] === q.answer) {
                 correctCount++;
@@ -127,7 +140,7 @@ const Quiz = () => {
         });
 
         const percentage = Math.round((correctCount / quizQuestions.length) * 100);
-        const passed = percentage >= 70; 
+        const passed = percentage >= 70;
 
         setResult({
             score: percentage,
@@ -136,17 +149,41 @@ const Quiz = () => {
             total: quizQuestions.length
         });
 
-        if (passed && isAuthenticated) {
+        if (passed && isAuthenticated && course) {
             try {
-                const { api } = await import('../services/api');
-                await api.updateProgress(course.id, 'final_exam', percentage);
+                // Determine course ID (could be _id or id)
+                const cId = course._id || course.id;
+                await api.updateProgress({
+                    courseId: cId,
+                    lessonId: 'final_exam',
+                    progress: percentage
+                });
             } catch (error) {
                 console.error("Failed to save quiz score:", error);
             }
         }
-
         window.scrollTo(0, 0);
     };
+
+    if (!isAuthenticated) return <Navigate to="/login" replace />;
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+            </div>
+        );
+    }
+
+    if (!course || quizQuestions.length === 0) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-gray-300">
+                <h2 className="text-2xl font-bold mb-4">Quiz não encontrado / Quiz not found</h2>
+                <p className="mb-6">Este curso ainda não possui uma prova final cadastrada.</p>
+                <Link to={`/curso/${slug}`} className="text-indigo-600 hover:text-indigo-800 font-medium">Voltar ao Curso</Link>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-20 pb-12 px-4 transition-colors duration-300">

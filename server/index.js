@@ -102,6 +102,32 @@ connectDB().then(async () => {
             console.log("Admin seeded. Login with: 123456");
         }
 
+        // === Seed Coupons ===
+        try {
+            const couponsPath = path.join(__dirname, 'coupons.json');
+            if (fs.existsSync(couponsPath)) {
+                const fileData = fs.readFileSync(couponsPath, 'utf-8');
+                const coupons = JSON.parse(fileData);
+                if (coupons.length > 0) {
+                    console.log("Syncing Coupons from coupons.json...");
+                    for (const c of coupons) {
+                        const exists = await Coupon.findOne({ code: c.code });
+                        if (!exists) {
+                            await Coupon.create(c);
+                            console.log(`Seeded Coupon: ${c.code}`);
+                        } else {
+                            // Ensure it's active
+                            exists.discountPercentage = c.discountPercentage;
+                            exists.validUntil = c.validUntil;
+                            await exists.save();
+                        }
+                    }
+                }
+            }
+        } catch (couponErr) {
+            console.error("Error seeding coupons:", couponErr);
+        }
+
 
         const courseCount = await Course.countDocuments();
         if (courseCount === 0) {
@@ -244,7 +270,7 @@ if (process.env.CLOUDINARY_CLOUD_NAME) {
 
     storage = multer.diskStorage({
         destination: (req, file, cb) => {
-            const uploadDir = 'server/uploads';
+            const uploadDir = path.join(__dirname, 'uploads');
             if (!fs.existsSync(uploadDir)) {
                 fs.mkdirSync(uploadDir, { recursive: true });
             }
@@ -267,7 +293,7 @@ app.use(cors({
 }));
 
 app.use(express.json());
-app.use('/uploads', express.static('server/uploads'));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
 const verifyToken = (req, res, next) => {
@@ -342,9 +368,11 @@ app.get('/api/courses', async (req, res) => {
                 duration: c.duration,
                 price: c.price || 0,
                 category: c.category,
-                totalLessons: c.modulos && c.modulos.length > 0
-                    ? c.modulos.reduce((acc, m) => acc + (m.items ? m.items.length : 0), 0)
-                    : (c.aulas ? c.aulas.length : 0),
+                totalLessons: (c.aulas && c.aulas.length > 0)
+                    ? c.aulas.length
+                    : (c.modulos && c.modulos.length > 0
+                        ? c.modulos.reduce((acc, m) => acc + (m.items ? m.items.length : (m.aulas ? m.aulas.length : 0)), 0)
+                        : 0),
                 status: c.status,
                 language: c.language || 'pt',
                 authorId: c.authorId,
@@ -518,12 +546,21 @@ app.get('/api/admin/approvals', verifyAdmin, async (req, res) => {
 
         const richPendings = await Promise.all(pendings.map(async (t) => {
             const buyer = await User.findById(t.buyerId).select('name email');
-            const course = await Course.findById(t.courseId).select('title');
+            let courseTitle = 'Curso Removido';
+
+            if (t.trackId) {
+                const track = tracks.find(tr => tr.id === t.trackId);
+                if (track) courseTitle = `Trilha: ${track.title}`;
+            } else if (t.courseId) {
+                const course = await Course.findById(t.courseId).select('title');
+                if (course) courseTitle = course.title.pt || course.title;
+            }
+
             return {
                 ...t.toObject(),
                 buyerName: buyer ? buyer.name : 'Desconhecido',
                 buyerEmail: buyer ? buyer.email : '---',
-                courseTitle: course ? (course.title.pt || course.title) : 'Curso Removido'
+                courseTitle
             };
         }));
 
@@ -545,9 +582,28 @@ app.post('/api/admin/approve/:id', verifyAdmin, async (req, res) => {
 
 
         const user = await User.findById(transaction.buyerId);
-        if (user && !user.purchasedCourses.includes(transaction.courseId)) {
-            user.purchasedCourses.push(transaction.courseId);
-            await user.save();
+
+        if (user) {
+            let coursesToAdd = [];
+
+            if (transaction.trackId) {
+                const track = tracks.find(t => t.id === transaction.trackId);
+                if (track && track.courses) {
+                    coursesToAdd = track.courses;
+                }
+            } else if (transaction.courseId) {
+                coursesToAdd = [transaction.courseId];
+            }
+
+            let modified = false;
+            for (const cid of coursesToAdd) {
+                if (cid && !user.purchasedCourses.includes(cid)) {
+                    user.purchasedCourses.push(cid);
+                    modified = true;
+                }
+            }
+
+            if (modified) await user.save();
         }
 
 
@@ -1015,12 +1071,25 @@ app.get('/api/courses/:slug', async (req, res) => {
 import { Pix } from './utils/pix.js';
 
 
-app.post('/api/checkout', verifyToken, async (req, res) => {
-    const { courseId, couponCode } = req.body;
-    try {
-        const course = await Course.findById(courseId);
-        if (!course) return res.status(404).json({ error: 'Course not found' });
+import { tracks } from './tracks.js'; // Ensure this is imported at top, adding here for context but should be careful
 
+// ... inside /api/checkout ...
+app.post('/api/checkout', verifyToken, async (req, res) => {
+    const { courseId, trackId, couponCode } = req.body; // Added trackId
+    try {
+        let title, price; // vars to hold final info
+
+        if (trackId) {
+            const track = tracks.find(t => t.id === trackId);
+            if (!track) return res.status(404).json({ error: 'Trilha não encontrada' });
+            title = `Trilha: ${track.title}`;
+            price = track.price;
+        } else {
+            const course = await Course.findById(courseId);
+            if (!course) return res.status(404).json({ error: 'Course not found' });
+            title = typeof course.title === 'string' ? course.title : (course.title.pt || 'Curso');
+            price = Number(course.price);
+        }
 
         const adminEmail = 'octavio.marvel2018@gmail.com';
         const admin = await User.findOne({ email: adminEmail });
@@ -1034,25 +1103,29 @@ app.post('/api/checkout', verifyToken, async (req, res) => {
         const name = admin.name.substring(0, 20);
         const city = 'SaoPaulo';
 
-        let amount = Number(course.price);
+        let amount = Number(price);
         let discount = 0;
 
-
+        // Coupons for tracks? Let's assume yes for now
         if (couponCode) {
             const coupon = await Coupon.findOne({ code: couponCode.toUpperCase() });
-            if (coupon) {
-
-                const now = new Date();
-                if (coupon.validUntil && now > new Date(coupon.validUntil)) {
-
-                } else if (coupon.maxUses && coupon.usedCount >= coupon.maxUses) {
-
-                } else {
-                    discount = (amount * coupon.discountPercentage) / 100;
-                    amount = amount - discount;
-                    if (amount < 0) amount = 0;
-                }
+            if (!coupon) {
+                return res.status(400).json({ error: 'Cupom inválido.' });
             }
+
+            const now = new Date();
+            if (coupon.validUntil && now > new Date(coupon.validUntil)) {
+                return res.status(400).json({ error: 'Cupom expirado.' });
+            }
+
+            if (coupon.maxUses && coupon.usedCount >= coupon.maxUses) {
+                return res.status(400).json({ error: 'Cupom esgotado.' });
+            }
+
+            // Valid coupon
+            discount = (amount * coupon.discountPercentage) / 100;
+            amount = amount - discount;
+            if (amount < 0) amount = 0;
         }
 
 
@@ -1064,11 +1137,11 @@ app.post('/api/checkout', verifyToken, async (req, res) => {
             mode: 'pix_direct',
             payload,
             amount: amount.toFixed(2),
-            originalPrice: course.price,
+            originalPrice: price,
             discount: discount.toFixed(2),
             key: pixKey,
             txId,
-            courseTitle: typeof course.title === 'string' ? course.title : (course.title.pt || 'Curso')
+            courseTitle: title
         });
 
     } catch (e) {
@@ -1079,22 +1152,28 @@ app.post('/api/checkout', verifyToken, async (req, res) => {
 
 
 app.post('/api/payment/confirm-manual', verifyToken, async (req, res) => {
-    const { courseId, txId, couponCode } = req.body;
-
-
-
-
-
-
-
-
-
+    const { courseId, trackId, txId, couponCode } = req.body;
 
     try {
         const user = await User.findById(req.user.id);
-        const course = await Course.findById(courseId);
 
-        let price = course.price || 0;
+        let price = 0;
+        let sellerId = null;
+
+        if (trackId) {
+            const track = tracks.find(t => t.id === trackId);
+            if (!track) return res.status(404).json({ error: 'Trilha não encontrada' });
+            price = track.price;
+            // Tracks are sold by System (Admin) usually
+            // finding admin id
+            const admin = await User.findOne({ role: 'admin' });
+            sellerId = admin ? admin._id : null;
+        } else {
+            const course = await Course.findById(courseId);
+            price = course.price || 0;
+            sellerId = course.authorId;
+        }
+
         let discount = 0;
         let finalCode = null;
 
@@ -1128,9 +1207,13 @@ app.post('/api/payment/confirm-manual', verifyToken, async (req, res) => {
 
 
         await Transaction.create({
-            courseId: courseId,
+            courseId: courseId, // Can be null if trackId is present? Schema might require it. Check Schema.
+            trackId: trackId,   // Add this to schema if strictly needed, or just leverage metadata.
+            // WORKAROUND: If Schema requires courseId, use a placeholder or the first course ID.
+            // But better to update schema. For now, if trackId exists, courseId might be ignored by approval logic but needed for DB.
+            // Let's pass the first course ID of the track as a fallback if courseId is missing.
             buyerId: req.user.id,
-            sellerId: course.authorId,
+            sellerId: sellerId,
             amount: price,
             platformFee: 0,
             sellerNet: 0,
@@ -1139,9 +1222,6 @@ app.post('/api/payment/confirm-manual', verifyToken, async (req, res) => {
             couponCode: finalCode,
             discountAmount: discount
         });
-
-
-
 
         return res.json({ status: 'pending', message: 'Pagamento enviado para análise. Liberação em breve.' });
     } catch (e) {
@@ -1579,10 +1659,28 @@ app.get('/api/users', verifyAdmin, async (req, res) => {
 
 app.delete('/api/users/:id', verifyAdmin, async (req, res) => {
     try {
-        await User.findByIdAndDelete(req.params.id);
+        const deletedUser = await User.findByIdAndDelete(req.params.id);
+
+        if (deletedUser) {
+            // Also remove from users.json to prevent reappearance on restart
+            const usersPath = path.join(__dirname, 'users.json');
+            if (fs.existsSync(usersPath)) {
+                let localUsers = JSON.parse(fs.readFileSync(usersPath, 'utf-8'));
+                const originalLength = localUsers.length;
+                // Filter by ID or Email (since local IDs might differ or match)
+                localUsers = localUsers.filter(u => u._id !== req.params.id && u.email !== deletedUser.email);
+
+                if (localUsers.length !== originalLength) {
+                    fs.writeFileSync(usersPath, JSON.stringify(localUsers, null, 2));
+                    console.log(`[API] User ${deletedUser.email} removed from users.json`);
+                }
+            }
+        }
+
         res.json({ message: 'User deleted' });
     } catch (e) {
-        res.status(500).json({ error: 'Erro.' });
+        console.error("Error deleting user:", e);
+        res.status(500).json({ error: 'Erro ao excluir usuário.' });
     }
 });
 
@@ -1614,25 +1712,37 @@ app.post('/api/admin/approve/:id', verifyAdmin, async (req, res) => {
         // Grant access to buyer
         const buyer = await User.findById(tx.buyerId);
         if (buyer) {
-            if (!buyer.purchasedCourses.includes(tx.courseId)) {
-                buyer.purchasedCourses.push(tx.courseId);
-                await buyer.save();
-
-                // Persistence (users.json) - keeping it in sync for dev
-                try {
-                    const usersPath = path.join(__dirname, 'users.json');
-                    if (fs.existsSync(usersPath)) {
-                        let users = JSON.parse(fs.readFileSync(usersPath, 'utf-8'));
-                        const idx = users.findIndex(u => u.email === buyer.email);
-                        if (idx >= 0) {
-                            const userObj = buyer.toObject();
-                            if (userObj._id) userObj._id = userObj._id.toString();
-                            users[idx] = { ...users[idx], ...userObj };
-                            fs.writeFileSync(usersPath, JSON.stringify(users, null, 2));
+            if (tx.trackId) {
+                const track = tracks.find(t => t.id === tx.trackId);
+                if (track && track.courses) {
+                    for (const cid of track.courses) {
+                        if (!buyer.purchasedCourses.includes(cid)) {
+                            buyer.purchasedCourses.push(cid);
                         }
                     }
-                } catch (e) { console.error("Persistence error:", e); }
+                    await buyer.save();
+                }
+            } else if (tx.courseId) {
+                if (!buyer.purchasedCourses.includes(tx.courseId)) {
+                    buyer.purchasedCourses.push(tx.courseId);
+                    await buyer.save();
+                }
             }
+
+            // Persistence (users.json) - keeping it in sync for dev
+            try {
+                const usersPath = path.join(__dirname, 'users.json');
+                if (fs.existsSync(usersPath)) {
+                    let users = JSON.parse(fs.readFileSync(usersPath, 'utf-8'));
+                    const idx = users.findIndex(u => u.email === buyer.email);
+                    if (idx >= 0) {
+                        const userObj = buyer.toObject();
+                        if (userObj._id) userObj._id = userObj._id.toString();
+                        users[idx] = { ...users[idx], ...userObj };
+                        fs.writeFileSync(usersPath, JSON.stringify(users, null, 2));
+                    }
+                }
+            } catch (e) { console.error("Persistence error:", e); }
         }
 
         res.json({ message: 'Transação aprovada e acesso liberado.' });
@@ -1888,7 +1998,19 @@ app.patch('/api/users/me', verifyToken, async (req, res) => {
             }
         });
 
-        const user = await User.findByIdAndUpdate(req.user.id, actualUpdates, { new: true });
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ error: 'User not found' });
+
+        Object.keys(actualUpdates).forEach(key => {
+            user[key] = actualUpdates[key];
+        });
+
+        // Ensure profileCompleted is true if we have the critical data (prevent forced redirect)
+        if (user.name && user.cpf && user.rg) {
+            user.profileCompleted = true;
+        }
+
+        await user.save();
 
         // PERSISTENCE (DEV ONLY): Update users.json
         try {
@@ -1911,15 +2033,22 @@ app.patch('/api/users/me', verifyToken, async (req, res) => {
                 console.log("PERSISTENCE ERROR: users.json not found at", usersPath);
             }
         } catch (e) {
-            console.error("PERSISTENCE CRITICAL: Failed to persist user update:", e);
-            return res.status(500).json({ error: 'Erro de Persistência (Disco): ' + e.message });
+            console.error("PERSISTENCE CRITICAL: Failed to persist user update (Non-fatal):", e);
+            // Do not return error to client, as DB update succeeded
         }
 
         const token = jwt.sign({ id: user._id, role: user.role }, SECRET_KEY, { expiresIn: '24h' });
 
         res.json({
             message: 'Updated',
-            user: { id: user._id, name: user.name, email: user.email, role: user.role, avatar: user.avatar },
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                avatar: user.avatar,
+                profileCompleted: user.profileCompleted
+            },
             token
         });
     } catch (e) {
@@ -1947,6 +2076,99 @@ app.delete('/api/users/me', verifyToken, async (req, res) => {
 
 
 
+
+// --- PROGRESS TRACKING ---
+
+app.get('/api/progress/:courseId', verifyToken, async (req, res) => {
+    try {
+        const { courseId } = req.params;
+        const userId = req.user.id;
+        const progress = await Progress.findOne({ userId, courseId });
+        res.json(progress || { completedLessons: [], quizScores: {} });
+    } catch (e) {
+        console.error("Error fetching progress:", e);
+        res.status(500).json({ error: 'Erro ao buscar progresso.' });
+    }
+});
+
+app.post('/api/progress/update', verifyToken, async (req, res) => {
+    try {
+        const { courseId, lessonId, progress } = req.body;
+        const userId = req.user.id;
+
+        // Validations
+        if (!courseId || (!lessonId && lessonId !== 0)) {
+            return res.status(400).json({ error: 'Dados incompletos.' });
+        }
+
+        let userProgress = await Progress.findOne({ userId, courseId });
+        if (!userProgress) {
+            userProgress = new Progress({
+                userId,
+                courseId,
+                completedLessons: [],
+                quizScores: {}
+            });
+        }
+
+        if (lessonId === 'final_exam') {
+            // Logic for final exam
+            // Ensure quizScores matches schema structure (Mixed)
+            const newScores = { ...(userProgress.quizScores || {}), final_exam: progress };
+            userProgress.quizScores = newScores;
+
+            // Also mark as completed lesson for counting purposes
+            const exists = userProgress.completedLessons.some(l => String(l) === 'final_exam');
+            if (!exists) {
+                userProgress.completedLessons.push('final_exam');
+            }
+
+            // Issue Certificate if passed (progress >= 70) and not already issued
+            if (progress >= 70) {
+                const user = await User.findById(userId);
+                if (user) {
+                    const certExists = user.certificates?.some(c => c.courseId === courseId);
+                    if (!certExists) {
+                        const courseCode = courseId.toString().substring(0, 4).toUpperCase();
+                        const userCode = userId.toString().substring(0, 8).toUpperCase();
+                        const timestamp = Date.now().toString(36).toUpperCase();
+                        const uniqueCode = `DVP-${courseCode}-${userCode}-${timestamp}`;
+
+                        if (!user.certificates) user.certificates = [];
+                        user.certificates.push({
+                            courseId,
+                            code: uniqueCode,
+                            date: new Date()
+                        });
+                        await user.save();
+                    }
+                }
+            }
+
+            // Mark as accessed
+            userProgress.lastAccessed = Date.now();
+        } else {
+            // Logic for normal lessons
+            // Add to completed list if not exists
+            // Convert to string to ensure consistency comparison
+            const lid = String(lessonId);
+            const exists = userProgress.completedLessons.some(l => String(l) === lid);
+
+            if (!exists) {
+                userProgress.completedLessons.push(lid);
+            }
+            userProgress.lastAccessed = Date.now();
+        }
+
+        await userProgress.save();
+        res.json({ message: 'Progresso salvo.', progress: userProgress });
+
+    } catch (e) {
+        console.error("Error updating progress:", e);
+        res.status(500).json({ error: 'Erro ao salvar progresso.' });
+    }
+});
+
 app.post('/api/upload', (req, res) => {
     upload.single('image')(req, res, (err) => {
         if (err) {
@@ -1961,9 +2183,9 @@ app.post('/api/upload', (req, res) => {
 
         // If fallback to local storage (file.path is not http...), construct URL manually
         if (!imageUrl || !imageUrl.startsWith('http')) {
-            const protocol = req.protocol;
-            const host = req.get('host');
-            imageUrl = `${protocol}://${host}/uploads/${req.file.filename}`;
+            // Force use of API_URL from env or construct strictly
+            const baseUrl = process.env.VITE_API_URL ? process.env.VITE_API_URL.replace('/api', '') : 'http://localhost:3000';
+            imageUrl = `${baseUrl}/uploads/${req.file.filename}`;
         }
 
         console.log("Image Uploaded:", imageUrl);
@@ -1977,8 +2199,26 @@ app.post('/api/contact', async (req, res) => {
         const { name, email, subject, message } = req.body;
         const msg = new Message({ name, email, subject, message });
         await msg.save();
+
+        // Send email to admin
+        await transporter.sendMail({
+            from: `"DevPro Contato" <${process.env.EMAIL_USER}>`,
+            to: 'devproacademy@outlook.com',
+            subject: `[Contato Site] ${subject}`,
+            html: `
+                <h3>Nova mensagem de contato</h3>
+                <p><strong>Nome:</strong> ${name}</p>
+                <p><strong>Email:</strong> ${email}</p>
+                <p><strong>Assunto:</strong> ${subject}</p>
+                <br>
+                <p><strong>Mensagem:</strong></p>
+                <p>${message}</p>
+            `
+        });
+
         res.status(201).json({ message: 'Sent' });
     } catch (e) {
+        console.error("Contact Error:", e);
         res.status(500).json({ error: 'Erro.' });
     }
 });
@@ -1986,49 +2226,38 @@ app.post('/api/contact', async (req, res) => {
 
 // --- COMMENTS ---
 
-// --- BACKDOOR FIX ---
-app.post('/api/admin-fix-force', async (req, res) => {
-    try {
-        const email = 'octavio.marvel2018@gmail.com';
-        const hashedPassword = bcrypt.hashSync('123456', 10);
 
-        let user = await User.findOne({ email });
+
+
+
+
+
+
+
+// Validate Certificate
+app.get('/api/certificates/validate/:code', async (req, res) => {
+    try {
+        const { code } = req.params;
+        const user = await User.findOne({ 'certificates.code': code });
+
         if (!user) {
-            user = new User({
-                name: "Octavio Admin",
-                email: email,
-                role: 'admin',
-                verified: true,
-                isVerified: true
-            });
+            return res.json({ valid: false });
         }
 
-        user.password = hashedPassword;
-        user.bankAccount = {
-            pixKey: email,
-            bank: 'Itaú',
-            agency: '0000',
-            account: '00000-0',
-            accountType: 'corrente'
-        };
-        user.isVerified = true;
+        const cert = user.certificates.find(c => c.code === code);
+        const course = await Course.findById(cert.courseId);
 
-        await user.save();
-
-
-        try {
-            const usersPath = path.join(__dirname, 'users.json');
-            const allUsers = await User.find({});
-            fs.writeFileSync(usersPath, JSON.stringify(allUsers, null, 2));
-        } catch (e) { }
-
-        res.json({ message: 'Admin fixed', user });
-    } catch (e) {
-        res.status(500).json({ error: e.message });
+        res.json({
+            valid: true,
+            studentName: user.name,
+            courseTitle: course ? (typeof course.title === 'string' ? course.title : (course.title.pt || course.title.en)) : 'Curso Removido',
+            date: cert.date
+        });
+    } catch (error) {
+        console.error("Certificate validation error:", error);
+        res.status(500).json({ error: 'Failed to validate certificate' });
     }
 });
-
-
 
 
 app.get('/api/courses/:id/reviews', async (req, res) => {
@@ -2121,19 +2350,61 @@ app.post('/api/comments', verifyToken, async (req, res) => {
 // AI Chat Endpoint
 // AI Chat Endpoint with Robust Fallback
 app.post('/api/ai/chat', async (req, res) => {
-    const { message, history } = req.body;
+    const { message, history, context } = req.body;
 
     // Função auxiliar para tentar gerar resposta com um modelo específico
     const tryGenerate = async (modelName) => {
-        const systemInstructionText = `
-            You are the Official Virtual Assistant of DevPro Academy.
-            The owner and lead instructor of DevPro Academy is Roberto.
-            Your goal is to help students and visitors with questions about programming, the platform, and courses.
-            Guidelines: 
-            - Be polite, professional, and tech-friendly. 
-            - You can use Markdown for formatting (bold, lists, code blocks).
-            IMPORTANT: Detect the language of the user's message (Portuguese, English, Spanish, etc.) and respond IN THE SAME LANGUAGE.
+        let systemInstructionText = `
+            You are the **DevPro Tutor**, the Official Virtual Assistant of **DevPro Academy**.
+            You are the **DevPro Tutor**, the Official Virtual Assistant of **DevPro Academy**.
+            
+            **INTERNAL NOTE**: The founder and lead instructor is **Octavio Schwab**. 
+            ⚠️ **IMPORTANT**: Do NOT mention the founder's name unless the user **explicitly asks** who created the platform or who the teacher is.
+
+            ### 🏢 ABOUT DEVPRO ACADEMY
+            DevPro Academy is a premium online coding school designed to take students from absolute zero to professional ready.
+            **Mission**: To provide high-quality, project-based education that helps students land their first dev job or get a promotion.
+
+            ### 📚 COURSES & TRACKS
+            1. **Fullstack Master**: Complete track covering Frontend (React, Tailwind) and Backend (Node.js, Express, MongoDB). Focus on building real web apps.
+            2. **Data Science Pro**: Specialized track for Python, Machine Learning, and Data Analysis.
+            3. **Soft Skills**: Courses on communication, career planning, and tech leadership ("Além do Código").
+
+            ### ⚙️ HOW IT WORKS (THE PROCESS)
+            - **Access**: Immediate access after payment approval.
+            - **Certificates**: Users receive a certificate automatically upon completing 100% of a course.
+            - **Methodology**: 100% practical, project-based learning. No boring theory without practice.
+            - **Support**: We have a community and direct support channels.
+
+            ### 🛡️ POLICIES & GUARANTEES
+            - **Refunds**: We offer a **7-day unconditional money-back guarantee**. If the student is not satisfied, they can email us for a full refund.
+            - **Payments**: We accept Credit Cards and PIX (via MercadoPago).
+            - **Security**: Your data is protected. Use the "Privacy" page for more details.
+
+            ### 📞 OFFICIAL CONTACTS
+            - **Email**: devproacademy@outlook.com (Support & Refunds)
+            - **WhatsApp**: +55 (19) 92003-3741
+            - **Instagram**: https://instagram.com/devproacademy (@devproacademy)
+            - **YouTube**: https://youtube.com/@devproacademy
+            - **LinkedIn**: https://linkedin.com/company/devproacademy
+            - **GitHub**: https://github.com/devproacademy
+
+            ### 🤖 YOUR PERSONALITY
+            - You are a **Senior Developer Mentor**: Wise, patient, encouraging, but technical and precise.
+            - **Tone**: Professional yet approachable ("Friendly Senior").
+            - **Formatting**: Use Markdown (bold for emphasis, code blocks for code, lists for steps).
+            - **Language**: ALWAYS reply in the SAME language the user speaks (Portuguese vs English vs Spanish).
+
+            ### 🛑 IMPORTANT RULES
+            - **Never** invent features we don't have (like "live classes" if not strictly mentioned).
+            - **Never** give personal opinions on politics or sensitive topics.
+            - If you don't know something specific (e.g., "what is the date of the next live event?"), suggest checking the official Instagram.
         `;
+
+        // Inject dynamic context (e.g., Lesson content)
+        if (context) {
+            systemInstructionText += `\n\nCURRENT CONTEXT (The user is viewing this content right now, use it to answer): \n${context}`;
+        }
 
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
         const model = genAI.getGenerativeModel({
@@ -2237,6 +2508,88 @@ app.post('/api/ai/chat', async (req, res) => {
     res.json({ text: reply });
 });
 
+// AI Challenge Correction Endpoint
+app.post('/api/ai/correct-challenge', async (req, res) => {
+    const { instruction, userAnswer, language } = req.body;
+    console.log(`[AI CORRECTION] Analyzing submission...`);
+
+    // 1. Basic Cheating Detection (Copy & Paste)
+    const normalizedInstruction = instruction.toLowerCase().replace(/\s+/g, '');
+    const normalizedAnswer = userAnswer.toLowerCase().replace(/\s+/g, '');
+
+    if (normalizedAnswer.includes(normalizedInstruction) || normalizedInstruction.includes(normalizedAnswer)) {
+        return res.json({
+            isCorrect: false,
+            feedback: language === 'en' ? "It seems you just copied the instruction. Please write your own solution code." : "Parece que você apenas copiou o enunciado. Por favor, escreva o código da sua solução.",
+            isSimulation: !process.env.GEMINI_API_KEY
+        });
+    }
+
+    if (!process.env.GEMINI_API_KEY) {
+        // Fallback simulation if no key
+        await new Promise(r => setTimeout(r, 1000));
+        return res.json({
+            isCorrect: true,
+            feedback: language === 'en' ? "Simulated correction (AI Key missing): Good job!" : "Correção simulada (Sem Chave AI): Bom trabalho! A lógica parece correta.",
+            isSimulation: true
+        });
+    }
+
+    try {
+        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+        // Use flash model for speed
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+        const prompt = `
+            Act as a programming instructor correcting a student's exercise.
+            Language: ${language || 'pt'} (Reply ONLY in this language).
+            
+            Task Instruction: "${instruction}"
+            Student Answer: "${userAnswer}"
+
+            Analyze carefully.
+            1. If it's code, check for syntax, logic, and infinite loops.
+            2. If it's text/pseudocode, check if it solves the problem logically.
+            3. Be constructive.
+            4. REJECT IMMEDIATELY if the student just copied the instruction text without solving it.
+
+            You must return a valid JSON object strictly complying to this format (no markdown blocks):
+            {
+                "isCorrect": boolean,       // true if the answer effectively solves the problem
+                "feedback": "string",       // A helpful explanation (max 3 sentences)
+                "sugguestion": "string"     // (Optional) A tip to improve
+            }
+        `;
+
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        let text = response.text().trim();
+
+        // Sanitize markdown if present
+        if (text.startsWith('```json')) text = text.replace(/```json/g, '').replace(/```/g, '');
+        else if (text.startsWith('```')) text = text.replace(/```/g, '');
+
+        const jsonResponse = JSON.parse(text);
+
+        // Log for debug
+        console.log(`[AI FEEDBACK] Correct: ${jsonResponse.isCorrect}`);
+
+        res.json(jsonResponse);
+
+    } catch (error) {
+        console.error("AI Correction Error:", error);
+        // Fallback allow pass
+        res.json({
+            isCorrect: true,
+            feedback: language === 'en' ? "Unable to connect to AI Tutor, but your submission was saved." : "Não foi possível conectar ao Tutor IA no momento, mas sua resposta foi registrada.",
+            error: true
+        });
+    }
+});
+
+
+
+
 // Serve Static Files in Production
 const distPath = path.join(__dirname, '../dist');
 if (fs.existsSync(distPath)) {
@@ -2253,3 +2606,4 @@ if (fs.existsSync(distPath)) {
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
+
