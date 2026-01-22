@@ -15,7 +15,7 @@ async function runTest() {
         const loginRes = await fetch(`${API_URL}/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: 'testprof@devpro.com', password: 'password123!', rememberMe: false })
+            body: JSON.stringify({ email: 'octavio.marvel2018@gmail.com', password: '123456', rememberMe: false })
         });
         const loginData = await loginRes.json();
         if (!loginRes.ok) throw new Error("Login failed: " + JSON.stringify(loginData));

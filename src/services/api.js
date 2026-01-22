@@ -153,7 +153,7 @@ export const api = {
     },
     updateMe: async (data) => {
         const res = await fetch(`${API_URL}/users/me`, {
-            method: "PATCH",
+            method: "PUT",
             headers: getHeaders(),
             body: JSON.stringify(data)
         });

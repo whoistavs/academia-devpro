@@ -14,7 +14,7 @@ const TestComponent = () => {
                     <button onClick={logout}>Logout</button>
                 </>
             ) : (
-                <button onClick={() => login('fake-token', { email: 'test@example.com' })}>Login</button>
+                <button onClick={() => login({ email: 'test@example.com' }, 'fake-token')}>Login</button>
             )}
         </div>
     );
@@ -28,20 +28,20 @@ describe('AuthContext', () => {
             </AuthProvider>
         );
 
-        
+
         expect(screen.queryByTestId('user-email')).toBeNull();
 
-        
+
         fireEvent.click(screen.getByText('Login'));
 
-        
+
         expect(screen.getByTestId('user-email')).toHaveTextContent('test@example.com');
         expect(localStorage.getItem('token')).toBe('fake-token');
 
-        
+
         fireEvent.click(screen.getByText('Logout'));
 
-        
+
         expect(screen.queryByTestId('user-email')).toBeNull();
         expect(localStorage.getItem('token')).toBeNull();
     });

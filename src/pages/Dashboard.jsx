@@ -360,7 +360,6 @@ const Dashboard = () => {
             setUploadStatus("Removendo foto...");
 
             await api.updateMe({
-                name: user.name,
                 avatar: ""
             });
 
@@ -376,7 +375,6 @@ const Dashboard = () => {
                 return;
             }
             setUploadStatus(`Erro ao remover: ${error.message}`);
-            updateUser({ ...user, avatar: "" });
         }
     };
 

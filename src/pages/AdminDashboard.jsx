@@ -304,7 +304,6 @@ const AdminDashboard = () => {
     const [deletingId, setDeletingId] = useState(null);
 
     const handleDelete = async (id) => {
-        // console.log("Tentando excluir usuário:", id);
         if (!id) return alert("Erro: ID de usuário inválido.");
 
         // Direct delete without confirm for debugging
@@ -313,7 +312,6 @@ const AdminDashboard = () => {
             await api.adminDeleteUser(id);
             // Force refresh of the list
             await queryClient.invalidateQueries({ queryKey: ['users'] });
-            // console.log("Usuário excluído com sucesso.");
         } catch (err) {
             console.error(err);
             alert('Erro ao excluir: ' + (err.message || "Erro desconhecido"));

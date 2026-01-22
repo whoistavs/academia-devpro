@@ -12,7 +12,7 @@
     "email": "octavio.marvel2018@gmail.com",
     "password": "$2a$08$OfIo9DHpdlsFYo0KLBuWAOiyXAhD23p1SvH21T9rKhex22eJLL2kG",
     "role": "admin",
-    "avatar": "http://localhost:3000/uploads/audit_test_1768929846965.png",
+    "avatar": "https://res.cloudinary.com/dksghbmpz/image/upload/v1769102495/devpro_academy/iucmyabkat2qgfzmeryo.jpg",
     "cpf": "11111111111",
     "rg": "111111111",
     "birthDate": "1990-01-01T00:00:00.000Z",

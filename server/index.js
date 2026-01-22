@@ -43,7 +43,7 @@ if (result.error) {
     console.error("Error loading .env from:", envPath, result.error);
 } else {
     // console.log(".env loaded from:", envPath);
-    console.log("Parsed Keys:", Object.keys(result.parsed || {}));
+
 }
 
 const app = express();
@@ -1487,7 +1487,7 @@ app.put('/api/users/bank-account', verifyToken, async (req, res) => {
 
 app.post('/api/verify-email', async (req, res) => {
     const { token } = req.body;
-    console.log(`Verifying token: ${token}`); // DEBUG log
+
     try {
         const user = await User.findOne({ verificationToken: token });
         if (!user) {
@@ -1984,10 +1984,9 @@ app.get('/api/users/me', verifyToken, async (req, res) => {
         res.status(500).json({ error: 'System Error' });
     }
 });
-app.patch('/api/users/me', verifyToken, async (req, res) => {
+const handleUserUpdate = async (req, res) => {
     try {
         const updates = req.body; // Allow dynamic updates (name, avatar, etc)
-        // Security check: Only allow specific fields
         // Security check: Only allow specific fields
         const allowedUpdates = ['name', 'avatar', 'cpf', 'rg', 'birthDate', 'username', 'profileCompleted'];
         const actualUpdates = {};
@@ -2054,7 +2053,10 @@ app.patch('/api/users/me', verifyToken, async (req, res) => {
     } catch (e) {
         res.status(500).json({ error: 'Erro.' });
     }
-});
+};
+
+app.patch('/api/users/me', verifyToken, handleUserUpdate);
+app.put('/api/users/me', verifyToken, handleUserUpdate);
 
 app.post('/api/users/delete-me', verifyToken, async (req, res) => {
     try {
