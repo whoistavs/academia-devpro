@@ -179,16 +179,15 @@ const Login = () => {
                         </div>
                     </div>
 
-                    <SecurityCaptcha onValidate={setCaptchaValid} />
+                    {/* 
+                    <SecurityCaptcha onValidate={setCaptchaValid} /> 
+                    */}
 
                     <div>
                         <button
                             type="submit"
-                            disabled={!captchaValid}
-                            className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white transition-colors ${captchaValid
-                                ? 'bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
-                                : 'bg-gray-400 cursor-not-allowed'
-                                }`}
+                            // disabled={!captchaValid}
+                            className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white transition-colors bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
                         >
                             {t('auth.login.submit')}
                         </button>
