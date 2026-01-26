@@ -50,6 +50,10 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const SECRET_KEY = process.env.JWT_SECRET || "chave_secreta_super_segura";
 
+app.use(cors()); // Allow all origins (Netlify, Localhost, etc)
+app.use(express.json()); // Ensure JSON body parsing is on too if missing
+
+
 
 
 connectDB().then(async () => {

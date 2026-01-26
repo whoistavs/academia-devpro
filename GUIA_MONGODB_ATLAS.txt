@@ -1,0 +1,48 @@
+==============================================================================
+GUIA RÁPIDO: CONFIGURANDO O MONGODB ATLAS (BANCO DE DADOS NA NUVEM)
+==============================================================================
+
+Para que seu site funcione profissionalmente 24/7, vamos configurar um banco de dados gratuito no MongoDB Atlas.
+
+PASSO 1: CRIAR CONTA E CLUSTER
+1. Acesse: https://www.mongodb.com/cloud/atlas/register
+2. Crie uma conta (pode usar o Google).
+3. Após logar, você verá uma tela para criar um "Cluster".
+4. Escolha o plano **M0 FREE** (Gratuito para sempre).
+5. Provider: Escolha **AWS**.
+6. Region: Escolha a mais próxima **N. Virginia (us-east-1)**.
+7. Clique em **Create Deployment** ou **Create Cluster**.
+
+PASSO 2: CRIAR USUÁRIO DO BANCO
+1. A tela vai pedir "Security Quickstart".
+2. **Username:** `admin`
+3. **Password:** Crie uma senha simples (ex: `admin123456`) e ANOTE.
+4. Clique em **Create Database User**.
+
+PASSO 3: LIBERAR ACESSO (NETWORK ACCESS)
+1. Na mesma tela (ou no menu lateral "Network Access"), vá em "IP Access List".
+2. Clique em **Add IP Address**.
+3. Selecione **Allow Access from Anywhere** (0.0.0.0/0).
+   * Isso é necessário para que o Render (servidor) consiga conectar no banco.
+4. Clique em **Confirm**.
+
+PASSO 4: PEGAR O LINK DE CONEXÃO
+1. Vá no menu lateral **Database**.
+2. Clique no botão **Connect** (perto do nome do Cluster).
+3. Escolha **Drivers**.
+4. Você verá um link parecido com este:
+   `mongodb+srv://admin:<db_password>@cluster0.abcde.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
+5. **COPIE ESSE LINK.**
+
+PASSO 5: CONFIGURAR NO RENDER
+1. Volte para o painel do seu site no Render: https://dashboard.render.com
+2. Clique no seu serviço `devpro-backend`.
+3. Vá em **Environment**.
+4. Clique em **Add Environment Variable**.
+5. **Key:** `MONGODB_URI`
+6. **Value:** Cole o link que você copiou do passo 4.
+   * **IMPORTANTE:** Substitua `<db_password>` pela senha que você criou no Passo 2 (tire os símbolos `<` e `>`).
+   * Exemplo final: `mongodb+srv://admin:admin123456@cluster0.abcde.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
+7. Clique em **Save Changes**.
+
+O Render vai reiniciar o servidor automaticamente. Assim que ele ficar "Live" de novo, o erro de "Failed fetch" vai sumir e seu site estará voando! 🚀
