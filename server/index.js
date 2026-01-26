@@ -1980,10 +1980,23 @@ app.get('/api/users/me', verifyToken, async (req, res) => {
     try {
         const user = await User.findById(req.user.id).select('-password');
         if (!user) return res.status(404).json({ error: 'User not found' });
-        // Manually constructing response to ensuring fields or just send user
-        // user includes authProvider if it's in schema. 
-        // Let's ensure we return it. user is a Mongoose doc, so .toJSON() is automatic.
-        res.json(user);
+
+        // Explicitly returning fields to ensure authProvider is present for frontend logic
+        res.json({
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            avatar: user.avatar,
+            username: user.username,
+            profileCompleted: user.profileCompleted,
+            purchasedCourses: user.purchasedCourses || [],
+            authProvider: user.authProvider || 'local', // Default to local if missing
+            bankAccount: user.bankAccount,
+            xp: user.xp,
+            level: user.level,
+            createdAt: user.createdAt
+        });
     } catch (e) {
         res.status(500).json({ error: 'System Error' });
     }

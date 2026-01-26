@@ -21,8 +21,9 @@ const Login = () => {
     const googleLogin = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
             try {
-                const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-                const response = await fetch(`${API_URL}/api/auth/google`, {
+                // const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+                // Using the specific endpoint for Google Auth
+                const response = await fetch(`https://devpro-backend.onrender.com/api/auth/google`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ access_token: tokenResponse.access_token })
