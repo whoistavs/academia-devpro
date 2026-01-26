@@ -3,7 +3,9 @@ import { useNavigate } from "react-router-dom";
 
 
 
-const API_URL = import.meta.env.VITE_API_URL || "https://devpro-backend.onrender.com/api";
+// FORCING PRODUCTION URL (DEBUGGING)
+const API_URL = "https://devpro-backend.onrender.com/api";
+// const API_URL = import.meta.env.VITE_API_URL || "https://devpro-backend.onrender.com/api";
 
 
 
