@@ -2364,6 +2364,51 @@ app.post('/api/comments', verifyToken, async (req, res) => {
 });
 
 // --- ADMIN FINANCIALS ---
+app.get('/api/admin/seed', async (req, res) => {
+    try {
+        const count = await Course.countDocuments();
+        if (count > 0) return res.json({ message: 'Banco já possui cursos.' });
+
+        const courses = [
+            {
+                title: { pt: 'Fullstack Master: Do Zero ao Profissional', en: 'Fullstack Master: From Zero to Hero' },
+                description: { pt: 'Domine React, Node.js e construa aplicações completas.', en: 'Master React, Node.js and build complete apps.' },
+                price: 29.90,
+                category: 'Front-end',
+                slug: 'fullstack-master',
+                status: 'published',
+                image: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=2070&auto=format&fit=crop',
+                rating: 4.8,
+                totalStudents: 1250,
+                modulos: [
+                    { id: 1, title: 'Introdução ao React', aulas: [{ id: 101, title: 'Configurando o Ambiente' }, { id: 102, title: 'Componentes e Props' }] },
+                    { id: 2, title: 'Node.js e API', aulas: [{ id: 201, title: 'Criando servidor Express' }, { id: 202, title: 'Conectando ao MongoDB' }] }
+                ]
+            },
+            {
+                title: { pt: 'Python para Data Science', en: 'Python for Data Science' },
+                description: { pt: 'Aprenda análise de dados, Pandas e Machine Learning.', en: 'Learn data analysis, Pandas and Machine Learning.' },
+                price: 39.90,
+                category: 'Data Science',
+                slug: 'python-data-science',
+                status: 'published',
+                image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=2070&auto=format&fit=crop',
+                rating: 4.9,
+                totalStudents: 850,
+                modulos: [
+                    { id: 1, title: 'Fundamentos de Python', aulas: [{ id: 101, title: 'Variáveis e Tipos' }] },
+                    { id: 2, title: 'Pandas & NumPy', aulas: [{ id: 201, title: 'Dataframes' }] }
+                ]
+            }
+        ];
+
+        await Course.insertMany(courses);
+        res.json({ message: 'Sucesso! Cursos criados.' });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
 app.get('/api/admin/financials', verifyAdmin, async (req, res) => {
     try {
         const transactions = await Transaction.find().sort({ date: -1 });
