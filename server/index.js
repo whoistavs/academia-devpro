@@ -2232,6 +2232,16 @@ app.post('/api/contact', async (req, res) => {
 
 // --- COMMENTS ---
 
+app.get('/api/courses', async (req, res) => {
+    try {
+        const courses = await Course.find({ status: 'published' });
+        res.json(courses);
+    } catch (e) {
+        console.error("Error fetching courses:", e);
+        res.status(500).json({ error: 'Erro ao buscar cursos.' });
+    }
+});
+
 
 
 
