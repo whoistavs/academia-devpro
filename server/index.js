@@ -2353,6 +2353,38 @@ app.post('/api/comments', verifyToken, async (req, res) => {
     }
 });
 
+// --- ADMIN FINANCIALS ---
+app.get('/api/admin/financials', verifyAdmin, async (req, res) => {
+    try {
+        const transactions = await Transaction.find().sort({ date: -1 });
+        const courses = await Course.find();
+
+        const totalRevenue = transactions
+            .filter(t => t.status === 'approved')
+            .reduce((acc, t) => acc + (t.amount || 0), 0);
+
+        const activeStudents = await User.countDocuments({ role: 'student' });
+
+        // Mock data if empty (for initial dashboard feel)
+        const recentSales = transactions.slice(0, 5).map(t => ({
+            id: t._id,
+            user: "Student", // In real app, populate user
+            amount: t.amount,
+            date: t.date,
+            status: t.status
+        }));
+
+        res.json({
+            totalRevenue,
+            activeStudents,
+            recentSales
+        });
+    } catch (e) {
+        console.error("Financials Error:", e);
+        res.status(500).json({ error: 'Failed fetch financials' });
+    }
+});
+
 // AI Chat Endpoint
 // AI Chat Endpoint with Robust Fallback
 app.post('/api/ai/chat', async (req, res) => {
