@@ -38,7 +38,8 @@ const Login = () => {
                     email: data.email,
                     role: data.role,
                     avatar: data.avatar,
-                    profileCompleted: data.profileCompleted
+                    profileCompleted: data.profileCompleted,
+                    authProvider: data.authProvider // Saving auth provider
                 }, data.accessToken);
                 navigate('/dashboard');
             } catch (err) {
