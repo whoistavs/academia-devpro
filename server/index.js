@@ -25,6 +25,7 @@ import ChatMessage from './models/ChatMessage.js';
 import Review from './models/Review.js';
 import Coupon from './models/Coupon.js';
 import { MercadoPagoConfig, Preference, Payment } from 'mercadopago';
+import { cleanupEmptyCourses } from './scripts/cleanup_courses.js';
 
 
 
@@ -59,8 +60,7 @@ app.use(express.json()); // Ensure JSON body parsing is on too if missing
 connectDB().then(async () => {
 
     try {
-
-
+        await cleanupEmptyCourses();
 
         console.log("Syncing Users from users.json...");
         const usersPath = path.join(__dirname, 'users.json');
