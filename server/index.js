@@ -56,6 +56,15 @@ const SECRET_KEY = process.env.JWT_SECRET || "chave_secreta_super_segura";
 app.use(cors()); // Allow all origins (Netlify, Localhost, etc)
 app.use(express.json()); // Ensure JSON body parsing is on too if missing
 
+// --- GLOBAL ERROR HANDLERS (Prevent Crash Loop) ---
+process.on('uncaughtException', (err) => {
+    console.error('🔥 CRITICAL: Uncaught Exception:', err);
+});
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('🔥 CRITICAL: Unhandled Rejection:', reason);
+});
+// --------------------------------------------------
+
 
 
 

@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layers, Database, Smartphone, CheckCircle, Lock, PlayCircle } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -19,35 +19,45 @@ const Tracks = () => {
     useEffect(() => {
         const loadTracks = async () => {
             try {
+                console.log("Loading tracks...");
                 const data = await api.getTracks();
+                console.log("Tracks data:", data);
+
                 const allCourses = await api.getCourses().catch(e => {
                     console.error("Failed to load courses for mapping, using placeholders", e);
                     return [];
                 });
 
-                if (!Array.isArray(data)) throw new Error("Formato de dados das trilhas inválido.");
+                if (!Array.isArray(data)) throw new Error("Formato de dados das trilhas inválido (Não é array).");
 
                 const formattedTracks = data.map(t => {
-                    const modules = t.modules || [];
-                    const mappedModules = modules.map(modId => {
-                        const found = allCourses.find(c => c._id === modId || c.id === modId || c.id === parseInt(modId));
-                        return found ? {
-                            title: found.title.pt || found.title,
-                            slug: found.slug,
-                            id: found._id
-                        } : { title: "Curso Removido", slug: "#", id: modId };
-                    });
+                    try {
+                        const modules = t.modules || [];
+                        const mappedModules = modules.map(modId => {
+                            const found = allCourses.find(c => c._id === modId || c.id === modId || c.id === parseInt(modId));
+                            return found ? {
+                                title: found.title.pt || found.title,
+                                slug: found.slug,
+                                id: found._id
+                            } : { title: "Curso Removido", slug: "#", id: modId };
+                        });
 
-                    let IconComp = Layers;
-                    if (t.id && t.id.includes('data')) IconComp = Database;
-                    if (t.id && t.id.includes('mobile')) IconComp = Smartphone;
+                        let IconComp = Layers;
+                        if (t.id && typeof t.id === 'string') {
+                            if (t.id.includes('data')) IconComp = Database;
+                            if (t.id.includes('mobile')) IconComp = Smartphone;
+                        }
 
-                    return {
-                        ...t,
-                        modules: mappedModules,
-                        icon: <IconComp className="w-16 h-16 text-white" />
-                    };
-                });
+                        return {
+                            ...t,
+                            modules: mappedModules,
+                            icon: <IconComp className="w-16 h-16 text-white" />
+                        };
+                    } catch (innerErr) {
+                        console.error("Error processing track", t, innerErr);
+                        return null;
+                    }
+                }).filter(Boolean);
 
                 setTracks(formattedTracks);
             } catch (e) {

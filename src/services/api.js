@@ -4,8 +4,9 @@ import { useNavigate } from "react-router-dom";
 
 
 // FORCING PRODUCTION URL (DEBUGGING)
-const API_URL = "https://devpro-backend.onrender.com/api";
-// const API_URL = import.meta.env.VITE_API_URL || "https://devpro-backend.onrender.com/api";
+// FORCING PRODUCTION URL (DEBUGGING)
+// const API_URL = "https://devpro-backend.onrender.com/api";
+const API_URL = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:3000/api`;
 
 
 
@@ -61,6 +62,18 @@ export const api = {
         if (!res.ok) {
             const err = await res.json();
             throw new Error(err.error || "Login fail");
+        }
+        return res.json();
+    },
+    googleLogin: async (accessToken) => {
+        const res = await fetch(`${API_URL}/auth/google`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ access_token: accessToken })
+        });
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.error || "Google login failed");
         }
         return res.json();
     },
