@@ -285,6 +285,39 @@ export const api = {
         return res.json();
     },
 
+    // Tracks API
+    getTracks: async () => {
+        const res = await fetch(`${API_URL}/tracks`, { headers: getHeaders() });
+        if (!res.ok) throw new Error("Failed to fetch tracks");
+        return res.json();
+    },
+    createTrack: async (data) => {
+        const res = await fetch(`${API_URL}/tracks`, {
+            method: "POST",
+            headers: getHeaders(),
+            body: JSON.stringify(data),
+        });
+        if (!res.ok) throw new Error("Failed create track");
+        return res.json();
+    },
+    updateTrack: async (id, data) => {
+        const res = await fetch(`${API_URL}/tracks/${id}`, {
+            method: "PUT",
+            headers: getHeaders(),
+            body: JSON.stringify(data),
+        });
+        if (!res.ok) throw new Error("Failed update track");
+        return res.json();
+    },
+    deleteTrack: async (id) => {
+        const res = await fetch(`${API_URL}/tracks/${id}`, {
+            method: "DELETE",
+            headers: getHeaders()
+        });
+        if (!res.ok) throw new Error("Failed delete track");
+        return res.json();
+    },
+
 
 
     getUsers: async () => {

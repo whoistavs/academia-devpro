@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
-import { Trash2, Users, ShieldAlert, Edit, BookOpen, DollarSign, TrendingUp, Wallet, ArrowUpRight, Check, Ban, Clock, X, Tag } from 'lucide-react';
+import { Trash2, Users, ShieldAlert, Edit, BookOpen, DollarSign, TrendingUp, Wallet, ArrowUpRight, Check, Ban, Clock, X, Tag, Layers } from 'lucide-react';
 
 import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
@@ -265,6 +265,241 @@ const PendingPaymentsSection = () => {
     );
 };
 
+const TracksSection = () => {
+    const queryClient = useQueryClient();
+    const { data: tracks = [], isLoading } = useQuery({
+        queryKey: ['tracks'],
+        queryFn: api.getTracks
+    });
+
+    // We need all courses to populate selection dropdown
+    const { data: allCourses = [] } = useQuery({
+        queryKey: ['courses', 'all'],
+        queryFn: () => api.getCourses("all=true")
+    });
+
+    const [editingTrack, setEditingTrack] = useState(null);
+    const [isCreating, setIsCreating] = useState(false);
+
+    // Form State
+    const [formData, setFormData] = useState({
+        id: '',
+        title: '',
+        description: '',
+        bundlePrice: 0,
+        duration: '',
+        gradient: 'from-indigo-500 to-purple-600',
+        modules: [] // Array of IDs
+    });
+
+    const resetForm = () => {
+        setFormData({
+            id: '',
+            title: '',
+            description: '',
+            bundlePrice: 0,
+            duration: '',
+            gradient: 'from-indigo-500 to-purple-600',
+            modules: []
+        });
+        setEditingTrack(null);
+        setIsCreating(false);
+    };
+
+    const handleEdit = (track) => {
+        setEditingTrack(track);
+        setFormData({
+            id: track.id,
+            title: track.title,
+            description: track.description,
+            bundlePrice: track.bundlePrice || track.price,
+            duration: track.duration,
+            gradient: track.gradient,
+            modules: track.modules || []
+        });
+        setIsCreating(true);
+    };
+
+    const handleDelete = async (id) => {
+        if (!window.confirm("Tem certeza que deseja excluir esta trilha?")) return;
+        try {
+            await api.deleteTrack(id);
+            alert("Trilha excluída!");
+            queryClient.invalidateQueries({ queryKey: ['tracks'] });
+        } catch (e) {
+            alert("Erro ao excluir: " + e.message);
+        }
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            if (editingTrack) {
+                // Update
+                // Note: We use 'id' field for updating typically, or the _id.
+                // Our API implementation tries both.
+                await api.updateTrack(editingTrack.id, formData); // Using string ID
+                alert("Trilha atualizada!");
+            } else {
+                // Create
+                await api.createTrack(formData);
+                alert("Trilha criada!");
+            }
+            queryClient.invalidateQueries({ queryKey: ['tracks'] });
+            resetForm();
+        } catch (e) {
+            alert("Erro ao salvar: " + e.message);
+        }
+    };
+
+    const toggleModule = (courseId) => {
+        setFormData(prev => {
+            if (prev.modules.includes(courseId)) {
+                return { ...prev, modules: prev.modules.filter(id => id !== courseId) };
+            } else {
+                return { ...prev, modules: [...prev.modules, courseId] };
+            }
+        });
+    };
+
+    if (isLoading) return <TableSkeleton rows={2} />;
+
+    return (
+        <div className="bg-white dark:bg-gray-800 shadow-xl rounded-lg overflow-hidden border border-purple-200 dark:border-purple-900 mb-8">
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700 bg-purple-50 dark:bg-purple-900/20 flex justify-between items-center">
+                <h2 className="text-xl font-semibold text-purple-800 dark:text-purple-100 flex items-center">
+                    <Layers className="w-5 h-5 mr-2" />
+                    Gerenciar Trilhas ({tracks.length})
+                </h2>
+                {!isCreating && (
+                    <button
+                        onClick={() => setIsCreating(true)}
+                        className="bg-purple-600 text-white px-3 py-1 rounded text-sm hover:bg-purple-700"
+                    >
+                        Criar Nova Trilha
+                    </button>
+                )}
+            </div>
+
+            <div className="p-6">
+                {isCreating ? (
+                    <form onSubmit={handleSubmit} className="space-y-4 mb-6 bg-gray-50 dark:bg-gray-700/30 p-4 rounded-lg">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium dark:text-gray-300">ID (Slug único)</label>
+                                <input
+                                    type="text"
+                                    className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                    value={formData.id}
+                                    onChange={e => setFormData({ ...formData, id: e.target.value })}
+                                    disabled={!!editingTrack} // Cannot change ID typically
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium dark:text-gray-300">Título</label>
+                                <input
+                                    type="text"
+                                    className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                    value={formData.title}
+                                    onChange={e => setFormData({ ...formData, title: e.target.value })}
+                                    required
+                                />
+                            </div>
+                            <div className="md:col-span-2">
+                                <label className="block text-sm font-medium dark:text-gray-300">Descrição</label>
+                                <textarea
+                                    className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                    value={formData.description}
+                                    onChange={e => setFormData({ ...formData, description: e.target.value })}
+                                    rows={2}
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium dark:text-gray-300">Preço do Pacote (R$)</label>
+                                <input
+                                    type="number"
+                                    className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                    value={formData.bundlePrice}
+                                    onChange={e => setFormData({ ...formData, bundlePrice: parseFloat(e.target.value) })}
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium dark:text-gray-300">Duração Estimada</label>
+                                <input
+                                    type="text"
+                                    className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                    value={formData.duration}
+                                    onChange={e => setFormData({ ...formData, duration: e.target.value })}
+                                />
+                            </div>
+                            <div className="md:col-span-2">
+                                <label className="block text-sm font-medium dark:text-gray-300 mb-2">Selecionar Cursos</label>
+                                <div className="max-h-40 overflow-y-auto border rounded p-2 bg-white dark:bg-gray-800 dark:border-gray-600">
+                                    {allCourses.map(c => (
+                                        <div key={c._id || c.id} className="flex items-center space-x-2 mb-1">
+                                            <input
+                                                type="checkbox"
+                                                checked={formData.modules.includes(c._id || c.id)}
+                                                onChange={() => toggleModule(c._id || c.id)}
+                                            />
+                                            <span className="text-sm dark:text-gray-300 truncate">{(c.title.pt || c.title)}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex justify-end space-x-3 mt-4">
+                            <button
+                                type="button"
+                                onClick={resetForm}
+                                className="px-4 py-2 border rounded text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                type="submit"
+                                className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
+                            >
+                                {editingTrack ? 'Atualizar Trilha' : 'Criar Trilha'}
+                            </button>
+                        </div>
+                    </form>
+                ) : (
+                    <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+                        {tracks.map(t => (
+                            <li key={t.id} className="py-4 flex items-center justify-between">
+                                <div>
+                                    <h3 className="text-lg font-medium text-gray-900 dark:text-white">{t.title}</h3>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                                        R$ {t.bundlePrice},00 | Cursos: {t.modules.length}
+                                    </p>
+                                </div>
+                                <div className="flex space-x-2">
+                                    <button
+                                        onClick={() => handleEdit(t)}
+                                        className="p-2 text-blue-600 hover:bg-blue-50 rounded"
+                                    >
+                                        <Edit className="w-4 h-4" />
+                                    </button>
+                                    <button
+                                        onClick={() => handleDelete(t.id)}
+                                        className="p-2 text-red-600 hover:bg-red-50 rounded"
+                                    >
+                                        <Trash2 className="w-4 h-4" />
+                                    </button>
+                                </div>
+                            </li>
+                        ))}
+                        {tracks.length === 0 && <p className="text-gray-500 text-center">Nenhuma trilha encontrada.</p>}
+                    </ul>
+                )}
+            </div>
+        </div>
+    );
+};
+
 const AdminDashboard = () => {
     const { user } = useAuth();
     const { t } = useTranslation();
@@ -488,7 +723,12 @@ const AdminDashboard = () => {
                     </div>
                 }
 
-                { }
+                {/* Seção de Trilhas */}
+                <div className="mb-8">
+                    <TracksSection />
+                </div>
+
+                { /* Pending Approvals */}
                 {
                     loadingCourses ? (
                         <div className="mb-8"><TableSkeleton rows={2} /></div>

@@ -12,56 +12,61 @@ const Tracks = () => {
     const [purchasing, setPurchasing] = useState(false);
     const [pixData, setPixData] = useState(null);
 
-    const tracks = [
-        {
-            id: "fullstack-master",
-            title: "Fullstack Master",
-            description: "Do zero ao profissional completo. Domine o desenvolvimento web moderno com as tecnologias mais demandadas do mercado.",
-            icon: <Layers className="w-16 h-16 text-white" />,
-            gradient: "from-indigo-500 to-purple-600",
-            modules: [
-                { title: "HTML5 & CSS3 Avançado", slug: "html5-css3-moderno", id: "1766510293124ndktl" },
-                { title: "Javascript Moderno", slug: "javascript-deep-dive", id: "1766510293126aghjq" },
-                { title: "React.js Profissional", slug: "react-js-componentizacao", id: "1766510293131nkbix" },
-                { title: "Node.js & Express", slug: "node-js-express", id: "1766510293135mju9v" },
-                { title: "Banco de Dados SQL", slug: "postgresql-sql", id: "176651029313807qzf" }
-            ],
-            duration: "6 Meses",
-            bundlePrice: 35
-        },
-        {
-            id: "data-science-pro",
-            title: "Data Science Pro",
-            description: "Torne-se um especialista em dados. Aprenda a analisar, processar e gerar valor a partir de grandes volumes de informação.",
-            icon: <Database className="w-16 h-16 text-white" />,
-            gradient: "from-green-500 to-teal-600",
-            modules: [
-                { title: "Lógica de Programação", slug: "logica-de-programacao", id: "1766510293117g9bf7" },
-                { title: "Estatística Aplicada", slug: "html5-css3-moderno", id: "1766510293124ndktl" }, // Placeholder
-                { title: "Machine Learning", slug: "javascript-deep-dive", id: "1766510293126aghjq" }, // Placeholder
-                { title: "Deep Learning", slug: "react-js-componentizacao", id: "1766510293131nkbix" }, // Placeholder
-                { title: "Big Data com Spark", slug: "node-js-express", id: "1766510293135mju9v" } // Placeholder
-            ],
-            duration: "8 Meses",
-            bundlePrice: 45
-        },
-        {
-            id: "mobile-expert",
-            title: "Mobile Expert",
-            description: "Crie aplicativos nativos e híbridos para iOS e Android. Domine o ecossistema mobile e publique seus apps.",
-            icon: <Smartphone className="w-16 h-16 text-white" />,
-            gradient: "from-blue-500 to-cyan-500",
-            modules: [
-                { title: "Lógica de Programação", slug: "logica-de-programacao", id: "1766510293117g9bf7" },
-                { title: "React Native (Intro)", slug: "react-js-componentizacao", id: "1766510293131nkbix" }, // Placeholder
-                { title: "Flutter & Dart", slug: "javascript-deep-dive", id: "1766510293126aghjq" }, // Placeholder
-                { title: "Publicação nas Lojas", slug: "git-github", id: "1766510293121w80ee" }, // Placeholder
-                { title: "UX/UI Mobile", slug: "html5-css3-moderno", id: "1766510293124ndktl" } // Placeholder
-            ],
-            duration: "5 Meses",
-            bundlePrice: 35
-        }
-    ];
+    const [tracks, setTracks] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const loadTracks = async () => {
+            try {
+                const data = await api.getTracks();
+                // If API returns empty (first load before seed?), use fallback or just wait.
+                // But backend seeds on startup, so it should be fine.
+                // We need to ensure the data structure matches what UI expects.
+                // UI expects: id, title, description, icon (component), gradient, modules, duration, bundlePrice.
+                // DB has: id, title, description, icon (string), gradient, modules (string[]), duration, bundlePrice.
+
+                // We need to Map the DB data to UI data.
+                // Specifically: icon component and modules objects.
+                // The DB 'modules' is array of IDs. The UI needs { title, slug, id } to display list.
+                // The frontend Tracks.jsx DOES NOT have access to course content unless we fetch them all.
+                // We should probably fetch all courses to map the names?
+                // Or update the backend to populate modules?
+                // Let's fetch all courses here to map titles.
+
+                const allCourses = await api.getCourses();
+
+                const formattedTracks = data.map(t => {
+                    const mappedModules = t.modules.map(modId => {
+                        const found = allCourses.find(c => c._id === modId || c.id === modId || c.id === parseInt(modId));
+                        return found ? {
+                            title: found.title.pt || found.title,
+                            slug: found.slug,
+                            id: found._id
+                        } : { title: "Curso Removido", slug: "#", id: modId };
+                    });
+
+                    // Icon mapping? We only stored string.
+                    // We can map string keys to icons.
+                    let IconComp = Layers;
+                    if (t.id.includes('data')) IconComp = Database;
+                    if (t.id.includes('mobile')) IconComp = Smartphone;
+
+                    return {
+                        ...t,
+                        modules: mappedModules,
+                        icon: <IconComp className="w-16 h-16 text-white" />
+                    };
+                });
+
+                setTracks(formattedTracks);
+            } catch (e) {
+                console.error("Failed loading tracks", e);
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadTracks();
+    }, []);
 
     const COURSE_PRICE = 10;
 

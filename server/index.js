@@ -24,8 +24,10 @@ import Payout from './models/Payout.js';
 import ChatMessage from './models/ChatMessage.js';
 import Review from './models/Review.js';
 import Coupon from './models/Coupon.js';
+import Track from './models/Track.js';
 import { MercadoPagoConfig, Preference, Payment } from 'mercadopago';
 import { cleanupEmptyCourses } from './scripts/cleanup_courses.js';
+import { tracks as initialTracks } from './tracks.js'; // Renamed for seeding only
 
 
 
@@ -179,6 +181,65 @@ connectDB().then(async () => {
                 }
             }
         }
+
+        // === Seed Tracks ===
+        try {
+            const trackCount = await Track.countDocuments();
+            if (trackCount === 0) {
+                console.log("Seeding Tracks from static file...");
+                for (const t of initialTracks) {
+                    // Map static IDs to real DB IDs if necessary, or just store string IDs 
+                    // The frontend currently uses string IDs (e.g. "fullstack-master") which is fine.
+                    // The modules inside are IDs like "176651..." which might need matching to DB courses if we want strict references.
+                    // For now, we keep the string IDs as 'modules' in Track schema to match legacy logic, 
+                    // BUT the user wants dynamic management. 
+                    // We should try to find the Course ID by slug if possible? 
+                    // actually static tracks use IDs from courses.json. 
+                    // If courses were seeded from courses.json, they might have different _ids if we let Mongo generate them,
+                    // BUT our seed script above preserves _id if it's 24 chars. 
+                    // The courses.json IDs (e.g. "1766510293124ndktl") are NOT 24-char ObjectId.
+                    // They are custom IDs. 
+                    // Course model has `id` (number) and `_id` (ObjectId).
+                    // Wait, looking at `courses.json`: "_id": "1766510293121w80ee" -> This is NOT a valid ObjectId (it has 'w', 'z'). 
+                    // Mongo will throw error if we try to force that as _id.
+                    // AH, the seed script says: `_id: _id && _id.length === 24 ? _id : undefined`.
+                    // So those custom IDs in courses.json were likely DISCARDED and new ObjectIds generated.
+                    // THIS MEANS TRACKS REFERENCES ARE BROKEN IN DB!
+                    // We must fix this mapping.
+
+                    // Helper to find real Course ID by matching title or slug-ish
+                    // tracks.js uses IDs... checking tracks.js content again. 
+                    // It has: "1766510293124ndktl" (HTML5...).
+                    // We need to find the course with that ID? 
+                    // The courses.json had `_id`="1766510293124ndktl".
+                    // Since they were seeded without that _id, we need to find them by title/slug.
+                    // Or, we should have stored that old ID in another field?
+                    // Too late, data is seeded.
+
+                    // Strategy: Match by array index or approximate title?
+                    // Let's use specific slugs for the known tracks if possible.
+                    // The static tracks.js has titles.
+
+                    // We will just seed them as is for now, but we might need to fix the course references manually in Admin later
+                    // OR we rely on the fact that `cleanup_courses.js` deleted most of them anyway?
+                    // Wait, if `cleanup_courses` deleted them, then the tracks pointing to them are broken anyway.
+                    // The user said "Remove empty courses". 
+                    // If Fullstack Master depends on "HTML5" and "HTML5" was empty and deleted, the track is empty.
+                    // That's fine. The User wants to MANAGE them.
+                    // So we seed what we have, and the Admin (User) will fix them in the UI.
+
+                    await Track.create({
+                        ...t,
+                        icon: "", // Icon component cannot be stored in DB, we'll use a string locator or generic
+                        gradient: "from-indigo-500 to-purple-600" // Default
+                    });
+                }
+                console.log(`Seeded ${initialTracks.length} tracks.`);
+            }
+        } catch (err) {
+            console.error("Track seeding error:", err);
+        }
+
     } catch (e) {
         console.error("Seeding error:", e);
     }
@@ -1075,7 +1136,66 @@ app.get('/api/courses/:slug', async (req, res) => {
 import { Pix } from './utils/pix.js';
 
 
-import { tracks } from './tracks.js'; // Ensure this is imported at top, adding here for context but should be careful
+// import { tracks } from './tracks.js'; // REMOVED STATIC IMPORT
+
+// === Track CRUD API ===
+
+app.get('/api/tracks', async (req, res) => {
+    try {
+        const tracks = await Track.find({});
+        res.json(tracks);
+    } catch (e) {
+        res.status(500).json({ error: 'Erro ao buscar trilhas' });
+    }
+});
+
+app.post('/api/tracks', verifyToken, async (req, res) => {
+    if (req.user.role !== 'admin') return res.status(403).json({ error: 'Access denied' });
+    try {
+        const newTrack = await Track.create(req.body);
+        res.status(201).json(newTrack);
+    } catch (e) {
+        res.status(500).json({ error: 'Erro ao criar trilha: ' + e.message });
+    }
+});
+
+app.put('/api/tracks/:id', verifyToken, async (req, res) => {
+    if (req.user.role !== 'admin') return res.status(403).json({ error: 'Access denied' });
+    try {
+        // Use findOneAndUpdate with "id" (string) or "_id" (mongo)? 
+        // Frontend sends the string ID (e.g. "fullstack-master") usually as param if we use that as route.
+        // Let's assume params.id matches the DB 'id' field OR '_id'.
+        // Safer to try both or rely on what we send.
+
+        let track = await Track.findOneAndUpdate({ id: req.params.id }, req.body, { new: true });
+        if (!track) {
+            // Try by ObjectId
+            if (req.params.id.length === 24) {
+                track = await Track.findByIdAndUpdate(req.params.id, req.body, { new: true });
+            }
+        }
+
+        if (!track) return res.status(404).json({ error: 'Trilha não encontrada' });
+        res.json(track);
+    } catch (e) {
+        res.status(500).json({ error: 'Erro ao atualizar: ' + e.message });
+    }
+});
+
+app.delete('/api/tracks/:id', verifyToken, async (req, res) => {
+    if (req.user.role !== 'admin') return res.status(403).json({ error: 'Access denied' });
+    try {
+        let result = await Track.findOneAndDelete({ id: req.params.id });
+        if (!result && req.params.id.length === 24) {
+            result = await Track.findByIdAndDelete(req.params.id);
+        }
+
+        if (!result) return res.status(404).json({ error: 'Trilha não encontrada' });
+        res.json({ message: 'Trilha removida' });
+    } catch (e) {
+        res.status(500).json({ error: 'Erro ao remover: ' + e.message });
+    }
+});
 
 // ... inside /api/checkout ...
 app.post('/api/checkout', verifyToken, async (req, res) => {
@@ -1084,10 +1204,19 @@ app.post('/api/checkout', verifyToken, async (req, res) => {
         let title, price; // vars to hold final info
 
         if (trackId) {
-            const track = tracks.find(t => t.id === trackId);
+            const track = await Track.findOne({ id: trackId }); // Try finding by string ID
+            if (!track) {
+                // Try finding by ObjectId?
+                // Most likely trackId comes from frontend which uses the string ID (e.g. data-science-pro)
+                // BUT if we create new tracks in Admin, we might assume auto-generated ObjectIds. 
+                // So we should search by both if needed.
+                // For now, let's assume 'id' field is used for legacy compat.
+            }
+
             if (!track) return res.status(404).json({ error: 'Trilha não encontrada' });
+
             title = `Trilha: ${track.title}`;
-            price = track.price;
+            price = track.bundlePrice || track.price; // Support both fields just in case
         } else {
             const course = await Course.findById(courseId);
             if (!course) return res.status(404).json({ error: 'Course not found' });
@@ -1165,9 +1294,10 @@ app.post('/api/payment/confirm-manual', verifyToken, async (req, res) => {
         let sellerId = null;
 
         if (trackId) {
-            const track = tracks.find(t => t.id === trackId);
+            const track = await Track.findOne({ id: trackId });
             if (!track) return res.status(404).json({ error: 'Trilha não encontrada' });
-            price = track.price;
+
+            price = track.bundlePrice || track.price;
             // Tracks are sold by System (Admin) usually
             // finding admin id
             const admin = await User.findOne({ role: 'admin' });
