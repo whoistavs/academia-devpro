@@ -230,8 +230,10 @@ connectDB().then(async () => {
 
                     await Track.create({
                         ...t,
-                        icon: "", // Icon component cannot be stored in DB, we'll use a string locator or generic
-                        gradient: "from-indigo-500 to-purple-600" // Default
+                        modules: t.courses || [], // Map courses (from tracks.js) to modules (Track model)
+                        bundlePrice: t.price, // Map price to bundlePrice
+                        icon: "",
+                        gradient: "from-indigo-500 to-purple-600"
                     });
                 }
                 console.log(`Seeded ${initialTracks.length} tracks.`);

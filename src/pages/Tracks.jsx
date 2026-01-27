@@ -36,7 +36,8 @@ const Tracks = () => {
                 const allCourses = await api.getCourses();
 
                 const formattedTracks = data.map(t => {
-                    const mappedModules = t.modules.map(modId => {
+                    const modules = t.modules || [];
+                    const mappedModules = modules.map(modId => {
                         const found = allCourses.find(c => c._id === modId || c.id === modId || c.id === parseInt(modId));
                         return found ? {
                             title: found.title.pt || found.title,
