@@ -406,6 +406,39 @@ app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', message: 'API Running' });
 });
 
+app.get('/api/debug-email', async (req, res) => {
+    try {
+        await transporter.verify();
+
+        await transporter.sendMail({
+            from: process.env.EMAIL_USER,
+            to: process.env.EMAIL_USER, // Send to self
+            subject: "Debug Email Production",
+            text: "Se você recebeu isso, o email está funcionando!"
+        });
+
+        res.json({
+            status: 'success',
+            message: 'Email enviado com sucesso!',
+            config: {
+                host: process.env.EMAIL_HOST,
+                user: process.env.EMAIL_USER,
+                secure: process.env.EMAIL_SECURE
+            }
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: 'error',
+            message: error.message,
+            stack: error.stack,
+            config: {
+                host: process.env.EMAIL_HOST,
+                user: process.env.EMAIL_USER
+            }
+        });
+    }
+});
+
 
 app.get('/api/courses', async (req, res) => {
     try {
