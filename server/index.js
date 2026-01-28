@@ -260,15 +260,27 @@ connectDB().then(async () => {
 
 
 // 
-const transporter = nodemailer.createTransport({
+// 
+const mailConfig = {
     host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
+    port: Number(process.env.EMAIL_PORT), // Force number
     secure: process.env.EMAIL_SECURE === 'true',
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
-    }
+    },
+    // Add timeouts to prevent hanging
+    connectionTimeout: 10000,
+    greetingTimeout: 5000,
+    socketTimeout: 10000
+};
+
+console.log("Email Config (Safe):", {
+    ...mailConfig,
+    auth: { user: mailConfig.auth.user, pass: '******' }
 });
+
+const transporter = nodemailer.createTransport(mailConfig);
 
 const sendVerificationEmail = async (email, token, language = 'pt') => {
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
@@ -433,7 +445,9 @@ app.get('/api/debug-email', async (req, res) => {
             stack: error.stack,
             config: {
                 host: process.env.EMAIL_HOST,
-                user: process.env.EMAIL_USER
+                user: process.env.EMAIL_USER,
+                port: process.env.EMAIL_PORT, // Added port
+                secure: process.env.EMAIL_SECURE // Added secure
             }
         });
     }
