@@ -262,13 +262,18 @@ connectDB().then(async () => {
 // 
 // 
 // 
+// 
 const mailConfig = {
-    service: 'gmail', // Use built-in Gmail service settings
+    // Revert to manual config to force specific port/host
+    host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+    port: Number(process.env.EMAIL_PORT) || 587,
+    secure: process.env.EMAIL_SECURE === 'true', // Should be false for 587
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
     },
-    // Add timeouts to prevent hanging
+    // Network settings
+    family: 4, // Force IPv4 to avoid Render IPv6 timeouts
     connectionTimeout: 10000,
     greetingTimeout: 5000,
     socketTimeout: 10000,
