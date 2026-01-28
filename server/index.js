@@ -272,7 +272,10 @@ const mailConfig = {
     // Add timeouts to prevent hanging
     connectionTimeout: 10000,
     greetingTimeout: 5000,
-    socketTimeout: 10000
+    socketTimeout: 10000,
+    tls: {
+        rejectUnauthorized: false
+    }
 };
 
 console.log("Email Config (Safe):", {
