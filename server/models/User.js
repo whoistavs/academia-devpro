@@ -31,6 +31,9 @@ const userSchema = new mongoose.Schema({
     authProvider: { type: String, default: 'local' },
     xp: { type: Number, default: 0 },
     level: { type: Number, default: 1 },
+    streak: { type: Number, default: 0 },
+    lastLoginDate: { type: Date },
+    badges: [{ type: String }],
     createdAt: { type: Date, default: Date.now }
 });
 

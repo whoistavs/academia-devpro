@@ -12,7 +12,7 @@
     "email": "octavio.marvel2018@gmail.com",
     "password": "$2a$08$OfIo9DHpdlsFYo0KLBuWAOiyXAhD23p1SvH21T9rKhex22eJLL2kG",
     "role": "admin",
-    "avatar": "https://res.cloudinary.com/dksghbmpz/image/upload/v1769102495/devpro_academy/iucmyabkat2qgfzmeryo.jpg",
+    "avatar": "",
     "cpf": "11111111111",
     "rg": "111111111",
     "birthDate": "1990-01-01T00:00:00.000Z",
@@ -33,9 +33,9 @@
     "isVerified": true,
     "authProvider": "local",
     "createdAt": "2026-01-08T13:40:44.911Z",
-    "__v": 0,
+    "__v": 1,
     "level": 1,
-    "xp": 0,
+    "xp": 200,
     "certificates": [
       {
         "courseId": "696f8adde36e187332bb3484",
@@ -49,7 +49,13 @@
         "date": "2026-01-20T12:36:20.386Z",
         "_id": "696f8b8fe6662795c769653a"
       }
-    ]
+    ],
+    "streak": 14,
+    "badges": [
+      "streak_7",
+      "first_100_xp"
+    ],
+    "lastLoginDate": "2026-03-09T13:28:26.122Z"
   },
   {
     "name": "Teste",

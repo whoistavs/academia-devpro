@@ -1,3 +1,6 @@
+import adminRoutes from './routes/adminRoutes.js';
+import courseRoutes from './routes/courseRoutes.js';
+import professorRoutes from './routes/professorRoutes.js';
 import express from 'express';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
@@ -55,6 +58,9 @@ const SECRET_KEY = process.env.JWT_SECRET || "chave_secreta_super_segura";
 
 app.use(cors()); // Allow all origins (Netlify, Localhost, etc)
 app.use(express.json()); // Ensure JSON body parsing is on too if missing
+app.use('/api', adminRoutes);
+app.use('/api', courseRoutes);
+app.use('/api', professorRoutes);
 
 // --- GLOBAL ERROR HANDLERS (Prevent Crash Loop) ---
 process.on('uncaughtException', (err) => {
@@ -461,142 +467,10 @@ app.get('/api/debug-email', async (req, res) => {
 });
 
 
-app.get('/api/courses', async (req, res) => {
-    try {
-        const authHeader = req.headers['authorization'];
-        const token = authHeader && authHeader.split(' ')[1];
-        let isAdmin = false;
-
-        if (token) {
-            try {
-                const decoded = jwt.verify(token, SECRET_KEY);
-                if (decoded.role === 'admin') isAdmin = true;
-            } catch (e) { }
-        }
-
-        const query = isAdmin ? {} : { status: 'published' };
-        const courses = await Course.find(query).sort({ createdAt: -1 });
-
-
-        const authorIds = [...new Set(courses.map(c => c.authorId).filter(id => id && id !== 'admin'))];
-        const authors = await User.find({ _id: { $in: authorIds } });
-        const authorMap = {};
-        authors.forEach(a => authorMap[a._id.toString()] = a.name);
-
-        const summary = await Promise.all(courses.map(async c => {
-            const reviews = await Review.find({ courseId: c._id });
-            const reviewCount = reviews.length;
-            const avgRating = reviewCount > 0
-                ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviewCount).toFixed(1)
-                : 0;
-
-            return {
-                id: c._id,
-                slug: c.slug,
-                title: c.title,
-                description: c.description,
-                image: c.image,
-                level: c.level,
-                duration: c.duration,
-                price: c.price || 0,
-                category: c.category,
-                totalLessons: (c.aulas && c.aulas.length > 0)
-                    ? c.aulas.length
-                    : (c.modulos && c.modulos.length > 0
-                        ? c.modulos.reduce((acc, m) => acc + (m.items ? m.items.length : (m.aulas ? m.aulas.length : 0)), 0)
-                        : 0),
-                status: c.status,
-                language: c.language || 'pt',
-                authorId: c.authorId,
-                authorName: c.authorId === 'admin' ? 'DevPro Oficial' : (authorMap[c.authorId] || 'Professor'),
-                rating: avgRating,
-                totalReviews: reviewCount
-            };
-        }));
-
-        res.json(summary);
-    } catch (error) {
-        res.status(500).json({ error: 'Erro ao buscar cursos.' });
-    }
-});
-
-
-app.get('/api/professor/courses', verifyToken, async (req, res) => {
-    if (req.user.role !== 'professor' && req.user.role !== 'admin') {
-        return res.status(403).json({ error: 'Acesso negado.' });
-    }
-    try {
-        const courses = await Course.find({ authorId: req.user.id });
-        res.json(courses);
-    } catch (error) {
-        res.status(500).json({ error: 'Erro ao buscar cursos.' });
-    }
-});
-
-
-app.post('/api/courses', verifyToken, async (req, res) => {
-    if (req.user.role !== 'professor' && req.user.role !== 'admin') {
-        return res.status(403).json({ error: 'Permissão negada.' });
-    }
-
-    const { title, description, category, level, image, duration, price, modulos, aulas, language } = req.body;
-
-    if (!title || !description || !category) {
-        return res.status(400).json({ error: 'Campos obrigatórios faltando.' });
-    }
-
-
-    const titleText = typeof title === 'string' ? title : (title.pt || title.en || 'curso');
-    const slug = titleText.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-') + '-' + Date.now().toString(36);
-
-    try {
-        const newCourse = new Course({
-            title, description, category, level, image, duration, slug,
-            price: price || 0,
-            modulos: modulos || [],
-            aulas: aulas || [],
-            language: language || 'pt',
-            authorId: req.user.id,
-            status: req.user.role === 'admin' ? 'published' : 'pending'
-        });
-
-        await newCourse.save();
-        res.status(201).json(newCourse);
-    } catch (error) {
-        res.status(500).json({ error: 'Erro ao criar curso.' });
-    }
-});
-
 
-app.get('/api/admin/financials', verifyAdmin, async (req, res) => {
-    console.log("[API] GET /api/admin/financials called");
-    try {
-        const transactions = await Transaction.find().sort({ createdAt: -1 });
-        const payouts = await Payout.find({ userId: req.user.id, status: { $ne: 'failed' } });
 
-        const totalSales = transactions.reduce((acc, t) => acc + t.amount, 0);
-        const totalFees = transactions.reduce((acc, t) => acc + t.platformFee, 0);
-        const totalPayoutsToPro = transactions.reduce((acc, t) => acc + t.sellerNet, 0);
 
-        const withdrawn = payouts.reduce((acc, p) => acc + p.amount, 0);
-        const availableBalance = totalFees - withdrawn;
 
-        res.json({
-            transactions: transactions.slice(0, 50),
-            payouts,
-            summary: {
-                totalSales,
-                totalFees,
-                totalPayouts: totalPayoutsToPro,
-                availableBalance,
-                withdrawn
-            }
-        });
-    } catch (e) {
-        console.error(e);
-        res.status(500).json({ error: 'Erro ao buscar financeiro' });
-    }
-});
 
 
 
@@ -604,255 +478,29 @@ app.get('/api/admin/financials', verifyAdmin, async (req, res) => {
 
 
 
-app.get('/api/admin/debts', verifyAdmin, async (req, res) => {
-    try {
 
-        const professors = await User.find({ role: { $in: ['professor', 'admin'] } });
-        const debts = [];
 
-        for (const prof of professors) {
-            const transactions = await Transaction.find({ sellerId: prof._id, status: 'approved' });
-            const payouts = await Payout.find({ userId: prof._id, status: 'completed' });
 
-            const totalEarned = transactions.reduce((acc, t) => acc + (t.sellerNet || 0), 0);
-            const totalPaid = payouts.reduce((acc, p) => acc + (p.amount || 0), 0);
-            const balance = totalEarned - totalPaid;
 
-            if (balance > 0.01) {
-                debts.push({
-                    professorId: prof._id,
-                    name: prof.name,
-                    email: prof.email,
-                    pixKey: prof.bankAccount?.pixKey || 'Não configurada',
-                    balance: balance,
-                    totalEarned,
-                    totalPaid
-                });
-            }
-        }
 
-        res.json(debts);
-    } catch (e) {
-        console.error(e);
-        res.status(500).json({ error: 'Erro ao calcular dívidas.' });
-    }
-});
 
 
-app.post('/api/admin/payouts/manual', verifyAdmin, async (req, res) => {
-    try {
-        const { professorId, amount, notes } = req.body;
 
-        if (!professorId || !amount) return res.status(400).json({ error: 'Dados incompletos.' });
 
-        const professor = await User.findById(professorId);
-        if (!professor) return res.status(404).json({ error: 'Professor não encontrado.' });
 
 
-        const payout = await Payout.create({
-            userId: professorId,
-            amount: Number(amount),
-            bankDetails: professor.bankAccount || {},
-            status: 'completed',
-            processedAt: new Date(),
-            notes: notes || 'Pagamento Manual via Admin'
-        });
 
-        res.json({ message: 'Pagamento registrado com sucesso!', payout });
-    } catch (e) {
-        console.error(e);
-        res.status(500).json({ error: 'Erro ao registrar pagamento.' });
-    }
-});
 
 
-
-
-
-app.get('/api/admin/approvals', verifyAdmin, async (req, res) => {
-    try {
 
 
-        const pendings = await Transaction.find({ status: 'pending_approval' });
-
 
-        const richPendings = await Promise.all(pendings.map(async (t) => {
-            const buyer = await User.findById(t.buyerId).select('name email');
-            let courseTitle = 'Curso Removido';
 
-            if (t.trackId) {
-                const track = tracks.find(tr => tr.id === t.trackId);
-                if (track) courseTitle = `Trilha: ${track.title}`;
-            } else if (t.courseId) {
-                const course = await Course.findById(t.courseId).select('title');
-                if (course) courseTitle = course.title.pt || course.title;
-            }
 
-            return {
-                ...t.toObject(),
-                buyerName: buyer ? buyer.name : 'Desconhecido',
-                buyerEmail: buyer ? buyer.email : '---',
-                courseTitle
-            };
-        }));
 
-        res.json(richPendings);
-    } catch (e) {
-        res.status(500).json({ error: 'Erro ao buscar aprovações.' });
-    }
-});
 
 
-app.post('/api/admin/approve/:id', verifyAdmin, async (req, res) => {
-    try {
-        const transaction = await Transaction.findById(req.params.id);
-        if (!transaction) return res.status(404).json({ error: 'Pedido não encontrado.' });
 
-        if (transaction.status !== 'pending_approval') {
-            return res.status(400).json({ error: 'Este pedido não está pendente.' });
-        }
-
-
-        const user = await User.findById(transaction.buyerId);
-
-        if (user) {
-            let coursesToAdd = [];
-
-            if (transaction.trackId) {
-                const track = tracks.find(t => t.id === transaction.trackId);
-                if (track && track.courses) {
-                    coursesToAdd = track.courses;
-                }
-            } else if (transaction.courseId) {
-                coursesToAdd = [transaction.courseId];
-            }
-
-            let modified = false;
-            for (const cid of coursesToAdd) {
-                if (cid && !user.purchasedCourses.includes(cid)) {
-                    user.purchasedCourses.push(cid);
-                    modified = true;
-                }
-            }
-
-            if (modified) await user.save();
-        }
-
-
-
-        const amount = transaction.amount || 0;
-        transaction.platformFee = amount * 0.10;
-        transaction.sellerNet = amount * 0.90;
-        transaction.status = 'approved';
-        await transaction.save();
-
-
-        try {
-            const usersPath = path.join(__dirname, 'users.json');
-            if (user && fs.existsSync(usersPath)) {
-                let users = JSON.parse(fs.readFileSync(usersPath, 'utf-8'));
-                const idx = users.findIndex(u => u.email === user.email);
-                if (idx >= 0) {
-                    const userObj = user.toObject();
-                    if (userObj._id) userObj._id = userObj._id.toString();
-                    users[idx] = { ...users[idx], ...userObj };
-                    fs.writeFileSync(usersPath, JSON.stringify(users, null, 2));
-                    console.log(`APPROVAL PERSISTENCE: Saved ${user.email} to users.json`);
-                }
-            }
-        } catch (perr) { console.error("Persistence Warning:", perr); }
-
-        res.json({ message: 'Aprovado com sucesso!' });
-    } catch (e) {
-        console.error(e);
-        res.status(500).json({ error: 'Erro ao aprovar.' });
-    }
-});
-
-
-app.post('/api/admin/reject/:id', verifyAdmin, async (req, res) => {
-    try {
-        const transaction = await Transaction.findById(req.params.id);
-        if (!transaction) return res.status(404).json({ error: 'Pedido não encontrado.' });
-
-        transaction.status = 'rejected';
-        await transaction.save();
-
-        res.json({ message: 'Pedido rejeitado.' });
-    } catch (e) {
-        res.status(500).json({ error: 'Erro ao rejeitar.' });
-    }
-});
-
-
-
-
-app.get('/api/admin/coupons', verifyAdmin, async (req, res) => {
-    try {
-        const coupons = await Coupon.find().sort({ createdAt: -1 });
-        res.json(coupons);
-    } catch (e) {
-        res.status(500).json({ error: 'Erro ao buscar cupons.' });
-    }
-});
-
-
-app.post('/api/admin/coupons', verifyAdmin, async (req, res) => {
-    try {
-        const { code, discountPercentage, validUntil, maxUses, maxUsesPerUser } = req.body;
-
-        if (!code || !discountPercentage) {
-            return res.status(400).json({ error: 'Código e Desconto são obrigatórios.' });
-        }
-
-        const coupon = new Coupon({
-            code: code.toUpperCase(),
-            discountPercentage,
-            validUntil,
-            maxUses,
-            maxUsesPerUser: maxUsesPerUser || 1,
-            createdBy: req.user.id
-        });
-
-        await coupon.save();
-        res.json(coupon);
-    } catch (e) {
-        if (e.code === 11000) return res.status(400).json({ error: 'Código já existe.' });
-        res.status(500).json({ error: 'Erro ao criar cupom.' });
-    }
-});
-
-
-app.delete('/api/admin/coupons/:id', verifyAdmin, async (req, res) => {
-    try {
-        await Coupon.findByIdAndDelete(req.params.id);
-        res.json({ message: 'Cupom removido.' });
-    } catch (e) {
-        res.status(500).json({ error: 'Erro ao remover cupom.' });
-    }
-});
-
-
-app.put('/api/admin/coupons/:id', verifyAdmin, async (req, res) => {
-    try {
-        const { code, discountPercentage, validUntil, maxUses, maxUsesPerUser } = req.body;
-
-        const coupon = await Coupon.findById(req.params.id);
-        if (!coupon) return res.status(404).json({ error: 'Cupom não encontrado.' });
-
-        if (code) coupon.code = code.toUpperCase();
-        if (discountPercentage) coupon.discountPercentage = discountPercentage;
-        if (validUntil !== undefined) coupon.validUntil = validUntil;
-        if (maxUses !== undefined) coupon.maxUses = maxUses;
-        if (maxUsesPerUser !== undefined) coupon.maxUsesPerUser = maxUsesPerUser;
-
-        await coupon.save();
-        res.json(coupon);
-    } catch (e) {
-        if (e.code === 11000) return res.status(400).json({ error: 'Código já existe.' });
-        res.status(500).json({ error: 'Erro ao atualizar cupom.' });
-    }
-});
 
 
 app.post('/api/coupons/validate', async (req, res) => {
@@ -897,85 +545,8 @@ app.post('/api/coupons/validate', async (req, res) => {
 
 
 
-app.get('/api/professor/students', verifyToken, async (req, res) => {
-    try {
-
-        const myCourses = await Course.find({ authorId: req.user.id });
-        const myCourseIds = myCourses.map(c => c._id.toString());
 
 
-
-        const students = await User.find({
-            purchasedCourses: { $in: myCourseIds }
-        }).select('name email avatar purchasedCourses');
-
-
-        const richStudents = students.map(s => {
-            const boughtMyCourses = myCourses.filter(c =>
-                s.purchasedCourses.includes(c._id.toString()) ||
-                s.purchasedCourses.includes(c._id)
-            );
-            return {
-                id: s._id,
-                name: s.name,
-                email: s.email,
-                avatar: s.avatar,
-                courses: boughtMyCourses.map(c => c.title)
-            };
-        });
-
-        res.json(richStudents);
-    } catch (e) {
-        console.error(e);
-        res.status(500).json({ error: 'Erro ao buscar alunos.' });
-    }
-});
-
-
-app.get('/api/student/professors', verifyToken, async (req, res) => {
-    try {
-        const studentId = req.user.id;
-        const student = await User.findById(studentId);
-
-        if (!student.purchasedCourses || student.purchasedCourses.length === 0) {
-            return res.json([]);
-        }
-
-
-        const purchasedCourses = await Course.find({
-            _id: { $in: student.purchasedCourses }
-        });
-
-
-        const authorIds = [...new Set(purchasedCourses.map(c => c.authorId))];
-
-
-        const professors = await User.find({
-            _id: { $in: authorIds }
-        }).select('name email avatar role');
-
-
-        const richProfessors = professors.map(p => {
-            const coursesTaught = purchasedCourses
-                .filter(c => c.authorId === p._id.toString() || c.authorId === p.id)
-                .map(c => c.title);
-
-            return {
-                id: p._id,
-                name: p.name,
-                email: p.email,
-                avatar: p.avatar,
-                role: p.role,
-                courses: coursesTaught
-            };
-        });
-
-        res.json(richProfessors);
-    } catch (e) {
-        console.error(e);
-        res.status(500).json({ error: 'Erro ao buscar professores.' });
-    }
-});
 
 
 app.get('/api/chat/:userId', verifyToken, async (req, res) => {
@@ -1068,66 +639,6 @@ app.post('/api/chat/send', verifyToken, uploadChat.single('file'), async (req, r
 });
 
 
-app.put('/api/courses/:id', verifyToken, async (req, res) => {
-    try {
-        const course = await Course.findById(req.params.id);
-        if (!course) return res.status(404).json({ error: 'Curso não encontrado.' });
-
-
-
-
-
-
-
-        const isOwner = course.authorId === req.user.id;
-        const isSystemCourse = !course.authorId || course.authorId === 'admin';
-        const isAdmin = req.user.role === 'admin';
-
-
-        if (!isOwner && !(isAdmin && isSystemCourse)) {
-            return res.status(403).json({ error: 'Permissão negada. Admin só edita cursos do Sistema ou Próprios.' });
-        }
-
-        Object.assign(course, req.body);
-
-        course.markModified('modulos');
-        course.markModified('aulas');
-
-        await course.save();
-
-
-        try {
-
-            const coursesPath = path.join(__dirname, 'courses.json');
-
-            if (fs.existsSync(coursesPath)) {
-                let courses = JSON.parse(fs.readFileSync(coursesPath, 'utf-8'));
-
-                const idx = courses.findIndex(c => String(c._id) === String(course._id) || c.slug === course.slug);
-
-                if (idx >= 0) {
-                    const courseObj = course.toObject();
-                    if (courseObj._id) courseObj._id = courseObj._id.toString();
-
-
-                    courses[idx] = { ...courses[idx], ...courseObj };
-
-                    fs.writeFileSync(coursesPath, JSON.stringify(courses, null, 2));
-                    console.log(`PERSISTENCE SUCCESS: Updated '${course.title}' in courses.json (matched index ${idx})`);
-                } else {
-                    console.warn(`PERSISTENCE WARNING: Could not find '${course.title}' (Slug: ${course.slug}, ID: ${course._id}) in courses.json`);
-                }
-            }
-        } catch (err) {
-            console.error("Failed to persist course update:", err);
-
-        }
-
-        res.json(course);
-    } catch (error) {
-        res.status(500).json({ error: 'Erro ao atualizar.' });
-    }
-});
 
 
 
@@ -1166,39 +677,8 @@ app.delete('/api/courses/:id', verifyToken, async (req, res) => {
 });
 
 
-app.get('/api/courses/id/:id', async (req, res) => {
-    try {
-        const course = await Course.findById(req.params.id);
-        if (!course) return res.status(404).json({ error: 'Curso não encontrado.' });
-        res.json(course);
-    } catch (e) {
-        res.status(500).json({ error: 'Erro no servidor.' });
-    }
-});
 
 
-app.get('/api/courses/:slug', async (req, res) => {
-    try {
-        const course = await Course.findOne({ slug: req.params.slug });
-        if (!course) return res.status(404).json({ error: 'Curso não encontrado.' });
-
-        let authorName = 'Professor';
-        if (course.authorId === 'admin') authorName = 'DevPro Oficial';
-        else if (course.authorId) {
-            try {
-                const author = await User.findById(course.authorId);
-                if (author) authorName = author.name;
-            } catch (e) { }
-        }
-
-        const courseObj = course.toObject();
-        courseObj.authorName = authorName;
-
-        res.json(courseObj);
-    } catch (e) {
-        res.status(500).json({ error: 'Erro no servidor.' });
-    }
-});
 
 import { Pix } from './utils/pix.js';
 
@@ -1207,62 +687,9 @@ import { Pix } from './utils/pix.js';
 
 // === Track CRUD API ===
 
-app.get('/api/tracks', async (req, res) => {
-    try {
-        const tracks = await Track.find({});
-        res.json(tracks);
-    } catch (e) {
-        res.status(500).json({ error: 'Erro ao buscar trilhas' });
-    }
-});
 
-app.post('/api/tracks', verifyToken, async (req, res) => {
-    if (req.user.role !== 'admin') return res.status(403).json({ error: 'Access denied' });
-    try {
-        const newTrack = await Track.create(req.body);
-        res.status(201).json(newTrack);
-    } catch (e) {
-        res.status(500).json({ error: 'Erro ao criar trilha: ' + e.message });
-    }
-});
 
-app.put('/api/tracks/:id', verifyToken, async (req, res) => {
-    if (req.user.role !== 'admin') return res.status(403).json({ error: 'Access denied' });
-    try {
-        // Use findOneAndUpdate with "id" (string) or "_id" (mongo)? 
-        // Frontend sends the string ID (e.g. "fullstack-master") usually as param if we use that as route.
-        // Let's assume params.id matches the DB 'id' field OR '_id'.
-        // Safer to try both or rely on what we send.
 
-        let track = await Track.findOneAndUpdate({ id: req.params.id }, req.body, { new: true });
-        if (!track) {
-            // Try by ObjectId
-            if (req.params.id.length === 24) {
-                track = await Track.findByIdAndUpdate(req.params.id, req.body, { new: true });
-            }
-        }
-
-        if (!track) return res.status(404).json({ error: 'Trilha não encontrada' });
-        res.json(track);
-    } catch (e) {
-        res.status(500).json({ error: 'Erro ao atualizar: ' + e.message });
-    }
-});
-
-app.delete('/api/tracks/:id', verifyToken, async (req, res) => {
-    if (req.user.role !== 'admin') return res.status(403).json({ error: 'Access denied' });
-    try {
-        let result = await Track.findOneAndDelete({ id: req.params.id });
-        if (!result && req.params.id.length === 24) {
-            result = await Track.findByIdAndDelete(req.params.id);
-        }
-
-        if (!result) return res.status(404).json({ error: 'Trilha não encontrada' });
-        res.json({ message: 'Trilha removida' });
-    } catch (e) {
-        res.status(500).json({ error: 'Erro ao remover: ' + e.message });
-    }
-});
 
 // ... inside /api/checkout ...
 app.post('/api/checkout', verifyToken, async (req, res) => {
@@ -1848,124 +1275,10 @@ app.post('/api/auth/google', async (req, res) => {
 
 // --- ADMIN ---
 
-app.get('/api/users', verifyAdmin, async (req, res) => {
-    console.log("[API] GET /api/users called");
-    try {
-        const users = await User.find({}, '-password'); // Exclude password
-        res.json(users);
-    } catch (e) {
-        res.status(500).json({ error: 'Erro.' });
-    }
-});
 
-app.delete('/api/users/:id', verifyAdmin, async (req, res) => {
-    try {
-        const deletedUser = await User.findByIdAndDelete(req.params.id);
 
-        if (deletedUser) {
-            // Also remove from users.json to prevent reappearance on restart
-            const usersPath = path.join(__dirname, 'users.json');
-            if (fs.existsSync(usersPath)) {
-                let localUsers = JSON.parse(fs.readFileSync(usersPath, 'utf-8'));
-                const originalLength = localUsers.length;
-                // Filter by ID or Email (since local IDs might differ or match)
-                localUsers = localUsers.filter(u => u._id !== req.params.id && u.email !== deletedUser.email);
 
-                if (localUsers.length !== originalLength) {
-                    fs.writeFileSync(usersPath, JSON.stringify(localUsers, null, 2));
-                    console.log(`[API] User ${deletedUser.email} removed from users.json`);
-                }
-            }
-        }
 
-        res.json({ message: 'User deleted' });
-    } catch (e) {
-        console.error("Error deleting user:", e);
-        res.status(500).json({ error: 'Erro ao excluir usuário.' });
-    }
-});
-
-app.patch('/api/users/:id/role', verifyAdmin, async (req, res) => {
-    try {
-        const { role } = req.body;
-        const updatedUser = await User.findByIdAndUpdate(req.params.id, { role }, { new: true });
-
-        if (!updatedUser) return res.status(404).json({ error: 'Usuário não encontrado.' });
-
-        res.json({ message: 'Role updated', user: updatedUser });
-    } catch (e) {
-        console.error("Error updating role:", e);
-        res.status(500).json({ error: e.message || 'Erro ao atualizar função.' });
-    }
-});
-
-app.post('/api/admin/approve/:id', verifyAdmin, async (req, res) => {
-    console.log(`[API] Approve requested for TX: ${req.params.id}`);
-    try {
-        const tx = await Transaction.findById(req.params.id);
-        if (!tx) return res.status(404).json({ error: 'Transação não encontrada.' });
-
-        if (tx.status === 'approved') return res.json({ message: 'Já aprovada.' });
-
-        tx.status = 'approved';
-        await tx.save();
-
-        // Grant access to buyer
-        const buyer = await User.findById(tx.buyerId);
-        if (buyer) {
-            if (tx.trackId) {
-                const track = tracks.find(t => t.id === tx.trackId);
-                if (track && track.courses) {
-                    for (const cid of track.courses) {
-                        if (!buyer.purchasedCourses.includes(cid)) {
-                            buyer.purchasedCourses.push(cid);
-                        }
-                    }
-                    await buyer.save();
-                }
-            } else if (tx.courseId) {
-                if (!buyer.purchasedCourses.includes(tx.courseId)) {
-                    buyer.purchasedCourses.push(tx.courseId);
-                    await buyer.save();
-                }
-            }
-
-            // Persistence (users.json) - keeping it in sync for dev
-            try {
-                const usersPath = path.join(__dirname, 'users.json');
-                if (fs.existsSync(usersPath)) {
-                    let users = JSON.parse(fs.readFileSync(usersPath, 'utf-8'));
-                    const idx = users.findIndex(u => u.email === buyer.email);
-                    if (idx >= 0) {
-                        const userObj = buyer.toObject();
-                        if (userObj._id) userObj._id = userObj._id.toString();
-                        users[idx] = { ...users[idx], ...userObj };
-                        fs.writeFileSync(usersPath, JSON.stringify(users, null, 2));
-                    }
-                }
-            } catch (e) { console.error("Persistence error:", e); }
-        }
-
-        res.json({ message: 'Transação aprovada e acesso liberado.' });
-    } catch (e) {
-        console.error(e);
-        res.status(500).json({ error: 'Erro ao aprovar.' });
-    }
-});
-
-app.post('/api/admin/reject/:id', verifyAdmin, async (req, res) => {
-    try {
-        const tx = await Transaction.findById(req.params.id);
-        if (!tx) return res.status(404).json({ error: 'Transação não encontrada.' });
-
-        tx.status = 'rejected';
-        await tx.save();
-
-        res.json({ message: 'Transação rejeitada.' });
-    } catch (e) {
-        res.status(500).json({ error: 'Erro ao rejeitar.' });
-    }
-});
 
 app.patch('/api/users/change-password', verifyToken, async (req, res) => {
     const { oldPassword, newPassword, language = 'pt' } = req.body;
@@ -2192,6 +1505,9 @@ app.get('/api/users/me', verifyToken, async (req, res) => {
             bankAccount: user.bankAccount,
             xp: user.xp,
             level: user.level,
+            streak: user.streak || 0,
+            badges: user.badges || [],
+            lastLoginDate: user.lastLoginDate,
             createdAt: user.createdAt
         });
     } catch (e) {
@@ -2442,15 +1758,6 @@ app.post('/api/contact', async (req, res) => {
 
 // --- COMMENTS ---
 
-app.get('/api/courses', async (req, res) => {
-    try {
-        const courses = await Course.find({ status: 'published' });
-        res.json(courses);
-    } catch (e) {
-        console.error("Error fetching courses:", e);
-        res.status(500).json({ error: 'Erro ao buscar cursos.' });
-    }
-});
 
 
 
@@ -2461,117 +1768,12 @@ app.get('/api/courses', async (req, res) => {
 
 
 // Validate Certificate
-app.get('/api/certificates/validate/:code', async (req, res) => {
-    try {
-        const { code } = req.params;
-        const user = await User.findOne({ 'certificates.code': code });
-
-        if (!user) {
-            return res.json({ valid: false });
-        }
-
-        const cert = user.certificates.find(c => c.code === code);
-        const course = await Course.findById(cert.courseId);
-
-        res.json({
-            valid: true,
-            studentName: user.name,
-            courseTitle: course ? (typeof course.title === 'string' ? course.title : (course.title.pt || course.title.en)) : 'Curso Removido',
-            date: cert.date
-        });
-    } catch (error) {
-        console.error("Certificate validation error:", error);
-        res.status(500).json({ error: 'Failed to validate certificate' });
-    }
-});
-
-
-app.get('/api/courses/:id/reviews', async (req, res) => {
-    try {
-        const { id } = req.params;
-        const reviews = await Review.find({ courseId: id }).sort({ createdAt: -1 });
-
-
-        const total = reviews.length;
-        const average = total > 0
-            ? (reviews.reduce((acc, r) => acc + r.rating, 0) / total).toFixed(1)
-            : 0;
-
-        res.json({ reviews, average, total });
-    } catch (e) {
-        res.status(500).json({ error: 'Erro ao buscar avaliações.' });
-    }
-});
-
-
-app.post('/api/courses/:id/reviews', verifyToken, async (req, res) => {
-    const { id } = req.params;
-    const { rating, comment } = req.body;
-
-    if (!rating) return res.status(400).json({ error: 'Nota é obrigatória.' });
-
-    try {
-        const user = await User.findById(req.user.id);
 
 
 
 
 
 
-        const reviewData = {
-            courseId: id,
-            userId: user._id,
-            userName: user.name,
-            userAvatar: user.avatar,
-            rating,
-            comment,
-            createdAt: new Date()
-        };
-
-
-        const review = await Review.findOneAndUpdate(
-            { courseId: id, userId: user._id },
-            reviewData,
-            { new: true, upsert: true }
-        );
-
-        res.json(review);
-    } catch (e) {
-        console.error(e);
-        res.status(500).json({ error: 'Erro ao salvar avaliação.' });
-    }
-});
-
-app.get('/api/comments/:courseSlug/:lessonIndex', async (req, res) => {
-    try {
-        const { courseSlug, lessonIndex } = req.params;
-        const comments = await Comment.find({ courseSlug, lessonIndex }).sort({ createdAt: -1 });
-        res.json(comments);
-    } catch (e) {
-        res.status(500).json({ error: 'Erro ao buscar comentários' });
-    }
-});
-
-app.post('/api/comments', verifyToken, async (req, res) => {
-    try {
-        const { courseSlug, lessonIndex, content } = req.body;
-        const user = await User.findById(req.user.id);
-
-        const newComment = new Comment({
-            courseSlug,
-            lessonIndex,
-            userId: user._id,
-            userName: user.name,
-            userAvatar: user.avatar,
-            content
-        });
-
-        await newComment.save();
-        res.status(201).json(newComment);
-    } catch (e) {
-        res.status(500).json({ error: 'Erro ao postar comentário' });
-    }
-});
 
 // --- ADMIN FINANCIALS ---
 app.get('/api/admin/seed', async (req, res) => {
@@ -2619,36 +1821,6 @@ app.get('/api/admin/seed', async (req, res) => {
     }
 });
 
-app.get('/api/admin/financials', verifyAdmin, async (req, res) => {
-    try {
-        const transactions = await Transaction.find().sort({ date: -1 });
-        const courses = await Course.find();
-
-        const totalRevenue = transactions
-            .filter(t => t.status === 'approved')
-            .reduce((acc, t) => acc + (t.amount || 0), 0);
-
-        const activeStudents = await User.countDocuments({ role: 'student' });
-
-        // Mock data if empty (for initial dashboard feel)
-        const recentSales = transactions.slice(0, 5).map(t => ({
-            id: t._id,
-            user: "Student", // In real app, populate user
-            amount: t.amount,
-            date: t.date,
-            status: t.status
-        }));
-
-        res.json({
-            totalRevenue,
-            activeStudents,
-            recentSales
-        });
-    } catch (e) {
-        console.error("Financials Error:", e);
-        res.status(500).json({ error: 'Failed fetch financials' });
-    }
-});
 
 // AI Chat Endpoint
 // AI Chat Endpoint with Robust Fallback

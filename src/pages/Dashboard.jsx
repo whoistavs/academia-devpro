@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from '../context/LanguageContext';
-import { BookOpen, User, LogOut, Trash2, Camera, Edit, Lock, Award, Users, MessageCircle, Send, X, Paperclip, Mic, Square, FileText, Download } from 'lucide-react';
+import { BookOpen, User, LogOut, Trash2, Camera, Edit, Lock, Award, Users, MessageCircle, Send, X, Paperclip, Mic, Square, FileText, Download, Flame, Star } from 'lucide-react';
 
 import { Navigate, useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
@@ -12,11 +12,13 @@ import Leaderboard from '../components/Leaderboard';
 
 const Dashboard = () => {
     const { user, isAuthenticated, loading, logout, updateUser, isLessonCompleted, fetchProgress, completedLessons } = useAuth();
+    console.log("Current user object:", user);
     const { t } = useTranslation();
     const navigate = useNavigate();
     const fileInputRef = React.useRef(null);
     const [courses, setCourses] = useState([]);
     const [isLoadingCourses, setIsLoadingCourses] = useState(true);
+    const [isLoadingAuth, setIsLoadingAuth] = useState(false);
 
 
     const [professors, setProfessors] = useState([]);
@@ -491,6 +493,12 @@ const Dashboard = () => {
                             <p className="text-sm text-indigo-600 dark:text-indigo-400 font-medium capitalize mt-1 border border-indigo-200 dark:border-indigo-800 rounded-full px-3 py-0.5 inline-block bg-indigo-50 dark:bg-indigo-900/20">
                                 {user.role || 'student'} • Nível {user.level || 1}
                             </p>
+                            {user.streak > 0 && (
+                                <p className="text-sm text-orange-600 dark:text-orange-400 font-medium ml-2 border border-orange-200 dark:border-orange-800 rounded-full px-3 py-0.5 inline-flex items-center space-x-1 bg-orange-50 dark:bg-orange-900/20">
+                                    <Flame className="w-4 h-4 fill-current" />
+                                    <span>{user.streak} dia(s) seguidos</span>
+                                </p>
+                            )}
 
                             { }
                             <div className="mt-2 w-48">
@@ -505,6 +513,41 @@ const Dashboard = () => {
                                     ></div>
                                 </div>
                             </div>
+
+                            {/* Badges Section */}
+                            {user.badges && user.badges.length > 0 && (
+                                <div className="mt-4 flex flex-wrap gap-2">
+                                    {user.badges.map(badgeId => {
+                                        let BadgeIcon = Award;
+                                        let title = "Conquista";
+                                        let colorClass = "text-indigo-500";
+                                        let bgClass = "bg-indigo-100 dark:bg-indigo-900/40";
+
+                                        if (badgeId === 'first_100_xp') {
+                                            BadgeIcon = Star;
+                                            title = "Iniciante Promissor (100+ XP)";
+                                            colorClass = "text-yellow-500";
+                                            bgClass = "bg-yellow-100 dark:bg-yellow-900/40";
+                                        } else if (badgeId.startsWith('streak')) {
+                                            BadgeIcon = Flame;
+                                            title = `Mestre do Fogo (${badgeId.split('_')[1]} dias)`;
+                                            colorClass = "text-orange-500";
+                                            bgClass = "bg-orange-100 dark:bg-orange-900/40";
+                                        } else if (badgeId === 'first_certificate') {
+                                            title = "Graduado (1º Certificado)";
+                                            colorClass = "text-green-500";
+                                            bgClass = "bg-green-100 dark:bg-green-900/40";
+                                        }
+
+                                        return (
+                                            <div key={badgeId} className={`${bgClass} border border-transparent hover:border-white p-2 rounded-full cursor-help transition-all shadow-sm group relative`} title={title}>
+                                                <BadgeIcon className={`w-5 h-5 ${colorClass}`} />
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )}
+
                         </div>
                     </div>
                 </div>
