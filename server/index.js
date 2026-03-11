@@ -31,6 +31,7 @@ import Track from './models/Track.js';
 import { MercadoPagoConfig, Preference, Payment } from 'mercadopago';
 import { cleanupEmptyCourses } from './scripts/cleanup_courses.js';
 import { tracks as initialTracks } from './tracks.js'; // Renamed for seeding only
+import { calculateBadges } from './utils/badgeSystem.js';
 
 
 
@@ -1256,6 +1257,41 @@ app.post('/api/auth/google', async (req, res) => {
             if (changed) await user.save();
         }
 
+        // Gamification: Streak logic
+        const targetDateLocaleOptions = { timeZone: 'America/Sao_Paulo' };
+        // Normalize today's date to midnight
+        const todayStr = new Date().toLocaleString('en-US', targetDateLocaleOptions);
+        const todayNum = new Date(todayStr);
+        todayNum.setHours(0, 0, 0, 0);
+
+        if (user.lastLoginDate) {
+            const lastLoginStr = new Date(user.lastLoginDate).toLocaleString('en-US', targetDateLocaleOptions);
+            const lastLoginNum = new Date(lastLoginStr);
+            lastLoginNum.setHours(0, 0, 0, 0);
+            
+            const diffTime = Math.abs(todayNum - lastLoginNum);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            if (diffDays === 1) {
+                // Logged in yesterday, increment
+                user.streak = (user.streak || 0) + 1;
+            } else if (diffDays > 1) {
+                // Missed a day
+                user.streak = 1;
+            }
+            // If diffDays === 0, they already logged in today, do nothing to streak
+        } else {
+            // First time logic
+            user.streak = 1;
+        }
+
+        user.lastLoginDate = new Date(); // Save new login timestamp
+
+        // Recalculate Badges based on updated streak, xp, etc.
+        user.badges = calculateBadges(user);
+
+        await user.save();
+
         const token = jwt.sign({ id: user._id, role: user.role }, SECRET_KEY, { expiresIn: '24h' });
 
         res.json({
@@ -1265,6 +1301,11 @@ app.post('/api/auth/google', async (req, res) => {
             avatar: user.avatar,
             authProvider: user.authProvider,
             profileCompleted: user.profileCompleted,
+            streak: user.streak || 0,
+            badges: user.badges || [],
+            xp: user.xp || 0,
+            level: user.level || 1,
+            bankAccount: user.bankAccount,
             accessToken: token
         });
 
