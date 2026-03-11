@@ -39,7 +39,12 @@ const Signup = () => {
                     name: data.name,
                     email: data.email,
                     role: data.role,
-                    avatar: data.avatar
+                    avatar: data.avatar,
+                    streak: data.streak,
+                    badges: data.badges,
+                    xp: data.xp,
+                    level: data.level,
+                    bankAccount: data.bankAccount
                 }, data.accessToken);
                 navigate('/dashboard');
             } catch (err) {

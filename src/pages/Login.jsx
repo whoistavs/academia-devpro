@@ -34,7 +34,12 @@ const Login = () => {
                     role: data.role,
                     avatar: data.avatar,
                     profileCompleted: data.profileCompleted,
-                    authProvider: data.authProvider // Saving auth provider
+                    authProvider: data.authProvider,
+                    streak: data.streak,
+                    badges: data.badges,
+                    xp: data.xp,
+                    level: data.level,
+                    bankAccount: data.bankAccount
                 }, data.accessToken);
                 navigate('/dashboard');
             } catch (err) {
@@ -62,7 +67,12 @@ const Login = () => {
                 email: data.email,
                 role: data.role,
                 avatar: data.avatar,
-                profileCompleted: data.profileCompleted
+                profileCompleted: data.profileCompleted,
+                streak: data.streak,
+                badges: data.badges,
+                xp: data.xp,
+                level: data.level,
+                bankAccount: data.bankAccount
             }, data.accessToken);
             navigate('/dashboard');
         } catch (err) {
