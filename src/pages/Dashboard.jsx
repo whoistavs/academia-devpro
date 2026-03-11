@@ -493,7 +493,7 @@ const Dashboard = () => {
                             <p className="text-sm text-indigo-600 dark:text-indigo-400 font-medium capitalize mt-1 border border-indigo-200 dark:border-indigo-800 rounded-full px-3 py-0.5 inline-block bg-indigo-50 dark:bg-indigo-900/20">
                                 {user.role || 'student'} • Nível {user.level || 1}
                             </p>
-                            {user.streak > 0 && (
+                            {user.streak >= 0 && (
                                 <p className="text-sm text-orange-600 dark:text-orange-400 font-medium ml-2 border border-orange-200 dark:border-orange-800 rounded-full px-3 py-0.5 inline-flex items-center space-x-1 bg-orange-50 dark:bg-orange-900/20">
                                     <Flame className="w-4 h-4 fill-current" />
                                     <span>{user.streak} dia(s) seguidos</span>
