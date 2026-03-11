@@ -1280,6 +1280,10 @@ app.post('/api/auth/google', async (req, res) => {
                 user.streak = 1;
             }
             // If diffDays === 0, they already logged in today, do nothing to streak
+            // However, ensure it is at least 1 (e.g. if they just created the account)
+            if (diffDays === 0 && (!user.streak || user.streak === 0)) {
+                user.streak = 1;
+            }
         } else {
             // First time logic
             user.streak = 1;
