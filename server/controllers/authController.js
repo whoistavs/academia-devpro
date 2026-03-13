@@ -12,22 +12,29 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const SECRET_KEY = process.env.JWT_SECRET || "chave_secreta_super_segura";
 
-const mailConfig = {
-    host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-    port: Number(process.env.EMAIL_PORT) || 587,
-    secure: process.env.EMAIL_SECURE === 'true',
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    },
-    family: 4,
-    connectionTimeout: 10000,
-    greetingTimeout: 5000,
-    socketTimeout: 10000,
-    tls: { rejectUnauthorized: false }
-};
+let transporter = null;
 
-const transporter = nodemailer.createTransport(mailConfig);
+const getTransporter = () => {
+    if (transporter) return transporter;
+
+    const mailConfig = {
+        host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+        port: Number(process.env.EMAIL_PORT) || 587,
+        secure: process.env.EMAIL_SECURE === 'true',
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS
+        },
+        family: 4,
+        connectionTimeout: 10000,
+        greetingTimeout: 5000,
+        socketTimeout: 10000,
+        tls: { rejectUnauthorized: false }
+    };
+
+    transporter = nodemailer.createTransport(mailConfig);
+    return transporter;
+};
 
 export const sendVerificationEmail = async (email, token, language = 'pt') => {
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
@@ -56,7 +63,7 @@ export const sendVerificationEmail = async (email, token, language = 'pt') => {
     const content = contents[lang];
 
     try {
-        await transporter.sendMail({
+        await getTransporter().sendMail({
             from: `"DevPro Academy" <${process.env.EMAIL_USER}>`,
             to: email,
             subject: subjects[lang],
@@ -385,7 +392,7 @@ export const forgotPassword = async (req, res) => {
         const lang = contents[language] ? language : 'pt';
         const content = contents[lang];
 
-        await transporter.sendMail({
+        await getTransporter().sendMail({
             from: `"DevPro Academy" <${process.env.EMAIL_USER}>`,
             to: email,
             subject: subjects[lang] || subjects.pt,

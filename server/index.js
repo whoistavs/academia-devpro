@@ -1,7 +1,4 @@
-import adminRoutes from './routes/adminRoutes.js';
-import authRoutes from './routes/authRoutes.js';
-import courseRoutes from './routes/courseRoutes.js';
-import professorRoutes from './routes/professorRoutes.js';
+import './loadEnv.js';
 import express from 'express';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
@@ -11,13 +8,16 @@ import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import nodemailer from 'nodemailer';
-import dotenv from 'dotenv';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { v2 as cloudinary } from 'cloudinary';
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
 
-
+// Database & Routes
 import connectDB from './connectDb.js';
+import adminRoutes from './routes/adminRoutes.js';
+import authRoutes from './routes/authRoutes.js';
+import courseRoutes from './routes/courseRoutes.js';
+import professorRoutes from './routes/professorRoutes.js';
 import User from './models/User.js';
 import Course from './models/Course.js';
 import Progress from './models/Progress.js';
@@ -44,22 +44,13 @@ const client = new MercadoPagoConfig({ accessToken: process.env.MERCADOPAGO_ACCE
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const envPath = path.join(__dirname, '../.env');
-const result = dotenv.config({ path: envPath });
-
-if (result.error) {
-    console.error("Error loading .env from:", envPath, result.error);
-} else {
-    // console.log(".env loaded from:", envPath);
-
-}
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 const SECRET_KEY = process.env.JWT_SECRET || "chave_secreta_super_segura";
 
 app.use(cors()); // Allow all origins (Netlify, Localhost, etc)
-app.use(express.json()); // Ensure JSON body parsing is on too if missing
+app.use(express.json());
+
 app.use('/api', adminRoutes);
 app.use('/api', courseRoutes);
 app.use('/api', professorRoutes);
