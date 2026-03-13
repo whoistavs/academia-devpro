@@ -17,18 +17,24 @@ let transporter = null;
 const getTransporter = () => {
     if (transporter) return transporter;
 
+    const emailHost = process.env.EMAIL_HOST || 'smtp.gmail.com';
+    const emailPort = Number(process.env.EMAIL_PORT) || 587;
+    const isSecure = process.env.EMAIL_SECURE === 'true' || emailPort === 465;
+
+    console.log(`📡 [SMTP Config] Host: ${emailHost}, Port: ${emailPort}, Secure: ${isSecure}`);
+
     const mailConfig = {
-        host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-        port: Number(process.env.EMAIL_PORT) || 587,
-        secure: process.env.EMAIL_SECURE === 'true',
+        host: emailHost,
+        port: emailPort,
+        secure: isSecure,
         auth: {
             user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_PASS
         },
         family: 4,
-        connectionTimeout: 10000,
-        greetingTimeout: 5000,
-        socketTimeout: 10000,
+        connectionTimeout: 20000, // Increased to 20s
+        greetingTimeout: 15000,   // Increased to 15s
+        socketTimeout: 20000,     // Increased to 20s
         tls: { rejectUnauthorized: false }
     };
 
@@ -82,7 +88,12 @@ export const sendVerificationEmail = async (email, token, language = 'pt') => {
         });
         console.log(`Verification email sent to ${email}`);
     } catch (error) {
-        console.error("Email sending failed:", error);
+        console.error("Email sending failed:", {
+            message: error.message,
+            code: error.code,
+            command: error.command,
+            response: error.response
+        });
     }
 };
 
