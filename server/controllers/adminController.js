@@ -14,27 +14,26 @@ const __dirname = path.dirname(__filename);
 
 export const getFinancials = async (req, res) => {
     try {
-        const transactions = await Transaction.find().sort({ date: -1 });
-        const courses = await Course.find();
+        const transactions = await Transaction.find({ status: 'approved' });
 
-        const totalRevenue = transactions
-            .filter(t => t.status === 'approved')
-            .reduce((acc, t) => acc + (t.amount || 0), 0);
+        const totalSales = transactions.reduce((acc, t) => acc + (t.amount || 0), 0);
+        const totalFees = transactions.reduce((acc, t) => acc + (t.platformFee || 0), 0);
+        const totalPayouts = transactions.reduce((acc, t) => acc + (t.sellerNet || 0), 0);
+        
+        // availableBalance for admin is totalFees
+        const availableBalance = totalFees;
 
-        const activeStudents = await User.countDocuments({ role: 'student' });
-
-        // Mock data if empty (for initial dashboard feel)
-        const recentSales = transactions.slice(0, 5).map(t => ({
-            id: t._id,
-            user: "Student", // In real app, populate user
-            amount: t.amount,
-            date: t.date,
-            status: t.status
-        }));
+        const recentSales = await Transaction.find()
+            .sort({ createdAt: -1 })
+            .limit(5);
 
         res.json({
-            totalRevenue,
-            activeStudents,
+            summary: {
+                totalSales,
+                totalFees,
+                availableBalance,
+                totalPayouts
+            },
             recentSales
         });
     } catch (e) {
