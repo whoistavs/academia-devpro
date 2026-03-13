@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 import { api } from '../services/api';
+import AchievementToast from '../components/AchievementToast';
 
 const AuthContext = createContext();
 
@@ -9,6 +10,16 @@ export const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [notifications, setNotifications] = useState([]);
+
+    const addNotification = (message, type) => {
+        const id = Date.now() + Math.random();
+        setNotifications(prev => [...prev, { id, message, type }]);
+    };
+
+    const removeNotification = (id) => {
+        setNotifications(prev => prev.filter(n => n.id !== id));
+    };
 
     useEffect(() => {
         const initAuth = async () => {
@@ -52,6 +63,10 @@ export const AuthProvider = ({ children }) => {
         setIsAuthenticated(true);
         localStorage.setItem('token', accessToken);
         localStorage.setItem('user', JSON.stringify(safeUser));
+
+        if (safeUser.streak >= 1) {
+            addNotification(`${safeUser.streak} dia(s) seguidos!`, 'streak');
+        }
     };
 
     const logout = () => {
@@ -99,7 +114,21 @@ export const AuthProvider = ({ children }) => {
                 
                 
                 const finalId = lessonIndex === 0 ? "0" : lessonIndex;
-                await api.updateProgress({ courseId, lessonId: finalId });
+                const result = await api.updateProgress({ courseId, lessonId: finalId });
+
+                if (result.gamification) {
+                    const { earnedXp, newBadges, leveledUp, user: updatedUser } = result.gamification;
+                    
+                    if (earnedXp > 0) addNotification(`+${earnedXp} XP de Conhecimento!`, 'xp');
+                    if (newBadges && newBadges.length > 0) {
+                        newBadges.forEach(badge => addNotification(`Conquista Desbloqueada: ${badge}`, 'badge'));
+                    }
+                    if (leveledUp) addNotification(`Subiu de Nível! Nível ${updatedUser?.level || 'Novo'}`, 'level');
+
+                    if (updatedUser) {
+                        updateUser({ ...user, ...updatedUser });
+                    }
+                }
             } catch (error) {
                 console.error("Failed to save progress:", error);
             }
@@ -114,8 +143,19 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, token, isAuthenticated, login, logout, updateUser, loading, markLessonComplete, isLessonCompleted, completedLessons, fetchProgress }}>
+        <AuthContext.Provider value={{ user, token, isAuthenticated, login, logout, updateUser, loading, markLessonComplete, isLessonCompleted, completedLessons, fetchProgress, addNotification }}>
             {children}
+            <div className="fixed bottom-0 right-0 p-6 z-[9999] pointer-events-none flex flex-col items-end gap-3">
+                {notifications.map(n => (
+                    <div key={n.id} className="pointer-events-auto">
+                        <AchievementToast 
+                            message={n.message} 
+                            type={n.type} 
+                            onClose={() => removeNotification(n.id)} 
+                        />
+                    </div>
+                ))}
+            </div>
         </AuthContext.Provider>
     );
 };

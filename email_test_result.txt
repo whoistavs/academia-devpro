@@ -1,0 +1,16 @@
+
+--- VERIFICAÇÃO DE CONFIGURAÇÃO DE EMAIL ---
+
+[OK] EMAIL_HOST: smtp.gmail.com
+[OK] EMAIL_PORT: 465
+[OK] EMAIL_USER: noreply.devproacademy@gmail.com
+[OK] EMAIL_PASS: ******
+[X] FALTANDO (MISSING): FRONTEND_URL
+
+--- TESTANDO CONEXÃO SMTP ---
+
+[SUCESSO] Conexão com o servidor de email ESTABELECIDA!
+Seu backend está pronto para enviar emails.
+
+--------------------------------------------
+

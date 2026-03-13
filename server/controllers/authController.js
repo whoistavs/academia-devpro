@@ -259,15 +259,335 @@ export const verifyPassword = async (req, res) => {
         const user = await User.findById(req.user.id);
         if (!user) return res.status(404).json({ error: 'Usuário não encontrado.' });
 
-        if (user.authProvider === 'google') {
-            return res.status(400).json({ error: 'Usuários Google não possuem senha definida. Ação não permitida.' });
-        }
-
         const isValid = bcrypt.compareSync(password, user.password);
         if (!isValid) return res.status(401).json({ error: 'Senha incorreta.' });
 
         res.json({ success: true });
     } catch (e) {
         res.status(500).json({ error: 'Erro ao verificar senha.' });
+    }
+};
+
+export const googleAuth = async (req, res) => {
+    const { access_token } = req.body;
+    try {
+        const googleRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+            headers: { Authorization: `Bearer ${access_token}` }
+        });
+
+        if (!googleRes.ok) return res.status(401).json({ error: 'Invalid Google Token' });
+
+        const googleData = await googleRes.json();
+        const { email, picture } = googleData;
+        const name = googleData.name || googleData.given_name || 'Usuário';
+
+        let user = await User.findOne({ email });
+
+        if (!user) {
+            const tempPass = bcrypt.hashSync(Math.random().toString(36), 8);
+            user = new User({
+                name, email,
+                password: tempPass,
+                role: 'student',
+                isVerified: true,
+                avatar: picture,
+                authProvider: 'google'
+            });
+            await user.save();
+        } else {
+            let changed = false;
+            if (!user.name || user.name === 'undefined') {
+                user.name = name;
+                changed = true;
+            }
+            if (!user.avatar && picture) {
+                user.avatar = picture;
+                changed = true;
+            }
+            if (changed) await user.save();
+        }
+
+        // Gamification: Streak logic
+        const targetDateLocaleOptions = { timeZone: 'America/Sao_Paulo' };
+        const todayStr = new Date().toLocaleString('en-US', targetDateLocaleOptions);
+        const todayNum = new Date(todayStr);
+        todayNum.setHours(0, 0, 0, 0);
+
+        if (user.lastLoginDate) {
+            const lastLoginStr = new Date(user.lastLoginDate).toLocaleString('en-US', targetDateLocaleOptions);
+            const lastLoginNum = new Date(lastLoginStr);
+            lastLoginNum.setHours(0, 0, 0, 0);
+            
+            const diffTime = Math.abs(todayNum - lastLoginNum);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            if (diffDays === 1) {
+                user.streak = (user.streak || 0) + 1;
+            } else if (diffDays > 1) {
+                user.streak = 1;
+            }
+            if (diffDays === 0 && (!user.streak || user.streak === 0)) {
+                user.streak = 1;
+            }
+        } else {
+            user.streak = 1;
+        }
+
+        user.lastLoginDate = new Date();
+        user.badges = calculateBadges(user);
+        await user.save();
+
+        const token = jwt.sign({ id: user._id, role: user.role }, SECRET_KEY, { expiresIn: '24h' });
+
+        res.json({
+            id: user._id,
+            name: user.name,
+            role: user.role,
+            avatar: user.avatar,
+            authProvider: user.authProvider,
+            profileCompleted: user.profileCompleted,
+            streak: user.streak || 0,
+            badges: user.badges || [],
+            xp: user.xp || 0,
+            level: user.level || 1,
+            bankAccount: user.bankAccount,
+            accessToken: token
+        });
+    } catch (e) {
+        console.error("Google Auth error:", e);
+        res.status(500).json({ error: 'Google Auth Failed' });
+    }
+};
+
+export const forgotPassword = async (req, res) => {
+    const { email, language = 'pt' } = req.body;
+    try {
+        const user = await User.findOne({ email });
+        if (!user) return res.status(404).json({ error: 'Email não encontrado.' });
+        if (user.authProvider === 'google') return res.status(400).json({ error: 'Use o login do Google.' });
+
+        const code = Math.floor(100000 + Math.random() * 900000).toString();
+        user.resetPasswordToken = code;
+        user.resetPasswordExpires = Date.now() + 15 * 60 * 1000;
+        await user.save();
+
+        const subjects = {
+            pt: "Recuperação de Senha - DevPro Academy",
+            en: "Password Recovery - DevPro Academy",
+            es: "Recuperación de Contraseña - DevPro Academy"
+        };
+
+        const contents = {
+            pt: { title: "Recuperação de Senha 🔒", text1: "Você solicitou a redefinição da sua senha.", text2: "Use o código abaixo para continuar:", small1: "Este código expira em 15 minutos.", small2: "Se você não solicitou isso, ignore este email." },
+            en: { title: "Password Recovery 🔒", text1: "You requested a password reset.", text2: "Use the code below to continue:", small1: "This code expires in 15 minutes.", small2: "If you did not request this, please ignore this email." }
+        };
+
+        const lang = contents[language] ? language : 'pt';
+        const content = contents[lang];
+
+        await transporter.sendMail({
+            from: `"DevPro Academy" <${process.env.EMAIL_USER}>`,
+            to: email,
+            subject: subjects[lang] || subjects.pt,
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                    <h2 style="color: #4F46E5;">${content.title}</h2>
+                    <p>${content.text1}</p>
+                    <p>${content.text2}</p>
+                    <div style="text-align: center; margin: 30px 0;">
+                        <span style="background-color: #f3f4f6; padding: 15px 30px; border-radius: 8px; font-size: 24px; font-weight: bold; letter-spacing: 5px; color: #1F2937;">${code}</span>
+                    </div>
+                    <p style="color: #666; font-size: 14px;">${content.small1}</p>
+                    <p style="color: #666; font-size: 12px;">${content.small2}</p>
+                </div>
+            `
+        });
+
+        res.json({ message: 'Código enviado para seu email.' });
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: 'Erro ao enviar email.' });
+    }
+};
+
+export const validateCode = async (req, res) => {
+    const { email, code, language = 'pt' } = req.body;
+    try {
+        const user = await User.findOne({
+            email,
+            resetPasswordToken: code,
+            resetPasswordExpires: { $gt: Date.now() }
+        });
+        if (!user) return res.status(400).json({ error: 'Código inválido ou expirado.' });
+        res.json({ message: 'Código válido.' });
+    } catch (e) {
+        res.status(500).json({ error: 'Erro ao validar código.' });
+    }
+};
+
+export const resetPassword = async (req, res) => {
+    const { email, code, newPassword, language = 'pt' } = req.body;
+    try {
+        const user = await User.findOne({
+            email,
+            resetPasswordToken: code,
+            resetPasswordExpires: { $gt: Date.now() }
+        });
+        if (!user) return res.status(400).json({ error: 'Código inválido ou expirado.' });
+
+        const minLength = 8;
+        if (newPassword.length < minLength || !/\d/.test(newPassword) || !/[!@#$%^&*(),.?":{}|<>_]/.test(newPassword)) {
+            return res.status(400).json({ error: 'A senha deve ter 8+ caracteres, números e símbolos.' });
+        }
+
+        user.password = bcrypt.hashSync(newPassword, 8);
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpires = undefined;
+        await user.save();
+
+        res.json({ message: 'Senha alterada com sucesso! Faça login agora.' });
+    } catch (e) {
+        res.status(500).json({ error: 'Erro ao redefinir senha.' });
+    }
+};
+
+export const changePassword = async (req, res) => {
+    const { oldPassword, newPassword, language = 'pt' } = req.body;
+    try {
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ error: 'Usuário não encontrado.' });
+        if (user.authProvider === 'google') return res.status(400).json({ error: 'Usuários Google não possuem senha para alterar.' });
+
+        const isValid = bcrypt.compareSync(oldPassword, user.password);
+        if (!isValid) return res.status(401).json({ error: 'Senha atual incorreta.' });
+
+        user.password = bcrypt.hashSync(newPassword, 8);
+        await user.save();
+        res.json({ message: 'Senha alterada com sucesso.' });
+    } catch (e) {
+        res.status(500).json({ error: 'Erro ao alterar senha.' });
+    }
+};
+
+export const getMe = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id).select('-password');
+        if (!user) return res.status(404).json({ error: 'User not found' });
+        res.json({
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            avatar: user.avatar,
+            username: user.username,
+            profileCompleted: user.profileCompleted,
+            purchasedCourses: user.purchasedCourses || [],
+            authProvider: user.authProvider || 'local',
+            bankAccount: user.bankAccount,
+            streak: user.streak || 0,
+            badges: user.badges || [],
+            xp: user.xp || 0,
+            level: user.level || 1
+        });
+    } catch (e) {
+        res.status(500).json({ error: 'Erro ao buscar perfil.' });
+    }
+};
+
+export const completeProfile = async (req, res) => {
+    const { name, cpf, rg, birthDate } = req.body;
+    try {
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ error: 'Usuário não encontrado.' });
+
+        user.name = name;
+        user.cpf = cpf;
+        user.rg = rg;
+        user.birthDate = birthDate;
+        user.profileCompleted = true;
+        await user.save();
+
+        res.json({ message: 'Perfil completado com sucesso!', user });
+    } catch (e) {
+        res.status(500).json({ error: 'Erro ao salvar perfil.' });
+    }
+};
+
+export const updateBankAccount = async (req, res) => {
+    const { pixKey, bank, agency, account, accountType } = req.body;
+    try {
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ error: 'Usuário não encontrado.' });
+
+        user.bankAccount = { pixKey, bank, agency, account, accountType };
+        await user.save();
+
+        res.json({ message: 'Dados bancários atualizados!', bankAccount: user.bankAccount });
+    } catch (e) {
+        res.status(500).json({ error: 'Erro ao salvar dados bancários.' });
+    }
+};
+
+export const updateMe = async (req, res) => {
+    try {
+        const updates = req.body;
+        const allowedUpdates = ['name', 'avatar', 'cpf', 'rg', 'birthDate', 'username', 'profileCompleted'];
+        const actualUpdates = {};
+
+        Object.keys(updates).forEach(key => {
+            if (allowedUpdates.includes(key)) {
+                actualUpdates[key] = updates[key];
+            }
+        });
+
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ error: 'User not found' });
+
+        Object.keys(actualUpdates).forEach(key => {
+            user[key] = actualUpdates[key];
+        });
+
+        if (user.name && user.cpf && user.rg) {
+            user.profileCompleted = true;
+        }
+
+        await user.save();
+        const token = jwt.sign({ id: user._id, role: user.role }, SECRET_KEY, { expiresIn: '24h' });
+
+        res.json({
+            message: 'Updated',
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                avatar: user.avatar,
+                profileCompleted: user.profileCompleted
+            },
+            token
+        });
+    } catch (e) {
+        res.status(500).json({ error: 'Erro ao atualizar perfil.' });
+    }
+};
+
+export const deleteMe = async (req, res) => {
+    try {
+        await User.findByIdAndDelete(req.user.id);
+        res.json({ message: 'Conta excluída com sucesso.' });
+    } catch (e) {
+        res.status(500).json({ error: 'Erro ao excluir conta.' });
+    }
+};
+
+export const getRanking = async (req, res) => {
+    try {
+        const users = await User.find({ role: 'student' })
+            .select('name xp level avatar badges streak')
+            .sort({ xp: -1 })
+            .limit(10);
+        res.json(users);
+    } catch (e) {
+        res.status(500).json({ error: 'Erro ao buscar ranking.' });
     }
 };
