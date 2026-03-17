@@ -2,7 +2,8 @@ import express from 'express';
 import { 
     registerUser, verifyEmail, resendVerification, loginUser, verifyPassword,
     googleAuth, forgotPassword, validateCode, resetPassword, changePassword,
-    getMe, completeProfile, updateBankAccount, updateMe, deleteMe, getRanking
+    getMe, completeProfile, updateBankAccount, updateMe, deleteMe, getRanking,
+    contact
 } from '../controllers/authController.js';
 import { verifyToken } from '../middleware/auth.js';
 
@@ -19,6 +20,7 @@ router.post('/auth/google', googleAuth);
 router.post('/forgot-password', forgotPassword);
 router.post('/validate-code', validateCode);
 router.post('/reset-password', resetPassword);
+router.post('/contact', contact);
 
 // Protected routes
 router.get('/users/me', verifyToken, getMe);

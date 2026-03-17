@@ -83,7 +83,7 @@ const Signup = () => {
         }
 
         try {
-            await api.register({ name, username, email, password, role, language });
+            await api.register({ name, username, email, password, role, language }, captchaValid);
             setError('SUCCESS_VERIFICATION');
         } catch (err) {
             setError(err.message);

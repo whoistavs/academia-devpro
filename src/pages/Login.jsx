@@ -59,7 +59,7 @@ const Login = () => {
         setError('');
 
         try {
-            const data = await api.login(email, password, rememberMe);
+            const data = await api.login(email, password, rememberMe, captchaValid);
 
             login({
                 id: data.id,
@@ -189,15 +189,13 @@ const Login = () => {
                         </div>
                     </div>
 
-                    {/* 
-                    <SecurityCaptcha onValidate={setCaptchaValid} /> 
-                    */}
+                    <SecurityCaptcha onValidate={setCaptchaValid} />
 
                     <div>
                         <button
                             type="submit"
-                            disabled={isGoogleLoading}
-                            className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white transition-colors bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${isGoogleLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            disabled={isGoogleLoading || !captchaValid}
+                            className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white transition-colors bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${isGoogleLoading || !captchaValid ? 'opacity-50 cursor-not-allowed' : ''}`}
                         >
                             {t('auth.login.submit')}
                         </button>

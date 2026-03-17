@@ -54,11 +54,11 @@ export const api = {
     },
 
 
-    login: async (email, password, rememberMe = false) => {
+    login: async (email, password, rememberMe = false, captchaToken = null) => {
         const res = await fetch(`${API_URL}/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password, rememberMe }),
+            body: JSON.stringify({ email, password, rememberMe, captchaToken }),
         });
         if (!res.ok) {
             const err = await res.json();
@@ -126,12 +126,12 @@ export const api = {
         }
         return res.json();
     },
-    register: async (userData) => {
+    register: async (userData, captchaToken = null) => {
 
         const res = await fetch(`${API_URL}/cadastro`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(userData),
+            body: JSON.stringify({ ...userData, captchaToken }),
         });
         if (!res.ok) {
             const err = await res.json();

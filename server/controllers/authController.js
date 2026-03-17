@@ -1,4 +1,5 @@
 import User from '../models/User.js';
+import Message from '../models/Message.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import fs from 'fs';
@@ -11,6 +12,24 @@ import nodemailer from 'nodemailer';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const SECRET_KEY = process.env.JWT_SECRET || "chave_secreta_super_segura";
+
+const verifyCaptcha = async (token) => {
+    if (!token) return false;
+    // TEST SECRET KEY for localhost
+    const secret = process.env.RECAPTCHA_SECRET_KEY || "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe";
+    try {
+        const response = await fetch(`https://www.google.com/recaptcha/api/siteverify`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `secret=${secret}&response=${token}`
+        });
+        const data = await response.json();
+        return data.success;
+    } catch (e) {
+        console.error("Captcha Verify Error:", e);
+        return false;
+    }
+};
 
 let transporter = null;
 
@@ -98,7 +117,11 @@ export const sendVerificationEmail = async (email, token, language = 'pt') => {
 };
 
 export const registerUser = async (req, res) => {
-    const { name, email, password, role, username, language = 'pt' } = req.body;
+    const { name, email, password, role, username, language = 'pt', captchaToken } = req.body;
+
+    if (!await verifyCaptcha(captchaToken)) {
+        return res.status(400).json({ error: 'Falha na verificação de CAPTCHA.' });
+    }
 
     try {
         const existingUser = await User.findOne({
@@ -198,7 +221,11 @@ export const resendVerification = async (req, res) => {
 };
 
 export const loginUser = async (req, res) => {
-    const { email, password, rememberMe } = req.body;
+    const { email, password, rememberMe, captchaToken } = req.body;
+
+    if (!await verifyCaptcha(captchaToken)) {
+        return res.status(400).json({ error: 'Falha na verificação de CAPTCHA.' });
+    }
 
     try {
         const user = await User.findOne({ email });
@@ -607,5 +634,24 @@ export const getRanking = async (req, res) => {
         res.json(users);
     } catch (e) {
         res.status(500).json({ error: 'Erro ao buscar ranking.' });
+    }
+};
+export const contact = async (req, res) => {
+    try {
+        const { name, email, subject, message } = req.body;
+        const msg = new Message({ name, email, subject, message });
+        await msg.save();
+
+        await (await getTransporter()).sendMail({
+            from: `"DevPro Contato" <${process.env.EMAIL_USER}>`,
+            to: 'devproacademy@outlook.com',
+            subject: `[Contato Site] ${subject}`,
+            html: `<h3>Nova mensagem de contato</h3><p><strong>Nome:</strong> ${name}</p><p><strong>Email:</strong> ${email}</p><p><strong>Assunto:</strong> ${subject}</p><br><p><strong>Mensagem:</strong></p><p>${message}</p>`
+        });
+
+        res.status(201).json({ message: 'Sent' });
+    } catch (e) {
+        console.error("Contact Error:", e);
+        res.status(500).json({ error: 'Erro.' });
     }
 };

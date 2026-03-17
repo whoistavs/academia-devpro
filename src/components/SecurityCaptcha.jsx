@@ -12,15 +12,11 @@ const SecurityCaptcha = ({ onValidate }) => {
      * https://www.google.com/recaptcha/admin
      * and replace this value.
      */
-    const SITE_KEY = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
+    const SITE_KEY = "6Ld9gI0sAAAAAHnF3WR4wfN_ExOkehjbsQwkZDCT";
 
     const handleChange = (value) => {
-        // If value is truthy, the user solved the captcha
-        if (value) {
-            onValidate(true);
-        } else {
-            onValidate(false);
-        }
+        // Pass the token to the parent
+        onValidate(value);
     };
 
     return (
