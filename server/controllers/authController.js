@@ -15,8 +15,13 @@ const SECRET_KEY = process.env.JWT_SECRET || "chave_secreta_super_segura";
 
 const verifyCaptcha = async (token) => {
     if (!token) return false;
-    // TEST SECRET KEY for localhost
-    const secret = process.env.RECAPTCHA_SECRET_KEY || "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe";
+    
+    const secret = process.env.RECAPTCHA_SECRET_KEY;
+    if (!secret) {
+        console.warn("RECAPTCHA_SECRET_KEY missing. Skipping real verification (Local development mode).");
+        return true; // Allow for development if secret is missing
+    }
+
     try {
         const response = await fetch(`https://www.google.com/recaptcha/api/siteverify`, {
             method: 'POST',
@@ -24,7 +29,15 @@ const verifyCaptcha = async (token) => {
             body: `secret=${secret}&response=${token}`
         });
         const data = await response.json();
-        return data.success;
+        
+        // For v3, we should also check the score. 
+        // 0.5 is a common threshold for "likely a human"
+        if (data.success && (data.score === undefined || data.score >= 0.5)) {
+            return true;
+        }
+        
+        console.warn("CAPTCHA failed or low score:", data);
+        return false;
     } catch (e) {
         console.error("Captcha Verify Error:", e);
         return false;
