@@ -15,11 +15,25 @@ const Signup = () => {
     const [role, setRole] = useState('student');
     const [showPassword, setShowPassword] = useState(false);
     const [agreedToTerms, setAgreedToTerms] = useState(false);
+    const [cpf, setCpf] = useState('');
     const [error, setError] = useState('');
     const [captchaValid, setCaptchaValid] = useState(false);
     const navigate = useNavigate();
     const { t, language } = useTranslation();
     const { login } = useAuth();
+
+    const maskCPF = (value) => {
+        return value
+            .replace(/\D/g, '')
+            .replace(/(\d{3})(\d)/, '$1.$2')
+            .replace(/(\d{3})(\d)/, '$1.$2')
+            .replace(/(\d{3})(\d{1,2})/, '$1-$2')
+            .replace(/(-\d{2})\d+?$/, '$1');
+    };
+
+    const handleCpfChange = (e) => {
+        setCpf(maskCPF(e.target.value));
+    };
     const googleLogin = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
             try {
@@ -82,8 +96,13 @@ const Signup = () => {
             return;
         }
 
+        if (cpf && cpf.replace(/\D/g, '').length !== 11) {
+            setError("O CPF deve conter 11 dígitos.");
+            return;
+        }
+
         try {
-            await api.register({ name, username, email, password, role, language }, captchaValid);
+            await api.register({ name, username, email, password, cpf, role, language }, captchaValid);
             setError('SUCCESS_VERIFICATION');
         } catch (err) {
             setError(err.message);
@@ -183,6 +202,22 @@ const Signup = () => {
                                         onChange={(e) => setUsername(e.target.value)}
                                         className="appearance-none rounded-none relative block w-full px-3 py-2 pl-10 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm bg-white dark:bg-gray-700"
                                         placeholder="Nome de Usuário (ex: whoistavs)"
+                                    />
+                                </div>
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <User className="h-5 w-5 text-gray-400" />
+                                    </div>
+                                    <input
+                                        id="cpf"
+                                        name="cpf"
+                                        type="text"
+                                        required
+                                        value={cpf}
+                                        onChange={handleCpfChange}
+                                        maxLength="14"
+                                        className="appearance-none rounded-none relative block w-full px-3 py-2 pl-10 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm bg-white dark:bg-gray-700"
+                                        placeholder="CPF (000.000.000-00)"
                                     />
                                 </div>
                                 <div className="relative">

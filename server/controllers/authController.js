@@ -44,6 +44,15 @@ const verifyCaptcha = async (token) => {
     }
 };
 
+const isValidCPF = (cpf) => {
+    if (typeof cpf !== 'string') return false;
+    cpf = cpf.replace(/[^\d]+/g, '');
+    if (cpf.length !== 11 || !!cpf.match(/(\d)\1{10}/)) return false;
+    cpf = cpf.split('').map(el => +el);
+    const rest = (count) => (cpf.slice(0, count-12).reduce((soma, el, index) => (soma + el * (count - index)), 0) * 10) % 11 % 10;
+    return rest(10) === cpf[9] && rest(11) === cpf[10];
+};
+
 let transporter = null;
 
 const getTransporter = () => {
@@ -130,7 +139,7 @@ export const sendVerificationEmail = async (email, token, language = 'pt') => {
 };
 
 export const registerUser = async (req, res) => {
-    const { name, email, password, role, username, language = 'pt', captchaToken } = req.body;
+    const { name, email, password, role, username, cpf, language = 'pt', captchaToken } = req.body;
 
     if (!await verifyCaptcha(captchaToken)) {
         return res.status(400).json({ error: 'Falha na verificação de CAPTCHA.' });
@@ -138,12 +147,17 @@ export const registerUser = async (req, res) => {
 
     try {
         const existingUser = await User.findOne({
-            $or: [{ email }, { username: username }]
+            $or: [{ email }, { username: username }, { cpf }]
         });
 
         if (existingUser) {
             if (existingUser.email === email) return res.status(400).json({ error: 'Email já cadastrado.' });
             if (existingUser.username === username) return res.status(400).json({ error: 'Nome de usuário já existe.' });
+            if (cpf && existingUser.cpf === cpf) return res.status(400).json({ error: 'CPF já cadastrado.' });
+        }
+
+        if (cpf && !isValidCPF(cpf)) {
+            return res.status(400).json({ error: 'CPF inválido.' });
         }
 
         const minLength = 8;
@@ -158,7 +172,7 @@ export const registerUser = async (req, res) => {
         const verificationToken = Math.random().toString(36).substring(2);
 
         const newUser = new User({
-            name, email, username,
+            name, email, username, cpf,
             password: hashedPassword,
             role: role === 'professor' ? 'professor' : 'student',
             verificationToken,

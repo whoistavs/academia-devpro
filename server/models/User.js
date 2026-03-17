@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema({
     role: { type: String, enum: ['student', 'professor', 'admin'], default: 'student' },
     avatar: { type: String },
     username: { type: String, unique: true, sparse: true },
-    cpf: { type: String },
+    cpf: { type: String, unique: true, sparse: true },
     rg: { type: String },
     birthDate: { type: Date },
     profileCompleted: { type: Boolean, default: false },
