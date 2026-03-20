@@ -30,7 +30,7 @@ const ProfessorDebtsSection = () => {
             return alert("O professor não configurou a chave Pix.");
         }
         setPayModal(debt);
-        setAmountToPay(debt.balance.toFixed(2));
+        setAmountToPay((debt.balance || 0).toFixed(2));
     };
 
     const handleConfirmPay = async () => {
@@ -87,13 +87,13 @@ const ProfessorDebtsSection = () => {
                                     Chave Pix: <span className="font-mono bg-gray-100 dark:bg-gray-700 px-1 rounded">{d.pixKey}</span>
                                 </p>
                                 <p className="text-xs text-purple-600 dark:text-purple-400 mt-1">
-                                    Vendas: R$ {d.totalEarned.toFixed(2)} | Já Pago: R$ {d.totalPaid.toFixed(2)}
+                                    Vendas: R$ {(d.totalEarned || 0).toFixed(2)} | Já Pago: R$ {(d.totalPaid || 0).toFixed(2)}
                                 </p>
                             </div>
                             <div className="flex items-center space-x-4">
                                 <div className="text-right">
                                     <span className="block text-sm text-gray-500 dark:text-gray-400">Saldo a Pagar</span>
-                                    <span className="block text-xl font-bold text-green-600 dark:text-green-400">R$ {d.balance.toFixed(2)}</span>
+                                    <span className="block text-xl font-bold text-green-600 dark:text-green-400">R$ {(d.balance || 0).toFixed(2)}</span>
                                 </div>
                                 <button
                                     onClick={() => openPayModal(d)}
@@ -669,7 +669,7 @@ const AdminDashboard = () => {
                                     <div className="flex justify-between items-center">
                                         <div>
                                             <p className="text-gray-500 text-sm font-medium uppercase">Vendas Totais</p>
-                                            <h3 className="text-2xl font-bold text-gray-900 dark:text-white">R$ {financials.summary.totalSales.toFixed(2)}</h3>
+                                            <h3 className="text-2xl font-bold text-gray-900 dark:text-white">R$ {(financials.summary?.totalSales || 0).toFixed(2)}</h3>
                                         </div>
                                         <div className="p-3 bg-indigo-100 dark:bg-indigo-900/30 rounded-full">
                                             <DollarSign className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
@@ -683,8 +683,8 @@ const AdminDashboard = () => {
                                         <div className="flex justify-between items-center mb-2">
                                             <div>
                                                 <p className="text-gray-500 text-sm font-medium uppercase">Sua Comissão (Saldo)</p>
-                                                <h3 className="text-2xl font-bold text-green-600 dark:text-green-400">R$ {financials.summary.availableBalance.toFixed(2)}</h3>
-                                                <p className="text-xs text-gray-400">Total Acumulado: R$ {financials.summary.totalFees.toFixed(2)}</p>
+                                                <h3 className="text-2xl font-bold text-green-600 dark:text-green-400">R$ {(financials.summary?.availableBalance || 0).toFixed(2)}</h3>
+                                                <p className="text-xs text-gray-400">Total Acumulado: R$ {(financials.summary?.totalFees || 0).toFixed(2)}</p>
                                             </div>
                                             <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-full">
                                                 <TrendingUp className="w-6 h-6 text-green-600 dark:text-green-400" />
@@ -699,7 +699,7 @@ const AdminDashboard = () => {
                                     <div className="flex justify-between items-center">
                                         <div>
                                             <p className="text-gray-500 text-sm font-medium uppercase">A Pagar Aos Pro.</p>
-                                            <h3 className="text-2xl font-bold text-gray-900 dark:text-white">R$ {financials.summary.totalPayouts.toFixed(2)}</h3>
+                                            <h3 className="text-2xl font-bold text-gray-900 dark:text-white">R$ {(financials.summary?.totalPayouts || 0).toFixed(2)}</h3>
                                         </div>
                                         <div className="p-3 bg-gray-100 dark:bg-gray-700 rounded-full">
                                             <Users className="w-6 h-6 text-gray-600 dark:text-gray-400" />

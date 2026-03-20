@@ -138,33 +138,49 @@ const AIChatWidget = () => {
 
     const formatMessage = (text) => {
         if (!text) return text;
-        const parts = text.split(/(\*\*.*?\*\*|`.*?`|https?:\/\/[^\s]+)/g);
 
-        return parts.map((part, index) => {
-            if (part.startsWith('**') && part.endsWith('**')) {
-                return <strong key={index}>{part.slice(2, -2)}</strong>;
-            }
-            if (part.startsWith('`') && part.endsWith('`')) {
+        // First, extract code blocks (```...```)
+        const blockParts = text.split(/(```[\s\S]*?```)/g);
+
+        return blockParts.map((blockPart, bIdx) => {
+            if (blockPart.startsWith('```') && blockPart.endsWith('```')) {
+                const code = blockPart.slice(3, -3);
                 return (
-                    <code key={index} className="bg-gray-200 dark:bg-gray-600 px-1 py-0.5 rounded text-xs font-mono break-all">
-                        {part.slice(1, -1)}
-                    </code>
+                    <pre key={`b-${bIdx}`} className="bg-gray-900 text-gray-100 p-3 rounded-lg my-2 font-mono text-xs overflow-x-auto border border-gray-700">
+                        <code>{code.replace(/^[a-z]+\n/i, '')}</code>
+                    </pre>
                 );
             }
-            if (part.match(/^https?:\/\//)) {
-                return (
-                    <a
-                        key={index}
-                        href={part}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-300 hover:text-white underline break-all"
-                    >
-                        {part}
-                    </a>
-                );
-            }
-            return <span key={index}>{part}</span>;
+
+            // Then format the rest (bold, inline code, links)
+            const parts = blockPart.split(/(\*\*.*?\*\*|`.*?`|https?:\/\/[^\s]+)/g);
+
+            return parts.map((part, index) => {
+                if (part.startsWith('**') && part.endsWith('**')) {
+                    return <strong key={index}>{part.slice(2, -2)}</strong>;
+                }
+                if (part.startsWith('`') && part.endsWith('`')) {
+                    return (
+                        <code key={index} className="bg-gray-200 dark:bg-gray-600 px-1 py-0.5 rounded text-xs font-mono break-all">
+                            {part.slice(1, -1)}
+                        </code>
+                    );
+                }
+                if (part.match(/^https?:\/\//)) {
+                    return (
+                        <a
+                            key={index}
+                            href={part}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-300 hover:text-white underline break-all"
+                        >
+                            {part}
+                        </a>
+                    );
+                }
+                return <span key={index}>{part}</span>;
+            });
         });
     };
 

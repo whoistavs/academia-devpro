@@ -49,9 +49,9 @@ const CourseCard = ({ course }) => {
                         </div>
                     </div>
                     {course.rating > 0 && (
-                        <div className="flex items-center text-yellow-500 font-semibold">
-                            <Star className="h-4 w-4 mr-1 fill-current" />
-                            <span>{course.rating}</span>
+                        <div className="flex items-center bg-amber-50 dark:bg-amber-900/30 px-2 py-1 rounded-lg border border-amber-100 dark:border-amber-800/50 shadow-sm">
+                            <Star className="h-3.5 w-3.5 mr-1 text-amber-500 fill-current" />
+                            <span className="text-amber-700 dark:text-amber-400 font-bold text-xs">{course.rating.toFixed(1)}</span>
                         </div>
                     )}
                 </div>

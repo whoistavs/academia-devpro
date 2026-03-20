@@ -2,13 +2,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from '../context/LanguageContext';
-import { BookOpen, User, LogOut, Trash2, Camera, Edit, Lock, Award, Users, MessageCircle, Send, X, Paperclip, Mic, Square, FileText, Download, Flame, Star } from 'lucide-react';
+import { BookOpen, User, LogOut, Trash2, Camera, Edit, Lock, Award, Users, MessageCircle, Send, X, Paperclip, Mic, Square, FileText, Download, Flame, Star, Globe, Github, Linkedin, Twitter, ExternalLink } from 'lucide-react';
 
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate, Link } from 'react-router-dom';
 import { api } from '../services/api';
 import PasswordConfirmationModal from '../components/PasswordConfirmationModal';
 import ChangePasswordModal from '../components/ChangePasswordModal';
 import Leaderboard from '../components/Leaderboard';
+import Skeleton, { SkeletonCard } from '../components/Skeleton';
 
 const Dashboard = () => {
     const { user, isAuthenticated, loading, logout, updateUser, isLessonCompleted, fetchProgress, completedLessons } = useAuth();
@@ -31,6 +32,14 @@ const Dashboard = () => {
     const [isRecording, setIsRecording] = useState(false);
     const mediaRecorderRef = useRef(null);
     const audioChunksRef = useRef([]);
+
+    const [showSocialModal, setShowSocialModal] = useState(false);
+    const [socialData, setSocialData] = useState({
+        username: user?.username || '',
+        bio: user?.bio || '',
+        socialLinks: user?.socialLinks || { github: '', linkedin: '', twitter: '', website: '' },
+        isPublic: user?.isPublic ?? true
+    });
 
 
     useEffect(() => {
@@ -167,14 +176,10 @@ const Dashboard = () => {
 
     useEffect(() => {
         if (user) {
-
-            const savedCpf = localStorage.getItem(`user_cpf_${user.id}`);
-            const savedRg = localStorage.getItem(`user_rg_${user.id}`);
-
             setEditData({
                 name: user.name || '',
-                cpf: savedCpf || user.cpf || '',
-                rg: savedRg || user.rg || ''
+                cpf: user.cpf || '',
+                rg: user.rg || ''
             });
         }
     }, [user]);
@@ -189,12 +194,7 @@ const Dashboard = () => {
         }
 
 
-        try {
-            localStorage.setItem(`user_cpf_${user.id}`, editData.cpf);
-            localStorage.setItem(`user_rg_${user.id}`, editData.rg);
-        } catch (localError) {
-            console.error("Local storage error:", localError);
-        }
+        // No more localStorage hacks, using real backend fields
 
         let apiSuccess = false;
         try {
@@ -246,7 +246,7 @@ const Dashboard = () => {
                 setProfessors(profs);
 
                 if (isAuthenticated) {
-                    await Promise.all(data.map(c => fetchProgress(c.id)));
+                    await Promise.all(data.map(c => fetchProgress(c.id || c._id)));
                 }
             } catch (error) {
                 console.error("Failed to load courses/progress:", error);
@@ -259,6 +259,29 @@ const Dashboard = () => {
             loadData();
         }
     }, [isAuthenticated]);
+
+    useEffect(() => {
+        if (user) {
+            setSocialData({
+                username: user.username || '',
+                bio: user.bio || '',
+                socialLinks: user.socialLinks || { github: '', linkedin: '', twitter: '', website: '' },
+                isPublic: user.isPublic ?? true
+            });
+        }
+    }, [user]);
+
+    const handleSocialSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const data = await api.updateProfile(socialData);
+            updateUser({ ...user, ...data.user });
+            setShowSocialModal(false);
+            alert("Perfil social atualizado!");
+        } catch (err) {
+            alert(err.message);
+        }
+    };
 
 
     useEffect(() => {
@@ -433,18 +456,24 @@ const Dashboard = () => {
     };
 
     return (
-        <main className="flex-grow pt-24 pb-20 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <main className="flex-grow pt-24 pb-20 bg-gray-50 dark:bg-gray-900 transition-colors duration-300 relative overflow-hidden">
+            {/* Background decorative elements */}
+            <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 { }
-                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 mb-8 border border-gray-100 dark:border-gray-700">
+                <div className="glass-premium rounded-3xl p-8 mb-8 border-none ring-1 ring-white/20 dark:ring-indigo-500/20">
                     <div className="flex items-center space-x-6">
                         <div className="relative group">
-                            <div className="h-24 w-24 rounded-full overflow-hidden bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center border-4 border-white dark:border-gray-700 shadow-lg">
-                                {user.avatar ? (
-                                    <img src={user.avatar} alt="Profile" className="h-full w-full object-cover" />
-                                ) : (
-                                    <User className="h-12 w-12 text-indigo-600 dark:text-indigo-400" />
-                                )}
+                            <div className="h-24 w-24 rounded-full overflow-hidden bg-gradient-to-tr from-indigo-500 to-purple-500 p-1 shadow-2xl">
+                                <div className="h-full w-full rounded-full overflow-hidden bg-indigo-100 dark:bg-slate-800 flex items-center justify-center border-2 border-white/50 dark:border-slate-800/50">
+                                    {user.avatar ? (
+                                        <img src={user.avatar} alt="Profile" className="h-full w-full object-cover" />
+                                    ) : (
+                                        <User className="h-12 w-12 text-indigo-600 dark:text-indigo-400" />
+                                    )}
+                                </div>
                             </div>
 
                             { }
@@ -477,13 +506,13 @@ const Dashboard = () => {
                         </div>
                         <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-3">
-                                <h1 className="text-3xl font-bold text-gray-900 dark:text-white truncate">{greeting}</h1>
+                                <h1 className="text-3xl font-extrabold premium-gradient-text truncate">{greeting}</h1>
                                 {!(user.name && user.cpf && user.rg) && (
-                                    <button
-                                        onClick={() => setShowEditModal(true)}
-                                        className="p-1.5 text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors flex-shrink-0"
-                                        title="Editar Perfil"
-                                    >
+                                        <button 
+                                            onClick={() => setShowEditModal(true)}
+                                            className="px-4 py-2 bg-white/20 hover:bg-white/40 rounded-xl text-white text-sm font-medium transition-all btn-premium flex items-center gap-2"
+                                            title="Editar Perfil"
+                                        >
                                         <Edit className="w-5 h-5" />
                                     </button>
                                 )}
@@ -500,15 +529,32 @@ const Dashboard = () => {
                                 </p>
                             )}
 
+                            <div className="mt-4 flex flex-wrap gap-2">
+                                <button
+                                    onClick={() => setShowSocialModal(true)}
+                                    className="px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-bold shadow-lg hover:bg-indigo-700 transition-all flex items-center gap-2"
+                                >
+                                    <Globe className="w-4 h-4" /> Configurar Perfil Público
+                                </button>
+                                {user.username && (
+                                    <Link
+                                        to={`/perfil/${user.username}`}
+                                        className="px-4 py-2 bg-white/10 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all flex items-center gap-2"
+                                    >
+                                        Ver Meu Perfil <ExternalLink className="w-4 h-4" />
+                                    </Link>
+                                )}
+                            </div>
+
                             { }
                             <div className="mt-2 w-48">
                                 <div className="flex justify-between text-xs text-gray-500 mb-1">
                                     <span>XP {user.xp || 0}</span>
                                     <span>Nível {(user.level || 1) + 1}</span>
                                 </div>
-                                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                                <div className="w-full bg-gray-200 dark:bg-gray-700/50 rounded-full h-2 overflow-hidden ring-1 ring-white/5">
                                     <div
-                                        className="bg-yellow-500 h-1.5 rounded-full"
+                                        className="bg-gradient-to-r from-yellow-400 via-orange-500 to-yellow-400 h-full rounded-full transition-all duration-1000 shadow-[0_0_10px_rgba(245,158,11,0.5)]"
                                         style={{ width: `${Math.min(100, ((user.xp || 0) % 500) / 5)}%` }}
                                     ></div>
                                 </div>
@@ -540,8 +586,10 @@ const Dashboard = () => {
                                         }
 
                                         return (
-                                            <div key={badgeId} className={`${bgClass} border border-transparent hover:border-white p-2 rounded-full cursor-help transition-all shadow-sm group relative`} title={title}>
-                                                <BadgeIcon className={`w-5 h-5 ${colorClass}`} />
+                                            <div key={badgeId} className="group relative">
+                                                <div className={`${bgClass} border border-white/20 dark:border-white/10 p-2.5 rounded-2xl cursor-help transition-all duration-300 shadow-lg group-hover:scale-110 group-hover:shadow-2xl group-hover:border-white/50 backdrop-blur-md`} title={title}>
+                                                    <BadgeIcon className={`w-6 h-6 ${colorClass} drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]`} />
+                                                </div>
                                             </div>
                                         );
                                     })}
@@ -556,12 +604,20 @@ const Dashboard = () => {
                     { }
                     <div className="lg:col-span-2 space-y-8">
                         { }
-                        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 border border-gray-100 dark:border-gray-700">
+                        <div className="glass rounded-3xl p-6 hover:shadow-2xl transition-all duration-500 border-none ring-1 ring-white/10 dark:ring-gray-700/30">
                             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
-                                <BookOpen className="h-5 w-5 mr-2 text-indigo-500" />
+                                <BookOpen className="h-5 w-5 mr-3 text-indigo-500" />
                                 {t('auth.dashboard.myCourses')}
                             </h2>
 
+                            {isLoadingCourses ? (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <SkeletonCard />
+                                <SkeletonCard />
+                                <SkeletonCard />
+                                <SkeletonCard />
+                            </div>
+                        ) : (
                             <div className="space-y-4">
                                 {courses.filter(course => {
                                     if (!user.purchasedCourses) return false;
@@ -588,7 +644,7 @@ const Dashboard = () => {
                                     }
 
                                     return (
-                                        <div key={course.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow group">
+                                        <div key={course.id} className="glass rounded-2xl p-5 hover:scale-[1.01] transition-all duration-300 group border-none ring-1 ring-white/10 dark:ring-gray-700/30">
                                             <div className="flex justify-between items-start">
                                                 <div>
                                                     <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
@@ -633,12 +689,13 @@ const Dashboard = () => {
                                     </div>
                                 )}
                             </div>
+                        )}
                         </div>
 
                         { }
-                        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 border border-gray-100 dark:border-gray-700">
+                        <div className="glass rounded-3xl p-6 hover:shadow-2xl transition-all duration-500 border-none ring-1 ring-white/10 dark:ring-gray-700/30">
                             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
-                                <Award className="h-5 w-5 mr-2 text-green-600" />
+                                <Award className="h-5 w-5 mr-3 text-green-500" />
                                 {t('auth.dashboard.myCertificates')}
                             </h2>
 
@@ -651,16 +708,16 @@ const Dashboard = () => {
                                     const getTitle = (c) => typeof c.title === 'string' ? c.title : (c.title?.pt || c.title?.en || 'Curso');
 
                                     return (
-                                        <div key={course.id} className="border border-green-100 dark:border-green-900/30 bg-green-50 dark:bg-green-900/10 rounded-lg p-4 flex items-center justify-between hover:shadow-md transition-all">
+                                        <div key={course.id} className="glass-premium rounded-2xl p-4 flex items-center justify-between hover:scale-[1.02] transition-all duration-300 border-none ring-1 ring-green-500/20 shadow-lg">
                                             <div className="flex items-center overflow-hidden">
-                                                <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-full mr-4 flex-shrink-0 text-green-600 dark:text-green-400">
-                                                    <Award className="w-6 h-6" />
+                                                <div className="p-3 bg-green-500/20 dark:bg-green-900/40 rounded-full mr-4 flex-shrink-0 text-green-600 dark:text-green-400">
+                                                    <Award className="w-6 h-6 animate-pulse" />
                                                 </div>
                                                 <div className="min-w-0">
-                                                    <h3 className="font-semibold text-gray-900 dark:text-white truncate pr-2" title={getTitle(course)}>
+                                                    <h3 className="font-bold text-gray-900 dark:text-white truncate pr-2" title={getTitle(course)}>
                                                         {getTitle(course)}
                                                     </h3>
-                                                    <p className="text-sm text-green-700 dark:text-green-500">{t('auth.dashboard.completed')}</p>
+                                                    <p className="text-xs font-semibold text-green-600 uppercase tracking-wider">{t('auth.dashboard.completed')}</p>
                                                 </div>
                                             </div>
                                             <button
@@ -688,9 +745,9 @@ const Dashboard = () => {
                         </div>
 
                         { }
-                        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 border border-gray-100 dark:border-gray-700">
+                        <div className="glass rounded-3xl p-6 hover:shadow-2xl transition-all duration-500 border-none ring-1 ring-white/10 dark:ring-gray-700/30">
                             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
-                                <Users className="h-5 w-5 mr-2 text-indigo-500" />
+                                <Users className="h-5 w-5 mr-3 text-indigo-500" />
                                 Meus Professores (Chat)
                             </h2>
 
@@ -716,9 +773,9 @@ const Dashboard = () => {
                                                 </p>
                                             </div>
                                         </div>
-                                        <button
+                                        <button 
                                             onClick={() => setSelectedProfessor(prof)}
-                                            className="ml-2 p-2 text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-full transition-colors"
+                                            className="p-2 bg-white/20 hover:bg-white/40 rounded-full transition-all btn-premium group"
                                             title="Abrir Chat"
                                         >
                                             <MessageCircle className="w-5 h-5" />
@@ -741,7 +798,7 @@ const Dashboard = () => {
                         <Leaderboard />
 
                         { }
-                        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 border border-gray-100 dark:border-gray-700">
+                        <div className="glass rounded-3xl p-6 border-none ring-1 ring-white/10 dark:ring-gray-700/30 shadow-2xl">
                             <h3 className="font-bold text-gray-900 dark:text-white mb-4">{t('auth.dashboard.account')}</h3>
 
                             {user.authProvider !== 'google' && (
@@ -990,6 +1047,123 @@ const Dashboard = () => {
                     </div>
                 )
             }
+
+            {/* Social Profile Modal */}
+            {showSocialModal && (
+                <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-md" onClick={() => setShowSocialModal(false)}></div>
+                    <div className="relative bg-white dark:bg-gray-800 rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden border border-white/20 dark:border-gray-700 animate-fade-in-up">
+                        <div className={`h-2 bg-gradient-to-r from-indigo-500 to-purple-600`}></div>
+                        <div className="p-8">
+                            <div className="flex justify-between items-center mb-6">
+                                <h1 className="text-2xl font-black text-gray-900 dark:text-white uppercase tracking-tighter">Perfil Público</h1>
+                                <button onClick={() => setShowSocialModal(false)} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors text-gray-500">
+                                    <X className="w-6 h-6" />
+                                </button>
+                            </div>
+
+                            <form onSubmit={handleSocialSubmit} className="space-y-5">
+                                <div>
+                                    <label className="block text-xs font-black text-gray-500 uppercase tracking-widest mb-1 shadow-sm">Seu Username Único</label>
+                                    <div className="relative">
+                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold">@</span>
+                                        <input
+                                            type="text"
+                                            value={socialData.username}
+                                            onChange={(e) => setSocialData({...socialData, username: e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '')})}
+                                            className="w-full pl-8 pr-4 py-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-100 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all dark:text-white font-medium"
+                                            placeholder="ex: dev_ninja"
+                                            required
+                                        />
+                                    </div>
+                                    <p className="text-[10px] text-gray-400 mt-1">Este será o seu endereço: /perfil/username</p>
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-black text-gray-500 uppercase tracking-widest mb-1">Bio (Sua História)</label>
+                                    <textarea
+                                        value={socialData.bio}
+                                        onChange={(e) => setSocialData({...socialData, bio: e.target.value})}
+                                        className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-100 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all dark:text-white font-medium min-h-[100px]"
+                                        placeholder="Conte um pouco sobre suas tecnologias favoritas e objetivos..."
+                                    />
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="flex items-center text-xs font-black text-gray-500 uppercase tracking-widest mb-1">
+                                            <Github className="w-3 h-3 mr-1" /> GitHub
+                                        </label>
+                                        <input
+                                            type="url"
+                                            value={socialData.socialLinks.github}
+                                            onChange={(e) => setSocialData({...socialData, socialLinks: {...socialData.socialLinks, github: e.target.value}})}
+                                            className="w-full px-4 py-2 bg-gray-50 dark:bg-gray-900/50 border border-gray-100 dark:border-gray-700 rounded-xl text-sm dark:text-white"
+                                            placeholder="https://github.com/..."
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="flex items-center text-xs font-black text-gray-500 uppercase tracking-widest mb-1">
+                                            <Linkedin className="w-3 h-3 mr-1" /> LinkedIn
+                                        </label>
+                                        <input
+                                            type="url"
+                                            value={socialData.socialLinks.linkedin}
+                                            onChange={(e) => setSocialData({...socialData, socialLinks: {...socialData.socialLinks, linkedin: e.target.value}})}
+                                            className="w-full px-4 py-2 bg-gray-50 dark:bg-gray-900/50 border border-gray-100 dark:border-gray-700 rounded-xl text-sm dark:text-white"
+                                            placeholder="https://linkedin.com/..."
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="flex items-center text-xs font-black text-gray-500 uppercase tracking-widest mb-1">
+                                            <Twitter className="w-3 h-3 mr-1" /> Twitter
+                                        </label>
+                                        <input
+                                            type="url"
+                                            value={socialData.socialLinks.twitter}
+                                            onChange={(e) => setSocialData({...socialData, socialLinks: {...socialData.socialLinks, twitter: e.target.value}})}
+                                            className="w-full px-4 py-2 bg-gray-50 dark:bg-gray-900/50 border border-gray-100 dark:border-gray-700 rounded-xl text-sm dark:text-white"
+                                            placeholder="https://twitter.com/..."
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="flex items-center text-xs font-black text-gray-500 uppercase tracking-widest mb-1">
+                                            <Globe className="w-3 h-3 mr-1" /> Website
+                                        </label>
+                                        <input
+                                            type="url"
+                                            value={socialData.socialLinks.website}
+                                            onChange={(e) => setSocialData({...socialData, socialLinks: {...socialData.socialLinks, website: e.target.value}})}
+                                            className="w-full px-4 py-2 bg-gray-50 dark:bg-gray-900/50 border border-gray-100 dark:border-gray-700 rounded-xl text-sm dark:text-white"
+                                            placeholder="https://..."
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center gap-3 p-4 bg-indigo-50 dark:bg-indigo-900/20 rounded-2xl">
+                                    <input
+                                        type="checkbox"
+                                        id="isPublic"
+                                        checked={socialData.isPublic}
+                                        onChange={(e) => setSocialData({...socialData, isPublic: e.target.checked})}
+                                        className="w-5 h-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                    />
+                                    <label htmlFor="isPublic" className="text-sm font-bold text-gray-700 dark:text-gray-300">
+                                        Tornar meu perfil público para a comunidade
+                                    </label>
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    className="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl font-black uppercase tracking-widest shadow-xl hover:shadow-indigo-500/25 transition-all active:scale-95"
+                                >
+                                    Ficar no Topo - Salvar Perfil
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            )}
         </main >
 
     );

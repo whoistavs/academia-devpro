@@ -34,6 +34,14 @@ const userSchema = new mongoose.Schema({
     streak: { type: Number, default: 0 },
     lastLoginDate: { type: Date },
     badges: [{ type: String }],
+    bio: { type: String, maxLength: 500, default: '' },
+    socialLinks: {
+        linkedin: { type: String, default: '' },
+        github: { type: String, default: '' },
+        website: { type: String, default: '' },
+        twitter: { type: String, default: '' }
+    },
+    isPublic: { type: Boolean, default: true },
     createdAt: { type: Date, default: Date.now }
 });
 

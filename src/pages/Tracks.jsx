@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import PixModal from '../components/PixModal';
+import SkillTree from '../components/SkillTree';
 
 const Tracks = () => {
     const { user, isAuthenticated } = useAuth();
@@ -196,49 +197,18 @@ const Tracks = () => {
 
                                             <p className="text-gray-600 dark:text-gray-300 text-lg mb-8 leading-relaxed">{track.description}</p>
 
-                                            <div className="bg-gray-50 dark:bg-gray-700/30 rounded-2xl p-6 mb-8 border border-gray-100 dark:border-gray-700">
-                                                <h4 className="font-bold text-gray-900 dark:text-white mb-6 flex items-center uppercase tracking-wide text-sm">
-                                                    <Layers className="w-4 h-4 mr-2 text-indigo-500" />
-                                                    Cronograma Oficial {hasTrack && '(Seus Cursos)'}
+                                            <div className="bg-gray-50 dark:bg-gray-900/40 rounded-3xl p-4 sm:p-10 mb-8 border border-gray-100 dark:border-gray-800 shadow-inner">
+                                                <h4 className="font-extrabold text-gray-900 dark:text-white mb-10 flex items-center justify-center gap-3 uppercase tracking-tighter text-2xl text-center">
+                                                    <Layers className="w-8 h-8 text-indigo-500" />
+                                                    Jornada de Especialização
                                                 </h4>
 
-                                                <div className="space-y-0 relative">
-                                                    <div className="absolute left-[15px] top-4 bottom-4 w-0.5 bg-gray-200 dark:bg-gray-600 z-0 hidden sm:block"></div>
-
-                                                    {track.modules?.map((mod, idx) => {
-                                                        const isPurchased = isAuthenticated && user?.purchasedCourses?.includes(mod.id);
-                                                        const isUnlocked = isPurchased;
-
-                                                        return (
-                                                            <div key={idx} className={`flex items-center group relative z-10 mb-4 last:mb-0 ${isUnlocked ? 'opacity-100' : 'opacity-70'}`}>
-                                                                <span className={`
-                                                                    flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold mr-4
-                                                                    ${isUnlocked ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white dark:bg-gray-800 border-2 border-indigo-100 dark:border-gray-600 text-gray-500 dark:text-gray-400'}
-                                                                    transition-all shadow-sm
-                                                                `}>
-                                                                    {isUnlocked ? <PlayCircle className="w-5 h-5" /> : idx + 1}
-                                                                </span>
-
-                                                                {isUnlocked ? (
-                                                                    <Link to={`/curso/${mod.slug}`} className="flex-grow p-4 bg-white dark:bg-gray-800 rounded-xl border border-indigo-200 dark:border-indigo-900 shadow-md flex flex-col sm:flex-row justify-between items-start sm:items-center hover:shadow-lg transition-all hover:bg-indigo-50 dark:hover:bg-gray-700 cursor-pointer">
-                                                                        <span className="font-semibold text-indigo-700 dark:text-indigo-300 mb-1 sm:mb-0">{mod.title}</span>
-                                                                        <span className="text-xs font-bold text-white bg-indigo-500 px-2 py-1 rounded">
-                                                                            ACESSAR AULA
-                                                                        </span>
-                                                                    </Link>
-                                                                ) : (
-                                                                    <div className="flex-grow p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center">
-                                                                        <span className="font-semibold text-gray-800 dark:text-gray-200 mb-1 sm:mb-0">{mod.title}</span>
-                                                                        <div className="flex items-center text-xs font-medium text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
-                                                                            <Lock className="w-3 h-3 mr-1" />
-                                                                            Bloqueado
-                                                                        </div>
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                        );
-                                                    })}
-                                                </div>
+                                                <SkillTree 
+                                                    modules={track.modules}
+                                                    isAuthenticated={isAuthenticated}
+                                                    purchasedCourses={user?.purchasedCourses}
+                                                    gradient={track.gradient}
+                                                />
                                             </div>
 
                                             <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pt-6 border-t border-gray-100 dark:border-gray-700">

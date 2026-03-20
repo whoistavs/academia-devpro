@@ -16,6 +16,7 @@ import VerifyEmail from './pages/VerifyEmail';
 import ForgotPassword from './pages/ForgotPassword';
 import Dashboard from './pages/Dashboard';
 import CompleteProfile from './pages/CompleteProfile';
+import PublicProfile from './pages/PublicProfile';
 import PaymentStatus from './pages/PaymentStatus';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -120,6 +121,7 @@ const Layout = () => {
         <Route path="/professor/editor" element={<ProtectedRoute><CourseEditor /></ProtectedRoute>} />
         <Route path="/professor/editor/:id" element={<ProtectedRoute><CourseEditor /></ProtectedRoute>} />
         <Route path="/trilhas" element={<Tracks />} />
+        <Route path="/perfil/:username" element={<PublicProfile />} />
       </Routes>
       <Footer />
       <CookieBanner />

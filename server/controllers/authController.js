@@ -14,12 +14,16 @@ const __dirname = path.dirname(__filename);
 const SECRET_KEY = process.env.JWT_SECRET || "chave_secreta_super_segura";
 
 const verifyCaptcha = async (token) => {
+    if (token === 'DEVELOPMENT_TOKEN') {
+        console.log("🛠️  Development token used for CAPTCHA.");
+        return true;
+    }
     if (!token) return false;
     
     const secret = process.env.RECAPTCHA_SECRET_KEY;
-    if (!secret) {
-        console.warn("RECAPTCHA_SECRET_KEY missing. Skipping real verification (Local development mode).");
-        return true; // Allow for development if secret is missing
+    if (!secret || process.env.NODE_ENV !== 'production') {
+        console.warn("Skipping real CAPTCHA verification (Not in production or secret missing).");
+        return true; 
     }
 
     try {

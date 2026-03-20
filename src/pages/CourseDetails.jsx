@@ -99,17 +99,21 @@ const CourseDetails = () => {
                                     <span>{course.duration} {t('courseDetails.contentCount')}</span>
                                 </div>
                                 <div className="flex items-center">
-                                    <BarChart className="h-5 w-5 mr-2 text-indigo-400" />
-                                    <span>{t('courseDetails.level')} {getContent(course.level)}</span>
-                                </div>
-                                <div className="flex items-center">
                                     <Globe className="h-5 w-5 mr-2 text-indigo-400" />
                                     <span className="uppercase tracking-wider font-bold">{course.language || 'PT'}</span>
                                 </div>
                                 <div className="flex items-center">
-                                    <User className="h-5 w-5 mr-2 text-indigo-400" />
-                                    <span>{t('courseDetails.certificate')}</span>
+                                    <BarChart className="h-5 w-5 mr-2 text-indigo-400" />
+                                    <span>{t('courseDetails.level')} {getContent(course.level)}</span>
                                 </div>
+                                {course.rating > 0 && (
+                                    <div className="flex items-center bg-white/10 px-3 py-1 rounded-full backdrop-blur-sm border border-white/10">
+                                        <Star className="h-4 w-4 mr-1.5 text-amber-400 fill-current" />
+                                        <span className="text-white font-bold">{course.rating.toFixed(1)}</span>
+                                        <span className="mx-2 text-indigo-300 opacity-50">|</span>
+                                        <span className="text-indigo-100 text-xs">{course.reviewsCount} {course.reviewsCount === 1 ? 'Avaliação' : 'Avaliações'}</span>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>

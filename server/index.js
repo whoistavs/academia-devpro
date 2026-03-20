@@ -19,6 +19,7 @@ import chatRoutes from './routes/chatRoutes.js';
 import progressRoutes from './routes/progressRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import uploadRoutes from './routes/uploadRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -45,6 +46,7 @@ app.use('/api', chatRoutes);
 app.use('/api', progressRoutes);
 app.use('/api', paymentRoutes);
 app.use('/api', uploadRoutes);
+app.use('/api', userRoutes);
 
 // Health Check
 app.get('/api/health', (req, res) => res.json({ status: 'ok', message: 'API Running' }));

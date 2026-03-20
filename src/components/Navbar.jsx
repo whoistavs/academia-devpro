@@ -1,6 +1,6 @@
 
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, Code2, Sun, Moon, User, LogOut, Settings, Globe, Search } from 'lucide-react';
 import LanguageSelector from './LanguageSelector';
 import { useTheme } from '../context/ThemeContext';
@@ -9,10 +9,38 @@ import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const searchRef = useRef(null);
+    const location = useLocation();
     const { theme, toggleTheme } = useTheme();
     const { language, changeLanguage, t, availableLanguages } = useTranslation();
     const { user, isAuthenticated, logout } = useAuth();
     const navigate = useNavigate();
+
+    // Ctrl+K Shortcut
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                searchRef.current?.focus();
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, []);
+
+    // Clear search when navigating away from courses
+    useEffect(() => {
+        if (!location.pathname.startsWith('/cursos')) {
+            setSearchQuery('');
+        }
+    }, [location.pathname]);
+
+    const handleSearch = (e) => {
+        if (e.key === 'Enter') {
+            navigate(`/cursos?search=${searchQuery}`);
+        }
+    };
 
     const handleLogout = () => {
         logout();
@@ -20,7 +48,7 @@ const Navbar = () => {
     };
 
     return (
-        <nav className="bg-white dark:bg-gray-900 shadow-md fixed w-full z-50 top-0 left-0 transition-colors duration-300 border-b dark:border-gray-800">
+        <nav className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-lg fixed w-full z-50 top-0 left-0 transition-all duration-300 border-b border-white/20 dark:border-gray-800/50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16">
                     <div className="flex items-center">
@@ -40,18 +68,34 @@ const Navbar = () => {
                         <Link to="/contato" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors">{t('nav.contact')}</Link>
 
                         {/* Search Bar */}
-                        <div className="relative hidden lg:block">
+                        <div className="relative hidden lg:block group">
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <Search className={`h-4 w-4 transition-colors ${searchQuery ? 'text-indigo-500' : 'text-gray-400'}`} />
+                            </div>
                             <input
+                                ref={searchRef}
                                 type="text"
-                                placeholder="Buscar..."
-                                className="pl-8 pr-4 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-32 focus:w-48 transition-all"
-                                onKeyDown={(e) => {
-                                    if (e.key === 'Enter') {
-                                        navigate(`/cursos?search=${e.target.value}`);
-                                    }
-                                }}
+                                placeholder={t('nav.search') || "Buscar cursos..."}
+                                className="block w-48 xl:w-64 pl-9 pr-12 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 border border-transparent focus:bg-white dark:focus:bg-gray-900 border-gray-200 dark:border-gray-700 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 text-sm transition-all outline-none"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                onKeyDown={handleSearch}
                             />
-                            <Search className="h-4 w-4 absolute left-2.5 top-1.5 text-gray-400" />
+                            <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                {searchQuery ? (
+                                    <button 
+                                        onClick={() => setSearchQuery('')}
+                                        className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition-colors"
+                                    >
+                                        <X className="h-3 w-3 text-gray-400" />
+                                    </button>
+                                ) : (
+                                    <div className="hidden sm:flex items-center space-x-1 px-1.5 py-0.5 rounded border border-gray-300 dark:border-gray-500 bg-white dark:bg-gray-700 pointer-events-none shadow-md">
+                                        <span className="text-[10px] font-black text-gray-500 dark:text-gray-300">Ctrl</span>
+                                        <span className="text-[10px] font-black text-gray-500 dark:text-gray-300">K</span>
+                                    </div>
+                                )}
+                            </div>
                         </div>
 
                         <div className="flex items-center space-x-4 border-l border-r px-4 border-gray-200 dark:border-gray-700">

@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
-import { ArrowLeft, CheckCircle, BookOpen, Code, Lightbulb, Lock } from 'lucide-react';
+import { ArrowLeft, BookOpen, CheckCircle, ChevronLeft, ChevronRight, Clock, Code, Lock, Play, HelpCircle, Lightbulb } from 'lucide-react';
 import { api } from '../services/api';
+import Celebration from '../components/Celebration';
+import CommentsSection from '../components/CommentsSection';
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from '../context/LanguageContext';
 import ReactMarkdown from 'react-markdown';
@@ -12,7 +14,13 @@ import AITutor from '../components/AITutor';
 const slugify = (text) => {
     try {
         if (!text) return '';
-        return String(text)
+        const stringContent = typeof text === 'string' 
+            ? text 
+            : Array.isArray(text) 
+                ? text.map(String).join('')
+                : String(text);
+
+        return stringContent
             .toLowerCase()
             .normalize('NFD')
             .replace(/[\u0300-\u036f]/g, '')
@@ -22,7 +30,7 @@ const slugify = (text) => {
             .replace(/^-+/, '')
             .replace(/-+$/, '');
     } catch (e) {
-        return 'header';
+        return 'header-' + Math.random().toString(36).substr(2, 5);
     }
 };
 
@@ -45,6 +53,7 @@ const LessonView = () => {
     const [challengeAnswer, setChallengeAnswer] = useState('');
     const [aiFeedback, setAiFeedback] = useState(null);
     const [isAnalysing, setIsAnalysing] = useState(false);
+    const [showCelebration, setShowCelebration] = useState(false);
     const [toc, setTocState] = useState([]);
 
 
@@ -190,8 +199,14 @@ const LessonView = () => {
 
 
     const completed = isLessonCompleted(courseId, lessonIndex);
-    const handleQuizPass = () => markLessonComplete(courseId, lessonIndex);
-    const handleManualComplete = () => markLessonComplete(courseId, lessonIndex);
+    const handleQuizPass = () => {
+        markLessonComplete(courseId, lessonIndex);
+        setShowCelebration(true);
+    };
+    const handleManualComplete = () => {
+        markLessonComplete(courseId, lessonIndex);
+        setShowCelebration(true);
+    };
 
 
     const handleChallengeSubmit = async () => {
@@ -212,6 +227,7 @@ const LessonView = () => {
 
                 if (result.isCorrect) {
                     markLessonComplete(courseId, lessonIndex);
+                    setShowCelebration(true);
                 }
             } catch (error) {
                 console.error(error);
@@ -222,12 +238,11 @@ const LessonView = () => {
         }
     };
 
-
     return (
         <main className="flex-grow pt-16 bg-gray-50 dark:bg-gray-900 transition-colors duration-300 min-h-screen">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            {showCelebration && <Celebration onComplete={() => setShowCelebration(false)} />}
 
-                { }
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {/* Course Progress Bar */}
                 <div className="mb-8 bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 overflow-hidden">
                     <div
@@ -246,7 +261,7 @@ const LessonView = () => {
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    { }
+                    {/* Main Content Column */}
                     <div className="lg:col-span-2 space-y-8">
                         <div>
                             <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
@@ -264,8 +279,37 @@ const LessonView = () => {
                             </div>
                         </div>
 
-                        { }
-                        { }
+                        {/* Video Player */}
+                        {lesson.videoUrl && (
+                            <div className="bg-black rounded-xl overflow-hidden shadow-2xl aspect-video border border-gray-800">
+                                {lesson.videoUrl.includes('youtube.com') || lesson.videoUrl.includes('youtu.be') ? (
+                                    <iframe
+                                        className="w-full h-full"
+                                        src={`https://www.youtube.com/embed/${lesson.videoUrl.split('v=')[1]?.split('&')[0] || lesson.videoUrl.split('/').pop()}`}
+                                        title="YouTube video player"
+                                        frameBorder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                    ></iframe>
+                                ) : lesson.videoUrl.includes('vimeo.com') ? (
+                                    <iframe
+                                        src={`https://player.vimeo.com/video/${lesson.videoUrl.split('/').pop()}`}
+                                        className="w-full h-full"
+                                        frameBorder="0"
+                                        allow="autoplay; fullscreen; picture-in-picture"
+                                        allowFullScreen
+                                    ></iframe>
+                                ) : (
+                                    <video
+                                        src={lesson.videoUrl}
+                                        className="w-full h-full"
+                                        controls
+                                        controlsList="nodownload"
+                                    ></video>
+                                )}
+                            </div>
+                        )}
+
                         {lesson.content && getContent(lesson.content) ? (
                             <div className="bg-white dark:bg-gray-800 p-8 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm prose dark:prose-invert max-w-none">
                                 <ReactMarkdown components={MarkdownComponents}>
@@ -274,7 +318,7 @@ const LessonView = () => {
                             </div>
                         ) : null}
 
-                        { }
+                        {/* Quiz or Challenge */}
                         {lesson.questions && lesson.questions.length > 0 ? (
                             !completed && (
                                 <LessonQuiz
@@ -314,7 +358,7 @@ const LessonView = () => {
                             )
                         ) : (
                             !completed && (
-                                <div className="bg-indigo-50 dark:bg-indigo-900/20 p-6 rounded-xl border border-indigo-100 dark:border-indigo-800 text-center">
+                                <div className="bg-indigo-50 dark:bg-indigo-900/20 p-6 rounded-xl border border-indigo-100 dark:border-gray-800 text-center">
                                     <h3 className="text-lg font-bold text-indigo-900 dark:text-indigo-300 mb-4">{getContent({ pt: "Conteúdo Estudado?", en: "Content Studied?" })}</h3>
                                     <button onClick={handleManualComplete} className="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-bold shadow-lg transition-transform transform hover:scale-105">
                                         {getContent({ pt: "Marcar como Concluída", en: "Mark as Complete" })}
@@ -333,9 +377,9 @@ const LessonView = () => {
                             </div>
                         )}
 
-                        { }
-                        <div className="flex justify-between pt-4">
-                            <Link to={lessonIndex > 0 ? `/curso/${slug}/aula/${lessonIndex - 1}` : '#'} className={`px-6 py-3 rounded-lg font-medium transition-colors ${lessonIndex > 0 ? 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700' : 'hidden'}`}>&larr; Aula Anterior</Link>
+                        {/* Navigation Buttons */}
+                        <div className="flex justify-between pt-4 border-t dark:border-gray-700">
+                            <Link to={lessonIndex > 0 ? `/curso/${slug}/aula/${lessonIndex - 1}` : '#'} className={`px-6 py-3 rounded-lg font-medium transition-colors ${lessonIndex > 0 ? 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700' : 'invisible'}`}>&larr; Aula Anterior</Link>
 
                             {completed ? (
                                 lessonIndex < totalLessons - 1 ? (
@@ -349,9 +393,18 @@ const LessonView = () => {
                                 <button disabled className="px-6 py-3 rounded-lg font-medium bg-gray-300 dark:bg-gray-700 text-gray-500 cursor-not-allowed">{language === 'en' ? 'Complete to Advance' : 'Conclua para Avançar'}</button>
                             )}
                         </div>
+
+                        {/* Comments & Discussion Area */}
+                        <section className="mt-16 pt-12 border-t border-gray-200 dark:border-gray-700 min-h-[500px]">
+                            <div className="flex items-center gap-3 mb-8">
+                                <div className="h-8 w-1 bg-indigo-600 rounded-full"></div>
+                                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Comunidade e Discussão</h2>
+                            </div>
+                            <CommentsSection slug={slug} lessonIndex={lessonIndex} />
+                        </section>
                     </div>
 
-                    { }
+                    {/* Sidebar Column */}
                     <div className="lg:col-span-1 space-y-6">
                         {toc.length > 0 && (
                             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden sticky top-24">
@@ -364,7 +417,15 @@ const LessonView = () => {
                                 <div className="p-4 max-h-[40vh] overflow-y-auto">
                                     <nav className="flex flex-col space-y-2">
                                         {toc.map((item, idx) => (
-                                            <a key={idx} href={`#${item.id}`} onClick={(e) => { e.preventDefault(); document.getElementById(item.id)?.scrollIntoView({ behavior: 'smooth' }); }} className={`text-sm transition-colors hover:text-indigo-600 dark:hover:text-indigo-400 ${item.level === 1 ? 'font-bold' : 'ml-4 text-gray-500'}`}>
+                                            <a
+                                                key={idx}
+                                                href={`#${item.id}`}
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    document.getElementById(item.id)?.scrollIntoView({ behavior: 'smooth' });
+                                                }}
+                                                className={`text-sm transition-colors hover:text-indigo-600 dark:hover:text-indigo-400 ${item.level === 1 ? 'font-bold' : 'ml-4 text-gray-500'}`}
+                                            >
                                                 {item.text}
                                             </a>
                                         ))}
@@ -374,17 +435,33 @@ const LessonView = () => {
                         )}
 
                         <div className={`bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden ${toc.length === 0 ? 'sticky top-24' : ''}`}>
-                            <div className="p-4 bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
-                                <h3 className="font-bold text-gray-900 dark:text-white">Conteúdo do Curso</h3>
+                            <div className="p-4 bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                                <h3 className="font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                    <BookOpen className="w-5 h-5 text-indigo-500" />
+                                    Conteúdo do Curso
+                                </h3>
+                                <span className="text-xs bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300 px-2 py-0.5 rounded-full font-bold">
+                                    {Math.round(((user?.progress?.[courseId]?.length || 0) / totalLessons) * 100)}%
+                                </span>
                             </div>
-                            <div className="max-h-[600px] overflow-y-auto">
+                            <div className="max-h-[600px] overflow-y-auto custom-scrollbar">
                                 {allLessons.map((a, idx) => {
                                     const isItemLocked = idx > 0 && !isLessonCompleted(courseId, idx - 1);
                                     const isItemCompleted = isLessonCompleted(courseId, idx);
                                     const title = getContent(a.titulo);
 
                                     return (
-                                        <Link key={idx} to={!isItemLocked ? `/curso/${slug}/aula/${idx}` : '#'} className={`flex items-center p-4 border-b dark:border-gray-700 last:border-b-0 transition-colors ${idx === lessonIndex ? 'bg-indigo-50 dark:bg-indigo-900/20 border-l-4 border-l-indigo-500' : isItemLocked ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-50 dark:hover:bg-gray-800'}`}>
+                                        <Link
+                                            key={idx}
+                                            to={!isItemLocked ? `/curso/${slug}/aula/${idx}` : '#'}
+                                            className={`flex items-center p-4 border-b dark:border-gray-700 last:border-b-0 transition-colors ${
+                                                idx === lessonIndex
+                                                    ? 'bg-indigo-50 dark:bg-indigo-900/20 border-l-4 border-l-indigo-500'
+                                                    : isItemLocked
+                                                        ? 'opacity-50 cursor-not-allowed'
+                                                        : 'hover:bg-gray-50 dark:hover:bg-gray-800'
+                                            }`}
+                                        >
                                             <div className={`mr-3 ${isItemCompleted ? 'text-green-500' : 'text-gray-400'}`}>
                                                 {isItemLocked ? <Lock className="w-4 h-4" /> : isItemCompleted ? <CheckCircle className="w-5 h-5" /> : <BookOpen className="w-5 h-5" />}
                                             </div>
@@ -397,12 +474,50 @@ const LessonView = () => {
                                 })}
                             </div>
                         </div>
+
+                        <AITutor context={`Aula: ${getContent(lesson.titulo)}\n\nConteúdo:\n${getContent(lesson.content)?.substring(0, 1000)}`} />
                     </div>
                 </div>
             </div>
 
-            <AITutor context={`Aula: ${getContent(lesson.titulo)}\n\nConteúdo:\n${getContent(lesson.content)}`} />
-        </main >
+            {/* Sticky Mobile Navigation Bar */}
+            <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-t border-gray-200 dark:border-gray-800 p-4 safe-area-bottom shadow-[0_-8px_30px_rgb(0,0,0,0.12)]">
+                <div className="flex items-center justify-between gap-4 max-w-md mx-auto">
+                    <Link 
+                        to={lessonIndex > 0 ? `/curso/${slug}/aula/${lessonIndex - 1}` : '#'} 
+                        className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold transition-all active:scale-95 ${lessonIndex > 0 ? 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700 shadow-sm' : 'opacity-0 pointer-events-none'}`}
+                    >
+                        <ChevronLeft className="w-5 h-5" />
+                        Retroceder
+                    </Link>
+
+                    {completed ? (
+                        lessonIndex < totalLessons - 1 ? (
+                            <Link 
+                                to={`/curso/${slug}/aula/${lessonIndex + 1}`} 
+                                className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold bg-indigo-600 text-white hover:bg-indigo-700 shadow-lg shadow-indigo-200 dark:shadow-none transition-all active:scale-95"
+                            >
+                                Avançar
+                                <ChevronRight className="w-5 h-5" />
+                            </Link>
+                        ) : (
+                            <Link 
+                                to={`/curso/${slug}`} 
+                                className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold bg-green-600 text-white hover:bg-green-700 shadow-lg shadow-green-200 dark:shadow-none transition-all active:scale-95"
+                            >
+                                Concluir
+                                <CheckCircle className="w-5 h-5" />
+                            </Link>
+                        )
+                    ) : (
+                        <div className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold bg-gray-200 dark:bg-gray-800 text-gray-400 cursor-not-allowed border border-gray-200 dark:border-gray-700">
+                            Bloqueado
+                            <Lock className="w-4 h-4 ml-1" />
+                        </div>
+                    )}
+                </div>
+            </div>
+        </main>
     );
 };
 

@@ -37,17 +37,8 @@ const Signup = () => {
     const googleLogin = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
             try {
-                const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-                const response = await fetch(`${API_URL}/api/auth/google`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ access_token: tokenResponse.access_token })
-                });
-
-                const data = await response.json();
-
-                if (!response.ok) throw new Error(data.error);
-
+                const data = await api.googleLogin(tokenResponse.access_token);
+                
                 login({
                     id: data.id,
                     name: data.name,

@@ -458,8 +458,6 @@ export const api = {
         if (!res.ok) throw new Error("Failed send message");
         return res.json();
     },
-
-
     getComments: async (slug, lessonIndex) => {
         const res = await fetch(`${API_URL}/comments/${slug}/${lessonIndex}`, { headers: getHeaders() });
         if (!res.ok) throw new Error("Failed fetch comments");
@@ -574,6 +572,28 @@ export const api = {
             body: JSON.stringify({ message, history, context })
         });
         if (!res.ok) throw new Error("Failed AI response");
+        return res.json();
+    },
+
+    // User Profiles
+    getPublicProfile: async (username) => {
+        const res = await fetch(`${API_URL}/users/public/${username}`, { headers: getHeaders() });
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.error || "Perfil não encontrado");
+        }
+        return res.json();
+    },
+    updateProfile: async (data) => {
+        const res = await fetch(`${API_URL}/users/profile`, {
+            method: 'PUT',
+            headers: getHeaders(),
+            body: JSON.stringify(data)
+        });
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.error || "Erro ao atualizar perfil");
+        }
         return res.json();
     }
 };

@@ -86,7 +86,7 @@ export const AuthProvider = ({ children }) => {
     const [completedLessons, setCompletedLessons] = useState({}); 
 
     const fetchProgress = async (courseId) => {
-        if (!isAuthenticated) return;
+        if (!isAuthenticated || !courseId) return;
         try {
             const progress = await api.getProgress(courseId);
             setCompletedLessons(prev => ({
@@ -113,8 +113,8 @@ export const AuthProvider = ({ children }) => {
             try {
                 
                 
-                const finalId = lessonIndex === 0 ? "0" : lessonIndex;
-                const result = await api.updateProgress({ courseId, lessonId: finalId });
+                const normalizedLessonId = String(lessonIndex);
+                const result = await api.updateProgress({ courseId, lessonId: normalizedLessonId });
 
                 if (result.gamification) {
                     const { earnedXp, newBadges, leveledUp, user: updatedUser } = result.gamification;

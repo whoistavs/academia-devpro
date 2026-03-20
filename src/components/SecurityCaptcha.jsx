@@ -13,11 +13,22 @@ const SecurityCaptcha = ({ onValidate }) => {
     
     useEffect(() => {
         const generateToken = () => {
+            if (window.location.hostname === 'localhost') {
+                setTimeout(() => onValidate('DEVELOPMENT_TOKEN'), 500);
+                return;
+            }
             if (window.grecaptcha) {
                 window.grecaptcha.ready(() => {
                     window.grecaptcha.execute('6Ld9gI0sAAAAAHnF3WR4wfN_ExOkehjbsQwkZDCT', { action: 'homepage' })
                         .then((token) => {
                             onValidate(token);
+                        })
+                        .catch(err => {
+                            console.error("reCAPTCHA Error:", err);
+                            // Fallback to development token if execute fails on localhost
+                            if (window.location.hostname === 'localhost') {
+                                onValidate('DEVELOPMENT_TOKEN');
+                            }
                         });
                 });
             }

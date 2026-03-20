@@ -14,7 +14,23 @@ const __dirname = path.dirname(__filename);
 export const getCourses = async (req, res) => {
     try {
         const courses = await Course.find({ status: 'published' });
-        res.json(courses);
+        
+        // Enhance courses with ratings
+        const coursesWithRatings = await Promise.all(courses.map(async (course) => {
+            const reviews = await Review.find({ courseId: String(course._id) });
+            const total = reviews.length;
+            const average = total > 0 
+                ? (reviews.reduce((acc, r) => acc + r.rating, 0) / total).toFixed(1)
+                : 0;
+            
+            return {
+                ...course.toObject(),
+                rating: parseFloat(average),
+                reviewsCount: total
+            };
+        }));
+
+        res.json(coursesWithRatings);
     } catch (e) {
         console.error("Error fetching courses:", e);
         res.status(500).json({ error: 'Erro ao buscar cursos.' });
@@ -31,7 +47,6 @@ export const createCourse = async (req, res) => {
     if (!title || !description || !category) {
         return res.status(400).json({ error: 'Campos obrigatórios faltando.' });
     }
-
 
     const titleText = typeof title === 'string' ? title : (title.pt || title.en || 'curso');
     const slug = titleText.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-') + '-' + Date.now().toString(36);
@@ -50,6 +65,7 @@ export const createCourse = async (req, res) => {
         await newCourse.save();
         res.status(201).json(newCourse);
     } catch (error) {
+        console.error(error);
         res.status(500).json({ error: 'Erro ao criar curso.' });
     }
 }
@@ -59,16 +75,9 @@ export const updateCourse = async (req, res) => {
         const course = await Course.findById(req.params.id);
         if (!course) return res.status(404).json({ error: 'Curso não encontrado.' });
 
-
-
-
-
-
-
         const isOwner = course.authorId === req.user.id;
         const isSystemCourse = !course.authorId || course.authorId === 'admin';
         const isAdmin = req.user.role === 'admin';
-
 
         if (!isOwner && !(isAdmin && isSystemCourse)) {
             return res.status(403).json({ error: 'Permissão negada. Admin só edita cursos do Sistema ou Próprios.' });
@@ -81,36 +90,29 @@ export const updateCourse = async (req, res) => {
 
         await course.save();
 
-
         try {
-
             const coursesPath = path.join(__dirname, 'courses.json');
-
             if (fs.existsSync(coursesPath)) {
                 let courses = JSON.parse(fs.readFileSync(coursesPath, 'utf-8'));
-
                 const idx = courses.findIndex(c => String(c._id) === String(course._id) || c.slug === course.slug);
 
                 if (idx >= 0) {
                     const courseObj = course.toObject();
                     if (courseObj._id) courseObj._id = courseObj._id.toString();
-
-
                     courses[idx] = { ...courses[idx], ...courseObj };
-
                     fs.writeFileSync(coursesPath, JSON.stringify(courses, null, 2));
-                    console.log(`PERSISTENCE SUCCESS: Updated '${course.title}' in courses.json (matched index ${idx})`);
+                    console.log(`PERSISTENCE SUCCESS: Updated '${course.title}' in courses.json`);
                 } else {
                     console.warn(`PERSISTENCE WARNING: Could not find '${course.title}' (Slug: ${course.slug}, ID: ${course._id}) in courses.json`);
                 }
             }
         } catch (err) {
             console.error("Failed to persist course update:", err);
-
         }
 
         res.json(course);
     } catch (error) {
+        console.error(error);
         res.status(500).json({ error: 'Erro ao atualizar.' });
     }
 }
@@ -119,7 +121,18 @@ export const getCourseByIdStrict = async (req, res) => {
     try {
         const course = await Course.findById(req.params.id);
         if (!course) return res.status(404).json({ error: 'Curso não encontrado.' });
-        res.json(course);
+        
+        const reviews = await Review.find({ courseId: String(course._id) });
+        const total = reviews.length;
+        const average = total > 0 
+            ? (reviews.reduce((acc, r) => acc + r.rating, 0) / total).toFixed(1)
+            : 0;
+
+        const courseObj = course.toObject();
+        courseObj.rating = parseFloat(average);
+        courseObj.reviewsCount = total;
+
+        res.json(courseObj);
     } catch (e) {
         res.status(500).json({ error: 'Erro no servidor.' });
     }
@@ -139,8 +152,16 @@ export const getCourseBySlug = async (req, res) => {
             } catch (e) { }
         }
 
+        const reviews = await Review.find({ courseId: String(course._id) });
+        const total = reviews.length;
+        const average = total > 0 
+            ? (reviews.reduce((acc, r) => acc + r.rating, 0) / total).toFixed(1)
+            : 0;
+
         const courseObj = course.toObject();
         courseObj.authorName = authorName;
+        courseObj.rating = parseFloat(average);
+        courseObj.reviewsCount = total;
 
         res.json(courseObj);
     } catch (e) {
@@ -150,7 +171,7 @@ export const getCourseBySlug = async (req, res) => {
 
 export const getTracks = async (req, res) => {
     try {
-        const tracks = await Track.find({});
+        const tracks = await Track.find().sort({ order: 1 });
         res.json(tracks);
     } catch (e) {
         res.status(500).json({ error: 'Erro ao buscar trilhas' });
@@ -287,8 +308,12 @@ export const addReview = async (req, res) => {
 export const getComments = async (req, res) => {
     try {
         const { courseSlug, lessonIndex } = req.params;
-        const comments = await Comment.find({ courseSlug, lessonIndex }).sort({ createdAt: -1 });
+        const comments = await Comment.find({ 
+            courseSlug, 
+            lessonIndex: Number(lessonIndex) 
+        }).sort({ createdAt: -1 });
         res.json(comments);
+
     } catch (e) {
         res.status(500).json({ error: 'Erro ao buscar comentários' });
     }

@@ -37,34 +37,34 @@ const AchievementToast = ({ message, type = 'xp', duration = 4000, onClose }) =>
 
     const getBgColor = () => {
         switch (type) {
-            case 'xp':
-                return 'bg-gray-900 border-yellow-500/50';
-            case 'level':
-                return 'bg-indigo-900 border-indigo-400/50';
-            case 'badge':
-                return 'bg-pink-900 border-pink-400/50';
-            case 'streak':
-                return 'bg-orange-900 border-orange-400/50';
-            default:
-                return 'bg-gray-900 border-gray-700';
+            case 'xp': return 'from-yellow-500/80 to-orange-600/80 border-yellow-400/50 shadow-yellow-500/20';
+            case 'level': return 'from-indigo-600/80 to-purple-700/80 border-indigo-400/50 shadow-indigo-500/20';
+            case 'badge': return 'from-pink-600/80 to-rose-700/80 border-pink-400/50 shadow-pink-500/20';
+            case 'streak': return 'from-orange-500/80 to-red-600/80 border-orange-400/50 shadow-orange-500/20';
+            default: return 'from-gray-800/80 to-gray-900/80 border-gray-600 shadow-gray-500/20';
         }
     };
 
     return (
         <div 
-            className={`fixed bottom-6 right-6 z-50 transform transition-all duration-500 ease-out 
-            ${isVisible && !isLeaving ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-12 opacity-0 scale-95'}
-            flex items-center gap-4 px-6 py-4 rounded-2xl shadow-2xl border ${getBgColor()}`}
+            className={`transform transition-all duration-700 ease-in-out 
+            ${isVisible && !isLeaving ? 'translate-x-0 opacity-100' : 'translate-x-[120%] opacity-0'}
+            flex items-center gap-4 px-6 py-4 rounded-2xl backdrop-blur-xl border bg-gradient-to-br shadow-2xl ${getBgColor()}`}
         >
-            <div className="flex-shrink-0 bg-white/10 p-2 rounded-full">
+            <div className="flex-shrink-0 bg-white/20 p-3 rounded-full shadow-inner">
                 {getIcon()}
             </div>
-            <div>
-                <p className="text-white font-bold text-lg leading-tight">{message}</p>
-                <p className="text-white/70 text-sm mt-0.5">
-                    {type === 'xp' ? '+ XP Adquirido!' : 
-                     type === 'level' ? 'Parabéns!' : 
-                     type === 'badge' ? 'Nova Conquista Desbloqueada' : 'Ofensiva Mantida!'}
+            <div className="min-w-[120px]">
+                <p className="text-white font-extrabold text-xl leading-tight drop-shadow-md">{message}</p>
+                <div className="flex items-center mt-1">
+                    <div className="h-1 w-full bg-white/20 rounded-full overflow-hidden">
+                        <div className="h-full bg-white animate-[progress_4s_linear]" style={{ width: '100%' }}></div>
+                    </div>
+                </div>
+                <p className="text-white/90 text-[10px] font-bold uppercase tracking-widest mt-2 px-2 py-0.5 bg-black/20 rounded-full inline-block">
+                    {type === 'xp' ? 'XP de Maestria' : 
+                     type === 'level' ? 'Novo Nível' : 
+                     type === 'badge' ? 'Conquista Rara' : 'Ofensiva Lendária'}
                 </p>
             </div>
         </div>
